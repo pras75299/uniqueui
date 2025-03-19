@@ -23,6 +23,7 @@ import {
   MorphingCardStack,
   type CardData,
 } from "@/components/ui/morphing-card-stack";
+import { PenCursor } from "@/components/ui/pen-cursor";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -325,6 +326,36 @@ export default function Home() {
                 cards={heroCards}
                 theme={isDark ? "dark" : "light"}
                 className="mx-auto"
+              />
+
+              <div
+                className={cn(
+                  "mt-6 pt-6 border-t text-center space-y-2",
+                  isDark ? "border-neutral-800" : "border-purple-100",
+                )}
+              >
+                <p
+                  className={cn(
+                    "text-xs font-medium uppercase tracking-wide",
+                    isDark ? "text-neutral-500" : "text-neutral-600",
+                  )}
+                >
+                  Drawing stroke
+                </p>
+                <p
+                  className={cn(
+                    "text-sm",
+                    isDark ? "text-neutral-400" : "text-neutral-600",
+                  )}
+                >
+                  Move your mouse — a fading ink line trails the pointer (cursor stays visible).
+                </p>
+              </div>
+              <PenCursor
+                color={isDark ? "#a3a3a3" : "#525252"}
+                lineWidth={2.75}
+                fadeDurationMs={400}
+                maxPoints={180}
               />
             </div>
 
