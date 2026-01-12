@@ -28,7 +28,7 @@ export default function Home() {
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-black via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
           <a
             className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0 text-neutral-400 hover:text-white transition-colors"
-            href="https://github.com/yourusername/uniqueui"
+            href="https://github.com/pras75299/uniqueui"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -107,7 +107,7 @@ export default function Home() {
           Component Showcase
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-8 flex flex-col items-center justify-center min-h-[400px]">
             <h3 className="text-xl font-semibold mb-8 text-neutral-300">Moving Border</h3>
             <Button
@@ -118,22 +118,41 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-6 overflow-hidden relative group">
-             <div className="absolute top-4 right-4 text-xs text-neutral-500">
-               Usage
-             </div>
-             <pre className="text-sm text-neutral-400 font-mono overflow-x-auto pt-8">
-               {`// Add to your project
+          <div className="bg-neutral-950 border border-neutral-800 rounded-xl overflow-hidden relative group">
+             <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-neutral-900/50">
+               <div className="text-xs text-neutral-400 font-medium">Usage Code</div>
+               <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`// Add to your project
 uniqueui add moving-border
 
 // Use in your code
-import { Button } from 
-  "@/components/ui/moving-border";
+import { Button } from "@/components/ui/moving-border";
+
+<Button>
+  Click me
+</Button>`);
+                    // Optional: You could reuse the copied state logic here if refactored or simply show distinct feedback
+                    alert("Copied to clipboard!");
+                  }}
+                  className="text-xs text-neutral-500 hover:text-white transition-colors flex items-center gap-1"
+               >
+                 <Copy className="w-3 h-3" /> Copy
+               </button>
+             </div>
+             <div className="p-6 overflow-x-auto">
+               <pre className="text-sm text-neutral-400 font-mono leading-relaxed">
+                 {`// Add to your project
+uniqueui add moving-border
+
+// Use in your code
+import { Button } from "@/components/ui/moving-border";
 
 <Button>
   Click me
 </Button>`}
-             </pre>
+               </pre>
+             </div>
           </div>
         </div>
       </div>
