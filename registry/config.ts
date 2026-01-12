@@ -10,7 +10,7 @@ export type Registry = Array<{
 export const registry: Registry = [
     {
         name: "moving-border",
-        dependencies: ["framer-motion", "clsx", "tailwind-merge"],
+        dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
             {
                 path: "moving-border.tsx",
