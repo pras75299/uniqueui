@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@layer utilities {
+  body {
+    background: #000;
+    color: #fff;
+    min-height: 100vh;
+  }
+}
