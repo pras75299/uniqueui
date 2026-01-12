@@ -1,0 +1,30 @@
+{
+    "name": "uniqueui-cli",
+    "version": "0.1.0",
+    "description": "CLI for UniqueUI",
+    "main": "dist/index.js",
+    "bin": {
+        "uniqueui": "./dist/index.js"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "dev": "ts-node src/index.ts"
+    },
+    "dependencies": {
+        "commander": "^11.1.0",
+        "chalk": "^4.1.2",
+        "ts-morph": "^21.0.1",
+        "zod": "^3.22.4",
+        "node-fetch": "^3.3.2",
+        "ora": "^5.4.1",
+        "prompts": "^2.4.2"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "typescript": "^5.3.3",
+        "@types/prompts": "^2.4.9",
+        "@types/fs-extra": "^11.0.4",
+        "fs-extra": "^11.2.0"
+    }
+}
