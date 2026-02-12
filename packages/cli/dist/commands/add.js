@@ -23,16 +23,43 @@ async function add(componentName, options) {
     }
     // 2. Fetch registry
     let registry;
+    const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
+    async function fetchRegistryFromUrl(baseUrl) {
+        try {
+            const registryUrl = baseUrl.endsWith('.json') ? baseUrl : `${baseUrl}/registry.json`;
+            const res = await (0, node_fetch_1.default)(registryUrl);
+            if (!res.ok)
+                return null;
+            return await res.json();
+        }
+        catch {
+            return null;
+        }
+    }
     try {
         // For local testing, if url is a file path, read it
         if (options.url.startsWith(".")) {
             registry = await fs_extra_1.default.readJson(options.url);
         }
         else {
-            const res = await (0, node_fetch_1.default)(`${options.url}/registry.json`);
-            if (!res.ok)
-                throw new Error("Failed to fetch registry");
-            registry = await res.json();
+            // Try primary URL first
+            let result = await fetchRegistryFromUrl(options.url);
+            // Try /api/registry endpoint as alternative
+            if (!result) {
+                console.log(chalk_1.default.yellow(`Could not fetch from ${options.url}/registry.json, trying API endpoint...`));
+                result = await fetchRegistryFromUrl(`${options.url}/api/registry`);
+            }
+            // Try fallback GitHub raw URL
+            if (!result && options.url !== FALLBACK_URL) {
+                console.log(chalk_1.default.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
+                result = await fetchRegistryFromUrl(FALLBACK_URL);
+            }
+            if (!result) {
+                throw new Error(`Failed to fetch registry from ${options.url}.\n` +
+                    `  Make sure the registry URL is accessible.\n` +
+                    `  You can specify a custom URL with: uniqueui add <component> --url <url>`);
+            }
+            registry = result;
         }
     }
     catch (e) {

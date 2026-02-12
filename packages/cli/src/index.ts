@@ -8,7 +8,7 @@ const program = new Command();
 program
     .name("uniqueui")
     .description("Add components from UniqueUI to your project")
-    .version("0.1.1");
+    .version("0.1.4");
 
 program
     .command("init")
@@ -19,7 +19,7 @@ program
     .command("add")
     .description("Add a component to your project")
     .argument("<component>", "the component to add")
-    .option("--url <url>", "the base URL of the registry", "https://raw.githubusercontent.com/pras75299/uniqueui/main")
+    .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
     .action(add);
 
 program.parse();
