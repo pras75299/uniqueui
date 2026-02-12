@@ -119,6 +119,24 @@ export async function add(componentName: string, options: { url: string }) {
 }
 
 async function updateTailwindConfig(configPath: string, newConfig: any) {
+    // Check for config file existence and handle fallback
+    let finalConfigPath = configPath;
+    if (!fs.existsSync(finalConfigPath)) {
+        // Try alternatives
+        const ext = path.extname(configPath);
+        const base = configPath.slice(0, -ext.length);
+        const altExts = [".ts", ".js", ".mjs", ".cjs"];
+
+        const found = altExts.find(e => fs.existsSync(base + e));
+        if (found) {
+            console.log(chalk.yellow(`Config ${configPath} not found, using ${base + found} instead.`));
+            finalConfigPath = base + found;
+        } else {
+            console.warn(chalk.yellow(`Tailwind config not found at ${configPath}. Skipping update.`));
+            return;
+        }
+    }
+
     const project = new Project({
         manipulationSettings: {
             quoteKind: QuoteKind.Double,
@@ -126,7 +144,13 @@ async function updateTailwindConfig(configPath: string, newConfig: any) {
     });
 
     // Attempt to add the file
-    const sourceFile = project.addSourceFileAtPath(configPath);
+    let sourceFile;
+    try {
+        sourceFile = project.addSourceFileAtPath(finalConfigPath);
+    } catch (e) {
+        console.error(chalk.yellow(`Failed to parse tailwind config at ${finalConfigPath}. Skipping update.`), e);
+        return;
+    }
 
     // Simplistic handling: look for export default or module.exports
     // We expect the config to be an object literal.

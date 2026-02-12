@@ -105,13 +105,37 @@ async function add(componentName, options) {
     }
 }
 async function updateTailwindConfig(configPath, newConfig) {
+    // Check for config file existence and handle fallback
+    let finalConfigPath = configPath;
+    if (!fs_extra_1.default.existsSync(finalConfigPath)) {
+        // Try alternatives
+        const ext = path_1.default.extname(configPath);
+        const base = configPath.slice(0, -ext.length);
+        const altExts = [".ts", ".js", ".mjs", ".cjs"];
+        const found = altExts.find(e => fs_extra_1.default.existsSync(base + e));
+        if (found) {
+            console.log(chalk_1.default.yellow(`Config ${configPath} not found, using ${base + found} instead.`));
+            finalConfigPath = base + found;
+        }
+        else {
+            console.warn(chalk_1.default.yellow(`Tailwind config not found at ${configPath}. Skipping update.`));
+            return;
+        }
+    }
     const project = new ts_morph_1.Project({
         manipulationSettings: {
             quoteKind: ts_morph_1.QuoteKind.Double,
         }
     });
     // Attempt to add the file
-    const sourceFile = project.addSourceFileAtPath(configPath);
+    let sourceFile;
+    try {
+        sourceFile = project.addSourceFileAtPath(finalConfigPath);
+    }
+    catch (e) {
+        console.error(chalk_1.default.yellow(`Failed to parse tailwind config at ${finalConfigPath}. Skipping update.`), e);
+        return;
+    }
     // Simplistic handling: look for export default or module.exports
     // We expect the config to be an object literal.
     // We need to merge `newConfig.theme.extend` into the existing config.
