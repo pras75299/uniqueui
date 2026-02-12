@@ -24,7 +24,7 @@ export default function ComponentsIndex() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05, duration: 0.4 }}
+              transition={{ delay: Math.min(idx * 0.05, 0.3), duration: 0.4 }}
               className="group h-full p-6 rounded-xl border border-neutral-800 bg-neutral-900/20 hover:bg-neutral-900/50 hover:border-neutral-700 transition-all"
             >
               <div className="flex items-start justify-between mb-4">
