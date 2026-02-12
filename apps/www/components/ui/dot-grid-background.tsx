@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useRef } from "react";
-import { motion, useMotionValue, useTransform } from "motion/react";
+import { motion, useMotionValue, useTransform, useMotionTemplate } from "motion/react";
 import { cn } from "@/lib/utils";
 
 export interface DotGridBackgroundProps {
@@ -40,6 +40,8 @@ export function DotGridBackground({
     mouseX.set(-1000);
     mouseY.set(-1000);
   }, [mouseX, mouseY]);
+
+  const maskImage = useMotionTemplate`radial-gradient(circle ${hoverRadius}px at ${mouseX}px ${mouseY}px, black 0%, transparent 100%)`;
 
   return (
     <div
@@ -82,8 +84,8 @@ export function DotGridBackground({
             "0.8)"
           )} ${dotSize * hoverScale * 0.5}px, transparent ${dotSize * hoverScale * 0.5}px)`,
           backgroundSize: `${gap}px ${gap}px`,
-          maskImage: `radial-gradient(circle ${hoverRadius}px at var(--mx) var(--my), black 0%, transparent 100%)`,
-          WebkitMaskImage: `radial-gradient(circle ${hoverRadius}px at var(--mx) var(--my), black 0%, transparent 100%)`,
+          maskImage,
+          WebkitMaskImage: maskImage,
         }}
       />
 
@@ -91,3 +93,4 @@ export function DotGridBackground({
     </div>
   );
 }
+

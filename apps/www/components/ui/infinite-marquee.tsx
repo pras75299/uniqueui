@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 export interface InfiniteMarqueeProps {
@@ -20,10 +19,8 @@ export function InfiniteMarquee({
   pauseOnHover = true,
   gap = 16,
 }: InfiniteMarqueeProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -35,29 +32,21 @@ export function InfiniteMarquee({
 
   return (
     <div
-      ref={containerRef}
-      className={cn("overflow-hidden", className)}
-      onMouseEnter={() => pauseOnHover && setIsPaused(true)}
-      onMouseLeave={() => pauseOnHover && setIsPaused(false)}
+      className={cn("overflow-hidden", pauseOnHover && "group", className)}
     >
-      <motion.div
+      <div
         ref={scrollRef}
-        className="flex w-max"
-        style={{ gap: `${gap}px` }}
-        animate={{
-          x: direction === "left" ? [0, -contentWidth - gap] : [-contentWidth - gap, 0],
+        className={cn(
+          "flex w-max",
+          pauseOnHover && "group-hover:[animation-play-state:paused]"
+        )}
+        style={{
+          gap: `${gap}px`,
+          animation: contentWidth
+            ? `marquee-scroll ${duration || 20}s linear infinite`
+            : undefined,
+          ["--marquee-distance" as string]: `${direction === "left" ? -(contentWidth + gap) : contentWidth + gap}px`,
         }}
-        transition={{
-          x: {
-            duration: duration || 20,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "linear",
-          },
-        }}
-        {...(isPaused && {
-          style: { animationPlayState: "paused", gap: `${gap}px` },
-        })}
       >
         {/* Original content */}
         <div className="flex shrink-0 items-center" style={{ gap: `${gap}px` }}>
@@ -67,7 +56,7 @@ export function InfiniteMarquee({
         <div className="flex shrink-0 items-center" style={{ gap: `${gap}px` }}>
           {children}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -90,3 +79,4 @@ export function MarqueeItem({
     </div>
   );
 }
+
