@@ -29,14 +29,47 @@ export async function add(componentName: string, options: { url: string }) {
 
     // 2. Fetch registry
     let registry: RegistryItem[];
+    const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
+
+    async function fetchRegistryFromUrl(baseUrl: string): Promise<RegistryItem[] | null> {
+        try {
+            const registryUrl = baseUrl.endsWith('.json') ? baseUrl : `${baseUrl}/registry.json`;
+            const res = await fetch(registryUrl);
+            if (!res.ok) return null;
+            return await res.json() as RegistryItem[];
+        } catch {
+            return null;
+        }
+    }
+
     try {
         // For local testing, if url is a file path, read it
         if (options.url.startsWith(".")) {
             registry = await fs.readJson(options.url);
         } else {
-            const res = await fetch(`${options.url}/registry.json`);
-            if (!res.ok) throw new Error("Failed to fetch registry");
-            registry = await res.json() as RegistryItem[];
+            // Try primary URL first
+            let result = await fetchRegistryFromUrl(options.url);
+
+            // Try /api/registry endpoint as alternative
+            if (!result) {
+                console.log(chalk.yellow(`Could not fetch from ${options.url}/registry.json, trying API endpoint...`));
+                result = await fetchRegistryFromUrl(`${options.url}/api/registry`);
+            }
+
+            // Try fallback GitHub raw URL
+            if (!result && options.url !== FALLBACK_URL) {
+                console.log(chalk.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
+                result = await fetchRegistryFromUrl(FALLBACK_URL);
+            }
+
+            if (!result) {
+                throw new Error(
+                    `Failed to fetch registry from ${options.url}.\n` +
+                    `  Make sure the registry URL is accessible.\n` +
+                    `  You can specify a custom URL with: uniqueui add <component> --url <url>`
+                );
+            }
+            registry = result;
         }
     } catch (e) {
         console.error(chalk.red("Could not fetch registry.json"), e);
