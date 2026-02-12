@@ -37,7 +37,8 @@ export async function add(componentName: string, options: { url: string }) {
             const res = await fetch(registryUrl);
             if (!res.ok) return null;
             return await res.json() as RegistryItem[];
-        } catch {
+        } catch (error) {
+            console.error(chalk.yellow(`\nWarning: Failed to fetch from ${baseUrl}:`), error);
             return null;
         }
     }

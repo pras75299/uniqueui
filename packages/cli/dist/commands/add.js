@@ -32,7 +32,8 @@ async function add(componentName, options) {
                 return null;
             return await res.json();
         }
-        catch {
+        catch (error) {
+            console.error(chalk_1.default.yellow(`\nWarning: Failed to fetch from ${baseUrl}:`), error);
             return null;
         }
     }
