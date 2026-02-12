@@ -91,17 +91,26 @@ async function add(componentName, options) {
         await updateTailwindConfig(config.tailwind.config, item.tailwindConfig);
     }
     // 5. Write Files
-    const targetDir = path_1.default.resolve(config.paths.components || "components/ui");
-    await fs_extra_1.default.ensureDir(targetDir);
     for (const file of item.files) {
-        // We only handle ui components for now
         if (file.type === "registry:ui") {
+            const targetDir = path_1.default.resolve(config.paths.components || "components/ui");
+            await fs_extra_1.default.ensureDir(targetDir);
             const fileName = path_1.default.basename(file.path);
             const targetPath = path_1.default.join(targetDir, fileName);
             await fs_extra_1.default.writeFile(targetPath, file.content);
             console.log(chalk_1.default.green(`Created ${fileName}`));
         }
-        // Handle utils if needed, or other types
+        else if (file.type === "registry:util") {
+            const targetDir = path_1.default.resolve(config.paths.lib || "utils");
+            await fs_extra_1.default.ensureDir(targetDir);
+            const fileName = path_1.default.basename(file.path);
+            const targetPath = path_1.default.join(targetDir, fileName);
+            // Only create util if it doesn't exist
+            if (!fs_extra_1.default.existsSync(targetPath)) {
+                await fs_extra_1.default.writeFile(targetPath, file.content);
+                console.log(chalk_1.default.green(`Created ${fileName}`));
+            }
+        }
     }
 }
 async function updateTailwindConfig(configPath, newConfig) {

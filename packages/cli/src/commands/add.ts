@@ -103,18 +103,26 @@ export async function add(componentName: string, options: { url: string }) {
     }
 
     // 5. Write Files
-    const targetDir = path.resolve(config.paths.components || "components/ui");
-    await fs.ensureDir(targetDir);
-
     for (const file of item.files) {
-        // We only handle ui components for now
         if (file.type === "registry:ui") {
+            const targetDir = path.resolve(config.paths.components || "components/ui");
+            await fs.ensureDir(targetDir);
             const fileName = path.basename(file.path);
             const targetPath = path.join(targetDir, fileName);
             await fs.writeFile(targetPath, file.content);
             console.log(chalk.green(`Created ${fileName}`));
+        } else if (file.type === "registry:util") {
+            const targetDir = path.resolve(config.paths.lib || "utils");
+            await fs.ensureDir(targetDir);
+            const fileName = path.basename(file.path);
+            const targetPath = path.join(targetDir, fileName);
+
+            // Only create util if it doesn't exist
+            if (!fs.existsSync(targetPath)) {
+                await fs.writeFile(targetPath, file.content);
+                console.log(chalk.green(`Created ${fileName}`));
+            }
         }
-        // Handle utils if needed, or other types
     }
 }
 

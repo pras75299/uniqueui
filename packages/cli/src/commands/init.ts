@@ -39,17 +39,17 @@ export async function init() {
         tsx: response.typescript,
         tailwind: {
             config: response.tailwindConfig,
-            css: "app/globals.css", // simplifying assumption or could ask
+            css: "app/globals.css",
             baseColor: "slate",
             cssVariables: true,
         },
         aliases: {
             components: "@/components",
-            utils: "@/lib/utils",
+            utils: "@/utils",
         },
         paths: {
             components: response.componentsDir,
-            lib: "lib" // simplifying
+            lib: "utils"
         }
     };
 
@@ -57,6 +57,26 @@ export async function init() {
         path.join(cwd, "components.json"),
         JSON.stringify(config, null, 2)
     );
+
+    // Create utils/cn.ts if it doesn't exist
+    const utilsDir = path.join(cwd, "utils");
+    const cnPath = path.join(utilsDir, "cn.ts");
+
+    const cnContent = `import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}`;
+
+    if (!(await fs.stat(utilsDir).catch(() => null))) {
+        await fs.mkdir(utilsDir, { recursive: true });
+    }
+
+    if (!(await fs.stat(cnPath).catch(() => null))) {
+        await fs.writeFile(cnPath, cnContent);
+        console.log(chalk.green("Created utils/cn.ts"));
+    }
 
     console.log(chalk.green("Configuration saved to components.json"));
 }
