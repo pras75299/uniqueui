@@ -1,7 +1,6 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { motion, useInView } from "motion/react";
-import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
 export interface GradientTextRevealProps {

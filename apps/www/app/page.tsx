@@ -13,7 +13,6 @@ import {
   Ghost,
   Sparkles,
   Layers,
-  MousePointer,
   ScrollText,
   ArrowRight,
 } from "lucide-react";

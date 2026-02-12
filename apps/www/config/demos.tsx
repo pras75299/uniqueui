@@ -28,9 +28,6 @@ import {
   Layers,
   ScrollText,
   Terminal,
-  Bell,
-  Check,
-  Copy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
