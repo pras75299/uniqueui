@@ -8,7 +8,7 @@ const program = new commander_1.Command();
 program
     .name("uniqueui")
     .description("Add components from UniqueUI to your project")
-    .version("0.1.0");
+    .version("0.1.1");
 program
     .command("init")
     .description("Configure your project for UniqueUI")
