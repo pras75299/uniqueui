@@ -1,15 +1,46 @@
 {
     "name": "uniqueui-cli",
-    "version": "0.1.0",
-    "description": "CLI for UniqueUI",
+    "version": "0.1.1",
+    "description": "CLI to add beautiful animated UI components from UniqueUI to your React project",
     "main": "dist/index.js",
     "bin": {
         "uniqueui": "./dist/index.js"
     },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
     "scripts": {
         "build": "tsc",
         "start": "node dist/index.js",
-        "dev": "ts-node src/index.ts"
+        "dev": "ts-node src/index.ts",
+        "prepublishOnly": "npm run build"
+    },
+    "keywords": [
+        "ui",
+        "components",
+        "react",
+        "animated",
+        "tailwindcss",
+        "motion",
+        "cli",
+        "design-system",
+        "uniqueui"
+    ],
+    "author": "pras75299",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pras75299/uniqueui.git",
+        "directory": "packages/cli"
+    },
+    "homepage": "https://github.com/pras75299/uniqueui#readme",
+    "bugs": {
+        "url": "https://github.com/pras75299/uniqueui/issues"
+    },
+    "engines": {
+        "node": ">=18"
     },
     "dependencies": {
         "commander": "^11.1.0",
