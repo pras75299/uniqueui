@@ -1,7 +1,7 @@
 import { componentsList } from "@/config/components";
 import ComponentPreview from "@/components/component-preview";
 import { notFound } from "next/navigation";
-import { Copy, Terminal } from "lucide-react";
+import { Terminal } from "lucide-react";
 import ClientCopyButton from "./client-copy-button"; // We'll make this small client component
 
 // Generate static params for all components

@@ -74,16 +74,13 @@ export function NotificationStack({
   className,
   position = "top-right",
   maxVisible = 5,
+  notifications,
+  onRemove,
 }: NotificationStackProps & {
   notifications: Notification[];
   onRemove: (id: string) => void;
 }) {
-  const props = arguments[0] as NotificationStackProps & {
-    notifications: Notification[];
-    onRemove: (id: string) => void;
-  };
-
-  const visible = props.notifications.slice(-maxVisible);
+  const visible = notifications.slice(-maxVisible);
   const isBottom = position.startsWith("bottom");
 
   return (
@@ -100,7 +97,7 @@ export function NotificationStack({
           <NotificationItem
             key={notification.id}
             notification={notification}
-            onRemove={props.onRemove}
+            onRemove={onRemove}
             position={position}
           />
         ))}

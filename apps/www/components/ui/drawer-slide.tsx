@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useCallback } from "react";
-import { motion, AnimatePresence, useDragControls } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
 export type DrawerPosition = "left" | "right" | "top" | "bottom";

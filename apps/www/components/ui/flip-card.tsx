@@ -65,7 +65,6 @@ export function FlipCard({
         )}
         style={{
           backfaceVisibility: "hidden",
-          [rotateAxis === "rotateY" ? "rotateY" : "rotateX"]: "180deg",
         }}
         initial={{ [rotateAxis]: -180 }}
         animate={{
