@@ -17,6 +17,6 @@ program
     .command("add")
     .description("Add a component to your project")
     .argument("<component>", "the component to add")
-    .option("--url <url>", "the base URL of the registry", "https://raw.githubusercontent.com/prashantkumarsingh/uniqueui/main")
+    .option("--url <url>", "the base URL of the registry", "https://raw.githubusercontent.com/pras75299/uniqueui/main")
     .action(add_1.add);
 program.parse();
