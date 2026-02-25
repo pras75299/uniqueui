@@ -3,6 +3,7 @@ import ComponentPreview from "@/components/component-preview";
 import { notFound } from "next/navigation";
 import { Terminal } from "lucide-react";
 import ClientCopyButton from "./client-copy-button"; // We'll make this small client component
+import { codeToHtml } from "shiki";
 
 // Generate static params for all components
 export function generateStaticParams() {
@@ -19,6 +20,15 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
 
   if (!component) {
     notFound();
+  }
+
+  // Pre-render the syntax-highlighted code on the server
+  let highlightedCode = "";
+  if (component.usageCode) {
+    highlightedCode = await codeToHtml(component.usageCode, {
+      lang: "tsx",
+      theme: "vitesse-dark",
+    });
   }
 
   return (
@@ -53,9 +63,13 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
         <section className="space-y-4 pt-8 border-t border-neutral-800">
           <h2 className="text-xl font-semibold text-white">Usage</h2>
           <div className="relative group rounded-lg overflow-hidden border border-neutral-800 bg-neutral-950">
-            <pre className="p-4 overflow-x-auto text-sm text-neutral-300 font-mono">
-              <code>{component.usageCode}</code>
-            </pre>
+            <div 
+              className="p-4 overflow-x-auto text-sm font-mono [&>pre]:!bg-transparent [&>pre]:!p-0"
+              style={{
+                backgroundColor: '#0a0a0a', // Vercel-like dark mode pre background
+              }}
+              dangerouslySetInnerHTML={{ __html: highlightedCode }}
+            />
             <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <ClientCopyButton text={component.usageCode} />
             </div>
