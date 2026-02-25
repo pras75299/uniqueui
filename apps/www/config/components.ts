@@ -609,7 +609,7 @@ export default function Example() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-20 w-full">
         {(["fade-up", "scale", "blur"] as const).map((preset, i) => (
-          <ScrollReveal key={preset} animation={preset} delay={i * 0.15}>
+          <ScrollReveal key={preset} animation={preset} delay={i * 0.15} once={false}>
             <div className="p-6 rounded-lg bg-neutral-900 border border-neutral-800 text-center shadow-lg h-full">
               <div className="text-lg font-semibold mb-1 text-neutral-200">{preset}</div>
               <p className="text-neutral-500 text-xs">Revealed!</p>
