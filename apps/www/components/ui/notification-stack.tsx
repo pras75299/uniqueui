@@ -117,9 +117,10 @@ function NotificationItem({
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
   const [progress, setProgress] = useState(100);
-  const startTime = useRef(Date.now());
+  const startTime = useRef<number>(0);
 
   useEffect(() => {
+    startTime.current = Date.now();
     if (duration <= 0) return;
 
     const interval = setInterval(() => {

@@ -30,7 +30,7 @@ export function GradientTextReveal({
 
   return (
     <Tag
-      ref={ref as any}
+      ref={ref as React.RefObject<HTMLHeadingElement & HTMLParagraphElement & HTMLSpanElement>}
       className={cn("flex flex-wrap gap-x-2 gap-y-1", className)}
     >
       {words.map((word, i) => (

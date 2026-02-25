@@ -40,15 +40,15 @@ function Meteors({ count, color }: { count: number; color: string }) {
   const [meteors, setMeteors] = useState<MeteorData[]>([]);
 
   useEffect(() => {
-    setMeteors(
-      Array.from({ length: count }).map(() => ({
-        left: `${Math.random() * 100}%`,
-        delay: `${Math.random() * 5}s`,
-        duration: `${Math.random() * 3 + 2}s`,
-        size: Math.random() * 1.5 + 0.5,
-        tailWidth: Math.random() * 80 + 40,
-      }))
-    );
+    const meteorData = Array.from({ length: count }).map(() => ({
+      left: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 5}s`,
+      duration: `${Math.random() * 3 + 2}s`,
+      size: Math.random() * 1.5 + 0.5,
+      tailWidth: Math.random() * 80 + 40,
+    }));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMeteors(meteorData);
   }, [count]);
 
   return (
