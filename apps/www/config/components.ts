@@ -1,66 +1,66 @@
 import type { ElementType } from 'react';
 import {
-      Sparkles,
-      Terminal,
-      Layers,
-      MousePointer,
-      ScrollText,
-      Loader2,
-      Maximize2,
-      Palette,
-      Type,
-      Flame,
-      RotateCw,
-      Grid3x3,
-      Anchor,
-      PartyPopper,
-      PanelRight,
-      Bell,
-      Clock,
+  Sparkles,
+  Terminal,
+  Layers,
+  MousePointer,
+  ScrollText,
+  Loader2,
+  Maximize2,
+  Palette,
+  Type,
+  Flame,
+  RotateCw,
+  Grid3x3,
+  Anchor,
+  PartyPopper,
+  PanelRight,
+  Bell,
+  Clock,
 } from "lucide-react";
 
 export type ComponentItem = {
-    slug: string;
-    name: string;
-    description: string;
-    installCmd: string;
-    icon: ElementType; // Lucide icon
-    category?: string;
-    props?: { name: string; type: string; default?: string; description: string }[];
-    usageCode?: string;
+  slug: string;
+  name: string;
+  description: string;
+  installCmd: string;
+  icon: ElementType; // Lucide icon
+  category?: string;
+  props?: { name: string; type: string; default?: string; description: string }[];
+  usageCode?: string;
 };
 
 export const componentsList: ComponentItem[] = [
+  {
+    slug: "moving-border",
+    name: "Moving Border",
+    description: "SVG-path-tracing animated border that orbits a button or card.",
+    installCmd: "uniqueui add moving-border",
+    icon: Sparkles,
+    category: "Effects & Animations",
+    props: [
       {
-            slug: "moving-border",
-            name: "Moving Border",
-            description: "SVG-path-tracing animated border that orbits a button or card.",
-            installCmd: "uniqueui add moving-border",
-            icon: Sparkles,
-            category: "Effects & Animations",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "The label or content displayed inside the button."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The label or content displayed inside the button."
       },
       {
-            "name": "duration",
-            "type": "number",
-            "description": "Time in milliseconds to complete one full orbit around the border."
+        "name": "duration",
+        "type": "number",
+        "description": "Time in milliseconds to complete one full orbit around the border."
       },
       {
-            "name": "rx",
-            "type": "string",
-            "description": "Description coming soon"
+        "name": "rx",
+        "type": "string",
+        "description": "Description coming soon"
       },
       {
-            "name": "ry",
-            "type": "string",
-            "description": "Description coming soon"
+        "name": "ry",
+        "type": "string",
+        "description": "Description coming soon"
       }
-],
-        usageCode: `import { Button } from "@/components/ui/moving-border";
+    ],
+    usageCode: `import { Button } from "@/components/ui/moving-border";
 
 export default function Example() {
   return (
@@ -81,58 +81,58 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "typewriter-text",
+    name: "Typewriter Text",
+    description:
+      "Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop.",
+    installCmd: "uniqueui add typewriter-text",
+    icon: Terminal,
+    category: "Text",
+    props: [
       {
-            slug: "typewriter-text",
-            name: "Typewriter Text",
-            description:
-                  "Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop.",
-            installCmd: "uniqueui add typewriter-text",
-            icon: Terminal,
-            category: "Text",
-        props: [
-      {
-            "name": "words",
-            "type": "string[]",
-            "description": "An array of words or phrases to be typed out sequentially."
+        "name": "words",
+        "type": "string[]",
+        "description": "An array of words or phrases to be typed out sequentially."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Add CSS classes to the text container."
+        "name": "className",
+        "type": "string",
+        "description": "Add CSS classes to the text container."
       },
       {
-            "name": "cursorClassName",
-            "type": "string",
-            "description": "Add CSS classes to customize the blinking cursor span."
+        "name": "cursorClassName",
+        "type": "string",
+        "description": "Add CSS classes to customize the blinking cursor span."
       },
       {
-            "name": "typingSpeed",
-            "type": "number",
-            "description": "Delay in milliseconds between typing each character."
+        "name": "typingSpeed",
+        "type": "number",
+        "description": "Delay in milliseconds between typing each character."
       },
       {
-            "name": "deletingSpeed",
-            "type": "number",
-            "description": "Delay in milliseconds between deleting each character."
+        "name": "deletingSpeed",
+        "type": "number",
+        "description": "Delay in milliseconds between deleting each character."
       },
       {
-            "name": "delayBetweenWords",
-            "type": "number",
-            "description": "Pause duration before erasing a completed word to type the next."
+        "name": "delayBetweenWords",
+        "type": "number",
+        "description": "Pause duration before erasing a completed word to type the next."
       },
       {
-            "name": "loop",
-            "type": "boolean",
-            "description": "Whether the typewriter sequence should repeat infinitely."
+        "name": "loop",
+        "type": "boolean",
+        "description": "Whether the typewriter sequence should repeat infinitely."
       },
       {
-            "name": "cursor",
-            "type": "boolean",
-            "description": "Controls the visibility of the blinking cursor at the end of the text."
+        "name": "cursor",
+        "type": "boolean",
+        "description": "Controls the visibility of the blinking cursor at the end of the text."
       }
-],
-        usageCode: `import { TypewriterText } from "@/components/ui/typewriter-text";
+    ],
+    usageCode: `import { TypewriterText } from "@/components/ui/typewriter-text";
 
 export default function Example() {
   return (
@@ -161,58 +161,58 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "3d-tilt-card",
+    name: "3D Tilt Card",
+    description:
+      "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
+    installCmd: "uniqueui add 3d-tilt-card",
+    icon: Layers,
+    category: "Cards",
+    props: [
       {
-            slug: "3d-tilt-card",
-            name: "3D Tilt Card",
-            description:
-                  "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
-            installCmd: "uniqueui add 3d-tilt-card",
-            icon: Layers,
-            category: "Cards",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "The element(s) suspended inside the 3D card layout."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The element(s) suspended inside the 3D card layout."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Tailwind configuration applied directly to the physical card."
+        "name": "className",
+        "type": "string",
+        "description": "Tailwind configuration applied directly to the physical card."
       },
       {
-            "name": "containerClassName",
-            "type": "string",
-            "description": "Tailwind bounds defining the invisible hover hit-box."
+        "name": "containerClassName",
+        "type": "string",
+        "description": "Tailwind bounds defining the invisible hover hit-box."
       },
       {
-            "name": "tiltMaxDeg",
-            "type": "number",
-            "description": "The maximum angle the card aggressively pitches on hover."
+        "name": "tiltMaxDeg",
+        "type": "number",
+        "description": "The maximum angle the card aggressively pitches on hover."
       },
       {
-            "name": "perspective",
-            "type": "number",
-            "description": "The CSS perspective depth in pixels determining 3D deformation strength."
+        "name": "perspective",
+        "type": "number",
+        "description": "The CSS perspective depth in pixels determining 3D deformation strength."
       },
       {
-            "name": "scale",
-            "type": "number",
-            "description": "Float multiplier for card scaling when hovered (e.g. 1.05)."
+        "name": "scale",
+        "type": "number",
+        "description": "Float multiplier for card scaling when hovered (e.g. 1.05)."
       },
       {
-            "name": "glare",
-            "type": "boolean",
-            "description": "Enable a dynamic radial-gradient glare sweep that tracks the pointer."
+        "name": "glare",
+        "type": "boolean",
+        "description": "Enable a dynamic radial-gradient glare sweep that tracks the pointer."
       },
       {
-            "name": "glareMaxOpacity",
-            "type": "number",
-            "description": "Max brightness (0 to 1) for the dynamic glare effect."
+        "name": "glareMaxOpacity",
+        "type": "number",
+        "description": "Max brightness (0 to 1) for the dynamic glare effect."
       }
-],
-        usageCode: `import { TiltCard } from "@/components/ui/3d-tilt-card";
+    ],
+    usageCode: `import { TiltCard } from "@/components/ui/3d-tilt-card";
 
 export default function Example() {
   return (
@@ -242,38 +242,38 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "spotlight-card",
+    name: "Spotlight Card",
+    description:
+      "Card with a radial spotlight that follows the mouse cursor across its surface.",
+    installCmd: "uniqueui add spotlight-card",
+    icon: MousePointer,
+    category: "Cards",
+    props: [
       {
-            slug: "spotlight-card",
-            name: "Spotlight Card",
-            description:
-                  "Card with a radial spotlight that follows the mouse cursor across its surface.",
-            installCmd: "uniqueui add spotlight-card",
-            icon: MousePointer,
-            category: "Cards",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "Components visible on the card."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Components visible on the card."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "CSS classes for sizing and styling the card layout."
+        "name": "className",
+        "type": "string",
+        "description": "CSS classes for sizing and styling the card layout."
       },
       {
-            "name": "spotlightColor",
-            "type": "string",
-            "description": "The hex/rgba color code used for the center cursor glow."
+        "name": "spotlightColor",
+        "type": "string",
+        "description": "The hex/rgba color code used for the center cursor glow."
       },
       {
-            "name": "spotlightSize",
-            "type": "number",
-            "description": "Diameter width/height of the gradient spotlight in pixels."
+        "name": "spotlightSize",
+        "type": "number",
+        "description": "Diameter width/height of the gradient spotlight in pixels."
       }
-],
-        usageCode: `import { SpotlightCard } from "@/components/ui/spotlight-card";
+    ],
+    usageCode: `import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 export default function Example() {
   return (
@@ -293,33 +293,33 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "aurora-background",
+    name: "Aurora Background",
+    description:
+      "Flowing aurora borealis gradient animation using layered blurred blobs.",
+    installCmd: "uniqueui add aurora-background",
+    icon: Sparkles,
+    category: "Backgrounds",
+    props: [
       {
-            slug: "aurora-background",
-            name: "Aurora Background",
-            description:
-                  "Flowing aurora borealis gradient animation using layered blurred blobs.",
-            installCmd: "uniqueui add aurora-background",
-            icon: Sparkles,
-            category: "Backgrounds",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "Content elements layered above the animated aurora gradient background."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Content elements layered above the animated aurora gradient background."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Additional CSS configuration applied to the background container."
+        "name": "className",
+        "type": "string",
+        "description": "Additional CSS configuration applied to the background container."
       },
       {
-            "name": "showRadialGradient",
-            "type": "boolean",
-            "description": "Apply a radial vignette mask to focus attention towards the center."
+        "name": "showRadialGradient",
+        "type": "boolean",
+        "description": "Apply a radial vignette mask to focus attention towards the center."
       }
-],
-        usageCode: `import { AuroraBackground } from "@/components/ui/aurora-background";
+    ],
+    usageCode: `import { AuroraBackground } from "@/components/ui/aurora-background";
 
 export default function Example() {
   return (
@@ -333,63 +333,63 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "animated-tabs",
+    name: "Animated Tabs",
+    description:
+      "Tab bar with a sliding pill that morphs between active tabs using layout animation.",
+    installCmd: "uniqueui add animated-tabs",
+    icon: Layers,
+    category: "Navigation & Overlays",
+    props: [
       {
-            slug: "animated-tabs",
-            name: "Animated Tabs",
-            description:
-                  "Tab bar with a sliding pill that morphs between active tabs using layout animation.",
-            installCmd: "uniqueui add animated-tabs",
-            icon: Layers,
-            category: "Navigation & Overlays",
-        props: [
-      {
-            "name": "tabs",
-            "type": "{",
-            "description": "Array of tab configurations establishing navigation schema."
+        "name": "tabs",
+        "type": "{",
+        "description": "Array of tab configurations establishing navigation schema."
       },
       {
-            "name": "id",
-            "type": "string",
-            "description": "A unique identifier used strictly for layout animations."
+        "name": "id",
+        "type": "string",
+        "description": "A unique identifier used strictly for layout animations."
       },
       {
-            "name": "label",
-            "type": "string",
-            "description": "The string/node rendered on the clickable tab button."
+        "name": "label",
+        "type": "string",
+        "description": "The string/node rendered on the clickable tab button."
       },
       {
-            "name": "content",
-            "type": "React.ReactNode",
-            "description": "The DOM payload rendered below when this tab is selected."
+        "name": "content",
+        "type": "React.ReactNode",
+        "description": "The DOM payload rendered below when this tab is selected."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Description coming soon"
+        "name": "className",
+        "type": "string",
+        "description": "Description coming soon"
       },
       {
-            "name": "tabClassName",
-            "type": "string",
-            "description": "Description coming soon"
+        "name": "tabClassName",
+        "type": "string",
+        "description": "Description coming soon"
       },
       {
-            "name": "activeTabClassName",
-            "type": "string",
-            "description": "Description coming soon"
+        "name": "activeTabClassName",
+        "type": "string",
+        "description": "Description coming soon"
       },
       {
-            "name": "contentClassName",
-            "type": "string",
-            "description": "Description coming soon"
+        "name": "contentClassName",
+        "type": "string",
+        "description": "Description coming soon"
       },
       {
-            "name": "onChange",
-            "type": "(id: string) => void",
-            "description": "Description coming soon"
+        "name": "onChange",
+        "type": "(id: string) => void",
+        "description": "Description coming soon"
       }
-],
-        usageCode: `import { AnimatedTabs } from "@/components/ui/animated-tabs";
+    ],
+    usageCode: `import { AnimatedTabs } from "@/components/ui/animated-tabs";
 
 export default function Example() {
   return (
@@ -429,48 +429,48 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "magnetic-button",
+    name: "Magnetic Button",
+    description:
+      "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
+    installCmd: "uniqueui add magnetic-button",
+    icon: MousePointer,
+    category: "Effects & Animations",
+    props: [
       {
-            slug: "magnetic-button",
-            name: "Magnetic Button",
-            description:
-                  "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
-            installCmd: "uniqueui add magnetic-button",
-            icon: MousePointer,
-            category: "Effects & Animations",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "The internal content of the button."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The internal content of the button."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Style overrides appended to the interactive boundary."
+        "name": "className",
+        "type": "string",
+        "description": "Style overrides appended to the interactive boundary."
       },
       {
-            "name": "magneticStrength",
-            "type": "number",
-            "description": "Float determining how fast/far the button lerps toward the cursor."
+        "name": "magneticStrength",
+        "type": "number",
+        "description": "Float determining how fast/far the button lerps toward the cursor."
       },
       {
-            "name": "magneticRadius",
-            "type": "number",
-            "description": "Pixel radius extending outward from the button where gravity begins."
+        "name": "magneticRadius",
+        "type": "number",
+        "description": "Pixel radius extending outward from the button where gravity begins."
       },
       {
-            "name": "onClick",
-            "type": "() => void",
-            "description": "Standard click event handler."
+        "name": "onClick",
+        "type": "() => void",
+        "description": "Standard click event handler."
       },
       {
-            "name": "disabled",
-            "type": "boolean",
-            "description": "Disables interaction and magnetic gravitational pull."
+        "name": "disabled",
+        "type": "boolean",
+        "description": "Disables interaction and magnetic gravitational pull."
       }
-],
-        usageCode: `import { MagneticButton } from "@/components/ui/magnetic-button";
+    ],
+    usageCode: `import { MagneticButton } from "@/components/ui/magnetic-button";
 
 export default function Example() {
   return (
@@ -486,48 +486,48 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "infinite-marquee",
+    name: "Infinite Marquee",
+    description:
+      "Seamless infinite-scrolling ticker with pause-on-hover and variable speed.",
+    installCmd: "uniqueui add infinite-marquee",
+    icon: ScrollText,
+    category: "Effects & Animations",
+    props: [
       {
-            slug: "infinite-marquee",
-            name: "Infinite Marquee",
-            description:
-                  "Seamless infinite-scrolling ticker with pause-on-hover and variable speed.",
-            installCmd: "uniqueui add infinite-marquee",
-            icon: ScrollText,
-            category: "Effects & Animations",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "Individual cards, images, or elements you want scrolling seamlessly."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Individual cards, images, or elements you want scrolling seamlessly."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Styling classes mapping to the outer tracking viewport."
+        "name": "className",
+        "type": "string",
+        "description": "Styling classes mapping to the outer tracking viewport."
       },
       {
-            "name": "speed",
-            "type": "number",
-            "description": "Scrolling velocity, representing translation pixels per second."
+        "name": "speed",
+        "type": "number",
+        "description": "Scrolling velocity, representing translation pixels per second."
       },
       {
-            "name": "direction",
-            "type": "\"left\" | \"right\"",
-            "description": "Horizontal (left/right) or vertical (up/down) scroll direction."
+        "name": "direction",
+        "type": "\"left\" | \"right\"",
+        "description": "Horizontal (left/right) or vertical (up/down) scroll direction."
       },
       {
-            "name": "pauseOnHover",
-            "type": "boolean",
-            "description": "Temporarily pause the animation sequence when a user points at the element."
+        "name": "pauseOnHover",
+        "type": "boolean",
+        "description": "Temporarily pause the animation sequence when a user points at the element."
       },
       {
-            "name": "gap",
-            "type": "number",
-            "description": "Consistent spacing separating each repeated instance loop."
+        "name": "gap",
+        "type": "number",
+        "description": "Consistent spacing separating each repeated instance loop."
       }
-],
-        usageCode: `import { InfiniteMarquee, MarqueeItem } from "@/components/ui/infinite-marquee";
+    ],
+    usageCode: `import { InfiniteMarquee, MarqueeItem } from "@/components/ui/infinite-marquee";
 
 export default function Example() {
   return (
@@ -565,48 +565,48 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "scroll-reveal",
+    name: "Scroll Reveal",
+    description:
+      "Elements animate into view when they enter the viewport, with 6 animation presets.",
+    installCmd: "uniqueui add scroll-reveal",
+    icon: ScrollText,
+    category: "Effects & Animations",
+    props: [
       {
-            slug: "scroll-reveal",
-            name: "Scroll Reveal",
-            description:
-                  "Elements animate into view when they enter the viewport, with 6 animation presets.",
-            installCmd: "uniqueui add scroll-reveal",
-            icon: ScrollText,
-            category: "Effects & Animations",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "The DOM elements to animate into view upon scrolling."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The DOM elements to animate into view upon scrolling."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Styling classes mapping to the outer tracking viewport."
+        "name": "className",
+        "type": "string",
+        "description": "Styling classes mapping to the outer tracking viewport."
       },
       {
-            "name": "animation",
-            "type": "AnimationPreset",
-            "description": "The specific animation choreography preset (e.g. 'fade-up', 'scale-in')."
+        "name": "animation",
+        "type": "AnimationPreset",
+        "description": "The specific animation choreography preset (e.g. 'fade-up', 'scale-in')."
       },
       {
-            "name": "staggerDelay",
-            "type": "number",
-            "description": "Description coming soon"
+        "name": "staggerDelay",
+        "type": "number",
+        "description": "Description coming soon"
       },
       {
-            "name": "threshold",
-            "type": "number",
-            "description": "Intersection ratio (0-1) required to trigger the reveal."
+        "name": "threshold",
+        "type": "number",
+        "description": "Intersection ratio (0-1) required to trigger the reveal."
       },
       {
-            "name": "once",
-            "type": "boolean",
-            "description": "Whether the element should hide and re-animate when scrolled out and back in."
+        "name": "once",
+        "type": "boolean",
+        "description": "Whether the element should hide and re-animate when scrolled out and back in."
       }
-],
-        usageCode: `import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
+    ],
+    usageCode: `import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 
 export default function Example() {
   return (
@@ -629,48 +629,48 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "skeleton-shimmer",
+    name: "Skeleton Shimmer",
+    description:
+      "Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade.",
+    installCmd: "uniqueui add skeleton-shimmer",
+    icon: Loader2,
+    category: "Effects & Animations",
+    props: [
       {
-            slug: "skeleton-shimmer",
-            name: "Skeleton Shimmer",
-            description:
-                  "Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade.",
-            installCmd: "uniqueui add skeleton-shimmer",
-            icon: Loader2,
-            category: "Effects & Animations",
-        props: [
-      {
-            "name": "className",
-            "type": "string",
-            "description": "Additional CSS configuration applied to the background container."
+        "name": "className",
+        "type": "string",
+        "description": "Additional CSS configuration applied to the background container."
       },
       {
-            "name": "width",
-            "type": "string | number",
-            "description": "Explicit CSS width for the placeholder element."
+        "name": "width",
+        "type": "string | number",
+        "description": "Explicit CSS width for the placeholder element."
       },
       {
-            "name": "height",
-            "type": "string | number",
-            "description": "Explicit CSS height for the placeholder element."
+        "name": "height",
+        "type": "string | number",
+        "description": "Explicit CSS height for the placeholder element."
       },
       {
-            "name": "rounded",
-            "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | \"full\"",
-            "description": "Tailwind border-radius abstraction class string (e.g. 'md', 'full')."
+        "name": "rounded",
+        "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | \"full\"",
+        "description": "Tailwind border-radius abstraction class string (e.g. 'md', 'full')."
       },
       {
-            "name": "count",
-            "type": "number",
-            "description": "Number of consecutive skeleton items to iterate."
+        "name": "count",
+        "type": "number",
+        "description": "Number of consecutive skeleton items to iterate."
       },
       {
-            "name": "gap",
-            "type": "number",
-            "description": "Spacing separating consecutive skeleton layers."
+        "name": "gap",
+        "type": "number",
+        "description": "Spacing separating consecutive skeleton layers."
       }
-],
-        usageCode: `import { SkeletonShimmer, SkeletonCard } from "@/components/ui/skeleton-shimmer";
+    ],
+    usageCode: `import { SkeletonShimmer, SkeletonCard } from "@/components/ui/skeleton-shimmer";
 
 export default function Example() {
   return (
@@ -687,38 +687,38 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "morphing-modal",
+    name: "Morphing Modal",
+    description:
+      "Modal that expands from the trigger element with spring physics and backdrop blur.",
+    installCmd: "uniqueui add morphing-modal",
+    icon: Maximize2,
+    category: "Navigation & Overlays",
+    props: [
       {
-            slug: "morphing-modal",
-            name: "Morphing Modal",
-            description:
-                  "Modal that expands from the trigger element with spring physics and backdrop blur.",
-            installCmd: "uniqueui add morphing-modal",
-            icon: Maximize2,
-            category: "Navigation & Overlays",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "The payload rendering inside the physical boundaries of the modal dialog box."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The payload rendering inside the physical boundaries of the modal dialog box."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Tailwind definitions passing specific sizes and visuals onto the dialog constraint."
+        "name": "className",
+        "type": "string",
+        "description": "Tailwind definitions passing specific sizes and visuals onto the dialog constraint."
       },
       {
-            "name": "layoutId",
-            "type": "string",
-            "description": "Unique arbitrary string utilized by Framer Motion to tie trigger layout transitions."
+        "name": "layoutId",
+        "type": "string",
+        "description": "Unique arbitrary string utilized by Framer Motion to tie trigger layout transitions."
       },
       {
-            "name": "onClick",
-            "type": "() => void",
-            "description": "Description coming soon"
+        "name": "onClick",
+        "type": "() => void",
+        "description": "Description coming soon"
       }
-],
-        usageCode: `"use client";
+    ],
+    usageCode: `"use client";
 import { useState } from "react";
 import { MorphingModal, MorphingModalTrigger } from "@/components/ui/morphing-modal";
 
@@ -768,58 +768,58 @@ export default function Example() {
     </>
   );
 }`
-    },
+  },
+  {
+    slug: "gradient-text-reveal",
+    name: "Gradient Text Reveal",
+    description:
+      "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
+    installCmd: "uniqueui add gradient-text-reveal",
+    icon: Palette,
+    category: "Text",
+    props: [
       {
-            slug: "gradient-text-reveal",
-            name: "Gradient Text Reveal",
-            description:
-                  "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
-            installCmd: "uniqueui add gradient-text-reveal",
-            icon: Palette,
-            category: "Text",
-        props: [
-      {
-            "name": "text",
-            "type": "string",
-            "description": "The exact sentence paragraph targeted for staggered rendering."
+        "name": "text",
+        "type": "string",
+        "description": "The exact sentence paragraph targeted for staggered rendering."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Add CSS classes mapping typographic configurations."
+        "name": "className",
+        "type": "string",
+        "description": "Add CSS classes mapping typographic configurations."
       },
       {
-            "name": "gradientFrom",
-            "type": "string",
-            "description": "Color indicating the start coordinate mapping of the visual gradient ramp."
+        "name": "gradientFrom",
+        "type": "string",
+        "description": "Color indicating the start coordinate mapping of the visual gradient ramp."
       },
       {
-            "name": "gradientTo",
-            "type": "string",
-            "description": "Terminal color definition ending the textual mask gradient."
+        "name": "gradientTo",
+        "type": "string",
+        "description": "Terminal color definition ending the textual mask gradient."
       },
       {
-            "name": "staggerDelay",
-            "type": "number",
-            "description": "Seconds mapping the offset differential delay evaluating subsequent sequential words."
+        "name": "staggerDelay",
+        "type": "number",
+        "description": "Seconds mapping the offset differential delay evaluating subsequent sequential words."
       },
       {
-            "name": "duration",
-            "type": "number",
-            "description": "Metric representation detailing exact sequence total span (measured in seconds)."
+        "name": "duration",
+        "type": "number",
+        "description": "Metric representation detailing exact sequence total span (measured in seconds)."
       },
       {
-            "name": "once",
-            "type": "boolean",
-            "description": "Prevent re-evaluating the intersection layout and permanently mark complete once run."
+        "name": "once",
+        "type": "boolean",
+        "description": "Prevent re-evaluating the intersection layout and permanently mark complete once run."
       },
       {
-            "name": "as",
-            "type": "\"h1\" | \"h2\" | \"h3\" | \"h4\" | \"p\" | \"span\"",
-            "description": "Explicit HTML element defining correct semantics matching the parent boundary box."
+        "name": "as",
+        "type": "\"h1\" | \"h2\" | \"h3\" | \"h4\" | \"p\" | \"span\"",
+        "description": "Explicit HTML element defining correct semantics matching the parent boundary box."
       }
-],
-        usageCode: `import { GradientTextReveal } from "@/components/ui/gradient-text-reveal";
+    ],
+    usageCode: `import { GradientTextReveal } from "@/components/ui/gradient-text-reveal";
 
 export default function Example() {
   return (
@@ -838,53 +838,53 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "scramble-text",
+    name: "Scramble Text",
+    description:
+      "Matrix-style text scramble effect that resolves characters left-to-right.",
+    installCmd: "uniqueui add scramble-text",
+    icon: Type,
+    category: "Text",
+    props: [
       {
-            slug: "scramble-text",
-            name: "Scramble Text",
-            description:
-                  "Matrix-style text scramble effect that resolves characters left-to-right.",
-            installCmd: "uniqueui add scramble-text",
-            icon: Type,
-            category: "Text",
-        props: [
-      {
-            "name": "text",
-            "type": "string",
-            "description": "The target string the scramble transition eventually resolves into."
+        "name": "text",
+        "type": "string",
+        "description": "The target string the scramble transition eventually resolves into."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Standard Tailwind configuration for typographic adjustment."
+        "name": "className",
+        "type": "string",
+        "description": "Standard Tailwind configuration for typographic adjustment."
       },
       {
-            "name": "speed",
-            "type": "number",
-            "description": "Multiplier scaling the character mutation flip rate."
+        "name": "speed",
+        "type": "number",
+        "description": "Multiplier scaling the character mutation flip rate."
       },
       {
-            "name": "scrambleDuration",
-            "type": "number",
-            "description": "Duration the sequence spends generating noise before revealing real characters."
+        "name": "scrambleDuration",
+        "type": "number",
+        "description": "Duration the sequence spends generating noise before revealing real characters."
       },
       {
-            "name": "triggerOnView",
-            "type": "boolean",
-            "description": "Wait until intersection observers detect the element on screen before starting."
+        "name": "triggerOnView",
+        "type": "boolean",
+        "description": "Wait until intersection observers detect the element on screen before starting."
       },
       {
-            "name": "once",
-            "type": "boolean",
-            "description": "Lock the transition state as resolved after completing one full loop."
+        "name": "once",
+        "type": "boolean",
+        "description": "Lock the transition state as resolved after completing one full loop."
       },
       {
-            "name": "characterSet",
-            "type": "string",
-            "description": "A custom dictionary string configuring the alphabet the noise generator selects from."
+        "name": "characterSet",
+        "type": "string",
+        "description": "A custom dictionary string configuring the alphabet the noise generator selects from."
       }
-],
-        usageCode: `import { ScrambleText } from "@/components/ui/scramble-text";
+    ],
+    usageCode: `import { ScrambleText } from "@/components/ui/scramble-text";
 
 export default function Example() {
   return (
@@ -898,38 +898,38 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "meteors-card",
+    name: "Meteors Card",
+    description:
+      "Card with animated meteor/shooting star particles falling through the background.",
+    installCmd: "uniqueui add meteors-card",
+    icon: Flame,
+    category: "Cards",
+    props: [
       {
-            slug: "meteors-card",
-            name: "Meteors Card",
-            description:
-                  "Card with animated meteor/shooting star particles falling through the background.",
-            installCmd: "uniqueui add meteors-card",
-            icon: Flame,
-            category: "Cards",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "The payload rendering above the background particle effect."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The payload rendering above the background particle effect."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Layout configurations for the wrapping card boundary."
+        "name": "className",
+        "type": "string",
+        "description": "Layout configurations for the wrapping card boundary."
       },
       {
-            "name": "meteorCount",
-            "type": "number",
-            "description": "Total integer quantity defining maximum concurrent active meteor particles."
+        "name": "meteorCount",
+        "type": "number",
+        "description": "Total integer quantity defining maximum concurrent active meteor particles."
       },
       {
-            "name": "meteorColor",
-            "type": "string",
-            "description": "Hex string establishing the primary focal styling of light trails."
+        "name": "meteorColor",
+        "type": "string",
+        "description": "Hex string establishing the primary focal styling of light trails."
       }
-],
-        usageCode: `import { MeteorsCard } from "@/components/ui/meteors-card";
+    ],
+    usageCode: `import { MeteorsCard } from "@/components/ui/meteors-card";
 
 export default function Example() {
   return (
@@ -947,58 +947,58 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "flip-card",
+    name: "Flip Card",
+    description:
+      "3D card flip with spring physics, supporting hover or click triggers.",
+    installCmd: "uniqueui add flip-card",
+    icon: RotateCw,
+    category: "Cards",
+    props: [
       {
-            slug: "flip-card",
-            name: "Flip Card",
-            description:
-                  "3D card flip with spring physics, supporting hover or click triggers.",
-            installCmd: "uniqueui add flip-card",
-            icon: RotateCw,
-            category: "Cards",
-        props: [
-      {
-            "name": "front",
-            "type": "React.ReactNode",
-            "description": "The leading visible standard interface node."
+        "name": "front",
+        "type": "React.ReactNode",
+        "description": "The leading visible standard interface node."
       },
       {
-            "name": "back",
-            "type": "React.ReactNode",
-            "description": "The trailing hidden secondary information node."
+        "name": "back",
+        "type": "React.ReactNode",
+        "description": "The trailing hidden secondary information node."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Overarching classes driving constraints on the 3D rotating canvas."
+        "name": "className",
+        "type": "string",
+        "description": "Overarching classes driving constraints on the 3D rotating canvas."
       },
       {
-            "name": "frontClassName",
-            "type": "string",
-            "description": "Granular overrides for the un-rotated visual state."
+        "name": "frontClassName",
+        "type": "string",
+        "description": "Granular overrides for the un-rotated visual state."
       },
       {
-            "name": "backClassName",
-            "type": "string",
-            "description": "Granular overrides targeting the inverted 180-degree state representation."
+        "name": "backClassName",
+        "type": "string",
+        "description": "Granular overrides targeting the inverted 180-degree state representation."
       },
       {
-            "name": "trigger",
-            "type": "\"hover\" | \"click\"",
-            "description": "Enum literal targeting 'hover' execution or explicit 'click' toggles."
+        "name": "trigger",
+        "type": "\"hover\" | \"click\"",
+        "description": "Enum literal targeting 'hover' execution or explicit 'click' toggles."
       },
       {
-            "name": "direction",
-            "type": "\"horizontal\" | \"vertical\"",
-            "description": "Axis orientation literal mapping rotation logic to 'horizontal' vs 'vertical'."
+        "name": "direction",
+        "type": "\"horizontal\" | \"vertical\"",
+        "description": "Axis orientation literal mapping rotation logic to 'horizontal' vs 'vertical'."
       },
       {
-            "name": "perspective",
-            "type": "number",
-            "description": "Z-depth translation simulating three-dimensional depth stretching."
+        "name": "perspective",
+        "type": "number",
+        "description": "Z-depth translation simulating three-dimensional depth stretching."
       }
-],
-        usageCode: `import { FlipCard } from "@/components/ui/flip-card";
+    ],
+    usageCode: `import { FlipCard } from "@/components/ui/flip-card";
 
 export default function Example() {
   return (
@@ -1033,53 +1033,53 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "dot-grid-background",
+    name: "Dot Grid Background",
+    description:
+      "Interactive dot-grid pattern with a glowing cursor-following effect.",
+    installCmd: "uniqueui add dot-grid-background",
+    icon: Grid3x3,
+    category: "Backgrounds",
+    props: [
       {
-            slug: "dot-grid-background",
-            name: "Dot Grid Background",
-            description:
-                  "Interactive dot-grid pattern with a glowing cursor-following effect.",
-            installCmd: "uniqueui add dot-grid-background",
-            icon: Grid3x3,
-            category: "Backgrounds",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "Components mapped into the z-index layer visually above the matrix."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Components mapped into the z-index layer visually above the matrix."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Container abstraction classes."
+        "name": "className",
+        "type": "string",
+        "description": "Container abstraction classes."
       },
       {
-            "name": "dotColor",
-            "type": "string",
-            "description": "Color code controlling the default un-illuminated grid representation."
+        "name": "dotColor",
+        "type": "string",
+        "description": "Color code controlling the default un-illuminated grid representation."
       },
       {
-            "name": "dotSize",
-            "type": "number",
-            "description": "Diameter specifying visual footprint density of single grid intersections."
+        "name": "dotSize",
+        "type": "number",
+        "description": "Diameter specifying visual footprint density of single grid intersections."
       },
       {
-            "name": "gap",
-            "type": "number",
-            "description": "Vector translation pixel count separating independent grid items."
+        "name": "gap",
+        "type": "number",
+        "description": "Vector translation pixel count separating independent grid items."
       },
       {
-            "name": "hoverRadius",
-            "type": "number",
-            "description": "Spread area around the cursor triggering focus interactions."
+        "name": "hoverRadius",
+        "type": "number",
+        "description": "Spread area around the cursor triggering focus interactions."
       },
       {
-            "name": "hoverScale",
-            "type": "number",
-            "description": "Float magnitude expanding intersections actively caught inside the hover bounds."
+        "name": "hoverScale",
+        "type": "number",
+        "description": "Float magnitude expanding intersections actively caught inside the hover bounds."
       }
-],
-        usageCode: `import { DotGridBackground } from "@/components/ui/dot-grid-background";
+    ],
+    usageCode: `import { DotGridBackground } from "@/components/ui/dot-grid-background";
 
 export default function Example() {
   return (
@@ -1093,68 +1093,68 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "floating-dock",
+    name: "Floating Dock",
+    description:
+      "macOS-style dock with magnetic scaling, spring physics, and tooltips.",
+    installCmd: "uniqueui add floating-dock",
+    icon: Anchor,
+    category: "Navigation & Overlays",
+    props: [
       {
-            slug: "floating-dock",
-            name: "Floating Dock",
-            description:
-                  "macOS-style dock with magnetic scaling, spring physics, and tooltips.",
-            installCmd: "uniqueui add floating-dock",
-            icon: Anchor,
-            category: "Navigation & Overlays",
-        props: [
-      {
-            "name": "items",
-            "type": "{",
-            "description": "Array defining mapping configuration objects containing icons and references."
+        "name": "items",
+        "type": "{",
+        "description": "Array defining mapping configuration objects containing icons and references."
       },
       {
-            "name": "id",
-            "type": "string",
-            "description": "A unique mapping identifier referencing the component node."
+        "name": "id",
+        "type": "string",
+        "description": "A unique mapping identifier referencing the component node."
       },
       {
-            "name": "icon",
-            "type": "React.ReactNode",
-            "description": "The SVG image rendered actively on the dock interface."
+        "name": "icon",
+        "type": "React.ReactNode",
+        "description": "The SVG image rendered actively on the dock interface."
       },
       {
-            "name": "label",
-            "type": "string",
-            "description": "String payload rendered inside the expanding tooltip layout."
+        "name": "label",
+        "type": "string",
+        "description": "String payload rendered inside the expanding tooltip layout."
       },
       {
-            "name": "onClick",
-            "type": "() => void",
-            "description": "Routine capturing specific explicit interactions mapped to the dock region."
+        "name": "onClick",
+        "type": "() => void",
+        "description": "Routine capturing specific explicit interactions mapped to the dock region."
       },
       {
-            "name": "href",
-            "type": "string",
-            "description": "Link routing path if the interface object encapsulates an anchor tag natively."
+        "name": "href",
+        "type": "string",
+        "description": "Link routing path if the interface object encapsulates an anchor tag natively."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Description coming soon"
+        "name": "className",
+        "type": "string",
+        "description": "Description coming soon"
       },
       {
-            "name": "iconSize",
-            "type": "number",
-            "description": "Description coming soon"
+        "name": "iconSize",
+        "type": "number",
+        "description": "Description coming soon"
       },
       {
-            "name": "maxScale",
-            "type": "number",
-            "description": "Description coming soon"
+        "name": "maxScale",
+        "type": "number",
+        "description": "Description coming soon"
       },
       {
-            "name": "magneticRange",
-            "type": "number",
-            "description": "Description coming soon"
+        "name": "magneticRange",
+        "type": "number",
+        "description": "Description coming soon"
       }
-],
-        usageCode: `import { FloatingDock } from "@/components/ui/floating-dock";
+    ],
+    usageCode: `import { FloatingDock } from "@/components/ui/floating-dock";
 import { Ghost, Sparkles, Layers, ScrollText, Terminal } from "lucide-react";
 
 export default function Example() {
@@ -1172,48 +1172,48 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "confetti-burst",
+    name: "Confetti Burst",
+    description:
+      "Click-triggered confetti particle explosion with customizable colors and physics.",
+    installCmd: "uniqueui add confetti-burst",
+    icon: PartyPopper,
+    category: "Effects & Animations",
+    props: [
       {
-            slug: "confetti-burst",
-            name: "Confetti Burst",
-            description:
-                  "Click-triggered confetti particle explosion with customizable colors and physics.",
-            installCmd: "uniqueui add confetti-burst",
-            icon: PartyPopper,
-            category: "Effects & Animations",
-        props: [
-      {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "Trigger element wrapped by the particle generation effect zone."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Trigger element wrapped by the particle generation effect zone."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Styling configurations for the interaction wrapper logic container."
+        "name": "className",
+        "type": "string",
+        "description": "Styling configurations for the interaction wrapper logic container."
       },
       {
-            "name": "particleCount",
-            "type": "number",
-            "description": "Quantity multiplier defining how many fragments evaluate per execution."
+        "name": "particleCount",
+        "type": "number",
+        "description": "Quantity multiplier defining how many fragments evaluate per execution."
       },
       {
-            "name": "colors",
-            "type": "string[]",
-            "description": "Array defining hex code palettes defining sequential particle rendering."
+        "name": "colors",
+        "type": "string[]",
+        "description": "Array defining hex code palettes defining sequential particle rendering."
       },
       {
-            "name": "spread",
-            "type": "number",
-            "description": "Radiant measurement indicating geometric angle variance for throwing trajectories."
+        "name": "spread",
+        "type": "number",
+        "description": "Radiant measurement indicating geometric angle variance for throwing trajectories."
       },
       {
-            "name": "duration",
-            "type": "number",
-            "description": "Timer limit capping maximum gravity simulation lifetime."
+        "name": "duration",
+        "type": "number",
+        "description": "Timer limit capping maximum gravity simulation lifetime."
       }
-],
-        usageCode: `import { ConfettiBurst } from "@/components/ui/confetti-burst";
+    ],
+    usageCode: `import { ConfettiBurst } from "@/components/ui/confetti-burst";
 
 export default function Example() {
   return (
@@ -1227,63 +1227,63 @@ export default function Example() {
     </div>
   );
 }`
-    },
+  },
+  {
+    slug: "drawer-slide",
+    name: "Drawer Slide",
+    description:
+      "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
+    installCmd: "uniqueui add drawer-slide",
+    icon: PanelRight,
+    category: "Navigation & Overlays",
+    props: [
       {
-            slug: "drawer-slide",
-            name: "Drawer Slide",
-            description:
-                  "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
-            installCmd: "uniqueui add drawer-slide",
-            icon: PanelRight,
-            category: "Navigation & Overlays",
-        props: [
-      {
-            "name": "isOpen",
-            "type": "boolean",
-            "description": "React state abstraction determining visible rendering."
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "React state abstraction determining visible rendering."
       },
       {
-            "name": "onClose",
-            "type": "() => void",
-            "description": "Method triggered when dismiss actions evaluation (drag, backdrop, external limit)."
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Method triggered when dismiss actions evaluation (drag, backdrop, external limit)."
       },
       {
-            "name": "children",
-            "type": "React.ReactNode",
-            "description": "Content rendered inside the active sliding sheet."
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Content rendered inside the active sliding sheet."
       },
       {
-            "name": "position",
-            "type": "DrawerPosition",
-            "description": "Anchoring enumeration bounding left, right, top, or bottom screen edges."
+        "name": "position",
+        "type": "DrawerPosition",
+        "description": "Anchoring enumeration bounding left, right, top, or bottom screen edges."
       },
       {
-            "name": "className",
-            "type": "string",
-            "description": "Specific styling modifiers passing onto the physical sliding panel."
+        "name": "className",
+        "type": "string",
+        "description": "Specific styling modifiers passing onto the physical sliding panel."
       },
       {
-            "name": "overlayClassName",
-            "type": "string",
-            "description": "Specific styling modifiers passing onto the dimming backdrop."
+        "name": "overlayClassName",
+        "type": "string",
+        "description": "Specific styling modifiers passing onto the dimming backdrop."
       },
       {
-            "name": "width",
-            "type": "string",
-            "description": "CSS explicit translation sizing left/right sliding panels."
+        "name": "width",
+        "type": "string",
+        "description": "CSS explicit translation sizing left/right sliding panels."
       },
       {
-            "name": "height",
-            "type": "string",
-            "description": "CSS explicit translation sizing top/bottom sliding panels."
+        "name": "height",
+        "type": "string",
+        "description": "CSS explicit translation sizing top/bottom sliding panels."
       },
       {
-            "name": "dragToClose",
-            "type": "boolean",
-            "description": "Map touch swiping events onto gesture recognizers supporting drag dismiss."
+        "name": "dragToClose",
+        "type": "boolean",
+        "description": "Map touch swiping events onto gesture recognizers supporting drag dismiss."
       }
-],
-        usageCode: `"use client";
+    ],
+    usageCode: `"use client";
 import { useState } from "react";
 import { DrawerSlide } from "@/components/ui/drawer-slide";
 
@@ -1314,33 +1314,33 @@ export default function Example() {
     </>
   );
 }`
-    },
+  },
+  {
+    slug: "notification-stack",
+    name: "Notification Stack",
+    description:
+      "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
+    installCmd: "uniqueui add notification-stack",
+    icon: Bell,
+    category: "Navigation & Overlays",
+    props: [
       {
-            slug: "notification-stack",
-            name: "Notification Stack",
-            description:
-                  "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
-            installCmd: "uniqueui add notification-stack",
-            icon: Bell,
-            category: "Navigation & Overlays",
-        props: [
-      {
-            "name": "className",
-            "type": "string",
-            "description": "CSS attributes tailoring the absolute container."
+        "name": "className",
+        "type": "string",
+        "description": "CSS attributes tailoring the absolute container."
       },
       {
-            "name": "position",
-            "type": "\"top-right\" | \"top-left\" | \"bottom-right\" | \"bottom-left\"",
-            "description": "Screen coordinate literal dictating orientation constraints."
+        "name": "position",
+        "type": "\"top-right\" | \"top-left\" | \"bottom-right\" | \"bottom-left\"",
+        "description": "Screen coordinate literal dictating orientation constraints."
       },
       {
-            "name": "maxVisible",
-            "type": "number",
-            "description": "Limit quantity threshold managing physical screen stack instances."
+        "name": "maxVisible",
+        "type": "number",
+        "description": "Limit quantity threshold managing physical screen stack instances."
       }
-],
-        usageCode: `"use client";
+    ],
+    usageCode: `"use client";
 import { NotificationStack, useNotifications } from "@/components/ui/notification-stack";
 
 export default function Example() {
@@ -1353,7 +1353,22 @@ export default function Example() {
             key={type}
             onClick={() =>
               addNotification({
-                title: \`\$${type.charAt(0).toUpperCase() + type.slice(1)} notification\`
+                title: \`\${type.charAt(0).toUpperCase() + type.slice(1)} notification\`,
+                description: "This is a demo notification that auto-dismisses.",
+                type,
+                duration: 4000,
+              })
+            }
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize text-white bg-neutral-800 hover:bg-neutral-700"
+          >
+            {type}
+          </button>
+        ))}
+      </div>
+      <NotificationStack notifications={notifications} onRemove={removeNotification} />
+    </div>
+  );
+}\`
     },
       {
             slug: "animated-timeline",
@@ -1382,10 +1397,53 @@ export default function Example() {
       {
             "name": "orientation",
             "type": "\"vertical\" | \"horizontal\"",
-            "description": "Directional bias translating objects explicitly 'horizontal' or natively 'vertical'."
+                title: \`\${type.charAt(0).toUpperCase() + type.slice(1)} notification\`,
+                description: \`This is a \${type} notification.\`,
+                type: type,
+              })
+            }
+            className="px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors text-sm"
+          >
+            Show {type}
+          </button>
+        ))}
+      </div>
+      <NotificationStack notifications={notifications} onDismiss={removeNotification} />
+    </div>
+  );
+}`
+  },
+  {
+    slug: "animated-timeline",
+    name: "Animated Timeline",
+    description:
+      "Scroll-triggered timeline with staggered spring animations for each node.",
+    installCmd: "uniqueui add animated-timeline",
+    icon: Clock,
+    category: "Effects & Animations",
+    props: [
+      {
+        "name": "items",
+        "type": "TimelineItem[]",
+        "description": "Ordered JSON object sequence defining steps parsing chronological evaluation."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Global CSS structure overrides for the list grouping wrapper."
+      },
+      {
+        "name": "lineColor",
+        "type": "string",
+        "description": "Vector stroke color defining the connection axis layout."
+      },
+      {
+        "name": "orientation",
+        "type": "\"vertical\" | \"horizontal\"",
+        "description": "Directional bias translating objects explicitly 'horizontal' or natively 'vertical'."
       }
-],
-        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+    ],
+    usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
 
 export default function Example() {
   const items = [
@@ -1404,5 +1462,5 @@ export default function Example() {
     </div>
   );
 }`
-    }
+  }
 ];
