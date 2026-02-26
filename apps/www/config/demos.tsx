@@ -151,13 +151,13 @@ export const componentDemos: Record<string, React.ReactNode> = {
     <div className="flex flex-wrap gap-6 items-center justify-center p-10">
       <Button
         borderRadius="1.75rem"
-        className="bg-transparent text-white border-neutral-200 dark:border-slate-800"
+        className="bg-slate-900 text-white border-neutral-200 dark:border-slate-800"
       >
         Click me
       </Button>
       <Button
         borderRadius="1rem"
-        className="bg-transparent text-white border-neutral-200 dark:border-slate-800"
+        className="bg-slate-900 text-white border-neutral-200 dark:border-slate-800"
         containerClassName="h-12 w-48"
       >
         Rounded Button
