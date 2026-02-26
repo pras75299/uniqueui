@@ -4,6 +4,7 @@ import fetch from "node-fetch";
 import path from "path";
 import fs from "fs-extra";
 import chalk from "chalk";
+import os from "os";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
 import { execSync } from "child_process";
 
@@ -31,6 +32,30 @@ export async function add(componentName: string, options: { url: string }) {
     let registry: RegistryItem[];
     const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
 
+    const CACHE_DIR = path.join(os.homedir(), ".uniqueui");
+    const CACHE_FILE = path.join(CACHE_DIR, "registry-cache.json");
+    const CACHE_TTL = 3600 * 1000; // 1 hour
+
+    async function getCachedRegistry(): Promise<RegistryItem[] | null> {
+        try {
+            if (!fs.existsSync(CACHE_FILE)) return null;
+            const stat = await fs.stat(CACHE_FILE);
+            if (Date.now() - stat.mtimeMs > CACHE_TTL) return null;
+            return await fs.readJson(CACHE_FILE);
+        } catch {
+            return null;
+        }
+    }
+
+    async function setCachedRegistry(data: RegistryItem[]) {
+        try {
+            await fs.ensureDir(CACHE_DIR);
+            await fs.writeJson(CACHE_FILE, data);
+        } catch {
+            // ignore cache write errors
+        }
+    }
+
     async function fetchRegistryFromUrl(baseUrl: string): Promise<RegistryItem[] | null> {
         try {
             const registryUrl = baseUrl.endsWith('.json') ? baseUrl : `${baseUrl}/registry.json`;
@@ -48,29 +73,37 @@ export async function add(componentName: string, options: { url: string }) {
         if (options.url.startsWith(".")) {
             registry = await fs.readJson(options.url);
         } else {
-            // Try primary URL first
-            let result = await fetchRegistryFromUrl(options.url);
+            // Try cache first
+            const cached = await getCachedRegistry();
+            if (cached) {
+                console.log(chalk.gray("Using cached component registry"));
+                registry = cached;
+            } else {
+                // Try primary URL first
+                let result = await fetchRegistryFromUrl(options.url);
 
-            // Try /api/registry endpoint as alternative
-            if (!result) {
-                console.log(chalk.yellow(`Could not fetch from ${options.url}/registry.json, trying API endpoint...`));
-                result = await fetchRegistryFromUrl(`${options.url}/api/registry`);
-            }
+                // Try /api/registry endpoint as alternative
+                if (!result) {
+                    console.log(chalk.yellow(`Could not fetch from ${options.url}/registry.json, trying API endpoint...`));
+                    result = await fetchRegistryFromUrl(`${options.url}/api/registry`);
+                }
 
-            // Try fallback GitHub raw URL
-            if (!result && options.url !== FALLBACK_URL) {
-                console.log(chalk.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
-                result = await fetchRegistryFromUrl(FALLBACK_URL);
-            }
+                // Try fallback GitHub raw URL
+                if (!result && options.url !== FALLBACK_URL) {
+                    console.log(chalk.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
+                    result = await fetchRegistryFromUrl(FALLBACK_URL);
+                }
 
-            if (!result) {
-                throw new Error(
-                    `Failed to fetch registry from ${options.url}.\n` +
-                    `  Make sure the registry URL is accessible.\n` +
-                    `  You can specify a custom URL with: uniqueui add <component> --url <url>`
-                );
+                if (!result) {
+                    throw new Error(
+                        `Failed to fetch registry from ${options.url}.\n` +
+                        `  Make sure the registry URL is accessible.\n` +
+                        `  You can specify a custom URL with: uniqueui add <component> --url <url>`
+                    );
+                }
+                registry = result;
+                await setCachedRegistry(registry);
             }
-            registry = result;
         }
     } catch (e) {
         console.error(chalk.red("Could not fetch registry.json"), e);
