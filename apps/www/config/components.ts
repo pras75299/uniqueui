@@ -40,9 +40,29 @@ export const componentsList: ComponentItem[] = [
     category: "Effects & Animations",
     props: [
       {
+        "name": "borderRadius",
+        "type": "string",
+        "description": "The radius for rounding the button edges and the orbiting path."
+      },
+      {
         "name": "children",
         "type": "React.ReactNode",
         "description": "The label or content displayed inside the button."
+      },
+      {
+        "name": "as",
+        "type": "React.ElementType",
+        "description": "The HTML element tag to use for the button wrapper (e.g., 'button', 'div')."
+      },
+      {
+        "name": "containerClassName",
+        "type": "string",
+        "description": "Add CSS classes to the outermost container."
+      },
+      {
+        "name": "borderClassName",
+        "type": "string",
+        "description": "Add CSS classes directly to the moving animated SVG border."
       },
       {
         "name": "duration",
@@ -50,14 +70,9 @@ export const componentsList: ComponentItem[] = [
         "description": "Time in milliseconds to complete one full orbit around the border."
       },
       {
-        "name": "rx",
+        "name": "className",
         "type": "string",
-        "description": "Description coming soon"
-      },
-      {
-        "name": "ry",
-        "type": "string",
-        "description": "Description coming soon"
+        "description": "Add CSS classes to the inner content layer."
       }
     ],
     usageCode: `import { Button } from "@/components/ui/moving-border";
@@ -514,7 +529,7 @@ export default function Example() {
       {
         "name": "direction",
         "type": "\"left\" | \"right\"",
-        "description": "Horizontal (left/right) or vertical (up/down) scroll direction."
+        "description": "Horizontal (left/right) scroll direction."
       },
       {
         "name": "pauseOnHover",
@@ -591,9 +606,14 @@ export default function Example() {
         "description": "The specific animation choreography preset (e.g. 'fade-up', 'scale-in')."
       },
       {
-        "name": "staggerDelay",
+        "name": "delay",
         "type": "number",
-        "description": "Description coming soon"
+        "description": "Delay in seconds before the animation begins."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "description": "Duration in seconds for the reveal animation."
       },
       {
         "name": "threshold",

@@ -75,6 +75,7 @@ export const MovingBorder = ({
   ry?: string;
   [key: string]: any;
 }) => {
+  const safeDuration = duration > 0 ? duration : 2000;
   const pathRef = useRef<SVGRectElement | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
@@ -90,7 +91,7 @@ export const MovingBorder = ({
 
       const pathLength = pathRef.current?.getTotalLength();
       if (pathLength) {
-        const pxPerMs = pathLength / duration;
+        const pxPerMs = pathLength / safeDuration;
         progressRef.current = (progressRef.current + deltaTime * pxPerMs) % pathLength;
         const point = pathRef.current?.getPointAtLength?.(progressRef.current);
         if (point && elementRef.current) {
@@ -102,7 +103,7 @@ export const MovingBorder = ({
 
     animationFrameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [duration]);
+  }, [safeDuration]);
 
   return (
     <>
