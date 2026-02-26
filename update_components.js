@@ -24,7 +24,7 @@ configContent = configContent.replace(
 );
 
 for (const [slug, propsObj] of Object.entries(parsedProps)) {
-  const propsString = JSON.stringify(propsObj, null, 6).replace(/\\"/g, '"');
+  const propsString = JSON.stringify(propsObj, null, 6);
   
   const componentNames = {
     "moving-border": "Button",
@@ -56,25 +56,40 @@ for (const [slug, propsObj] of Object.entries(parsedProps)) {
   if (slug === 'typewriter-text') usageCode = "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function Example() {\n  return (\n    <TypewriterText words={[\"Hello\", \"World\"]} />\n  );\n}";
   if (slug === 'animated-tabs') usageCode = "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\n\nexport default function Example() {\n  return (\n    <AnimatedTabs tabs={[{ id: \"1\", label: \"Tab 1\", content: \"Content 1\" }]} />\n  );\n}";
   
-  // Create a block of spaces for formatting
-  const injectString = "\n        props: " + propsString + ",\n        usageCode: `" + usageCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') + "`,\n    }";
-  
-  // Replace the closing brace for this specific item in componentsList array
-  // Wait, replacing regex in a string carefully
-  let startIdx = configContent.indexOf('slug: "' + slug + '",');
+  let startIdx = configContent.indexOf(`slug: "${slug}",`);
   if (startIdx !== -1) {
-    let braceIdx = configContent.indexOf('  },', startIdx);
-    if (braceIdx === -1) braceIdx = configContent.indexOf('    },', startIdx);
-    if (braceIdx === -1) braceIdx = configContent.indexOf('}', startIdx);
+    let blockStart = configContent.lastIndexOf('{', startIdx);
+    let braceCount = 0;
+    let blockEnd = -1;
+    for (let i = blockStart; i < configContent.length; i++) {
+        if (configContent[i] === '{') braceCount++;
+        else if (configContent[i] === '}') braceCount--;
+        if (braceCount === 0) {
+            blockEnd = i;
+            break;
+        }
+    }
     
-    if (braceIdx !== -1) {
-      configContent = configContent.substring(0, braceIdx) + injectString + configContent.substring(braceIdx + 1);
+    if (blockEnd !== -1) {
+        let propsIdx = configContent.indexOf('props:', startIdx);
+        let usageIdx = configContent.indexOf('usageCode:', startIdx);
+        let cutIdx = -1;
+        
+        if (propsIdx !== -1 && propsIdx < blockEnd) cutIdx = propsIdx;
+        if (usageIdx !== -1 && usageIdx < blockEnd && (cutIdx === -1 || usageIdx < cutIdx)) cutIdx = usageIdx;
+        
+        const injectContent = "props: " + propsString + ",\n        usageCode: `" + usageCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') + "`\n    ";
+        
+        if (cutIdx !== -1) {
+             configContent = configContent.substring(0, cutIdx) + injectContent + configContent.substring(blockEnd);
+        } else {
+             configContent = configContent.substring(0, blockEnd) + ",\n        " + injectContent + configContent.substring(blockEnd);
+        }
     }
   }
 }
 
-// Clean up any weirdly leftover `],` or stuff
-configContent = configContent.replace(/}, \n\];/g, "}\n];");
+// Ensure the array termination is perfectly formed
 configContent = configContent.replace(/},\n\];/g, "}\n];");
 
 fs.writeFileSync(configPath, configContent);
