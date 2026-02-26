@@ -55,6 +55,21 @@ for (const [slug, propsObj] of Object.entries(parsedProps)) {
   if (slug === 'moving-border') usageCode = "import { Button } from \"@/components/ui/moving-border\";\n\nexport default function Example() {\n  return (\n    <Button borderRadius=\"1.75rem\">\n      Click me\n    </Button>\n  );\n}";
   if (slug === 'typewriter-text') usageCode = "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function Example() {\n  return (\n    <TypewriterText words={[\"Hello\", \"World\"]} />\n  );\n}";
   if (slug === 'animated-tabs') usageCode = "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\n\nexport default function Example() {\n  return (\n    <AnimatedTabs tabs={[{ id: \"1\", label: \"Tab 1\", content: \"Content 1\" }]} />\n  );\n}";
+  if (slug === 'floating-dock') usageCode = `import { FloatingDock } from "@/components/ui/floating-dock";
+import { Anchor, Sparkles } from "lucide-react";
+
+export default function Example() {
+  const items = [
+    { id: "1", label: "Home", icon: <Anchor className="w-5 h-5" />, href: "#" },
+    { id: "2", label: "Magic", icon: <Sparkles className="w-5 h-5" />, href: "#" }
+  ];
+
+  return (
+    <div className="h-[200px] w-full flex items-center justify-center">
+      <FloatingDock items={items} position="bottom" />
+    </div>
+  );
+}`;
   
   let startIdx = configContent.indexOf(`slug: "${slug}",`);
   if (startIdx !== -1) {
