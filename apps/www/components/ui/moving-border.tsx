@@ -1,12 +1,7 @@
 "use client";
-import React, { useRef } from "react";
-import {
-  motion,
-  useAnimationFrame,
-  useMotionTemplate,
-  useMotionValue,
-  useTransform,
-} from "motion/react";
+import React from "react";
+import { motion } from "motion/react";
+import { useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 export function Button({
@@ -46,7 +41,7 @@ export function Button({
         <MovingBorder duration={duration} rx="30%" ry="30%">
           <div
             className={cn(
-              "h-20 w-20 opacity-[0.8] bg-[radial-gradient(var(--sky-500)_40%,transparent_60%)]",
+              "h-20 w-20 opacity-[0.8] bg-[radial-gradient(#0ea5e9_40%,transparent_60%)]",
               borderClassName
             )}
           />
@@ -82,26 +77,33 @@ export const MovingBorder = ({
   [key: string]: unknown;
 }) => {
   const pathRef = useRef<SVGRectElement>(null);
-  const progress = useMotionValue<number>(0);
+  const elementRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(0);
 
-  useAnimationFrame((time) => {
-    const length = pathRef.current?.getTotalLength();
-    if (length) {
-      const pxPerMillisecond = length / duration;
-      progress.set((time * pxPerMillisecond) % length);
-    }
-  });
+  useEffect(() => {
+    let animationFrameId: number;
+    let lastTime: number | null = null;
 
-  const x = useTransform(
-    progress,
-    (val) => pathRef.current?.getPointAtLength(val).x
-  );
-  const y = useTransform(
-    progress,
-    (val) => pathRef.current?.getPointAtLength(val).y
-  );
+    const animate = (time: number) => {
+      if (lastTime === null) lastTime = time;
+      const deltaTime = time - lastTime;
+      lastTime = time;
 
-  const transform = useMotionTemplate`translateX(${x}px) translateY(${y}px) translateX(-50%) translateY(-50%)`;
+      const pathLength = pathRef.current?.getTotalLength();
+      if (pathLength) {
+        const pxPerMs = pathLength / duration;
+        progressRef.current = (progressRef.current + deltaTime * pxPerMs) % pathLength;
+        const point = pathRef.current?.getPointAtLength?.(progressRef.current);
+        if (point && elementRef.current) {
+          elementRef.current.style.transform = `translateX(${point.x}px) translateY(${point.y}px) translateX(-50%) translateY(-50%)`;
+        }
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [duration]);
 
   return (
     <>
@@ -122,17 +124,18 @@ export const MovingBorder = ({
           ref={pathRef}
         />
       </svg>
-      <motion.div
+      <div
+        ref={elementRef}
         style={{
           position: "absolute",
           top: 0,
           left: 0,
           display: "inline-block",
-          transform,
+          transform: "translateX(0px) translateY(0px) translateX(-50%) translateY(-50%)",
         }}
       >
         {children}
-      </motion.div>
+      </div>
     </>
   );
 };
