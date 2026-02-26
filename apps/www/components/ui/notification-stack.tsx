@@ -117,9 +117,15 @@ function NotificationItem({
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
   const [progress, setProgress] = useState(100);
-  const startTime = useRef(Date.now());
+  const startTime = useRef<number>(0);
+  const onRemoveRef = useRef(onRemove);
 
   useEffect(() => {
+    onRemoveRef.current = onRemove;
+  }, [onRemove]);
+
+  useEffect(() => {
+    startTime.current = Date.now();
     if (duration <= 0) return;
 
     const interval = setInterval(() => {
@@ -128,12 +134,12 @@ function NotificationItem({
       setProgress(remaining);
       if (remaining <= 0) {
         clearInterval(interval);
-        onRemove(id);
+        onRemoveRef.current(id);
       }
     }, 50);
 
     return () => clearInterval(interval);
-  }, [id, duration, onRemove]);
+  }, [id, duration]);
 
   const isRight = position.includes("right");
 

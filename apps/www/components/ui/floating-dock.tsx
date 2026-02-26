@@ -103,7 +103,7 @@ function DockItem({
     : { onClick };
 
   return (
-    <Wrapper {...(wrapperProps as any)} className="group relative">
+    <Wrapper {...(wrapperProps as Record<string, unknown>)} className="group relative">
       <motion.div
         ref={ref}
         style={{ width: size, height: size, y }}

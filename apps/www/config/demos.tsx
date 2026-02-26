@@ -151,13 +151,13 @@ export const componentDemos: Record<string, React.ReactNode> = {
     <div className="flex flex-wrap gap-6 items-center justify-center p-10">
       <Button
         borderRadius="1.75rem"
-        className="bg-transparent text-white border-neutral-200 dark:border-slate-800"
+        className="bg-slate-900 text-white border-neutral-200 dark:border-slate-800"
       >
         Click me
       </Button>
       <Button
         borderRadius="1rem"
-        className="bg-transparent text-white border-neutral-200 dark:border-slate-800"
+        className="bg-slate-900 text-white border-neutral-200 dark:border-slate-800"
         containerClassName="h-12 w-48"
       >
         Rounded Button
@@ -324,22 +324,20 @@ export const componentDemos: Record<string, React.ReactNode> = {
     </div>
   ),
   "scroll-reveal": (
-    <div className="p-10">
-      <ScrollRevealGroup
-        animation="fade-up"
-        staggerDelay={0.15}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
-      >
-        {["fade-up", "scale", "blur"].map((preset) => (
-          <div
-            key={preset}
-            className="p-6 rounded-lg bg-neutral-900/50 border border-neutral-800 text-center"
-          >
-            <div className="text-lg font-semibold mb-1 text-neutral-200">{preset}</div>
-            <p className="text-neutral-500 text-xs">Scroll to reveal</p>
-          </div>
+    <div className="flex flex-col items-center justify-start h-[400px] w-full overflow-y-auto p-10 relative rounded-xl border border-neutral-800">
+      <div className="min-h-[500px] w-full flex flex-col items-center justify-start pt-10">
+         <p className="text-neutral-500 font-medium animate-pulse">Scroll down ↓</p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-20 w-full">
+        {(["fade-up", "scale", "blur"] as const).map((preset, i) => (
+          <ScrollReveal key={preset} animation={preset} delay={i * 0.15} once={false}>
+            <div className="p-6 rounded-lg bg-neutral-900 border border-neutral-800 text-center shadow-lg h-full">
+              <div className="text-lg font-semibold mb-1 text-neutral-200">{preset}</div>
+              <p className="text-neutral-500 text-xs">Revealed!</p>
+            </div>
+          </ScrollReveal>
         ))}
-      </ScrollRevealGroup>
+      </div>
     </div>
   ),
   "skeleton-shimmer": (
