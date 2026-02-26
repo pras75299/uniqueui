@@ -1,66 +1,90 @@
 const fs = require('fs');
 const path = require('path');
+const ts = require('typescript');
 
 const registryPath = path.join(__dirname, 'registry');
 const files = fs.readdirSync(registryPath).filter(f => f.endsWith('.tsx'));
 
-const results = {};
+const parsedProps = {};
 
 for (const file of files) {
   const content = fs.readFileSync(path.join(registryPath, file), 'utf-8');
-  results[file.replace('.tsx', '')] = content;
-}
-
-const parsedProps = {};
-
-for (const [key, content] of Object.entries(results)) {
-  const propsMatch = content.match(/export\s+(?:interface|type)\s+[A-Za-z]+Props\s*=?\s*(\{)/);
+  const key = file.replace('.tsx', '');
   
-  const componentPropsList = [];
+  const sourceFile = ts.createSourceFile(
+      file,
+      content,
+      ts.ScriptTarget.Latest,
+      true
+  );
+
+  let propsList = [];
+  let propsNode = null;
   
-  if (propsMatch) {
-    let braceCount = 0;
-    const startIndex = propsMatch.index + propsMatch[0].length - 1;
-    let propsBlock = "";
-    for (let i = startIndex; i < content.length; i++) {
-        if (content[i] === '{') braceCount++;
-        else if (content[i] === '}') braceCount--;
-        propsBlock += content[i];
-        if (braceCount === 0) break;
-    }
-    // extremely naive regex to find prop lines like `name?: string;` or `delay: number;`
-    // this isn't perfect but helps a ton
-    const propLines = propsBlock.split('\n');
-    for (const line of propLines) {
-      const match = line.match(/^\s*([a-zA-Z0-9_]+)\s*\??\s*:\s*([^;]+);?/);
-      if (match) {
-        componentPropsList.push({
-          name: match[1],
-          type: match[2].trim(),
-          description: "Description coming soon"
-        });
+  // 1. Find dedicated Props interface or type alias
+  ts.forEachChild(sourceFile, node => {
+      if ((ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) && node.name.text.endsWith('Props')) {
+          propsNode = node;
       }
-    }
-  } else {
-    // try to find inline props
-    const inlineMatch = content.match(/function\s+[A-Za-z]+\s*\(\s*\{\s*([^=}:,]+)(?:[\s\S]*?)\}\s*:\s*(\{[\s\S]*?\})/);
-    if(inlineMatch) {
-        const propsBlock = inlineMatch[2];
-        const propLines = propsBlock.split('\n');
-        for (const line of propLines) {
-            const match = line.match(/^\s*([a-zA-Z0-9_]+)\s*\??\s*:\s*([^;]+);?/);
-            if (match) {
-              componentPropsList.push({
-                name: match[1],
-                type: match[2].trim(),
-                description: "Description coming soon"
+  });
+
+  // 2. If not found, look for inline props in exported function
+  if (!propsNode) {
+      ts.forEachChild(sourceFile, node => {
+          if (ts.isFunctionDeclaration(node) && node.name && node.name.text[0] === node.name.text[0].toUpperCase()) {
+              const params = node.parameters;
+              if (params.length > 0) {
+                  const firstParam = params[0];
+                  if (firstParam.type && ts.isTypeLiteralNode(firstParam.type)) {
+                      propsNode = firstParam.type;
+                  }
+              }
+          } else if (ts.isVariableStatement(node)) {
+             const declarationList = node.declarationList;
+             for (const decl of declarationList.declarations) {
+                 if (decl.name && decl.name.text && decl.name.text[0] === decl.name.text[0].toUpperCase()) {
+                     if (decl.initializer && (ts.isArrowFunction(decl.initializer) || ts.isFunctionExpression(decl.initializer))) {
+                         const params = decl.initializer.parameters;
+                         if (params.length > 0) {
+                             const firstParam = params[0];
+                             if (firstParam.type && ts.isTypeLiteralNode(firstParam.type)) {
+                                 propsNode = firstParam.type;
+                             }
+                         }
+                     }
+                 }
+             }
+          }
+      });
+  }
+
+  if (propsNode) {
+      let members = [];
+      if (ts.isInterfaceDeclaration(propsNode)) {
+          members = propsNode.members;
+      } else if (ts.isTypeAliasDeclaration(propsNode) && ts.isTypeLiteralNode(propsNode.type)) {
+          members = propsNode.type.members;
+      } else if (ts.isTypeLiteralNode(propsNode)) {
+          members = propsNode.members;
+      }
+      
+      for (const member of members) {
+          if (ts.isPropertySignature(member)) {
+              const name = member.name.getText(sourceFile);
+              let typeStr = "any";
+              if (member.type) {
+                  typeStr = member.type.getText(sourceFile).replace(/\s+/g, ' ');
+              }
+              propsList.push({
+                  name: name,
+                  type: typeStr,
+                  description: "Description coming soon"
               });
-            }
-        }
-    }
+          }
+      }
   }
   
-parsedProps[key] = componentPropsList;
+  parsedProps[key] = propsList;
 }
 
 module.exports = { parsedProps };

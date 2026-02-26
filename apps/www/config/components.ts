@@ -40,28 +40,8 @@ export const componentsList: ComponentItem[] = [
             category: "Effects & Animations",
         props: [
       {
-            "name": "borderRadius",
-            "type": "string",
-            "description": "Description coming soon"
-      },
-      {
             "name": "children",
             "type": "React.ReactNode",
-            "description": "Description coming soon"
-      },
-      {
-            "name": "as",
-            "type": "React.ElementType",
-            "description": "Description coming soon"
-      },
-      {
-            "name": "containerClassName",
-            "type": "string",
-            "description": "Description coming soon"
-      },
-      {
-            "name": "borderClassName",
-            "type": "string",
             "description": "Description coming soon"
       },
       {
@@ -70,7 +50,12 @@ export const componentsList: ComponentItem[] = [
             "description": "Description coming soon"
       },
       {
-            "name": "className",
+            "name": "rx",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "ry",
             "type": "string",
             "description": "Description coming soon"
       }
@@ -466,12 +451,7 @@ export default function Example() {
             "description": "Description coming soon"
       },
       {
-            "name": "delay",
-            "type": "number",
-            "description": "Description coming soon"
-      },
-      {
-            "name": "duration",
+            "name": "staggerDelay",
             "type": "number",
             "description": "Description coming soon"
       },
@@ -556,16 +536,6 @@ export default function Example() {
             category: "Navigation & Overlays",
         props: [
       {
-            "name": "isOpen",
-            "type": "boolean",
-            "description": "Description coming soon"
-      },
-      {
-            "name": "onClose",
-            "type": "() => void",
-            "description": "Description coming soon"
-      },
-      {
             "name": "children",
             "type": "React.ReactNode",
             "description": "Description coming soon"
@@ -576,13 +546,13 @@ export default function Example() {
             "description": "Description coming soon"
       },
       {
-            "name": "overlayClassName",
+            "name": "layoutId",
             "type": "string",
             "description": "Description coming soon"
       },
       {
-            "name": "layoutId",
-            "type": "string",
+            "name": "onClick",
+            "type": "() => void",
             "description": "Description coming soon"
       }
 ],
