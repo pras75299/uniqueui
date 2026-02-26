@@ -24,6 +24,7 @@ export type ComponentItem = {
       description: string;
       installCmd: string;
       icon: React.ElementType; // Lucide icon
+      category?: string;
       props?: { name: string; type: string; default?: string; description: string }[];
       usageCode?: string;
 };
@@ -35,6 +36,7 @@ export const componentsList: ComponentItem[] = [
             description: "SVG-path-tracing animated border that orbits a button or card.",
             installCmd: "uniqueui add moving-border",
             icon: Sparkles,
+            category: "Effects & Animations",
 
             props: [
                   {
@@ -102,6 +104,7 @@ export default function Example() {
                   "Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop.",
             installCmd: "uniqueui add typewriter-text",
             icon: Terminal,
+            category: "Text",
 
             props: [
                   {
@@ -182,6 +185,7 @@ export default function Example() {
                   "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
             installCmd: "uniqueui add 3d-tilt-card",
             icon: Layers,
+            category: "Cards",
 
             props: [
                   {
@@ -263,6 +267,7 @@ export default function Example() {
                   "Card with a radial spotlight that follows the mouse cursor across its surface.",
             installCmd: "uniqueui add spotlight-card",
             icon: MousePointer,
+            category: "Cards",
 
             props: [
                   {
@@ -314,6 +319,7 @@ export default function Example() {
                   "Flowing aurora borealis gradient animation using layered blurred blobs.",
             installCmd: "uniqueui add aurora-background",
             icon: Sparkles,
+            category: "Backgrounds",
 
             props: [
                   {
@@ -354,6 +360,7 @@ export default function Example() {
                   "Tab bar with a sliding pill that morphs between active tabs using layout animation.",
             installCmd: "uniqueui add animated-tabs",
             icon: Layers,
+            category: "Navigation & Overlays",
 
             props: [
                   {
@@ -425,6 +432,7 @@ export default function Example() {
                   "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
             installCmd: "uniqueui add magnetic-button",
             icon: MousePointer,
+            category: "Effects & Animations",
 
             props: [
                   {
@@ -482,6 +490,7 @@ export default function Example() {
                   "Seamless infinite-scrolling ticker with pause-on-hover and variable speed.",
             installCmd: "uniqueui add infinite-marquee",
             icon: ScrollText,
+            category: "Effects & Animations",
 
             props: [
                   {
@@ -561,6 +570,7 @@ export default function Example() {
                   "Elements animate into view when they enter the viewport, with 6 animation presets.",
             installCmd: "uniqueui add scroll-reveal",
             icon: ScrollText,
+            category: "Effects & Animations",
 
             props: [
                   {
@@ -628,6 +638,7 @@ export default function Example() {
                   "Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade.",
             installCmd: "uniqueui add skeleton-shimmer",
             icon: Loader2,
+            category: "Effects & Animations",
 
             props: [
                   {
@@ -686,6 +697,7 @@ export default function Example() {
                   "Modal that expands from the trigger element with spring physics and backdrop blur.",
             installCmd: "uniqueui add morphing-modal",
             icon: Maximize2,
+            category: "Navigation & Overlays",
 
             props: [
                   {
@@ -777,6 +789,7 @@ export default function Example() {
                   "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
             installCmd: "uniqueui add gradient-text-reveal",
             icon: Palette,
+            category: "Text",
 
             props: [
                   {
@@ -847,6 +860,7 @@ export default function Example() {
                   "Matrix-style text scramble effect that resolves characters left-to-right.",
             installCmd: "uniqueui add scramble-text",
             icon: Type,
+            category: "Text",
 
             props: [
                   {
@@ -907,6 +921,7 @@ export default function Example() {
                   "Card with animated meteor/shooting star particles falling through the background.",
             installCmd: "uniqueui add meteors-card",
             icon: Flame,
+            category: "Cards",
 
             props: [
                   {
@@ -956,6 +971,7 @@ export default function Example() {
                   "3D card flip with spring physics, supporting hover or click triggers.",
             installCmd: "uniqueui add flip-card",
             icon: RotateCw,
+            category: "Cards",
 
             props: [
                   {
@@ -1042,6 +1058,7 @@ export default function Example() {
                   "Interactive dot-grid pattern with a glowing cursor-following effect.",
             installCmd: "uniqueui add dot-grid-background",
             icon: Grid3x3,
+            category: "Backgrounds",
 
             props: [
                   {
@@ -1102,6 +1119,7 @@ export default function Example() {
                   "macOS-style dock with magnetic scaling, spring physics, and tooltips.",
             installCmd: "uniqueui add floating-dock",
             icon: Anchor,
+            category: "Navigation & Overlays",
 
             props: [
                   {
@@ -1161,6 +1179,7 @@ export default function Example() {
                   "Click-triggered confetti particle explosion with customizable colors and physics.",
             installCmd: "uniqueui add confetti-burst",
             icon: PartyPopper,
+            category: "Effects & Animations",
 
             props: [
                   {
@@ -1216,6 +1235,7 @@ export default function Example() {
                   "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
             installCmd: "uniqueui add drawer-slide",
             icon: PanelRight,
+            category: "Navigation & Overlays",
 
             props: [
                   {
@@ -1303,6 +1323,7 @@ export default function Example() {
                   "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
             installCmd: "uniqueui add notification-stack",
             icon: Bell,
+            category: "Navigation & Overlays",
 
             props: [
                   {
@@ -1358,6 +1379,7 @@ export default function Example() {
                   "Scroll-triggered timeline with staggered spring animations for each node.",
             installCmd: "uniqueui add animated-timeline",
             icon: Clock,
+            category: "Effects & Animations",
 
             props: [
                   {

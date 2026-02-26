@@ -49,27 +49,40 @@ export default function ComponentsLayout({
                 </Link>
             </div>
 
-            <div className="space-y-1">
-                <h4 className="text-sm font-semibold text-neutral-400 mb-4 px-2 uppercase tracking-wider">Components</h4>
-                {componentsList.map((component) => {
-                    const isActive = pathname === `/components/${component.slug}`;
-                    return (
-                        <Link
-                            key={component.slug}
-                            href={`/components/${component.slug}`}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className={cn(
-                                "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-                                isActive
-                                    ? "bg-neutral-900 text-white font-medium"
-                                    : "text-neutral-400 hover:text-white hover:bg-neutral-900/50"
-                            )}
-                        >
-                            <component.icon className="w-4 h-4" />
-                            {component.name}
-                        </Link>
-                    );
-                })}
+            <div className="space-y-6">
+                {Array.from(
+                    componentsList.reduce((acc, component) => {
+                        const category = component.category || "Components";
+                        if (!acc.has(category)) acc.set(category, []);
+                        acc.get(category)!.push(component);
+                        return acc;
+                    }, new Map<string, typeof componentsList[0][]>())
+                ).map(([category, items]) => (
+                    <div key={category} className="space-y-1">
+                        <h4 className="text-xs font-semibold text-neutral-400 mb-2 px-3 uppercase tracking-wider">
+                            {category}
+                        </h4>
+                        {items.map((component) => {
+                            const isActive = pathname === `/components/${component.slug}`;
+                            return (
+                                <Link
+                                    key={component.slug}
+                                    href={`/components/${component.slug}`}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={cn(
+                                        "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                                        isActive
+                                            ? "bg-neutral-900 text-white font-medium"
+                                            : "text-neutral-400 hover:text-white hover:bg-neutral-900/50"
+                                    )}
+                                >
+                                    <component.icon className="w-4 h-4" />
+                                    {component.name}
+                                </Link>
+                            );
+                        })}
+                    </div>
+                ))}
             </div>
         </div>
       </aside>
