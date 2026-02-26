@@ -24,13 +24,13 @@ export function GradientTextReveal({
   once = true,
   as: Tag = "p",
 }: GradientTextRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLElement | null>(null);
   const isInView = useInView(ref, { once, amount: 0.3 });
   const words = text.split(" ");
 
   return (
     <Tag
-      ref={ref as React.RefObject<HTMLHeadingElement & HTMLParagraphElement & HTMLSpanElement>}
+      ref={ref as React.RefObject<any>}
       className={cn("flex flex-wrap gap-x-2 gap-y-1", className)}
     >
       {words.map((word, i) => (

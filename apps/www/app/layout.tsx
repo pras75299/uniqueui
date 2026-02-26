@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Fira_Code } from "next/font/google";
+import { Inter, Fira_Code } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({
+  variable: "--font-sans",
+  subsets: ["latin"],
+});
+
 const firaCode = Fira_Code({
-  variable: "--font-fira-code",
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -18,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${firaCode.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${firaCode.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased">
         {children}
       </body>

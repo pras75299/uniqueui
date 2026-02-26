@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-fira-code);
-  --font-mono: var(--font-fira-code);
-}
-
 @layer utilities {
   body {
     background: #000;

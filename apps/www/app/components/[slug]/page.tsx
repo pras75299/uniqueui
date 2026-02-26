@@ -25,10 +25,15 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
   // Pre-render the syntax-highlighted code on the server
   let highlightedCode = "";
   if (component.usageCode) {
-    highlightedCode = await codeToHtml(component.usageCode, {
-      lang: "tsx",
-      theme: "vitesse-dark",
-    });
+    try {
+      highlightedCode = await codeToHtml(component.usageCode, {
+        lang: "tsx",
+        theme: "vitesse-dark",
+      });
+    } catch (e) {
+      console.error("Failed to highlight code:", e);
+      highlightedCode = `<pre><code>${component.usageCode.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>`;
+    }
   }
 
   return (

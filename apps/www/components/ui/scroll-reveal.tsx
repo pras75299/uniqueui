@@ -124,9 +124,11 @@ export function ScrollRevealGroup({
       }}
       className={cn(className)}
     >
-      {React.Children.map(children, (child, index) => (
-        <motion.div
-          key={index}
+      {React.Children.map(children, (child, index) => {
+        const key = React.isValidElement(child) && child.key ? child.key : index;
+        return (
+          <motion.div
+            key={key}
           variants={{
             hidden: preset.hidden,
             visible: {
@@ -141,7 +143,8 @@ export function ScrollRevealGroup({
         >
           {child}
         </motion.div>
-      ))}
+        );
+      })}
     </motion.div>
   );
 }

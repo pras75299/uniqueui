@@ -14,12 +14,20 @@ for (const file of files) {
 const parsedProps = {};
 
 for (const [key, content] of Object.entries(results)) {
-  const propsMatch = content.match(/export\s+(?:interface|type)\s+[A-Za-z]+Props\s*=?\s*(\{[\s\S]*?\})/);
+  const propsMatch = content.match(/export\s+(?:interface|type)\s+[A-Za-z]+Props\s*=?\s*(\{)/);
   
   const componentPropsList = [];
   
   if (propsMatch) {
-    const propsBlock = propsMatch[1];
+    let braceCount = 0;
+    const startIndex = propsMatch.index + propsMatch[0].length - 1;
+    let propsBlock = "";
+    for (let i = startIndex; i < content.length; i++) {
+        if (content[i] === '{') braceCount++;
+        else if (content[i] === '}') braceCount--;
+        propsBlock += content[i];
+        if (braceCount === 0) break;
+    }
     // extremely naive regex to find prop lines like `name?: string;` or `delay: number;`
     // this isn't perfect but helps a ton
     const propLines = propsBlock.split('\n');
@@ -52,7 +60,11 @@ for (const [key, content] of Object.entries(results)) {
     }
   }
   
-  parsedProps[key] = componentPropsList;
+parsedProps[key] = componentPropsList;
 }
 
-console.log(JSON.stringify(parsedProps, null, 2));
+module.exports = { parsedProps };
+
+if (require.main === module) {
+  console.log(JSON.stringify(parsedProps, null, 2));
+}

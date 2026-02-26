@@ -19,14 +19,14 @@ import {
 } from "lucide-react";
 
 export type ComponentItem = {
-      slug: string;
-      name: string;
-      description: string;
-      installCmd: string;
-      icon: React.ElementType; // Lucide icon
-      category?: string;
-      props?: { name: string; type: string; default?: string; description: string }[];
-      usageCode?: string;
+    slug: string;
+    name: string;
+    description: string;
+    installCmd: string;
+    icon: React.ElementType; // Lucide icon
+    category?: string;
+    props?: { name: string; type: string; default?: string; description: string }[];
+    usageCode?: string;
 };
 
 export const componentsList: ComponentItem[] = [
@@ -43,7 +43,54 @@ export const componentsList: ComponentItem[] = [
                         "name": "borderRadius",
                         "type": "string",
                         "description": "The radius for rounding the button edges and the orbiting path."
-                  },
+                
+        props: [
+      {
+            "name": "borderRadius",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "as",
+            "type": "React.ElementType",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "containerClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "borderClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "duration",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { Button } from "@/components/ui/moving-border";
+
+export default function Example() {
+  return (
+    <Button borderRadius="1.75rem">
+      Click me
+    </Button>
+  );
+}`,
+    } },
                   {
                         "name": "children",
                         "type": "React.ReactNode",
@@ -111,7 +158,57 @@ export default function Example() {
                         "name": "words",
                         "type": "string[]",
                         "description": "An array of words or phrases to be typed out sequentially."
-                  },
+                
+        props: [
+      {
+            "name": "words",
+            "type": "string[]",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "cursorClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "typingSpeed",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "deletingSpeed",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "delayBetweenWords",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "loop",
+            "type": "boolean",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "cursor",
+            "type": "boolean",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { TypewriterText } from "@/components/ui/typewriter-text";
+
+export default function Example() {
+  return (
+    <TypewriterText words={["Hello", "World"]} />
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -192,7 +289,59 @@ export default function Example() {
                         "name": "children",
                         "type": "React.ReactNode",
                         "description": "The element(s) suspended inside the 3D card layout."
-                  },
+                
+        props: [
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "containerClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "tiltMaxDeg",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "perspective",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "scale",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "glare",
+            "type": "boolean",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "glareMaxOpacity",
+            "type": "number",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { TiltCard } from "@/components/ui/3d-tilt-card";
+
+export default function Example() {
+  return (
+    <TiltCard>
+      Content goes here
+    </TiltCard>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -274,7 +423,39 @@ export default function Example() {
                         "name": "children",
                         "type": "React.ReactNode",
                         "description": "Components visible on the card."
-                  },
+                
+        props: [
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "spotlightColor",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "spotlightSize",
+            "type": "number",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { SpotlightCard } from "@/components/ui/spotlight-card";
+
+export default function Example() {
+  return (
+    <SpotlightCard>
+      Content goes here
+    </SpotlightCard>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -326,7 +507,34 @@ export default function Example() {
                         "name": "children",
                         "type": "React.ReactNode",
                         "description": "Content elements layered above the animated aurora gradient background."
-                  },
+                
+        props: [
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "showRadialGradient",
+            "type": "boolean",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { AuroraBackground } from "@/components/ui/aurora-background";
+
+export default function Example() {
+  return (
+    <AuroraBackground>
+      Content goes here
+    </AuroraBackground>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -367,7 +575,62 @@ export default function Example() {
                         "name": "tabs",
                         "type": "Tab[]",
                         "description": "Array of tab configurations establishing navigation schema."
-                  },
+                
+        props: [
+      {
+            "name": "tabs",
+            "type": "{",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "id",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "label",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "content",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "tabClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "activeTabClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "contentClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "onChange",
+            "type": "(id: string) => void",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { AnimatedTabs } from "@/components/ui/animated-tabs";
+
+export default function Example() {
+  return (
+    <AnimatedTabs tabs={[{ id: "1", label: "Tab 1", content: "Content 1" }]} />
+  );
+}`,
+    } },
                   {
                         "name": "id",
                         "type": "string",
@@ -439,7 +702,49 @@ export default function Example() {
                         "name": "children",
                         "type": "React.ReactNode",
                         "description": "The internal content of the button."
-                  },
+                
+        props: [
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "magneticStrength",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "magneticRadius",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "onClick",
+            "type": "() => void",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "disabled",
+            "type": "boolean",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { MagneticButton } from "@/components/ui/magnetic-button";
+
+export default function Example() {
+  return (
+    <MagneticButton>
+      Content goes here
+    </MagneticButton>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -497,7 +802,49 @@ export default function Example() {
                         "name": "children",
                         "type": "React.ReactNode",
                         "description": "Individual cards, images, or elements you want scrolling seamlessly."
-                  },
+                
+        props: [
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "speed",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "direction",
+            "type": ""left" | "right"",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "pauseOnHover",
+            "type": "boolean",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "gap",
+            "type": "number",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { InfiniteMarquee } from "@/components/ui/infinite-marquee";
+
+export default function Example() {
+  return (
+    <InfiniteMarquee>
+      Content goes here
+    </InfiniteMarquee>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -577,7 +924,54 @@ export default function Example() {
                         "name": "children",
                         "type": "React.ReactNode",
                         "description": "The DOM elements to animate into view upon scrolling."
-                  },
+                
+        props: [
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "animation",
+            "type": "AnimationPreset",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "delay",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "duration",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "threshold",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "once",
+            "type": "boolean",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { ScrollReveal } from "@/components/ui/scroll-reveal";
+
+export default function Example() {
+  return (
+    <ScrollReveal>
+      Content goes here
+    </ScrollReveal>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -645,7 +1039,49 @@ export default function Example() {
                         "name": "className",
                         "type": "string",
                         "description": "Additional CSS configuration applied to the background container."
-                  },
+                
+        props: [
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "width",
+            "type": "string | number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "height",
+            "type": "string | number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "rounded",
+            "type": ""sm" | "md" | "lg" | "xl" | "full"",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "count",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "gap",
+            "type": "number",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { SkeletonShimmer } from "@/components/ui/skeleton-shimmer";
+
+export default function Example() {
+  return (
+    <SkeletonShimmer>
+      Content goes here
+    </SkeletonShimmer>
+  );
+}`,
+    } },
                   {
                         "name": "width",
                         "type": "string | number",
@@ -704,7 +1140,49 @@ export default function Example() {
                         "name": "isOpen",
                         "type": "boolean",
                         "description": "React boolean state reflecting if the modal is actively visible."
-                  },
+                
+        props: [
+      {
+            "name": "isOpen",
+            "type": "boolean",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "onClose",
+            "type": "() => void",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "overlayClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "layoutId",
+            "type": "string",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { MorphingModal } from "@/components/ui/morphing-modal";
+
+export default function Example() {
+  return (
+    <MorphingModal>
+      Content goes here
+    </MorphingModal>
+  );
+}`,
+    } },
                   {
                         "name": "onClose",
                         "type": "() => void",
@@ -796,7 +1274,59 @@ export default function Example() {
                         "name": "text",
                         "type": "string",
                         "description": "The exact sentence paragraph targeted for staggered rendering."
-                  },
+                
+        props: [
+      {
+            "name": "text",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "gradientFrom",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "gradientTo",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "staggerDelay",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "duration",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "once",
+            "type": "boolean",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "as",
+            "type": ""h1" | "h2" | "h3" | "h4" | "p" | "span"",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { GradientTextReveal } from "@/components/ui/gradient-text-reveal";
+
+export default function Example() {
+  return (
+    <GradientTextReveal>
+      Content goes here
+    </GradientTextReveal>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -867,7 +1397,54 @@ export default function Example() {
                         "name": "text",
                         "type": "string",
                         "description": "The target string the scramble transition eventually resolves into."
-                  },
+                
+        props: [
+      {
+            "name": "text",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "speed",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "scrambleDuration",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "triggerOnView",
+            "type": "boolean",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "once",
+            "type": "boolean",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "characterSet",
+            "type": "string",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { ScrambleText } from "@/components/ui/scramble-text";
+
+export default function Example() {
+  return (
+    <ScrambleText>
+      Content goes here
+    </ScrambleText>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -928,7 +1505,39 @@ export default function Example() {
                         "name": "children",
                         "type": "React.ReactNode",
                         "description": "The payload rendering above the background particle effect."
-                  },
+                
+        props: [
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "meteorCount",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "meteorColor",
+            "type": "string",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { MeteorsCard } from "@/components/ui/meteors-card";
+
+export default function Example() {
+  return (
+    <MeteorsCard>
+      Content goes here
+    </MeteorsCard>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -978,7 +1587,59 @@ export default function Example() {
                         "name": "front",
                         "type": "React.ReactNode",
                         "description": "The leading visible standard interface node."
-                  },
+                
+        props: [
+      {
+            "name": "front",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "back",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "frontClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "backClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "trigger",
+            "type": ""hover" | "click"",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "direction",
+            "type": ""horizontal" | "vertical"",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "perspective",
+            "type": "number",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { FlipCard } from "@/components/ui/flip-card";
+
+export default function Example() {
+  return (
+    <FlipCard>
+      Content goes here
+    </FlipCard>
+  );
+}`,
+    } },
                   {
                         "name": "back",
                         "type": "React.ReactNode",
@@ -1065,7 +1726,54 @@ export default function Example() {
                         "name": "children",
                         "type": "React.ReactNode",
                         "description": "Components mapped into the z-index layer visually above the matrix."
-                  },
+                
+        props: [
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "dotColor",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "dotSize",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "gap",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "hoverRadius",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "hoverScale",
+            "type": "number",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { DotGridBackground } from "@/components/ui/dot-grid-background";
+
+export default function Example() {
+  return (
+    <DotGridBackground>
+      Content goes here
+    </DotGridBackground>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -1126,7 +1834,69 @@ export default function Example() {
                         "name": "items",
                         "type": "DockItem[]",
                         "description": "Array defining mapping configuration objects containing icons and references."
-                  },
+                
+        props: [
+      {
+            "name": "items",
+            "type": "{",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "id",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "icon",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "label",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "onClick",
+            "type": "() => void",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "href",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "iconSize",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "maxScale",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "magneticRange",
+            "type": "number",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { FloatingDock } from "@/components/ui/floating-dock";
+
+export default function Example() {
+  return (
+    <FloatingDock>
+      Content goes here
+    </FloatingDock>
+  );
+}`,
+    } },
                   {
                         "name": "id",
                         "type": "string",
@@ -1186,7 +1956,49 @@ export default function Example() {
                         "name": "children",
                         "type": "React.ReactNode",
                         "description": "Trigger element wrapped by the particle generation effect zone."
-                  },
+                
+        props: [
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "particleCount",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "colors",
+            "type": "string[]",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "spread",
+            "type": "number",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "duration",
+            "type": "number",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { ConfettiBurst } from "@/components/ui/confetti-burst";
+
+export default function Example() {
+  return (
+    <ConfettiBurst>
+      Content goes here
+    </ConfettiBurst>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",
@@ -1242,7 +2054,64 @@ export default function Example() {
                         "name": "isOpen",
                         "type": "boolean",
                         "description": "React state abstraction determining visible rendering."
-                  },
+                
+        props: [
+      {
+            "name": "isOpen",
+            "type": "boolean",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "onClose",
+            "type": "() => void",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "children",
+            "type": "React.ReactNode",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "position",
+            "type": "DrawerPosition",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "overlayClassName",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "width",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "height",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "dragToClose",
+            "type": "boolean",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { DrawerSlide } from "@/components/ui/drawer-slide";
+
+export default function Example() {
+  return (
+    <DrawerSlide>
+      Content goes here
+    </DrawerSlide>
+  );
+}`,
+    } },
                   {
                         "name": "onClose",
                         "type": "() => void",
@@ -1330,7 +2199,34 @@ export default function Example() {
                         "name": "className",
                         "type": "string",
                         "description": "CSS attributes tailoring the absolute container."
-                  },
+                
+        props: [
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "position",
+            "type": ""top-right" | "top-left" | "bottom-right" | "bottom-left"",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "maxVisible",
+            "type": "number",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { NotificationStack } from "@/components/ui/notification-stack";
+
+export default function Example() {
+  return (
+    <NotificationStack>
+      Content goes here
+    </NotificationStack>
+  );
+}`,
+    } },
                   {
                         "name": "position",
                         "type": "top-right' | 'top-left' | 'bottom-right' | 'bottom-left",
@@ -1386,7 +2282,39 @@ export default function Example() {
                         "name": "items",
                         "type": "TimelineItem[]",
                         "description": "Ordered JSON object sequence defining steps parsing chronological evaluation."
-                  },
+                
+        props: [
+      {
+            "name": "items",
+            "type": "TimelineItem[]",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "className",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "lineColor",
+            "type": "string",
+            "description": "Description coming soon"
+      },
+      {
+            "name": "orientation",
+            "type": ""vertical" | "horizontal"",
+            "description": "Description coming soon"
+      }
+],
+        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+
+export default function Example() {
+  return (
+    <AnimatedTimeline>
+      Content goes here
+    </AnimatedTimeline>
+  );
+}`,
+    } },
                   {
                         "name": "className",
                         "type": "string",

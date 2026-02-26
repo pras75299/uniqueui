@@ -3,37 +3,7 @@ const path = require('path');
 
 const propsData = require('./get_props.js').parsedProps;
 
-const registryPath = path.join(__dirname, 'registry');
-const files = fs.readdirSync(registryPath).filter(f => f.endsWith('.tsx'));
-const parsedProps = {};
-for (const file of files) {
-  const content = fs.readFileSync(path.join(registryPath, file), 'utf-8');
-  const key = file.replace('.tsx', '');
-  const propsMatch = content.match(/export\s+(?:interface|type)\s+[A-Za-z]+Props\s*=?\s*(\{[\s\S]*?\})/);
-  const componentPropsList = [];
-  
-  if (propsMatch) {
-    const propLines = propsMatch[1].split('\n');
-    for (const line of propLines) {
-      const match = line.match(/^\s*([a-zA-Z0-9_]+)\s*\??\s*:\s*([^;]+);?/);
-      if (match) {
-        componentPropsList.push({ name: match[1], type: match[2].trim(), description: "Description coming soon" });
-      }
-    }
-  } else {
-    const inlineMatch = content.match(/function\s+[A-Za-z]+\s*\(\s*\{\s*([^=}:,]+)(?:[\s\S]*?)\}\s*:\s*(\{[\s\S]*?\})/);
-    if(inlineMatch) {
-        const propLines = inlineMatch[2].split('\n');
-        for (const line of propLines) {
-            const match = line.match(/^\s*([a-zA-Z0-9_]+)\s*\??\s*:\s*([^;]+);?/);
-            if (match) {
-              componentPropsList.push({ name: match[1], type: match[2].trim(), description: "Description coming soon" });
-            }
-        }
-    }
-  }
-  parsedProps[key] = componentPropsList;
-}
+const parsedProps = propsData;
 
 const configPath = path.join(__dirname, 'apps/www/config/components.ts');
 let configContent = fs.readFileSync(configPath, 'utf-8');
@@ -46,7 +16,8 @@ configContent = configContent.replace(
   "    name: string;\n" +
   "    description: string;\n" +
   "    installCmd: string;\n" +
-  "    icon: any; // Lucide icon\n" +
+  "    icon: React.ElementType; // Lucide icon\n" +
+  "    category?: string;\n" +
   "    props?: { name: string; type: string; default?: string; description: string }[];\n" +
   "    usageCode?: string;\n" +
   "};"
