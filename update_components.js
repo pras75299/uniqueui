@@ -16,12 +16,16 @@ configContent = configContent.replace(
   "    name: string;\n" +
   "    description: string;\n" +
   "    installCmd: string;\n" +
-  "    icon: React.ElementType; // Lucide icon\n" +
+  "    icon: ElementType; // Lucide icon\n" +
   "    category?: string;\n" +
   "    props?: { name: string; type: string; default?: string; description: string }[];\n" +
   "    usageCode?: string;\n" +
   "};"
 );
+
+if (!/import\s+type\s+\{\s*ElementType\s*\}\s+from\s+['"]react['"]/.test(configContent)) {
+  configContent = `import type { ElementType } from 'react';\n` + configContent;
+}
 
 for (const [slug, propsObj] of Object.entries(parsedProps)) {
   const propsString = JSON.stringify(propsObj, null, 6);
@@ -86,26 +90,32 @@ export default function Example() {
     }
     
     if (blockEnd !== -1) {
-        let propsIdx = configContent.indexOf('props:', startIdx);
-        let usageIdx = configContent.indexOf('usageCode:', startIdx);
-        let cutIdx = -1;
+        let blockText = configContent.substring(blockStart, blockEnd + 1);
         
-        if (propsIdx !== -1 && propsIdx < blockEnd) cutIdx = propsIdx;
-        if (usageIdx !== -1 && usageIdx < blockEnd && (cutIdx === -1 || usageIdx < cutIdx)) cutIdx = usageIdx;
+        let propsMatch = blockText.match(/\n\s*props\s*:/);
+        let usageMatch = blockText.match(/\n\s*usageCode\s*:/);
         
-        const injectContent = "props: " + propsString + ",\n        usageCode: `" + usageCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') + "`\n    ";
+        let minCut = blockText.length - 1; // before the closing brace
+        if (propsMatch) minCut = Math.min(minCut, propsMatch.index);
+        if (usageMatch) minCut = Math.min(minCut, usageMatch.index);
         
-        if (cutIdx !== -1) {
-             configContent = configContent.substring(0, cutIdx) + injectContent + configContent.substring(blockEnd);
-        } else {
-             configContent = configContent.substring(0, blockEnd) + ",\n        " + injectContent + configContent.substring(blockEnd);
-        }
+        let cleanedBlock = blockText.substring(0, minCut);
+        cleanedBlock = cleanedBlock.replace(/,\s*$/, ''); // strip trailing comma before we append
+
+        const injectContent = "props: " + propsString + ",\n        usageCode: `" + usageCode.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') + "`";
+
+        const updatedBlock = cleanedBlock + ",\n        " + injectContent + "\n    }";
+
+        configContent =
+          configContent.substring(0, blockStart) +
+          updatedBlock +
+          configContent.substring(blockEnd + 1);
     }
   }
 }
 
-// Ensure the array termination is perfectly formed
-configContent = configContent.replace(/},\n\];/g, "}\n];");
+// Ensure only the final array terminator is normalized
+configContent = configContent.replace(/,\s*\n(\s*\]\s*;?\s*)$/m, "\n$1");
 
 fs.writeFileSync(configPath, configContent);
 console.log('Successfully updated components.ts');

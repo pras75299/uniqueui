@@ -1,3 +1,4 @@
+import type { ElementType } from 'react';
 import {
       Sparkles,
       Terminal,
@@ -23,7 +24,7 @@ export type ComponentItem = {
     name: string;
     description: string;
     installCmd: string;
-    icon: React.ElementType; // Lucide icon
+    icon: ElementType; // Lucide icon
     category?: string;
     props?: { name: string; type: string; default?: string; description: string }[];
     usageCode?: string;
@@ -37,8 +38,7 @@ export const componentsList: ComponentItem[] = [
             installCmd: "uniqueui add moving-border",
             icon: Sparkles,
             category: "Effects & Animations",
-
-            props: [
+        props: [
       {
             "name": "borderRadius",
             "type": "string",
@@ -93,8 +93,7 @@ export default function Example() {
             installCmd: "uniqueui add typewriter-text",
             icon: Terminal,
             category: "Text",
-
-            props: [
+        props: [
       {
             "name": "words",
             "type": "string[]",
@@ -152,8 +151,7 @@ export default function Example() {
             installCmd: "uniqueui add 3d-tilt-card",
             icon: Layers,
             category: "Cards",
-
-            props: [
+        props: [
       {
             "name": "children",
             "type": "React.ReactNode",
@@ -213,8 +211,7 @@ export default function Example() {
             installCmd: "uniqueui add spotlight-card",
             icon: MousePointer,
             category: "Cards",
-
-            props: [
+        props: [
       {
             "name": "children",
             "type": "React.ReactNode",
@@ -254,8 +251,7 @@ export default function Example() {
             installCmd: "uniqueui add aurora-background",
             icon: Sparkles,
             category: "Backgrounds",
-
-            props: [
+        props: [
       {
             "name": "children",
             "type": "React.ReactNode",
@@ -290,8 +286,7 @@ export default function Example() {
             installCmd: "uniqueui add animated-tabs",
             icon: Layers,
             category: "Navigation & Overlays",
-
-            props: [
+        props: [
       {
             "name": "tabs",
             "type": "{",
@@ -354,8 +349,7 @@ export default function Example() {
             installCmd: "uniqueui add magnetic-button",
             icon: MousePointer,
             category: "Effects & Animations",
-
-            props: [
+        props: [
       {
             "name": "children",
             "type": "React.ReactNode",
@@ -405,8 +399,7 @@ export default function Example() {
             installCmd: "uniqueui add infinite-marquee",
             icon: ScrollText,
             category: "Effects & Animations",
-
-            props: [
+        props: [
       {
             "name": "children",
             "type": "React.ReactNode",
@@ -456,8 +449,7 @@ export default function Example() {
             installCmd: "uniqueui add scroll-reveal",
             icon: ScrollText,
             category: "Effects & Animations",
-
-            props: [
+        props: [
       {
             "name": "children",
             "type": "React.ReactNode",
@@ -512,8 +504,7 @@ export default function Example() {
             installCmd: "uniqueui add skeleton-shimmer",
             icon: Loader2,
             category: "Effects & Animations",
-
-            props: [
+        props: [
       {
             "name": "className",
             "type": "string",
@@ -563,8 +554,7 @@ export default function Example() {
             installCmd: "uniqueui add morphing-modal",
             icon: Maximize2,
             category: "Navigation & Overlays",
-
-            props: [
+        props: [
       {
             "name": "isOpen",
             "type": "boolean",
@@ -614,8 +604,7 @@ export default function Example() {
             installCmd: "uniqueui add gradient-text-reveal",
             icon: Palette,
             category: "Text",
-
-            props: [
+        props: [
       {
             "name": "text",
             "type": "string",
@@ -675,8 +664,7 @@ export default function Example() {
             installCmd: "uniqueui add scramble-text",
             icon: Type,
             category: "Text",
-
-            props: [
+        props: [
       {
             "name": "text",
             "type": "string",
@@ -731,8 +719,7 @@ export default function Example() {
             installCmd: "uniqueui add meteors-card",
             icon: Flame,
             category: "Cards",
-
-            props: [
+        props: [
       {
             "name": "children",
             "type": "React.ReactNode",
@@ -772,8 +759,7 @@ export default function Example() {
             installCmd: "uniqueui add flip-card",
             icon: RotateCw,
             category: "Cards",
-
-            props: [
+        props: [
       {
             "name": "front",
             "type": "React.ReactNode",
@@ -833,8 +819,7 @@ export default function Example() {
             installCmd: "uniqueui add dot-grid-background",
             icon: Grid3x3,
             category: "Backgrounds",
-
-            props: [
+        props: [
       {
             "name": "children",
             "type": "React.ReactNode",
@@ -889,8 +874,7 @@ export default function Example() {
             installCmd: "uniqueui add floating-dock",
             icon: Anchor,
             category: "Navigation & Overlays",
-
-            props: [
+        props: [
       {
             "name": "items",
             "type": "{",
@@ -943,12 +927,18 @@ export default function Example() {
       }
 ],
         usageCode: `import { FloatingDock } from "@/components/ui/floating-dock";
+import { Anchor, Sparkles } from "lucide-react";
 
 export default function Example() {
+  const items = [
+    { id: "1", label: "Home", icon: <Anchor className="w-5 h-5" />, href: "#" },
+    { id: "2", label: "Magic", icon: <Sparkles className="w-5 h-5" />, href: "#" }
+  ];
+
   return (
-    <FloatingDock>
-      Content goes here
-    </FloatingDock>
+    <div className="h-[200px] w-full flex items-center justify-center">
+      <FloatingDock items={items} position="bottom" />
+    </div>
   );
 }`
     },
@@ -960,8 +950,7 @@ export default function Example() {
             installCmd: "uniqueui add confetti-burst",
             icon: PartyPopper,
             category: "Effects & Animations",
-
-            props: [
+        props: [
       {
             "name": "children",
             "type": "React.ReactNode",
@@ -1011,8 +1000,7 @@ export default function Example() {
             installCmd: "uniqueui add drawer-slide",
             icon: PanelRight,
             category: "Navigation & Overlays",
-
-            props: [
+        props: [
       {
             "name": "isOpen",
             "type": "boolean",
@@ -1077,8 +1065,7 @@ export default function Example() {
             installCmd: "uniqueui add notification-stack",
             icon: Bell,
             category: "Navigation & Overlays",
-
-            props: [
+        props: [
       {
             "name": "className",
             "type": "string",
@@ -1113,8 +1100,7 @@ export default function Example() {
             installCmd: "uniqueui add animated-timeline",
             icon: Clock,
             category: "Effects & Animations",
-
-            props: [
+        props: [
       {
             "name": "items",
             "type": "TimelineItem[]",
