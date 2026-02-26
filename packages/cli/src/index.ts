@@ -1,14 +1,18 @@
 #!/usr/bin/env node
 import { Command } from "commander";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { init } from "./commands/init";
 import { add } from "./commands/add";
+
+const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
 
 const program = new Command();
 
 program
     .name("uniqueui")
     .description("Add components from UniqueUI to your project")
-    .version("0.1.4");
+    .version(pkg.version);
 
 program
     .command("init")
