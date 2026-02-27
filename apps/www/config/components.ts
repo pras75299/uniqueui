@@ -35,7 +35,7 @@ export const componentsList: ComponentItem[] = [
     slug: "moving-border",
     name: "Moving Border",
     description: "SVG-path-tracing animated border that orbits a button or card.",
-    installCmd: "uniqueui add moving-border",
+    installCmd: "npx uniqueui add moving-border",
     icon: Sparkles,
     category: "Effects & Animations",
     props: [
@@ -102,7 +102,7 @@ export default function Example() {
     name: "Typewriter Text",
     description:
       "Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop.",
-    installCmd: "uniqueui add typewriter-text",
+    installCmd: "npx uniqueui add typewriter-text",
     icon: Terminal,
     category: "Text",
     props: [
@@ -182,7 +182,7 @@ export default function Example() {
     name: "3D Tilt Card",
     description:
       "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
-    installCmd: "uniqueui add 3d-tilt-card",
+    installCmd: "npx uniqueui add 3d-tilt-card",
     icon: Layers,
     category: "Cards",
     props: [
@@ -263,7 +263,7 @@ export default function Example() {
     name: "Spotlight Card",
     description:
       "Card with a radial spotlight that follows the mouse cursor across its surface.",
-    installCmd: "uniqueui add spotlight-card",
+    installCmd: "npx uniqueui add spotlight-card",
     icon: MousePointer,
     category: "Cards",
     props: [
@@ -314,7 +314,7 @@ export default function Example() {
     name: "Aurora Background",
     description:
       "Flowing aurora borealis gradient animation using layered blurred blobs.",
-    installCmd: "uniqueui add aurora-background",
+    installCmd: "npx uniqueui add aurora-background",
     icon: Sparkles,
     category: "Backgrounds",
     props: [
@@ -354,7 +354,7 @@ export default function Example() {
     name: "Animated Tabs",
     description:
       "Tab bar with a sliding pill that morphs between active tabs using layout animation.",
-    installCmd: "uniqueui add animated-tabs",
+    installCmd: "npx uniqueui add animated-tabs",
     icon: Layers,
     category: "Navigation & Overlays",
     props: [
@@ -450,7 +450,7 @@ export default function Example() {
     name: "Magnetic Button",
     description:
       "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
-    installCmd: "uniqueui add magnetic-button",
+    installCmd: "npx uniqueui add magnetic-button",
     icon: MousePointer,
     category: "Effects & Animations",
     props: [
@@ -507,7 +507,7 @@ export default function Example() {
     name: "Infinite Marquee",
     description:
       "Seamless infinite-scrolling ticker with pause-on-hover and variable speed.",
-    installCmd: "uniqueui add infinite-marquee",
+    installCmd: "npx uniqueui add infinite-marquee",
     icon: ScrollText,
     category: "Effects & Animations",
     props: [
@@ -586,7 +586,7 @@ export default function Example() {
     name: "Scroll Reveal",
     description:
       "Elements animate into view when they enter the viewport, with 6 animation presets.",
-    installCmd: "uniqueui add scroll-reveal",
+    installCmd: "npx uniqueui add scroll-reveal",
     icon: ScrollText,
     category: "Effects & Animations",
     props: [
@@ -655,7 +655,7 @@ export default function Example() {
     name: "Skeleton Shimmer",
     description:
       "Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade.",
-    installCmd: "uniqueui add skeleton-shimmer",
+    installCmd: "npx uniqueui add skeleton-shimmer",
     icon: Loader2,
     category: "Effects & Animations",
     props: [
@@ -713,7 +713,7 @@ export default function Example() {
     name: "Morphing Modal",
     description:
       "Modal that expands from the trigger element with spring physics and backdrop blur.",
-    installCmd: "uniqueui add morphing-modal",
+    installCmd: "npx uniqueui add morphing-modal",
     icon: Maximize2,
     category: "Navigation & Overlays",
     props: [
@@ -794,7 +794,7 @@ export default function Example() {
     name: "Gradient Text Reveal",
     description:
       "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
-    installCmd: "uniqueui add gradient-text-reveal",
+    installCmd: "npx uniqueui add gradient-text-reveal",
     icon: Palette,
     category: "Text",
     props: [
@@ -864,7 +864,7 @@ export default function Example() {
     name: "Scramble Text",
     description:
       "Matrix-style text scramble effect that resolves characters left-to-right.",
-    installCmd: "uniqueui add scramble-text",
+    installCmd: "npx uniqueui add scramble-text",
     icon: Type,
     category: "Text",
     props: [
@@ -924,7 +924,7 @@ export default function Example() {
     name: "Meteors Card",
     description:
       "Card with animated meteor/shooting star particles falling through the background.",
-    installCmd: "uniqueui add meteors-card",
+    installCmd: "npx uniqueui add meteors-card",
     icon: Flame,
     category: "Cards",
     props: [
@@ -973,7 +973,7 @@ export default function Example() {
     name: "Flip Card",
     description:
       "3D card flip with spring physics, supporting hover or click triggers.",
-    installCmd: "uniqueui add flip-card",
+    installCmd: "npx uniqueui add flip-card",
     icon: RotateCw,
     category: "Cards",
     props: [
@@ -1059,7 +1059,7 @@ export default function Example() {
     name: "Dot Grid Background",
     description:
       "Interactive dot-grid pattern with a glowing cursor-following effect.",
-    installCmd: "uniqueui add dot-grid-background",
+    installCmd: "npx uniqueui add dot-grid-background",
     icon: Grid3x3,
     category: "Backgrounds",
     props: [
@@ -1119,7 +1119,7 @@ export default function Example() {
     name: "Floating Dock",
     description:
       "macOS-style dock with magnetic scaling, spring physics, and tooltips.",
-    installCmd: "uniqueui add floating-dock",
+    installCmd: "npx uniqueui add floating-dock",
     icon: Anchor,
     category: "Navigation & Overlays",
     props: [
@@ -1198,7 +1198,7 @@ export default function Example() {
     name: "Confetti Burst",
     description:
       "Click-triggered confetti particle explosion with customizable colors and physics.",
-    installCmd: "uniqueui add confetti-burst",
+    installCmd: "npx uniqueui add confetti-burst",
     icon: PartyPopper,
     category: "Effects & Animations",
     props: [
@@ -1253,7 +1253,7 @@ export default function Example() {
     name: "Drawer Slide",
     description:
       "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
-    installCmd: "uniqueui add drawer-slide",
+    installCmd: "npx uniqueui add drawer-slide",
     icon: PanelRight,
     category: "Navigation & Overlays",
     props: [
@@ -1340,7 +1340,7 @@ export default function Example() {
     name: "Notification Stack",
     description:
       "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
-    installCmd: "uniqueui add notification-stack",
+    installCmd: "npx uniqueui add notification-stack",
     icon: Bell,
     category: "Navigation & Overlays",
     props: [
@@ -1395,7 +1395,7 @@ export default function Example() {
             name: "Animated Timeline",
             description:
                   "Scroll-triggered timeline with staggered spring animations for each node.",
-            installCmd: "uniqueui add animated-timeline",
+            installCmd: "npx uniqueui add animated-timeline",
             icon: Clock,
             category: "Effects & Animations",
         props: [
@@ -1438,7 +1438,7 @@ export default function Example() {
     name: "Animated Timeline",
     description:
       "Scroll-triggered timeline with staggered spring animations for each node.",
-    installCmd: "uniqueui add animated-timeline",
+    installCmd: "npx uniqueui add animated-timeline",
     icon: Clock,
     category: "Effects & Animations",
     props: [

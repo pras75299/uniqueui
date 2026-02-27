@@ -23,7 +23,7 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
 
   const copyCommand = () => {
-    navigator.clipboard.writeText("npm i -g uniqueui-cli && uniqueui init");
+    navigator.clipboard.writeText("npx uniqueui init");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
