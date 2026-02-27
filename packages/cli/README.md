@@ -14,7 +14,7 @@ UniqueUI is a collection of **copy-paste animated components** built with React,
 ### 1. Initialize your project
 
 ```bash
-npx uniqueui-cli init
+npx uniqueui init
 ```
 
 This creates a `components.json` config file with your preferences:
@@ -26,7 +26,7 @@ This creates a `components.json` config file with your preferences:
 ### 2. Add a component
 
 ```bash
-npx uniqueui-cli add moving-border
+npx uniqueui add moving-border
 ```
 
 The CLI will:
@@ -42,7 +42,7 @@ The CLI will:
 You can use `npx` directly (no install needed):
 
 ```bash
-npx uniqueui-cli <command>
+npx uniqueui <command>
 ```
 
 Or install globally:
@@ -91,27 +91,27 @@ uniqueui add <component-name>
 
 | Component | Description |
 |---|---|
-| `moving-border` | Animated glowing border that follows a path |
-| `typewriter-text` | Text that types itself character by character |
-| `3d-tilt-card` | Card that tilts on hover with 3D perspective |
-| `spotlight-card` | Card with a spotlight effect following the cursor |
-| `aurora-background` | Animated aurora borealis gradient background |
-| `animated-tabs` | Tab navigation with smooth animated indicator |
-| `magnetic-button` | Button that magnetically follows cursor on hover |
-| `infinite-marquee` | Continuously scrolling horizontal content |
-| `scroll-reveal` | Elements that animate in on scroll |
-| `skeleton-shimmer` | Loading skeleton with shimmer animation |
-| `morphing-modal` | Modal with smooth morphing open/close transitions |
-| `gradient-text-reveal` | Text with animated gradient color reveal |
-| `scramble-text` | Text that scrambles/unscrambles on hover |
-| `meteors-card` | Card with animated falling meteor effects |
-| `flip-card` | Card that flips to reveal back content |
-| `dot-grid-background` | Animated dot grid pattern background |
-| `floating-dock` | macOS‑style floating dock navigation |
-| `confetti-burst` | Confetti particle burst animation |
-| `drawer-slide` | Slide-in drawer panel with smooth transitions |
-| `notification-stack` | Stacked notification cards with animations |
-| `animated-timeline` | Vertical timeline with scroll-triggered animations |
+| `moving-border` | SVG-path-tracing animated border that orbits a button or card |
+| `typewriter-text` | Character-by-character typing with blinking cursor and delete-retype loop |
+| `3d-tilt-card` | Perspective-shifting card that tilts toward the cursor with parallax layers |
+| `spotlight-card` | Card with a radial spotlight that follows the mouse cursor |
+| `aurora-background` | Flowing aurora borealis gradient animation using layered blurred blobs |
+| `animated-tabs` | Tab bar with a sliding pill that morphs between tabs using layout animation |
+| `magnetic-button` | Button that stretches toward the cursor and snaps back with spring physics |
+| `infinite-marquee` | Seamless infinite-scrolling ticker with pause-on-hover |
+| `scroll-reveal` | Elements animate into view on scroll, with 6 animation presets |
+| `skeleton-shimmer` | Loading placeholders with animated shimmer gradient sweep |
+| `morphing-modal` | Modal that expands from the trigger element with spring physics |
+| `gradient-text-reveal` | Word-by-word text reveal with gradient coloring and blur-to-clear animation |
+| `scramble-text` | Matrix-style text scramble effect that resolves characters left-to-right |
+| `meteors-card` | Card with animated shooting star particles through the background |
+| `flip-card` | 3D card flip with spring physics, hover or click triggers |
+| `dot-grid-background` | Interactive dot-grid pattern with glowing cursor-following effect |
+| `floating-dock` | macOS-style dock with magnetic scaling, spring physics, and tooltips |
+| `confetti-burst` | Click-triggered confetti particle explosion with customizable colors |
+| `drawer-slide` | Slide-out drawer panel with drag-to-dismiss and backdrop blur |
+| `notification-stack` | Stacked toast notifications with auto-dismiss and progress bars |
+| `animated-timeline` | Scroll-triggered timeline with staggered spring animations |
 
 ---
 
@@ -143,9 +143,9 @@ This means you can freely customize every component after adding it.
 npx uniqueui-cli init
 
 # Add components
-npx uniqueui-cli add aurora-background
-npx uniqueui-cli add magnetic-button
-npx uniqueui-cli add animated-tabs
+npx uniqueui add aurora-background
+npx uniqueui add magnetic-button
+npx uniqueui add animated-tabs
 ```
 
 Then use in your React code:

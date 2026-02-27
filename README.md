@@ -26,7 +26,7 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 
 - 🎯 **Copy-paste architecture** — Components live in your codebase, fully customizable
 - 🎨 **21 animated components** — From subtle to spectacular
-- ⚡ **CLI for instant setup** — `npx uniqueui-cli init` → `npx uniqueui-cli add <component>`
+- ⚡ **CLI for instant setup** — `npx uniqueui init` → `npx uniqueui add <component>`
 - 🧩 **Zero lock-in** — Uses standard React, Motion, and Tailwind CSS
 - 📱 **Dark-first design** — Every component looks great out of the box
 
@@ -69,7 +69,7 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 **1. Initialize your project:**
 
 ```bash
-npx uniqueui-cli init
+npx uniqueui init
 ```
 
 This configures your project by setting up the required utility function (`cn`) and ensuring dependencies are installed.
@@ -77,7 +77,7 @@ This configures your project by setting up the required utility function (`cn`) 
 **2. Add a component:**
 
 ```bash
-npx uniqueui-cli add spotlight-card
+npx uniqueui add spotlight-card
 ```
 
 The CLI will:
@@ -102,7 +102,7 @@ export default function Page() {
 
 ## CLI
 
-The UniqueUI CLI (`uniqueui-cli`) provides two commands:
+The UniqueUI CLI provides two commands:
 
 | Command | Description |
 |---------|-------------|
@@ -125,6 +125,13 @@ Each component declares its own dependencies. Most components need:
 - [`motion`](https://motion.dev) — Animation library (successor to Framer Motion)
 - [`clsx`](https://github.com/lukeed/clsx) — Conditional class names
 - [`tailwind-merge`](https://github.com/dcastil/tailwind-merge) — Merge Tailwind classes without conflicts
+
+## Compatibility
+
+UniqueUI components are designed to be universally compatible:
+- **Tailwind CSS**: Native support for Tailwind CSS (v3 and v4).
+- **Shadcn UI**: Seamlessly integrates into any Shadcn UI project because both use the copy-paste philosophy and `cn` utility logic.
+- **Other React UI Libraries**: Since there is no runtime dependency for the library itself, components can be used alongside Chakra UI, Radix Primitives, NextUI, or any other React framework without conflicts.
 
 ## Development
 
