@@ -233,4 +233,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "bento-grid",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "bento-grid.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];
