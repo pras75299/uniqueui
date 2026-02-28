@@ -17,6 +17,7 @@ import {
   PanelRight,
   Bell,
   Clock,
+  MessageSquare,
 } from "lucide-react";
 
 export type ComponentItem = {
@@ -1438,5 +1439,99 @@ export default function Example() {
     </div>
   );
 }`
-  }
+  },
+  {
+    slug: "nested-comments",
+    name: "Nested Comments",
+    description:
+      "Threaded comment section with infinite nesting, animated expand/collapse, inline reply composer, and spring-physics like button.",
+    installCmd: "npx uniqueui add nested-comments",
+    icon: MessageSquare,
+    category: "Social & Interaction",
+    props: [
+      {
+        name: "comments",
+        type: "Comment[]",
+        description: "Array of top-level comment objects, each optionally containing a `replies` array for nested threading.",
+      },
+      {
+        name: "maxDepth",
+        type: "number",
+        default: "4",
+        description: "Maximum nesting depth allowed before disabling the Reply button to prevent infinite threading.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description: "Additional CSS classes applied to the root wrapper element.",
+      },
+      {
+        name: "accentColor",
+        type: "string",
+        default: '"#8b5cf6"',
+        description: "Hex or CSS color used for reply badge highlights and interactive accent elements.",
+      },
+      {
+        name: "onReply",
+        type: "(commentId: string, content: string) => void",
+        description: "Callback fired when a user submits a reply, receiving the parent comment ID and reply text.",
+      },
+      {
+        name: "onLike",
+        type: "(commentId: string) => void",
+        description: "Callback fired when a user likes a comment, receiving the comment ID.",
+      },
+    ],
+    usageCode: `import { NestedComments } from "@/components/ui/nested-comments";
+import type { Comment } from "@/components/ui/nested-comments";
+
+const comments: Comment[] = [
+  {
+    id: "1",
+    author: "Alex Kim",
+    content: "This component is incredible! The animations feel so natural.",
+    timestamp: "2 hours ago",
+    likes: 14,
+    replies: [
+      {
+        id: "1-1",
+        author: "Sarah Chen",
+        content: "Agreed! The collapse animation is especially smooth.",
+        timestamp: "1 hour ago",
+        likes: 6,
+        replies: [
+          {
+            id: "1-1-1",
+            author: "Alex Kim",
+            content: "Thanks! Motion.dev's layout animations make it effortless.",
+            timestamp: "45 min ago",
+            likes: 3,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "2",
+    author: "Jordan Lee",
+    content: "Love the inline reply box with keyboard shortcuts. Very intuitive UX.",
+    timestamp: "3 hours ago",
+    likes: 9,
+  },
+];
+
+export default function Example() {
+  return (
+    <div className="p-6 bg-neutral-950 rounded-xl min-h-[400px]">
+      <NestedComments
+        comments={comments}
+        maxDepth={4}
+        accentColor="#8b5cf6"
+        onReply={(id, content) => console.log("Reply to", id, ":", content)}
+        onLike={(id) => console.log("Liked", id)}
+      />
+    </div>
+  );
+}`
+  },
 ];

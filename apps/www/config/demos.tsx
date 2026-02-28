@@ -21,6 +21,8 @@ import { ConfettiBurst } from "@/components/ui/confetti-burst";
 import { DrawerSlide } from "@/components/ui/drawer-slide";
 import { NotificationStack, useNotifications } from "@/components/ui/notification-stack";
 import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+import { NestedComments } from "@/components/ui/nested-comments";
+import type { Comment } from "@/components/ui/nested-comments";
 import { useState } from "react";
 import {
   Ghost,
@@ -143,6 +145,61 @@ function DrawerDemo() {
         </button>
       </DrawerSlide>
     </>
+  );
+}
+
+// Helper for Nested Comments demo
+const DEMO_COMMENTS: Comment[] = [
+  {
+    id: "1",
+    author: "Alex Kim",
+    content: "This component is incredible! The spring animations feel so natural and snappy.",
+    timestamp: "2 hours ago",
+    likes: 14,
+    replies: [
+      {
+        id: "1-1",
+        author: "Sarah Chen",
+        content: "Agreed! The collapse animation is especially smooth. Love the thread lines too.",
+        timestamp: "1 hour ago",
+        likes: 6,
+        replies: [
+          {
+            id: "1-1-1",
+            author: "Alex Kim",
+            content: "Thanks! Motion.dev's layout animations make nested content effortless to build.",
+            timestamp: "45 min ago",
+            likes: 3,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "2",
+    author: "Jordan Lee",
+    content: "Love the inline reply box with ⌘+Enter shortcut. Very intuitive UX — try clicking Reply!",
+    timestamp: "3 hours ago",
+    likes: 9,
+  },
+  {
+    id: "3",
+    author: "Maya Patel",
+    content: "The like button spring animation is a nice touch. Small details make a big difference.",
+    timestamp: "4 hours ago",
+    likes: 21,
+  },
+];
+
+function NestedCommentsDemo() {
+  return (
+    <div className="w-full p-6 overflow-y-auto max-h-[520px]">
+      <NestedComments
+        comments={DEMO_COMMENTS}
+        maxDepth={4}
+        accentColor="#8b5cf6"
+      />
+    </div>
   );
 }
 
@@ -495,4 +552,5 @@ export const componentDemos: Record<string, React.ReactNode> = {
         />
     </div>
   ),
+  "nested-comments": <NestedCommentsDemo />,
 };

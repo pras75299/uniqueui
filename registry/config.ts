@@ -217,4 +217,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "nested-comments",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "nested-comments.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

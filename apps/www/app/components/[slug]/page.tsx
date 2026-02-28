@@ -12,7 +12,7 @@ export function generateStaticParams() {
   }));
 }
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export default async function ComponentPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
