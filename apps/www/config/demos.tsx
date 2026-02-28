@@ -520,14 +520,14 @@ export const componentDemos: Record<string, React.ReactNode> = {
   "drawer-slide": <DrawerDemo />,
   "notification-stack": <NotificationDemo />,
   "animated-timeline": (
-    <div className="p-10 w-full">
+    <div className="p-10 w-full max-w-sm mx-auto">
       <AnimatedTimeline
         items={[
-          { id: "1", title: "Initialization", description: "System booted and components loaded." },
-          { id: "2", title: "Authentication", description: "User credentials verified securely." },
-          { id: "3", title: "Active Session", description: "Real-time connection established." }
+          { id: "1", title: "Project Kickoff",      description: "Scope defined and team assembled.",                color: "#a855f7", date: "Jan 2026" },
+          { id: "2", title: "Design Phase",          description: "Wireframes and component system finalised.",       color: "#6366f1", date: "Jan 2026" },
+          { id: "3", title: "Development Sprint",    description: "Core components built and tested end-to-end.",    color: "#ec4899", date: "Feb 2026" },
+          { id: "4", title: "Public Launch",         description: "CLI published and registry live.",                color: "#10b981", date: "Feb 2026" },
         ]}
-        orientation="vertical"
         lineColor="#3f3f46"
       />
     </div>
