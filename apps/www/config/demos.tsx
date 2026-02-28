@@ -209,13 +209,13 @@ export const componentDemos: Record<string, React.ReactNode> = {
     <div className="flex flex-wrap gap-6 items-center justify-center p-10">
       <Button
         borderRadius="1.75rem"
-        className="bg-slate-900 text-white border-neutral-200 dark:border-slate-800"
+        className="bg-zinc-950 text-white border-neutral-200 dark:border-slate-800"
       >
         Click me
       </Button>
       <Button
         borderRadius="1rem"
-        className="bg-slate-900 text-white border-neutral-200 dark:border-slate-800"
+        className="bg-zinc-950 text-white border-neutral-200 dark:border-slate-800"
         containerClassName="h-12 w-48"
       >
         Rounded Button
@@ -224,7 +224,7 @@ export const componentDemos: Record<string, React.ReactNode> = {
   ),
   "typewriter-text": (
     <div className="space-y-6 text-center p-10">
-      <div className="text-3xl font-bold">
+      <div className="text-3xl font-bold text-white">
         I love{" "}
         <TypewriterText
           words={["React", "TypeScript", "Motion", "Tailwind", "UniqueUI"]}
@@ -382,24 +382,26 @@ export const componentDemos: Record<string, React.ReactNode> = {
     </div>
   ),
   "scroll-reveal": (
-    <div className="flex flex-col items-center justify-start h-[400px] w-full overflow-y-auto p-10 relative rounded-xl border border-neutral-800">
-      <div className="min-h-[500px] w-full flex flex-col items-center justify-start pt-10">
-         <p className="text-neutral-500 font-medium animate-pulse">Scroll down ↓</p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-20 w-full">
-        {(["fade-up", "scale", "blur"] as const).map((preset, i) => (
-          <ScrollReveal key={preset} animation={preset} delay={i * 0.15} once={false}>
-            <div className="p-6 rounded-lg bg-neutral-900 border border-neutral-800 text-center shadow-lg h-full">
-              <div className="text-lg font-semibold mb-1 text-neutral-200">{preset}</div>
-              <p className="text-neutral-500 text-xs">Revealed!</p>
-            </div>
-          </ScrollReveal>
+    <div className="p-10 text-white">
+      <ScrollRevealGroup
+        animation="fade-up"
+        staggerDelay={0.15}
+        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+      >
+        {["fade-up", "scale", "blur"].map((preset) => (
+          <div
+            key={preset}
+            className="p-6 rounded-lg bg-neutral-900/50 border border-neutral-800 text-center"
+          >
+            <div className="text-lg font-semibold mb-1 text-neutral-200">{preset}</div>
+            <p className="text-neutral-500 text-xs">Scroll to reveal</p>
+          </div>
         ))}
-      </div>
+      </ScrollRevealGroup>
     </div>
   ),
   "skeleton-shimmer": (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full text-white">
       <SkeletonCard />
       <div className="space-y-4 p-6 rounded-xl border border-neutral-800 bg-neutral-900/50">
         <SkeletonShimmer width="80%" height={20} rounded="md" />
@@ -456,7 +458,7 @@ export const componentDemos: Record<string, React.ReactNode> = {
       <FlipCard
         className="w-60 h-40"
         front={
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800">
             <p className="text-lg font-bold">Hover to flip →</p>
           </div>
         }
@@ -470,12 +472,12 @@ export const componentDemos: Record<string, React.ReactNode> = {
         className="w-60 h-40"
         trigger="click"
         front={
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800">
             <p className="text-lg font-bold">Click to flip</p>
           </div>
         }
         back={
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full bg-zinc-800 rounded-xl border border-zinc-700">
             <p className="text-lg font-bold text-green-400">Click again!</p>
           </div>
         }
@@ -483,9 +485,9 @@ export const componentDemos: Record<string, React.ReactNode> = {
     </div>
   ),
   "dot-grid-background": (
-    <div className="p-10 w-full">
+    <div className="p-10 w-full text-white">
       <DotGridBackground className="rounded-xl h-[300px] flex items-center justify-center w-full">
-        <div className="text-center">
+        <div className="text-center z-10 w-full relative">
           <h3 className="text-2xl font-bold mb-2">Interactive Dots</h3>
           <p className="text-neutral-400">Move your cursor around</p>
         </div>
@@ -493,14 +495,14 @@ export const componentDemos: Record<string, React.ReactNode> = {
     </div>
   ),
   "floating-dock": (
-    <div className="flex items-center justify-center p-20">
+    <div className="flex items-center justify-center p-20 text-white">
       <FloatingDock
         items={[
-          { id: "home", icon: <Ghost className="w-5 h-5" />, label: "Home" },
-          { id: "search", icon: <Sparkles className="w-5 h-5" />, label: "Search" },
-          { id: "layers", icon: <Layers className="w-5 h-5" />, label: "Layers" },
-          { id: "scroll", icon: <ScrollText className="w-5 h-5" />, label: "Scroll" },
-          { id: "terminal", icon: <Terminal className="w-5 h-5" />, label: "Terminal" },
+          { id: "home", icon: <span className="text-xl">🏠</span>, label: "Home" },
+          { id: "search", icon: <span className="text-xl">✨</span>, label: "Search" },
+          { id: "layers", icon: <span className="text-xl">📚</span>, label: "Layers" },
+          { id: "scroll", icon: <span className="text-xl">📜</span>, label: "Scroll" },
+          { id: "terminal", icon: <span className="text-xl">💻</span>, label: "Terminal" },
         ]}
       />
     </div>
@@ -519,38 +521,15 @@ export const componentDemos: Record<string, React.ReactNode> = {
   "notification-stack": <NotificationDemo />,
   "animated-timeline": (
     <div className="p-10 w-full">
-        <AnimatedTimeline
-            items={[
-            {
-                id: "1",
-                title: "Project Started",
-                description: "Initial setup and planning for UniqueUI component library.",
-                date: "Jan 2026",
-                color: "#a855f7",
-            },
-            {
-                id: "2",
-                title: "Phase 1 Components",
-                description: "Built the first 11 animated components including Moving Border and Typewriter Text.",
-                date: "Jan 2026",
-                color: "#ec4899",
-            },
-            {
-                id: "3",
-                title: "Phase 2 Components",
-                description: "Added 10 more components including Flip Card, Meteors, and Notification Stack.",
-                date: "Feb 2026",
-                color: "#6366f1",
-            },
-            {
-                id: "4",
-                title: "CLI & Registry",
-                description: "Built the CLI tool and component registry for easy installation.",
-                date: "Feb 2026",
-                color: "#10b981",
-            },
-            ]}
-        />
+      <AnimatedTimeline
+        items={[
+          { id: "1", title: "Initialization", description: "System booted and components loaded." },
+          { id: "2", title: "Authentication", description: "User credentials verified securely." },
+          { id: "3", title: "Active Session", description: "Real-time connection established." }
+        ]}
+        orientation="vertical"
+        lineColor="#3f3f46"
+      />
     </div>
   ),
   "nested-comments": <NestedCommentsDemo />,
@@ -565,18 +544,6 @@ export const componentDemos: Record<string, React.ReactNode> = {
         description="What are the practical ways to ensure AI expands opportunity, strengthens resilience and supports a more inclusive, equitable future?"
         ctaText="Read the article →"
         accentColor="#6366f1"
-        imageHeight={220}
-        className="w-72"
-      />
-      <HoverRevealCard
-        image="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80"
-        imageAlt="Abstract technology"
-        tag="Design"
-        title="The future of UI design in the age of generative AI"
-        subtitle="Blog Post"
-        description="Designers are rethinking every touchpoint as AI-generated interfaces become the new creative frontier. Here's what comes next."
-        ctaText="Explore the post →"
-        accentColor="#ec4899"
         imageHeight={220}
         className="w-72"
       />
