@@ -1405,49 +1405,102 @@ export default function Example() {
     slug: "animated-timeline",
     name: "Animated Timeline",
     description:
-      "Scroll-triggered timeline with staggered spring animations for each node.",
+      "Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps.",
     installCmd: "npx uniqueui add animated-timeline",
     icon: Clock,
     category: "Effects & Animations",
     props: [
-      {
-        "name": "items",
-        "type": "TimelineItem[]",
-        "description": "Ordered JSON object sequence defining steps parsing chronological evaluation."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "description": "Global CSS structure overrides for the list grouping wrapper."
-      },
-      {
-        "name": "lineColor",
-        "type": "string",
-        "description": "Vector stroke color defining the connection axis layout."
-      },
-      {
-        "name": "orientation",
-        "type": "\"vertical\" | \"horizontal\"",
-        "description": "Directional bias translating objects explicitly 'horizontal' or natively 'vertical'."
-      }
+      { "name": "items", "type": "TimelineItem[]", "description": "Ordered array of timeline items (id, title, description, date, color, icon)." },
+      { "name": "variant", "type": "\"vertical\" | \"horizontal\" | \"cards\" | \"steps\"", "description": "Layout and animation style. Defaults to \"vertical\"." },
+      { "name": "lineColor", "type": "string", "description": "Connecting line color. Defaults to rgba(255,255,255,0.08)." },
+      { "name": "className", "type": "string", "description": "Additional classes on the root wrapper." },
     ],
-    usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+    variants: [
+      {
+        id: "vertical",
+        label: "Vertical",
+        demoKey: "animated-timeline/vertical",
+        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+
+const items = [
+  { id: "1", title: "Project Kickoff",   description: "Scope defined and team assembled.",             color: "#a855f7", date: "Jan 2026" },
+  { id: "2", title: "Design Phase",      description: "Wireframes and component system finalised.",    color: "#6366f1", date: "Jan 2026" },
+  { id: "3", title: "Dev Sprint",        description: "Core components built and tested end-to-end.", color: "#ec4899", date: "Feb 2026" },
+  { id: "4", title: "Public Launch",     description: "CLI published and registry live.",             color: "#10b981", date: "Feb 2026" },
+];
 
 export default function Example() {
   return (
-    <div className="max-w-sm mx-auto p-4 w-full text-white">
-      <AnimatedTimeline
-        items={[
-          { id: "1", title: "Project Kickoff",   description: "Scope defined and team assembled.",              color: "#a855f7", date: "Jan 2026" },
-          { id: "2", title: "Design Phase",       description: "Wireframes and component system finalised.",     color: "#6366f1", date: "Jan 2026" },
-          { id: "3", title: "Development Sprint", description: "Core components built and tested end-to-end.",  color: "#ec4899", date: "Feb 2026" },
-          { id: "4", title: "Public Launch",      description: "CLI published and registry live.",              color: "#10b981", date: "Feb 2026" },
-        ]}
-        lineColor="#3f3f46"
-      />
+    <div className="max-w-sm mx-auto p-6 w-full">
+      <AnimatedTimeline items={items} variant="vertical" lineColor="#3f3f46" />
     </div>
   );
-}`
+}`,
+      },
+      {
+        id: "horizontal",
+        label: "Horizontal",
+        demoKey: "animated-timeline/horizontal",
+        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+
+const items = [
+  { id: "1", title: "Kickoff",  description: "Scope agreed.",          color: "#a855f7", date: "Jan" },
+  { id: "2", title: "Design",   description: "Wireframes done.",       color: "#6366f1", date: "Jan" },
+  { id: "3", title: "Build",    description: "Components shipped.",    color: "#ec4899", date: "Feb" },
+  { id: "4", title: "Launch",   description: "Registry live.",         color: "#10b981", date: "Feb" },
+];
+
+export default function Example() {
+  return (
+    <div className="p-6 w-full overflow-x-auto">
+      <AnimatedTimeline items={items} variant="horizontal" lineColor="#3f3f46" />
+    </div>
+  );
+}`,
+      },
+      {
+        id: "cards",
+        label: "Cards",
+        demoKey: "animated-timeline/cards",
+        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+
+const items = [
+  { id: "1", title: "Project Kickoff",   description: "Scope defined and team assembled.",             color: "#a855f7", date: "Jan 2026" },
+  { id: "2", title: "Design Phase",      description: "Wireframes and component system finalised.",    color: "#6366f1", date: "Jan 2026" },
+  { id: "3", title: "Dev Sprint",        description: "Core components built and tested end-to-end.", color: "#ec4899", date: "Feb 2026" },
+  { id: "4", title: "Public Launch",     description: "CLI published and registry live.",             color: "#10b981", date: "Feb 2026" },
+];
+
+export default function Example() {
+  return (
+    <div className="max-w-lg mx-auto p-6 w-full">
+      <AnimatedTimeline items={items} variant="cards" lineColor="#3f3f46" />
+    </div>
+  );
+}`,
+      },
+      {
+        id: "steps",
+        label: "Steps",
+        demoKey: "animated-timeline/steps",
+        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+
+const items = [
+  { id: "1", title: "Install the CLI",        description: "Run npx uniqueui init in your project.",         color: "#a855f7" },
+  { id: "2", title: "Add a component",        description: "Run npx uniqueui add animated-timeline.",        color: "#6366f1" },
+  { id: "3", title: "Import and customise",   description: "Use variant, color, and date props as needed.",  color: "#ec4899" },
+  { id: "4", title: "Ship to production",     description: "Zero runtime dependency — fully your code.",     color: "#10b981" },
+];
+
+export default function Example() {
+  return (
+    <div className="max-w-sm mx-auto p-6 w-full">
+      <AnimatedTimeline items={items} variant="steps" />
+    </div>
+  );
+}`,
+      },
+    ],
   },
   {
     slug: "nested-comments",
