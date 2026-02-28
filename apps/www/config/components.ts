@@ -1534,4 +1534,90 @@ export default function Example() {
   );
 }`
   },
+  {
+    slug: "hover-reveal-card",
+    name: "Hover Reveal Card",
+    description:
+      "Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations.",
+    installCmd: "npx uniqueui add hover-reveal-card",
+    icon: Layers,
+    category: "Cards",
+    props: [
+      {
+        "name": "image",
+        "type": "string",
+        "description": "URL of the image displayed as the card's primary visual."
+      },
+      {
+        "name": "imageAlt",
+        "type": "string",
+        "description": "Accessible alt text attached to the img element."
+      },
+      {
+        "name": "tag",
+        "type": "string",
+        "description": "Small uppercase label rendered above the heading in both states."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Primary headline text displayed in both the default and reveal states."
+      },
+      {
+        "name": "subtitle",
+        "type": "string",
+        "description": "Supporting line shown beneath the title in the default state and as a footer in the reveal panel."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Extended body copy that appears only inside the slide-up hover panel."
+      },
+      {
+        "name": "ctaText",
+        "type": "string",
+        "description": "Call-to-action label rendered at the bottom of the hover panel."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "When supplied the wrapper renders as an anchor element pointing to this URL."
+      },
+      {
+        "name": "accentColor",
+        "type": "string",
+        "description": "Hex or CSS colour driving the tag, CTA text, and border-glow accent."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Tailwind utility classes forwarded onto the outermost card wrapper."
+      },
+      {
+        "name": "imageHeight",
+        "type": "number",
+        "description": "Pixel height reserved for the image section before the content area."
+      }
+    ],
+    usageCode: `import { HoverRevealCard } from "@/components/ui/hover-reveal-card";
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap gap-6 items-start justify-center p-10">
+      <HoverRevealCard
+        image="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80"
+        imageAlt="People at a conference table"
+        tag="AI"
+        title="AI for inclusive growth: Leadership lessons from Davos"
+        subtitle="Article"
+        description="What are the practical ways to ensure AI expands opportunity, strengthens resilience and supports a more inclusive, equitable future?"
+        ctaText="Read the article →"
+        accentColor="#6366f1"
+        imageHeight={220}
+        className="w-72"
+      />
+    </div>
+  );
+}`
+  },
 ];

@@ -225,4 +225,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "hover-reveal-card",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "hover-reveal-card.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];
