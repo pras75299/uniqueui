@@ -177,6 +177,9 @@ pnpm build
 
 # Build the registry
 pnpm build:registry   # from root
+
+# Run the test to see the components working
+npx ts-node scripts/test-all-components.ts      
 ```
 
 ## Project Structure

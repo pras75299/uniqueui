@@ -37,6 +37,8 @@ export async function add(componentName: string, options: { url: string }) {
     const CACHE_TTL = 3600 * 1000; // 1 hour
 
     async function getCachedRegistry(): Promise<RegistryItem[] | null> {
+        // Disabled cache during local development to ensure fresh registry
+        return null;
         try {
             if (!fs.existsSync(CACHE_FILE)) return null;
             const stat = await fs.stat(CACHE_FILE);

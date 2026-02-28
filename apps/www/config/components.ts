@@ -1175,18 +1175,17 @@ export default function Example() {
       }
     ],
     usageCode: `import { FloatingDock } from "@/components/ui/floating-dock";
-import { Ghost, Sparkles, Layers, ScrollText, Terminal } from "lucide-react";
 
 export default function Example() {
   return (
     <div className="flex items-center justify-center p-20 text-white">
       <FloatingDock
         items={[
-          { id: "home", icon: <Ghost className="w-5 h-5" />, label: "Home" },
-          { id: "search", icon: <Sparkles className="w-5 h-5" />, label: "Search" },
-          { id: "layers", icon: <Layers className="w-5 h-5" />, label: "Layers" },
-          { id: "scroll", icon: <ScrollText className="w-5 h-5" />, label: "Scroll" },
-          { id: "terminal", icon: <Terminal className="w-5 h-5" />, label: "Terminal" },
+          { id: "home", icon: <span className="text-xl">🏠</span>, label: "Home" },
+          { id: "search", icon: <span className="text-xl">✨</span>, label: "Search" },
+          { id: "layers", icon: <span className="text-xl">📚</span>, label: "Layers" },
+          { id: "scroll", icon: <span className="text-xl">📜</span>, label: "Scroll" },
+          { id: "terminal", icon: <span className="text-xl">💻</span>, label: "Terminal" },
         ]}
       />
     </div>
@@ -1388,49 +1387,6 @@ export default function Example() {
       <NotificationStack notifications={notifications} onRemove={removeNotification} />
     </div>
   );
-}\`
-    },
-      {
-            slug: "animated-timeline",
-            name: "Animated Timeline",
-            description:
-                  "Scroll-triggered timeline with staggered spring animations for each node.",
-            installCmd: "npx uniqueui add animated-timeline",
-            icon: Clock,
-            category: "Effects & Animations",
-        props: [
-      {
-            "name": "items",
-            "type": "TimelineItem[]",
-            "description": "Ordered JSON object sequence defining steps parsing chronological evaluation."
-      },
-      {
-            "name": "className",
-            "type": "string",
-            "description": "Global CSS structure overrides for the list grouping wrapper."
-      },
-      {
-            "name": "lineColor",
-            "type": "string",
-            "description": "Vector stroke color defining the connection axis layout."
-      },
-      {
-            "name": "orientation",
-            "type": "\"vertical\" | \"horizontal\"",
-                title: \`\${type.charAt(0).toUpperCase() + type.slice(1)} notification\`,
-                description: \`This is a \${type} notification.\`,
-                type: type,
-              })
-            }
-            className="px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors text-sm"
-          >
-            Show {type}
-          </button>
-        ))}
-      </div>
-      <NotificationStack notifications={notifications} onDismiss={removeNotification} />
-    </div>
-  );
 }`
   },
   {
@@ -1467,9 +1423,9 @@ export default function Example() {
 
 export default function Example() {
   const items = [
-    { title: "Initialization", description: "System booted and components loaded." },
-    { title: "Authentication", description: "User credentials verified securely." },
-    { title: "Active Session", description: "Real-time connection established." }
+    { id: "1", title: "Initialization", description: "System booted and components loaded." },
+    { id: "2", title: "Authentication", description: "User credentials verified securely." },
+    { id: "3", title: "Active Session", description: "Real-time connection established." }
   ];
 
   return (
