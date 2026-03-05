@@ -241,4 +241,13 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    // ─── Phase 3 — Premium & Polish  ───
+    {
+        name: "particle-field",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "particle-field.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

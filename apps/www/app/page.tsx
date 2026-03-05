@@ -5,6 +5,7 @@ import { TypewriterText } from "@/components/ui/typewriter-text";
 import { TiltCard } from "@/components/ui/3d-tilt-card";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { FloatingDock } from "@/components/ui/floating-dock";
+import { ParticleField } from "@/components/ui/particle-field";
 import { useState } from "react";
 import {
   Check,
@@ -167,7 +168,20 @@ export default function Home() {
               />
         </div>
 
-         <div className="flex justify-center">
+        <div className="w-full h-80 relative rounded-2xl overflow-hidden border border-neutral-800 bg-black mt-16 group">
+             <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center p-6 text-center">
+                 <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 mb-2">Particle Field</h3>
+                 <p className="text-neutral-400">Physics-based particle system with mouse interaction. Hover me!</p>
+             </div>
+             <ParticleField 
+                particleCount={150}
+                particleColor="#a855f7"
+                speed={0.5}
+                className="opacity-50 group-hover:opacity-100 transition-opacity duration-700"
+             />
+        </div>
+
+         <div className="flex justify-center mt-16">
             <Link href="/components">
                 <div className="group relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
                     <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />

@@ -1964,4 +1964,52 @@ export default function Example() {
       },
     ],
   },
+  {
+    slug: "particle-field",
+    name: "Particle Field",
+    description: "Canvas-based floating particles with mouse-repulsion physics and responsive connecting lines.",
+    installCmd: "npx uniqueui add particle-field",
+    icon: Sparkles,
+    category: "Backgrounds",
+    props: [
+      {
+        "name": "particleCount",
+        "type": "number",
+        "description": "The number of particles rendered dynamically."
+      },
+      {
+        "name": "particleColor",
+        "type": "string",
+        "description": "The hex color code for the particles and connecting lines."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "description": "The base movement speed multiplier."
+      },
+      {
+        "name": "interactionRadius",
+        "type": "number",
+        "description": "The pixel radius for the mouse repulsion event."
+      }
+    ],
+    usageCode: `import { ParticleField } from "@/components/ui/particle-field";
+
+export default function Example() {
+  return (
+    <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950">
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
+          Hover Around
+        </h3>
+      </div>
+      <ParticleField 
+        particleCount={120}
+        particleColor="#a855f7"
+        speed={0.5}
+      />
+    </div>
+  );
+}`
+  }
 ];

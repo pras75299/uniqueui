@@ -25,6 +25,7 @@ import { NestedComments } from "@/components/ui/nested-comments";
 import type { Comment } from "@/components/ui/nested-comments";
 import { HoverRevealCard } from "@/components/ui/hover-reveal-card";
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+import { ParticleField } from "@/components/ui/particle-field";
 import { useState } from "react";
 import {
   Ghost,
@@ -675,6 +676,20 @@ export const componentDemos: Record<string, React.ReactNode> = {
           />
         ))}
       </BentoGrid>
+    </div>
+  ),
+  "particle-field": (
+    <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950">
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 text-center">
+          Interactive<br/>Particle Field
+        </h3>
+      </div>
+      <ParticleField 
+        particleCount={120}
+        particleColor="#a855f7"
+        speed={0.5}
+      />
     </div>
   ),
 };
