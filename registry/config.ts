@@ -250,4 +250,20 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "radial-menu",
+        dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            { path: "radial-menu.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "cursor-trail",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "cursor-trail.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

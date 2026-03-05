@@ -28,6 +28,7 @@ import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { ParticleField } from "@/components/ui/particle-field";
 import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-gallery";
 import { RadialMenu } from "@/components/ui/radial-menu";
+import { CursorTrail } from "@/components/ui/cursor-trail";
 import { useState } from "react";
 import {
   Ghost,
@@ -721,6 +722,17 @@ export const componentDemos: Record<string, React.ReactNode> = {
           { id: "5", label: "Theme", icon: <Sparkles className="w-5 h-5" /> },
         ]} 
       />
+    </div>
+  ),
+  "cursor-trail": (
+    <div className="h-[400px] w-full flex items-center justify-center p-12 bg-neutral-950 rounded-xl overflow-hidden shadow-inner border border-neutral-800">
+      <div className="text-center relative z-10 pointer-events-none">
+        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-neutral-500 mb-4">
+          Interactive Cursor Trail
+        </h3>
+        <p className="text-neutral-400">Move your mouse inside this block to see the effect.</p>
+      </div>
+      <CursorTrail color="#a855f7" trailLength={30} size={15} decayDuration={0.8} />
     </div>
   ),
 };

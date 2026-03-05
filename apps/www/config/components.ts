@@ -2103,5 +2103,54 @@ export default function Example() {
     </div>
   );
 }`
+  },
+  {
+    slug: "cursor-trail",
+    name: "Cursor Trail",
+    description: "Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail.",
+    installCmd: "npx uniqueui add cursor-trail",
+    icon: LayoutGrid,
+    category: "Cursor Effects",
+    props: [
+      {
+        "name": "color",
+        "type": "string",
+        "description": "The color of the trail particles."
+      },
+      {
+        "name": "trailLength",
+        "type": "number",
+        "description": "Maximum number of particles rendering concurrently."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "description": "Base size of the trailing particle dots."
+      },
+      {
+        "name": "decayDuration",
+        "type": "number",
+        "description": "How long it takes for a drawn particle to fade and shrink out."
+      }
+    ],
+    usageCode: `import { CursorTrail } from "@/components/ui/cursor-trail";
+
+export default function Example() {
+  return (
+    <div className="h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center">
+      <h3 className="text-white text-2xl font-bold uppercase tracking-widest pointer-events-none">
+        Move your mouse
+      </h3>
+      
+      {/* Ensures it captures pointer events across the block but doesn't block the content */}
+      <CursorTrail 
+        color="#a855f7"
+        size={14}
+        trailLength={25}
+        decayDuration={0.6}
+      />
+    </div>
+  );
+}`
   }
 ];
