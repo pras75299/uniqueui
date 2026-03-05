@@ -49,6 +49,9 @@ export function ParticleField({
 
     let particles: Particle[] = [];
     let animationFrameId: number;
+    let rect = container.getBoundingClientRect();
+    let dpr = window.devicePixelRatio || 1;
+    let canvasRect = canvas.getBoundingClientRect();
     
     // Mouse state
     const mouse = {
@@ -122,65 +125,67 @@ export function ParticleField({
       }
     }
 
-    const init = () => {
-      // Setup canvas scaling for high DPI
-        const dpr = window.devicePixelRatio || 1;
-        // Get CSS dimensions
-        const rect = container.getBoundingClientRect();
-        
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        
-        ctx.scale(dpr, dpr);
-        
-        // CSS dimensions
-        canvas.style.width = `${rect.width}px`;
-        canvas.style.height = `${rect.height}px`;
+    const setupCanvas = () => {
+      rect = container.getBoundingClientRect();
+      dpr = window.devicePixelRatio || 1;
 
-        particles = [];
-        for (let i = 0; i < particleCount; i++) {
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+
+      // Cache canvas rect for pointer coordinate calculations
+      canvasRect = canvas.getBoundingClientRect();
+
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle(rect.width, rect.height));
-        }
+      }
     };
 
     const animate = () => {
-        const rect = container.getBoundingClientRect();
-        ctx.clearRect(0, 0, rect.width, rect.height);
-        
-        // Draw connecting lines between particles
-        for(let i = 0; i < particles.length; i++) {
-            for(let j = i; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const distance = Math.sqrt(dx*dx + dy*dy);
-                
-                if(distance < 100) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(${particleColorRgb}, ${1 - distance/100})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.stroke();
-                }
-            }
-        }
+      ctx.clearRect(0, 0, rect.width, rect.height);
 
-        particles.forEach((particle) => {
-            particle.update(rect.width, rect.height);
-            particle.draw(ctx);
-        });
-        
-        animationFrameId = requestAnimationFrame(animate);
+      // Limit line drawing complexity for large particle counts
+      const MAX_CONNECTED_PARTICLES = 150;
+      if (particles.length <= MAX_CONNECTED_PARTICLES) {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 100) {
+              ctx.beginPath();
+              ctx.strokeStyle = `rgba(${particleColorRgb}, ${1 - distance / 100})`;
+              ctx.lineWidth = 0.5;
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      particles.forEach((particle) => {
+        particle.update(rect.width, rect.height);
+        particle.draw(ctx);
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     const handleResize = () => {
-        init();
+      setupCanvas();
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-         const rect = canvas.getBoundingClientRect();
-         mouse.x = e.clientX - rect.left;
-         mouse.y = e.clientY - rect.top;
+      // Use cached canvas rect to avoid layout reads on every pointer move
+      mouse.x = e.clientX - canvasRect.left;
+      mouse.y = e.clientY - canvasRect.top;
     };
     
     const handleMouseLeave = () => {
@@ -194,7 +199,7 @@ export function ParticleField({
     canvas.addEventListener("mouseleave", handleMouseLeave);
 
     // Initial load
-    init();
+    setupCanvas();
     animate();
 
     return () => {

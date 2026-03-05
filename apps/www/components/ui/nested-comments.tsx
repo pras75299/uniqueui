@@ -10,6 +10,11 @@ import { cn } from "@/lib/utils";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
+/**
+ * NestedComments is designed for small-to-medium discussion threads.
+ * For very large or deeply nested trees, consider centralizing comment state
+ * and/or pairing with virtualization to keep rendering work bounded.
+ */
 export type Comment = {
   id: string;
   author: string;

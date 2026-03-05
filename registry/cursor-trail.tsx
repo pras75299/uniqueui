@@ -26,29 +26,53 @@ export function CursorTrail({
   const [positions, setPositions] = useState<{ id: number; x: number; y: number }[]>([]);
 
   useEffect(() => {
-    let animationFrameId: number = 0;
+    let animationFrameId: number | null = null;
     let particleId = 0;
+    let pendingPosition: { x: number; y: number } | null = null;
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const updatePositions = () => {
+      if (!pendingPosition) {
+        animationFrameId = null;
+        return;
+      }
+
+      const { x, y } = pendingPosition;
+      pendingPosition = null;
+
       setPositions((prev) => {
-        // Add new position to array
         const newPositions = [
           ...prev,
-          { id: particleId++, x: e.clientX, y: e.clientY },
+          { id: particleId++, x, y },
         ];
-        // Keep array capped to max length roughly based on trailLength
+
         if (newPositions.length > trailLength) {
           return newPositions.slice(-trailLength);
         }
+
         return newPositions;
       });
+
+      // Schedule another frame only if new mouse positions arrive
+      if (pendingPosition) {
+        animationFrameId = window.requestAnimationFrame(updatePositions);
+      } else {
+        animationFrameId = null;
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      pendingPosition = { x: e.clientX, y: e.clientY };
+
+      if (animationFrameId === null) {
+        animationFrameId = window.requestAnimationFrame(updatePositions);
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
     };
   }, [trailLength]);
 

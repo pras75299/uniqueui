@@ -3,6 +3,10 @@ import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
+/**
+ * TypewriterText is intended for a small number of simultaneous instances.
+ * For very large grids of text, consider a lighter-weight or shared-timer approach.
+ */
 export interface TypewriterTextProps {
   words: string[];
   className?: string;

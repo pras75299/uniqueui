@@ -116,29 +116,25 @@ function NotificationItem({
   position: string;
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
-  const [progress, setProgress] = useState(100);
-  const startTime = useRef<number>(0);
   const onRemoveRef = useRef(onRemove);
+  const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     onRemoveRef.current = onRemove;
   }, [onRemove]);
 
   useEffect(() => {
-    startTime.current = Date.now();
     if (duration <= 0) return;
 
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime.current;
-      const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
-      setProgress(remaining);
-      if (remaining <= 0) {
-        clearInterval(interval);
-        onRemoveRef.current(id);
-      }
-    }, 50);
+    timeoutRef.current = window.setTimeout(() => {
+      onRemoveRef.current(id);
+    }, duration);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [id, duration]);
 
   const isRight = position.includes("right");
@@ -200,8 +196,9 @@ function NotificationItem({
               type === "warning" && "bg-yellow-500",
               type === "info" && "bg-blue-500"
             )}
-            style={{ width: `${progress}%` }}
-            transition={{ duration: 0.05 }}
+            initial={{ width: "100%" }}
+            animate={{ width: "0%" }}
+            transition={{ duration: duration / 1000, ease: "linear" }}
           />
         </div>
       )}
