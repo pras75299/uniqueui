@@ -2011,5 +2011,97 @@ export default function Example() {
     </div>
   );
 }`
+  },
+  {
+    slug: "horizontal-scroll-gallery",
+    name: "Horizontal Scroll Gallery",
+    description: "Converts vertical scroll into horizontal movement with momentum physics for immersive galleries.",
+    installCmd: "npx uniqueui add horizontal-scroll-gallery",
+    icon: Layers,
+    category: "Effects & Animations",
+    props: [
+      {
+        "name": "items",
+        "type": "React.ReactNode[]",
+        "description": "Array of React nodes (e.g. images, cards) to map across the horizontal track."
+      },
+      {
+        "name": "direction",
+        "type": "\"left\" | \"right\"",
+        "description": "Direction the track moves when the user scrolls down."
+      },
+      {
+        "name": "itemClassName",
+        "type": "string",
+        "description": "Common classes applied to every individual container."
+      }
+    ],
+    usageCode: `import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-gallery";
+
+export default function Example() {
+  const images = [
+    <img key="1" src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b" alt="Landscape 1" className="object-cover w-full h-full" />,
+    <img key="2" src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538" alt="Landscape 2" className="object-cover w-full h-full" />,
+    <img key="3" src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b" alt="Landscape 3" className="object-cover w-full h-full" />,
+    <div key="4" className="w-full h-full bg-neutral-900 flex items-center justify-center p-8 text-center text-white">
+      <h3 className="text-4xl font-bold">End of Gallery</h3>
+    </div>
+  ];
+  return (
+    <HorizontalScrollGallery items={images} />
+  );
+}`
+  },
+  {
+    slug: "radial-menu",
+    name: "Radial Menu",
+    description: "Circular flyout menu that bursts items outward from a center trigger with staggered spring animation.",
+    installCmd: "npx uniqueui add radial-menu",
+    icon: Palette,
+    category: "Navigation & Overlays",
+    props: [
+      {
+        "name": "items",
+        "type": "RadialMenuItem[]",
+        "description": "Array of item configurations representing the burst actions."
+      },
+      {
+        "name": "radius",
+        "type": "number",
+        "description": "Distance in pixels each item travels from the trigger center."
+      },
+      {
+        "name": "startAngle",
+        "type": "number",
+        "description": "The starting angle for the radial arc (e.g. -90 for top)."
+      },
+      {
+        "name": "endAngle",
+        "type": "number",
+        "description": "The concluding angle for the radial arc."
+      },
+      {
+        "name": "staggerDelay",
+        "type": "number",
+        "description": "Staggering time multiplier between cascading children."
+      }
+    ],
+    usageCode: `import { RadialMenu } from "@/components/ui/radial-menu";
+import { User, Settings, Mail, Bell } from "lucide-react";
+
+export default function Example() {
+  const menuItems = [
+    { id: "profile", label: "Profile", icon: <User className="w-5 h-5" /> },
+    { id: "settings", label: "Settings", icon: <Settings className="w-5 h-5" /> },
+    { id: "messages", label: "Messages", icon: <Mail className="w-5 h-5" /> },
+    { id: "notifications", label: "Notifications", icon: <Bell className="w-5 h-5" /> },
+  ];
+
+  return (
+    <div className="h-[400px] w-full flex items-center justify-center">
+      <RadialMenu items={menuItems} radius={120} />
+    </div>
+  );
+}`
   }
 ];

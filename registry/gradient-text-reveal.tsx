@@ -1,10 +1,9 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React from "react";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
-function cn(...classes: (string | undefined | null | false)[]) {
-  return classes.filter(Boolean).join(" ");
-}
+
 
 export interface GradientTextRevealProps {
   text: string;

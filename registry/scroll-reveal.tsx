@@ -1,13 +1,8 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useRef } from "react";
 import { m, LazyMotion, domAnimation, useInView } from "motion/react";
 import type { Variant } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 type AnimationPreset = "fade-up" | "fade-down" | "fade-left" | "fade-right" | "scale" | "blur";
 

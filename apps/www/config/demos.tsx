@@ -26,6 +26,8 @@ import type { Comment } from "@/components/ui/nested-comments";
 import { HoverRevealCard } from "@/components/ui/hover-reveal-card";
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { ParticleField } from "@/components/ui/particle-field";
+import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-gallery";
+import { RadialMenu } from "@/components/ui/radial-menu";
 import { useState } from "react";
 import {
   Ghost,
@@ -689,6 +691,35 @@ export const componentDemos: Record<string, React.ReactNode> = {
         particleCount={120}
         particleColor="#a855f7"
         speed={0.5}
+      />
+    </div>
+  ),
+  "horizontal-scroll-gallery": (
+    <HorizontalScrollGallery
+      items={[
+        <img key="1" src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b?q=80&w=800&auto=format&fit=crop" alt="Landscape 1" className="object-cover w-full h-full" />,
+        <img key="2" src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538?q=80&w=800&auto=format&fit=crop" alt="Landscape 2" className="object-cover w-full h-full" />,
+        <img key="3" src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b?q=80&w=800&auto=format&fit=crop" alt="Landscape 3" className="object-cover w-full h-full" />,
+        <div key="4" className="w-full h-full bg-neutral-900 flex items-center justify-center p-8 text-center text-white">
+          <h3 className="text-4xl font-bold">End of Gallery</h3>
+        </div>
+      ]}
+    />
+  ),
+  "radial-menu": (
+    <div className="h-[400px] w-full flex items-center justify-center p-12 bg-neutral-950 rounded-xl overflow-hidden shadow-inner border border-neutral-800">
+      <RadialMenu 
+        radius={110} 
+        startAngle={-180} 
+        endAngle={0} 
+        staggerDelay={0.06}
+        items={[
+          { id: "1", label: "Settings", icon: <Layers className="w-5 h-5" /> },
+          { id: "2", label: "Search", icon: <Ghost className="w-5 h-5" /> },
+          { id: "3", label: "Apps", icon: <Terminal className="w-5 h-5" /> },
+          { id: "4", label: "Docs", icon: <ScrollText className="w-5 h-5" /> },
+          { id: "5", label: "Theme", icon: <Sparkles className="w-5 h-5" /> },
+        ]} 
       />
     </div>
   ),

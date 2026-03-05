@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useRef } from "react";
 import {
   motion,
@@ -7,12 +8,6 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export interface FloatingDockProps {
   items: {
