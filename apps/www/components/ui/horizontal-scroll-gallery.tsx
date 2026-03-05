@@ -36,10 +36,14 @@ export function HorizontalScrollGallery({
   });
 
   // Calculate translation range based on direction
+  // We use matching string templates so Framer Motion can interpolate the numbers
+  // from 0% to -100% offset by the viewport width so it stops exactly cleanly!
   const x = useTransform(
     smoothProgress,
     [0, 1],
-    direction === "left" ? ["0%", "-100%"] : ["-100%", "0%"]
+    direction === "left" 
+      ? ["calc(0% + 0vw)", "calc(-100% + 100vw)"] 
+      : ["calc(-100% + 100vw)", "calc(0% + 0vw)"]
   );
 
   return (
