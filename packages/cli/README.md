@@ -57,10 +57,14 @@ export default function Hero() {
 
 ## Installation
 
-### Option A — Use with `npx` (recommended, no install needed)
+### Option A — Run directly (recommended)
 
 ```bash
 npx uniqueui <command>
+# or
+pnpm dlx uniqueui <command>
+# or
+bunx uniqueui <command>
 ```
 
 ### Option B — Install globally
@@ -418,27 +422,34 @@ npx uniqueui add magnetic-button
 
 | Component | Install Command | Category | Description |
 |---|---|---|---|
-| `moving-border` | `npx uniqueui add moving-border` | Effects | SVG-path-tracing animated border that orbits a button or card |
-| `typewriter-text` | `npx uniqueui add typewriter-text` | Text | Character-by-character typing with blinking cursor and delete-retype loop |
-| `3d-tilt-card` | `npx uniqueui add 3d-tilt-card` | Cards | Perspective-shifting card that tilts toward the cursor with parallax layers |
-| `spotlight-card` | `npx uniqueui add spotlight-card` | Cards | Card with a radial spotlight that follows the mouse cursor |
-| `aurora-background` | `npx uniqueui add aurora-background` | Backgrounds | Flowing aurora borealis gradient animation using layered blurred blobs |
-| `animated-tabs` | `npx uniqueui add animated-tabs` | Navigation | Tab bar with a sliding pill that morphs between tabs using layout animation |
-| `magnetic-button` | `npx uniqueui add magnetic-button` | Effects | Button that stretches toward the cursor and snaps back with spring physics |
-| `infinite-marquee` | `npx uniqueui add infinite-marquee` | Effects | Seamless infinite-scrolling ticker with pause-on-hover |
-| `scroll-reveal` | `npx uniqueui add scroll-reveal` | Effects | Elements animate into view on scroll with 6 animation presets |
-| `skeleton-shimmer` | `npx uniqueui add skeleton-shimmer` | Loaders | Loading placeholders with animated shimmer gradient sweep |
-| `morphing-modal` | `npx uniqueui add morphing-modal` | Overlays | Modal that expands from the trigger element with spring physics |
-| `gradient-text-reveal` | `npx uniqueui add gradient-text-reveal` | Text | Word-by-word text reveal with gradient coloring and blur-to-clear animation |
-| `scramble-text` | `npx uniqueui add scramble-text` | Text | Matrix-style text scramble that resolves characters left-to-right |
-| `meteors-card` | `npx uniqueui add meteors-card` | Cards | Card with animated shooting star particles |
-| `flip-card` | `npx uniqueui add flip-card` | Cards | 3D card flip with spring physics, hover or click triggers |
-| `dot-grid-background` | `npx uniqueui add dot-grid-background` | Backgrounds | Interactive dot-grid pattern with glowing cursor-following effect |
-| `floating-dock` | `npx uniqueui add floating-dock` | Navigation | macOS-style dock with magnetic scaling, spring physics, and tooltips |
-| `confetti-burst` | `npx uniqueui add confetti-burst` | Effects | Click-triggered confetti particle explosion with customizable colors |
-| `drawer-slide` | `npx uniqueui add drawer-slide` | Overlays | Slide-out drawer panel with drag-to-dismiss and backdrop blur |
-| `notification-stack` | `npx uniqueui add notification-stack` | Overlays | Stacked toast notifications with auto-dismiss and progress bars |
-| `animated-timeline` | `npx uniqueui add animated-timeline` | Effects | Scroll-triggered timeline with staggered spring animations |
+| `moving-border` | `npx uniqueui add moving-border` | Effects & Animations | SVG-path-tracing animated border that orbits a button or card. |
+| `typewriter-text` | `npx uniqueui add typewriter-text` | Text | Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop. |
+| `3d-tilt-card` | `npx uniqueui add 3d-tilt-card` | Cards | Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay. |
+| `spotlight-card` | `npx uniqueui add spotlight-card` | Cards | Card with a radial spotlight that follows the mouse cursor across its surface. |
+| `aurora-background` | `npx uniqueui add aurora-background` | Backgrounds | Flowing aurora borealis gradient animation using layered blurred blobs. |
+| `animated-tabs` | `npx uniqueui add animated-tabs` | Navigation & Overlays | Tab bar with a sliding pill that morphs between active tabs using layout animation. |
+| `magnetic-button` | `npx uniqueui add magnetic-button` | Effects & Animations | Button that stretches toward the cursor when nearby and snaps back with spring physics. |
+| `infinite-marquee` | `npx uniqueui add infinite-marquee` | Effects & Animations | Seamless infinite-scrolling ticker with pause-on-hover and variable speed. |
+| `scroll-reveal` | `npx uniqueui add scroll-reveal` | Effects & Animations | Elements animate into view when they enter the viewport, with 6 animation presets. |
+| `skeleton-shimmer` | `npx uniqueui add skeleton-shimmer` | Effects & Animations | Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade. |
+| `morphing-modal` | `npx uniqueui add morphing-modal` | Navigation & Overlays | Modal that expands from the trigger element with spring physics and backdrop blur. |
+| `gradient-text-reveal` | `npx uniqueui add gradient-text-reveal` | Text | Word-by-word text reveal with gradient coloring and blur-to-clear spring animation. |
+| `scramble-text` | `npx uniqueui add scramble-text` | Text | Matrix-style text scramble effect that resolves characters left-to-right. |
+| `meteors-card` | `npx uniqueui add meteors-card` | Cards | Card with animated meteor/shooting star particles falling through the background. |
+| `flip-card` | `npx uniqueui add flip-card` | Cards | 3D card flip with spring physics, supporting hover or click triggers. |
+| `dot-grid-background` | `npx uniqueui add dot-grid-background` | Backgrounds | Interactive dot-grid pattern with a glowing cursor-following effect. |
+| `floating-dock` | `npx uniqueui add floating-dock` | Navigation & Overlays | macOS-style dock with magnetic scaling, spring physics, and tooltips. |
+| `confetti-burst` | `npx uniqueui add confetti-burst` | Effects & Animations | Click-triggered confetti particle explosion with customizable colors and physics. |
+| `drawer-slide` | `npx uniqueui add drawer-slide` | Navigation & Overlays | Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur. |
+| `notification-stack` | `npx uniqueui add notification-stack` | Navigation & Overlays | Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types. |
+| `animated-timeline` | `npx uniqueui add animated-timeline` | Effects & Animations | Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps. |
+| `nested-comments` | `npx uniqueui add nested-comments` | Social & Interaction | Threaded comment section with infinite nesting, animated expand/collapse, inline reply composer, and spring-physics like button. |
+| `hover-reveal-card` | `npx uniqueui add hover-reveal-card` | Cards | Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations. |
+| `bento-grid` | `npx uniqueui add bento-grid` | Cards | Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell. |
+| `particle-field` | `npx uniqueui add particle-field` | Backgrounds | Canvas-based floating particles with mouse-repulsion physics and responsive connecting lines. |
+| `horizontal-scroll-gallery` | `npx uniqueui add horizontal-scroll-gallery` | Effects & Animations | Converts vertical scroll into horizontal movement with momentum physics for immersive galleries. |
+| `radial-menu` | `npx uniqueui add radial-menu` | Navigation & Overlays | Circular flyout menu that bursts items outward from a center trigger with staggered spring animation. |
+| `cursor-trail` | `npx uniqueui add cursor-trail` | Cursor Effects | Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail. |
 
 ---
 

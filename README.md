@@ -33,7 +33,7 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 **Key features:**
 
 - 🎯 **Copy-paste architecture** — Components live in your codebase, fully customizable
-- 🎨 **24 animated components** — From subtle to spectacular
+- 🎨 **28 animated components** — From subtle to spectacular
 - ⚡ **CLI for instant setup** — `npx uniqueui init` → `npx uniqueui add <component>`
 - 🧩 **Zero lock-in** — Uses standard React, Motion, and Tailwind CSS
 - 📱 **Dark-first design** — Every component looks great out of the box
@@ -42,29 +42,34 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 
 | Component | Category | Description |
 |-----------|----------|-------------|
-| **Moving Border** | Effects | SVG-path-tracing animated border that orbits a button or card |
-| **Typewriter Text** | Text | Character-by-character typing with blinking cursor and delete-retype loop |
-| **3D Tilt Card** | Cards | Perspective-shifting card that tilts toward the cursor with parallax layers |
-| **Spotlight Card** | Cards | Card with a radial spotlight that follows the mouse cursor |
-| **Aurora Background** | Backgrounds | Flowing aurora borealis gradient animation using layered blurred blobs |
-| **Animated Tabs** | Navigation | Tab bar with a sliding pill that morphs between tabs using layout animation |
-| **Magnetic Button** | Effects | Button that stretches toward the cursor and snaps back with spring physics |
-| **Infinite Marquee** | Effects | Seamless infinite-scrolling ticker with pause-on-hover |
-| **Scroll Reveal** | Effects | Elements animate into view on scroll, with 6 animation presets |
-| **Skeleton Shimmer** | Loaders | Loading placeholders with animated shimmer gradient sweep |
-| **Morphing Modal** | Overlays | Modal that expands from the trigger element with spring physics |
-| **Gradient Text Reveal** | Text | Word-by-word text reveal with gradient coloring and blur-to-clear animation |
-| **Scramble Text** | Text | Matrix-style text scramble effect that resolves characters left-to-right |
-| **Meteors Card** | Cards | Card with animated shooting star particles through the background |
-| **Flip Card** | Cards | 3D card flip with spring physics, hover or click triggers |
-| **Dot Grid Background** | Backgrounds | Interactive dot-grid pattern with glowing cursor-following effect |
-| **Floating Dock** | Navigation | macOS-style dock with magnetic scaling, spring physics, and tooltips |
-| **Confetti Burst** | Effects | Click-triggered confetti particle explosion with customizable colors |
-| **Drawer Slide** | Overlays | Slide-out drawer panel with drag-to-dismiss and backdrop blur |
-| **Notification Stack** | Overlays | Stacked toast notifications with auto-dismiss and progress bars |
-| **Animated Timeline** | Effects | Scroll-triggered timeline with staggered spring animations and per-item colors |
-| **Nested Comments** | Social | Threaded comment section with infinite nesting and spring-physics animations |
-| **Hover Reveal Card** | Cards | Card that slides up a full-detail panel on hover with staggered Motion animations |
+| **Moving Border** | Effects & Animations | SVG-path-tracing animated border that orbits a button or card. |
+| **Typewriter Text** | Text | Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop. |
+| **3D Tilt Card** | Cards | Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay. |
+| **Spotlight Card** | Cards | Card with a radial spotlight that follows the mouse cursor across its surface. |
+| **Aurora Background** | Backgrounds | Flowing aurora borealis gradient animation using layered blurred blobs. |
+| **Animated Tabs** | Navigation & Overlays | Tab bar with a sliding pill that morphs between active tabs using layout animation. |
+| **Magnetic Button** | Effects & Animations | Button that stretches toward the cursor when nearby and snaps back with spring physics. |
+| **Infinite Marquee** | Effects & Animations | Seamless infinite-scrolling ticker with pause-on-hover and variable speed. |
+| **Scroll Reveal** | Effects & Animations | Elements animate into view when they enter the viewport, with 6 animation presets. |
+| **Skeleton Shimmer** | Effects & Animations | Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade. |
+| **Morphing Modal** | Navigation & Overlays | Modal that expands from the trigger element with spring physics and backdrop blur. |
+| **Gradient Text Reveal** | Text | Word-by-word text reveal with gradient coloring and blur-to-clear spring animation. |
+| **Scramble Text** | Text | Matrix-style text scramble effect that resolves characters left-to-right. |
+| **Meteors Card** | Cards | Card with animated meteor/shooting star particles falling through the background. |
+| **Flip Card** | Cards | 3D card flip with spring physics, supporting hover or click triggers. |
+| **Dot Grid Background** | Backgrounds | Interactive dot-grid pattern with a glowing cursor-following effect. |
+| **Floating Dock** | Navigation & Overlays | macOS-style dock with magnetic scaling, spring physics, and tooltips. |
+| **Confetti Burst** | Effects & Animations | Click-triggered confetti particle explosion with customizable colors and physics. |
+| **Drawer Slide** | Navigation & Overlays | Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur. |
+| **Notification Stack** | Navigation & Overlays | Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types. |
+| **Animated Timeline** | Effects & Animations | Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps. |
+| **Nested Comments** | Social & Interaction | Threaded comment section with infinite nesting, animated expand/collapse, inline reply composer, and spring-physics like button. |
+| **Hover Reveal Card** | Cards | Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations. |
+| **Bento Grid** | Cards | Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell. |
+| **Particle Field** | Backgrounds | Canvas-based floating particles with mouse-repulsion physics and responsive connecting lines. |
+| **Horizontal Scroll Gallery** | Effects & Animations | Converts vertical scroll into horizontal movement with momentum physics for immersive galleries. |
+| **Radial Menu** | Navigation & Overlays | Circular flyout menu that bursts items outward from a center trigger with staggered spring animation. |
+| **Cursor Trail** | Cursor Effects | Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail. |
 
 ## Installation
 
@@ -78,10 +83,14 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 
 > All components use [Motion](https://motion.dev) (formerly Framer Motion). The CLI installs `motion` automatically.
 
-### Option A — Use with `npx` (recommended)
+### Option A — Run directly (recommended)
 
 ```bash
 npx uniqueui <command>
+# or
+pnpm dlx uniqueui <command>
+# or
+bunx uniqueui <command>
 ```
 
 ### Option B — Install globally
@@ -411,7 +420,7 @@ uniqueui/
 │       │   ├── layout.tsx      # Root layout
 │       │   └── globals.css     # Global styles & keyframes
 │       ├── components/
-│       │   └── ui/             # All 24 UI components
+│       │   └── ui/             # All 28 UI components
 │       └── config/
 │           ├── components.ts   # Component metadata (name, slug, icon, description)
 │           └── demos.tsx       # Component demo configurations
@@ -425,7 +434,7 @@ uniqueui/
 │               └── list.ts     # `uniqueui list` command
 ├── registry/                   # Component source files + config
 │   ├── config.ts               # Registry configuration (dependencies, files)
-│   └── *.tsx                   # 24 component source files
+│   └── *.tsx                   # 28 component source files
 ├── scripts/
 │   └── build-registry.ts      # Generates registry.json from config
 ├── registry.json               # Generated registry manifest
