@@ -217,4 +217,53 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "nested-comments",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "nested-comments.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "hover-reveal-card",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "hover-reveal-card.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "bento-grid",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "bento-grid.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    // ─── Phase 3 — Premium & Polish  ───
+    {
+        name: "particle-field",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "particle-field.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "radial-menu",
+        dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            { path: "radial-menu.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "cursor-trail",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "cursor-trail.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

@@ -1,11 +1,6 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export interface MeteorsCardProps {
   children: React.ReactNode;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   motion,
   useMotionValue,
@@ -75,10 +75,29 @@ function DockItem({
   magneticRange: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const centerXRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const updateBounds = () => {
+      if (!ref.current) return;
+      const bounds = ref.current.getBoundingClientRect();
+      centerXRef.current = bounds.x + bounds.width / 2;
+    };
+
+    updateBounds();
+    window.addEventListener("resize", updateBounds);
+
+    return () => {
+      window.removeEventListener("resize", updateBounds);
+    };
+  }, []);
 
   const distance = useTransform(mouseX, (val: number) => {
-    const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
-    return val - bounds.x - bounds.width / 2;
+    const centerX = centerXRef.current;
+    if (centerX == null) {
+      return Infinity;
+    }
+    return val - centerX;
   });
 
   const springConfig = { stiffness: 200, damping: 15, mass: 0.5 };

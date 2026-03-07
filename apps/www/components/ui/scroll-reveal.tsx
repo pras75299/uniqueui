@@ -1,7 +1,8 @@
 "use client";
-import React, { useRef } from "react";
-import { motion, useInView, Variant } from "motion/react";
 import { cn } from "@/lib/utils";
+import React, { useRef } from "react";
+import { m, LazyMotion, domAnimation, useInView } from "motion/react";
+import type { Variant } from "motion/react";
 
 type AnimationPreset = "fade-up" | "fade-down" | "fade-left" | "fade-right" | "scale" | "blur";
 
@@ -60,27 +61,29 @@ export function ScrollReveal({
   const preset = presets[animation];
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden: preset.hidden,
-        visible: {
-          ...preset.visible,
-          transition: {
-            type: "spring",
-            stiffness: 100,
-            damping: 15,
-            delay,
-            duration,
+    <LazyMotion features={domAnimation}>
+      <m.div
+        ref={ref}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={{
+          hidden: preset.hidden,
+          visible: {
+            ...preset.visible,
+            transition: {
+              type: "spring",
+              stiffness: 100,
+              damping: 15,
+              delay,
+              duration,
+            },
           },
-        },
-      }}
-      className={cn(className)}
-    >
-      {children}
-    </motion.div>
+        }}
+        className={cn(className)}
+      >
+        {children}
+      </m.div>
+    </LazyMotion>
   );
 }
 
@@ -110,41 +113,43 @@ export function ScrollRevealGroup({
   const preset = presets[animation];
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: {
-            staggerChildren: staggerDelay,
-          },
-        },
-      }}
-      className={cn(className)}
-    >
-      {React.Children.map(children, (child, index) => {
-        const key = React.isValidElement(child) && child.key ? child.key : index;
-        return (
-          <motion.div
-            key={key}
-          variants={{
-            hidden: preset.hidden,
-            visible: {
-              ...preset.visible,
-              transition: {
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              },
+    <LazyMotion features={domAnimation}>
+      <m.div
+        ref={ref}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: staggerDelay,
             },
-          }}
-        >
-          {child}
-        </motion.div>
-        );
-      })}
-    </motion.div>
+          },
+        }}
+        className={cn(className)}
+      >
+        {React.Children.map(children, (child, index) => {
+          const key = React.isValidElement(child) && child.key ? child.key : index;
+          return (
+            <m.div
+              key={key}
+              variants={{
+                hidden: preset.hidden,
+                visible: {
+                  ...preset.visible,
+                  transition: {
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 15,
+                  },
+                },
+              }}
+            >
+              {child}
+            </m.div>
+          );
+        })}
+      </m.div>
+    </LazyMotion>
   );
 }

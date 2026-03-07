@@ -1,6 +1,12 @@
 "use client";
-import React from "react";
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
+import {
+  motion,
+  useAnimationFrame,
+  useMotionTemplate,
+  useMotionValue,
+  useTransform,
+} from "motion/react";
 import { cn } from "@/lib/utils";
 
 export function Button({
@@ -79,6 +85,7 @@ export const MovingBorder = ({
   const pathRef = useRef<SVGRectElement>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
+  const pathLengthRef = useRef<number | null>(null);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -89,7 +96,16 @@ export const MovingBorder = ({
       const deltaTime = time - lastTime;
       lastTime = time;
 
-      const pathLength = pathRef.current?.getTotalLength();
+      if (!pathRef.current) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+
+      if (pathLengthRef.current == null) {
+        pathLengthRef.current = pathRef.current.getTotalLength();
+      }
+
+      const pathLength = pathLengthRef.current;
       if (pathLength) {
         const pxPerMs = pathLength / safeDuration;
         progressRef.current = (progressRef.current + deltaTime * pxPerMs) % pathLength;

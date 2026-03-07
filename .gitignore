@@ -3,3 +3,4 @@
 /packages/cli/dist
 NPM_PUBLISH_GUIDE.md
 /temp-test
+/e2e-components-test

@@ -17,7 +17,17 @@ import {
   PanelRight,
   Bell,
   Clock,
+  MessageSquare,
+  LayoutGrid,
 } from "lucide-react";
+
+export type ComponentVariant = {
+  id: string;
+  label: string;
+  usageCode: string;
+  /** Key used to look up this variant's demo in componentDemos */
+  demoKey: string;
+};
 
 export type ComponentItem = {
   slug: string;
@@ -28,6 +38,8 @@ export type ComponentItem = {
   category?: string;
   props?: { name: string; type: string; default?: string; description: string }[];
   usageCode?: string;
+  /** When set, the page renders a synced tab switcher for both preview and code */
+  variants?: ComponentVariant[];
 };
 
 export const componentsList: ComponentItem[] = [
@@ -35,7 +47,7 @@ export const componentsList: ComponentItem[] = [
     slug: "moving-border",
     name: "Moving Border",
     description: "SVG-path-tracing animated border that orbits a button or card.",
-    installCmd: "uniqueui add moving-border",
+    installCmd: "npx uniqueui add moving-border",
     icon: Sparkles,
     category: "Effects & Animations",
     props: [
@@ -102,7 +114,7 @@ export default function Example() {
     name: "Typewriter Text",
     description:
       "Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop.",
-    installCmd: "uniqueui add typewriter-text",
+    installCmd: "npx uniqueui add typewriter-text",
     icon: Terminal,
     category: "Text",
     props: [
@@ -182,7 +194,7 @@ export default function Example() {
     name: "3D Tilt Card",
     description:
       "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
-    installCmd: "uniqueui add 3d-tilt-card",
+    installCmd: "npx uniqueui add 3d-tilt-card",
     icon: Layers,
     category: "Cards",
     props: [
@@ -263,7 +275,7 @@ export default function Example() {
     name: "Spotlight Card",
     description:
       "Card with a radial spotlight that follows the mouse cursor across its surface.",
-    installCmd: "uniqueui add spotlight-card",
+    installCmd: "npx uniqueui add spotlight-card",
     icon: MousePointer,
     category: "Cards",
     props: [
@@ -314,7 +326,7 @@ export default function Example() {
     name: "Aurora Background",
     description:
       "Flowing aurora borealis gradient animation using layered blurred blobs.",
-    installCmd: "uniqueui add aurora-background",
+    installCmd: "npx uniqueui add aurora-background",
     icon: Sparkles,
     category: "Backgrounds",
     props: [
@@ -354,7 +366,7 @@ export default function Example() {
     name: "Animated Tabs",
     description:
       "Tab bar with a sliding pill that morphs between active tabs using layout animation.",
-    installCmd: "uniqueui add animated-tabs",
+    installCmd: "npx uniqueui add animated-tabs",
     icon: Layers,
     category: "Navigation & Overlays",
     props: [
@@ -450,7 +462,7 @@ export default function Example() {
     name: "Magnetic Button",
     description:
       "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
-    installCmd: "uniqueui add magnetic-button",
+    installCmd: "npx uniqueui add magnetic-button",
     icon: MousePointer,
     category: "Effects & Animations",
     props: [
@@ -507,7 +519,7 @@ export default function Example() {
     name: "Infinite Marquee",
     description:
       "Seamless infinite-scrolling ticker with pause-on-hover and variable speed.",
-    installCmd: "uniqueui add infinite-marquee",
+    installCmd: "npx uniqueui add infinite-marquee",
     icon: ScrollText,
     category: "Effects & Animations",
     props: [
@@ -586,7 +598,7 @@ export default function Example() {
     name: "Scroll Reveal",
     description:
       "Elements animate into view when they enter the viewport, with 6 animation presets.",
-    installCmd: "uniqueui add scroll-reveal",
+    installCmd: "npx uniqueui add scroll-reveal",
     icon: ScrollText,
     category: "Effects & Animations",
     props: [
@@ -655,7 +667,7 @@ export default function Example() {
     name: "Skeleton Shimmer",
     description:
       "Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade.",
-    installCmd: "uniqueui add skeleton-shimmer",
+    installCmd: "npx uniqueui add skeleton-shimmer",
     icon: Loader2,
     category: "Effects & Animations",
     props: [
@@ -713,7 +725,7 @@ export default function Example() {
     name: "Morphing Modal",
     description:
       "Modal that expands from the trigger element with spring physics and backdrop blur.",
-    installCmd: "uniqueui add morphing-modal",
+    installCmd: "npx uniqueui add morphing-modal",
     icon: Maximize2,
     category: "Navigation & Overlays",
     props: [
@@ -794,7 +806,7 @@ export default function Example() {
     name: "Gradient Text Reveal",
     description:
       "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
-    installCmd: "uniqueui add gradient-text-reveal",
+    installCmd: "npx uniqueui add gradient-text-reveal",
     icon: Palette,
     category: "Text",
     props: [
@@ -864,7 +876,7 @@ export default function Example() {
     name: "Scramble Text",
     description:
       "Matrix-style text scramble effect that resolves characters left-to-right.",
-    installCmd: "uniqueui add scramble-text",
+    installCmd: "npx uniqueui add scramble-text",
     icon: Type,
     category: "Text",
     props: [
@@ -924,7 +936,7 @@ export default function Example() {
     name: "Meteors Card",
     description:
       "Card with animated meteor/shooting star particles falling through the background.",
-    installCmd: "uniqueui add meteors-card",
+    installCmd: "npx uniqueui add meteors-card",
     icon: Flame,
     category: "Cards",
     props: [
@@ -973,7 +985,7 @@ export default function Example() {
     name: "Flip Card",
     description:
       "3D card flip with spring physics, supporting hover or click triggers.",
-    installCmd: "uniqueui add flip-card",
+    installCmd: "npx uniqueui add flip-card",
     icon: RotateCw,
     category: "Cards",
     props: [
@@ -1059,7 +1071,7 @@ export default function Example() {
     name: "Dot Grid Background",
     description:
       "Interactive dot-grid pattern with a glowing cursor-following effect.",
-    installCmd: "uniqueui add dot-grid-background",
+    installCmd: "npx uniqueui add dot-grid-background",
     icon: Grid3x3,
     category: "Backgrounds",
     props: [
@@ -1119,7 +1131,7 @@ export default function Example() {
     name: "Floating Dock",
     description:
       "macOS-style dock with magnetic scaling, spring physics, and tooltips.",
-    installCmd: "uniqueui add floating-dock",
+    installCmd: "npx uniqueui add floating-dock",
     icon: Anchor,
     category: "Navigation & Overlays",
     props: [
@@ -1175,18 +1187,17 @@ export default function Example() {
       }
     ],
     usageCode: `import { FloatingDock } from "@/components/ui/floating-dock";
-import { Ghost, Sparkles, Layers, ScrollText, Terminal } from "lucide-react";
 
 export default function Example() {
   return (
     <div className="flex items-center justify-center p-20 text-white">
       <FloatingDock
         items={[
-          { id: "home", icon: <Ghost className="w-5 h-5" />, label: "Home" },
-          { id: "search", icon: <Sparkles className="w-5 h-5" />, label: "Search" },
-          { id: "layers", icon: <Layers className="w-5 h-5" />, label: "Layers" },
-          { id: "scroll", icon: <ScrollText className="w-5 h-5" />, label: "Scroll" },
-          { id: "terminal", icon: <Terminal className="w-5 h-5" />, label: "Terminal" },
+          { id: "home", icon: <span className="text-xl">🏠</span>, label: "Home" },
+          { id: "search", icon: <span className="text-xl">✨</span>, label: "Search" },
+          { id: "layers", icon: <span className="text-xl">📚</span>, label: "Layers" },
+          { id: "scroll", icon: <span className="text-xl">📜</span>, label: "Scroll" },
+          { id: "terminal", icon: <span className="text-xl">💻</span>, label: "Terminal" },
         ]}
       />
     </div>
@@ -1198,7 +1209,7 @@ export default function Example() {
     name: "Confetti Burst",
     description:
       "Click-triggered confetti particle explosion with customizable colors and physics.",
-    installCmd: "uniqueui add confetti-burst",
+    installCmd: "npx uniqueui add confetti-burst",
     icon: PartyPopper,
     category: "Effects & Animations",
     props: [
@@ -1253,7 +1264,7 @@ export default function Example() {
     name: "Drawer Slide",
     description:
       "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
-    installCmd: "uniqueui add drawer-slide",
+    installCmd: "npx uniqueui add drawer-slide",
     icon: PanelRight,
     category: "Navigation & Overlays",
     props: [
@@ -1340,7 +1351,7 @@ export default function Example() {
     name: "Notification Stack",
     description:
       "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
-    installCmd: "uniqueui add notification-stack",
+    installCmd: "npx uniqueui add notification-stack",
     icon: Bell,
     category: "Navigation & Overlays",
     props: [
@@ -1388,96 +1399,755 @@ export default function Example() {
       <NotificationStack notifications={notifications} onRemove={removeNotification} />
     </div>
   );
-}\`
-    },
-      {
-            slug: "animated-timeline",
-            name: "Animated Timeline",
-            description:
-                  "Scroll-triggered timeline with staggered spring animations for each node.",
-            installCmd: "uniqueui add animated-timeline",
-            icon: Clock,
-            category: "Effects & Animations",
-        props: [
-      {
-            "name": "items",
-            "type": "TimelineItem[]",
-            "description": "Ordered JSON object sequence defining steps parsing chronological evaluation."
-      },
-      {
-            "name": "className",
-            "type": "string",
-            "description": "Global CSS structure overrides for the list grouping wrapper."
-      },
-      {
-            "name": "lineColor",
-            "type": "string",
-            "description": "Vector stroke color defining the connection axis layout."
-      },
-      {
-            "name": "orientation",
-            "type": "\"vertical\" | \"horizontal\"",
-                title: \`\${type.charAt(0).toUpperCase() + type.slice(1)} notification\`,
-                description: \`This is a \${type} notification.\`,
-                type: type,
-              })
-            }
-            className="px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors text-sm"
-          >
-            Show {type}
-          </button>
-        ))}
-      </div>
-      <NotificationStack notifications={notifications} onDismiss={removeNotification} />
-    </div>
-  );
 }`
   },
   {
     slug: "animated-timeline",
     name: "Animated Timeline",
     description:
-      "Scroll-triggered timeline with staggered spring animations for each node.",
-    installCmd: "uniqueui add animated-timeline",
+      "Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps.",
+    installCmd: "npx uniqueui add animated-timeline",
     icon: Clock,
     category: "Effects & Animations",
     props: [
+      { "name": "items", "type": "TimelineItem[]", "description": "Ordered array of timeline items (id, title, description, date, color, icon)." },
+      { "name": "variant", "type": "\"vertical\" | \"horizontal\" | \"cards\" | \"steps\"", "description": "Layout and animation style. Defaults to \"vertical\"." },
+      { "name": "lineColor", "type": "string", "description": "Connecting line color. Defaults to rgba(255,255,255,0.08)." },
+      { "name": "className", "type": "string", "description": "Additional classes on the root wrapper." },
+    ],
+    variants: [
       {
-        "name": "items",
-        "type": "TimelineItem[]",
-        "description": "Ordered JSON object sequence defining steps parsing chronological evaluation."
+        id: "vertical",
+        label: "Vertical",
+        demoKey: "animated-timeline/vertical",
+        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+
+const items = [
+  { id: "1", title: "Project Kickoff",   description: "Scope defined and team assembled.",             color: "#a855f7", date: "Jan 2026" },
+  { id: "2", title: "Design Phase",      description: "Wireframes and component system finalised.",    color: "#6366f1", date: "Jan 2026" },
+  { id: "3", title: "Dev Sprint",        description: "Core components built and tested end-to-end.", color: "#ec4899", date: "Feb 2026" },
+  { id: "4", title: "Public Launch",     description: "CLI published and registry live.",             color: "#10b981", date: "Feb 2026" },
+];
+
+export default function Example() {
+  return (
+    <div className="max-w-sm mx-auto p-6 w-full">
+      <AnimatedTimeline items={items} variant="vertical" lineColor="#3f3f46" />
+    </div>
+  );
+}`,
+      },
+      {
+        id: "horizontal",
+        label: "Horizontal",
+        demoKey: "animated-timeline/horizontal",
+        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+
+const items = [
+  { id: "1", title: "Kickoff",  description: "Scope agreed.",          color: "#a855f7", date: "Jan" },
+  { id: "2", title: "Design",   description: "Wireframes done.",       color: "#6366f1", date: "Jan" },
+  { id: "3", title: "Build",    description: "Components shipped.",    color: "#ec4899", date: "Feb" },
+  { id: "4", title: "Launch",   description: "Registry live.",         color: "#10b981", date: "Feb" },
+];
+
+export default function Example() {
+  return (
+    <div className="p-6 w-full overflow-x-auto">
+      <AnimatedTimeline items={items} variant="horizontal" lineColor="#3f3f46" />
+    </div>
+  );
+}`,
+      },
+      {
+        id: "cards",
+        label: "Cards",
+        demoKey: "animated-timeline/cards",
+        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+
+const items = [
+  { id: "1", title: "Project Kickoff",   description: "Scope defined and team assembled.",             color: "#a855f7", date: "Jan 2026" },
+  { id: "2", title: "Design Phase",      description: "Wireframes and component system finalised.",    color: "#6366f1", date: "Jan 2026" },
+  { id: "3", title: "Dev Sprint",        description: "Core components built and tested end-to-end.", color: "#ec4899", date: "Feb 2026" },
+  { id: "4", title: "Public Launch",     description: "CLI published and registry live.",             color: "#10b981", date: "Feb 2026" },
+];
+
+export default function Example() {
+  return (
+    <div className="max-w-lg mx-auto p-6 w-full">
+      <AnimatedTimeline items={items} variant="cards" lineColor="#3f3f46" />
+    </div>
+  );
+}`,
+      },
+      {
+        id: "steps",
+        label: "Steps",
+        demoKey: "animated-timeline/steps",
+        usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+
+const items = [
+  { id: "1", title: "Install the CLI",        description: "Run npx uniqueui init in your project.",         color: "#a855f7" },
+  { id: "2", title: "Add a component",        description: "Run npx uniqueui add animated-timeline.",        color: "#6366f1" },
+  { id: "3", title: "Import and customise",   description: "Use variant, color, and date props as needed.",  color: "#ec4899" },
+  { id: "4", title: "Ship to production",     description: "Zero runtime dependency — fully your code.",     color: "#10b981" },
+];
+
+export default function Example() {
+  return (
+    <div className="max-w-sm mx-auto p-6 w-full">
+      <AnimatedTimeline items={items} variant="steps" />
+    </div>
+  );
+}`,
+      },
+    ],
+  },
+  {
+    slug: "nested-comments",
+    name: "Nested Comments",
+    description:
+      "Threaded comment section with infinite nesting, animated expand/collapse, inline reply composer, and spring-physics like button.",
+    installCmd: "npx uniqueui add nested-comments",
+    icon: MessageSquare,
+    category: "Social & Interaction",
+    props: [
+      {
+        name: "comments",
+        type: "Comment[]",
+        description: "Array of top-level comment objects, each optionally containing a `replies` array for nested threading.",
+      },
+      {
+        name: "maxDepth",
+        type: "number",
+        default: "4",
+        description: "Maximum nesting depth allowed before disabling the Reply button to prevent infinite threading.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description: "Additional CSS classes applied to the root wrapper element.",
+      },
+      {
+        name: "accentColor",
+        type: "string",
+        default: '"#8b5cf6"',
+        description: "Hex or CSS color used for reply badge highlights and interactive accent elements.",
+      },
+      {
+        name: "onReply",
+        type: "(commentId: string, content: string) => void",
+        description: "Callback fired when a user submits a reply, receiving the parent comment ID and reply text.",
+      },
+      {
+        name: "onLike",
+        type: "(commentId: string) => void",
+        description: "Callback fired when a user likes a comment, receiving the comment ID.",
+      },
+    ],
+    usageCode: `import { NestedComments } from "@/components/ui/nested-comments";
+import type { Comment } from "@/components/ui/nested-comments";
+
+const comments: Comment[] = [
+  {
+    id: "1",
+    author: "Alex Kim",
+    content: "This component is incredible! The animations feel so natural.",
+    timestamp: "2 hours ago",
+    likes: 14,
+    replies: [
+      {
+        id: "1-1",
+        author: "Sarah Chen",
+        content: "Agreed! The collapse animation is especially smooth.",
+        timestamp: "1 hour ago",
+        likes: 6,
+        replies: [
+          {
+            id: "1-1-1",
+            author: "Alex Kim",
+            content: "Thanks! Motion.dev's layout animations make it effortless.",
+            timestamp: "45 min ago",
+            likes: 3,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "2",
+    author: "Jordan Lee",
+    content: "Love the inline reply box with keyboard shortcuts. Very intuitive UX.",
+    timestamp: "3 hours ago",
+    likes: 9,
+  },
+];
+
+export default function Example() {
+  return (
+    <div className="p-6 bg-neutral-950 rounded-xl min-h-[400px]">
+      <NestedComments
+        comments={comments}
+        maxDepth={4}
+        accentColor="#8b5cf6"
+        onReply={(id, content) => console.log("Reply to", id, ":", content)}
+        onLike={(id) => console.log("Liked", id)}
+      />
+    </div>
+  );
+}`
+  },
+  {
+    slug: "hover-reveal-card",
+    name: "Hover Reveal Card",
+    description:
+      "Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations.",
+    installCmd: "npx uniqueui add hover-reveal-card",
+    icon: Layers,
+    category: "Cards",
+    props: [
+      {
+        "name": "image",
+        "type": "string",
+        "description": "URL of the image displayed as the card's primary visual."
+      },
+      {
+        "name": "imageAlt",
+        "type": "string",
+        "description": "Accessible alt text attached to the img element."
+      },
+      {
+        "name": "tag",
+        "type": "string",
+        "description": "Small uppercase label rendered above the heading in both states."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Primary headline text displayed in both the default and reveal states."
+      },
+      {
+        "name": "subtitle",
+        "type": "string",
+        "description": "Supporting line shown beneath the title in the default state and as a footer in the reveal panel."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Extended body copy that appears only inside the slide-up hover panel."
+      },
+      {
+        "name": "ctaText",
+        "type": "string",
+        "description": "Call-to-action label rendered at the bottom of the hover panel."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "When supplied the wrapper renders as an anchor element pointing to this URL."
+      },
+      {
+        "name": "accentColor",
+        "type": "string",
+        "description": "Hex or CSS colour driving the tag, CTA text, and border-glow accent."
       },
       {
         "name": "className",
         "type": "string",
-        "description": "Global CSS structure overrides for the list grouping wrapper."
+        "description": "Tailwind utility classes forwarded onto the outermost card wrapper."
       },
       {
-        "name": "lineColor",
-        "type": "string",
-        "description": "Vector stroke color defining the connection axis layout."
-      },
-      {
-        "name": "orientation",
-        "type": "\"vertical\" | \"horizontal\"",
-        "description": "Directional bias translating objects explicitly 'horizontal' or natively 'vertical'."
+        "name": "imageHeight",
+        "type": "number",
+        "description": "Pixel height reserved for the image section before the content area."
       }
     ],
-    usageCode: `import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+    usageCode: `import { HoverRevealCard } from "@/components/ui/hover-reveal-card";
 
 export default function Example() {
-  const items = [
-    { title: "Initialization", description: "System booted and components loaded." },
-    { title: "Authentication", description: "User credentials verified securely." },
-    { title: "Active Session", description: "Real-time connection established." }
+  return (
+    <div className="flex flex-wrap gap-6 items-start justify-center p-10">
+      <HoverRevealCard
+        image="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80"
+        imageAlt="People at a conference table"
+        tag="AI"
+        title="AI for inclusive growth: Leadership lessons from Davos"
+        subtitle="Article"
+        description="What are the practical ways to ensure AI expands opportunity, strengthens resilience and supports a more inclusive, equitable future?"
+        ctaText="Read the article →"
+        accentColor="#6366f1"
+        imageHeight={220}
+        className="w-72"
+      />
+    </div>
+  );
+}`
+  },
+  {
+    slug: "bento-grid",
+    name: "Bento Grid",
+    description:
+      "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
+    installCmd: "npx uniqueui add bento-grid",
+    icon: LayoutGrid,
+    category: "Cards",
+    props: [
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Headline text displayed at the bottom of the card."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Supporting body text shown beneath the title."
+      },
+      {
+        "name": "icon",
+        "type": "React.ReactNode",
+        "description": "Icon element rendered inside a pill at the top of the card."
+      },
+      {
+        "name": "background",
+        "type": "React.ReactNode",
+        "description": "Optional decorative layer (image, gradient, SVG) rendered behind the content."
+      },
+      {
+        "name": "cta",
+        "type": "string",
+        "description": "Call-to-action label that slides up into view on hover."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "When supplied the card renders as an anchor element."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Grid span and sizing classes forwarded to the cell wrapper, e.g. col-span-2 or row-span-2."
+      },
+      {
+        "name": "spinBorder",
+        "type": "boolean",
+        "description": "Enable the spinning conic-gradient border effect (same technique as the hero button). Replaces the static border."
+      },
+      {
+        "name": "spinBorderColors",
+        "type": "[string, string]",
+        "description": "Two hex/CSS color values for the conic gradient. Defaults to [\"#E2CBFF\", \"#393BB2\"] (purple–indigo)."
+      }
+    ],
+    usageCode: `import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+import { Sparkles, Zap, Shield, Globe } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="p-8 w-full">
+      <BentoGrid className="max-w-3xl mx-auto">
+        <BentoCard
+          icon={<Sparkles className="w-5 h-5" />}
+          title="Beautiful animations"
+          description="Every interaction is crafted with spring-physics Motion.dev animations for a premium feel."
+          cta="Explore components"
+          className="col-span-2"
+        />
+        <BentoCard
+          icon={<Zap className="w-5 h-5" />}
+          title="Lightning fast"
+          description="Copy-paste components with zero runtime overhead."
+        />
+        <BentoCard
+          icon={<Shield className="w-5 h-5" />}
+          title="Type safe"
+          description="Built with TypeScript and fully typed props."
+        />
+        <BentoCard
+          icon={<Globe className="w-5 h-5" />}
+          title="Zero lock-in"
+          description="You own the code. No external runtime dependency."
+          cta="Get started"
+          className="col-span-2"
+        />
+      </BentoGrid>
+    </div>
+  );
+}`
+    ,
+    variants: [
+      {
+        id: "features",
+        label: "Features",
+        demoKey: "bento-grid/features",
+        usageCode: `import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+import { Sparkles, Zap, Shield, Globe } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="p-8 w-full">
+      <BentoGrid>
+        <BentoCard
+          icon={<Sparkles className="w-5 h-5" />}
+          title="Beautiful animations"
+          description="Every interaction is crafted with spring-physics Motion.dev animations."
+          cta="Explore components"
+          className="col-span-2"
+          spinBorder
+          spinBorderColors={["#E2CBFF", "#393BB2"]}
+        />
+        <BentoCard
+          icon={<Zap className="w-5 h-5" />}
+          title="Lightning fast"
+          description="Copy-paste components with zero runtime overhead."
+          spinBorder
+          spinBorderColors={["#a3e635", "#065f46"]}
+        />
+        <BentoCard
+          icon={<Shield className="w-5 h-5" />}
+          title="Type-safe props"
+          description="Fully typed with TypeScript for confidence at scale."
+          spinBorder
+          spinBorderColors={["#67e8f9", "#1e3a5f"]}
+        />
+        <BentoCard
+          icon={<Globe className="w-5 h-5" />}
+          title="Zero lock-in"
+          description="You own the code. No external runtime dependency."
+          cta="Get started"
+          className="col-span-2"
+          spinBorder
+          spinBorderColors={["#fda4af", "#9f1239"]}
+        />
+      </BentoGrid>
+    </div>
+  );
+}`,
+      },
+      {
+        id: "showcase",
+        label: "Showcase",
+        demoKey: "bento-grid/showcase",
+        usageCode: `import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+
+export default function Example() {
+  return (
+    <div className="p-8 w-full">
+      <BentoGrid>
+        <BentoCard
+          title="Aurora vibes"
+          description="Layered animated gradients that feel alive."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse" />
+          }
+          cta="View component"
+          className="col-span-2"
+        />
+        <BentoCard
+          title="Magnetic pull"
+          description="Spring-physics cursor attraction."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-700/25 to-orange-600/20" />
+          }
+        />
+        <BentoCard
+          title="Spotlight effect"
+          description="Radial light that follows your mouse."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-sky-700/25 to-indigo-700/20" />
+          }
+        />
+        <BentoCard
+          title="Meteor storm"
+          description="Shooting star particles raining through cards."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20" />
+          }
+          cta="Try it"
+          className="col-span-2"
+        />
+      </BentoGrid>
+    </div>
+  );
+}`,
+      },
+      {
+        id: "stats",
+        label: "Stats",
+        demoKey: "bento-grid/stats",
+        usageCode: `import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+
+export default function Example() {
+  return (
+    <div className="p-8 w-full">
+      <BentoGrid className="auto-rows-[160px]">
+        <BentoCard
+          title="Components"
+          description="Production-ready animated components"
+          background={
+            <div className="absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none">24</div>
+          }
+          icon={<span className="text-2xl font-black text-violet-400">24</span>}
+        />
+        <BentoCard
+          title="Zero dependencies"
+          description="No UniqueUI runtime in your bundle"
+          background={
+            <div className="absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none">0</div>
+          }
+          icon={<span className="text-2xl font-black text-emerald-400">0</span>}
+        />
+        <BentoCard
+          title="Install time"
+          description="Seconds from CLI to working component"
+          icon={<span className="text-2xl font-black text-sky-400">~3s</span>}
+        />
+        <BentoCard
+          title="MIT License"
+          description="Open source forever. Fork it, extend it, ship it."
+          cta="View on GitHub"
+          className="col-span-2"
+        />
+        <BentoCard
+          title="Tailwind compatible"
+          description="v3 and v4 supported"
+          icon={<span className="text-2xl font-black text-cyan-400">✓</span>}
+        />
+      </BentoGrid>
+    </div>
+  );
+}`,
+      },
+      {
+        id: "team",
+        label: "Team",
+        demoKey: "bento-grid/team",
+        usageCode: `import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+
+const members = [
+  { name: "Alex Kim",   role: "Lead Engineer",    tag: "Motion",     color: "#a855f7" },
+  { name: "Sara Chen",  role: "Design Systems",   tag: "Tailwind",   color: "#6366f1" },
+  { name: "Jordan Lee", role: "DX Engineer",      tag: "CLI",        color: "#ec4899" },
+  { name: "Maya Patel", role: "Animations Lead",  tag: "Motion.dev", color: "#10b981" },
+  { name: "Ryan Wu",    role: "Accessibility",    tag: "ARIA",       color: "#f59e0b" },
+  { name: "Priya Shah", role: "TypeScript Infra", tag: "TS 5.x",    color: "#3b82f6" },
+];
+
+export default function Example() {
+  return (
+    <div className="p-8 w-full">
+      <BentoGrid className="auto-rows-[180px]">
+        {members.map((m) => (
+          <BentoCard
+            key={m.name}
+            title={m.name}
+            description={m.role}
+            background={
+              <div
+                className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-10"
+                style={{ backgroundColor: m.color }}
+              />
+            }
+            icon={
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                style={{ backgroundColor: m.color + "33", border: \`1.5px solid \${m.color}66\` }}
+              >
+                {m.name.split(" ").map((n) => n[0]).join("")}
+              </div>
+            }
+            cta={m.tag}
+          />
+        ))}
+      </BentoGrid>
+    </div>
+  );
+}`,
+      },
+    ],
+  },
+  {
+    slug: "particle-field",
+    name: "Particle Field",
+    description: "Canvas-based floating particles with mouse-repulsion physics and responsive connecting lines.",
+    installCmd: "npx uniqueui add particle-field",
+    icon: Sparkles,
+    category: "Backgrounds",
+    props: [
+      {
+        "name": "particleCount",
+        "type": "number",
+        "description": "The number of particles rendered dynamically."
+      },
+      {
+        "name": "particleColor",
+        "type": "string",
+        "description": "The hex color code for the particles and connecting lines."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "description": "The base movement speed multiplier."
+      },
+      {
+        "name": "interactionRadius",
+        "type": "number",
+        "description": "The pixel radius for the mouse repulsion event."
+      }
+    ],
+    usageCode: `import { ParticleField } from "@/components/ui/particle-field";
+
+export default function Example() {
+  return (
+    <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950">
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
+          Hover Around
+        </h3>
+      </div>
+      <ParticleField 
+        particleCount={120}
+        particleColor="#a855f7"
+        speed={0.5}
+      />
+    </div>
+  );
+}`
+  },
+  {
+    slug: "horizontal-scroll-gallery",
+    name: "Horizontal Scroll Gallery",
+    description: "Converts vertical scroll into horizontal movement with momentum physics for immersive galleries.",
+    installCmd: "npx uniqueui add horizontal-scroll-gallery",
+    icon: Layers,
+    category: "Effects & Animations",
+    props: [
+      {
+        "name": "items",
+        "type": "React.ReactNode[]",
+        "description": "Array of React nodes (e.g. images, cards) to map across the horizontal track."
+      },
+      {
+        "name": "direction",
+        "type": "\"left\" | \"right\"",
+        "description": "Direction the track moves when the user scrolls down."
+      },
+      {
+        "name": "itemClassName",
+        "type": "string",
+        "description": "Common classes applied to every individual container."
+      }
+    ],
+    usageCode: `import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-gallery";
+
+export default function Example() {
+  const images = [
+    <img key="1" src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b" alt="Landscape 1" className="object-cover w-full h-full" />,
+    <img key="2" src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538" alt="Landscape 2" className="object-cover w-full h-full" />,
+    <img key="3" src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b" alt="Landscape 3" className="object-cover w-full h-full" />,
+    <div key="4" className="w-full h-full bg-neutral-900 flex items-center justify-center p-8 text-center text-white">
+      <h3 className="text-4xl font-bold">End of Gallery</h3>
+    </div>
+  ];
+  return (
+    <HorizontalScrollGallery items={images} />
+  );
+}`
+  },
+  {
+    slug: "radial-menu",
+    name: "Radial Menu",
+    description: "Circular flyout menu that bursts items outward from a center trigger with staggered spring animation.",
+    installCmd: "npx uniqueui add radial-menu",
+    icon: Palette,
+    category: "Navigation & Overlays",
+    props: [
+      {
+        "name": "items",
+        "type": "RadialMenuItem[]",
+        "description": "Array of item configurations representing the burst actions."
+      },
+      {
+        "name": "radius",
+        "type": "number",
+        "description": "Distance in pixels each item travels from the trigger center."
+      },
+      {
+        "name": "startAngle",
+        "type": "number",
+        "description": "The starting angle for the radial arc (e.g. -90 for top)."
+      },
+      {
+        "name": "endAngle",
+        "type": "number",
+        "description": "The concluding angle for the radial arc."
+      },
+      {
+        "name": "staggerDelay",
+        "type": "number",
+        "description": "Staggering time multiplier between cascading children."
+      }
+    ],
+    usageCode: `import { RadialMenu } from "@/components/ui/radial-menu";
+import { User, Settings, Mail, Bell } from "lucide-react";
+
+export default function Example() {
+  const menuItems = [
+    { id: "profile", label: "Profile", icon: <User className="w-5 h-5" /> },
+    { id: "settings", label: "Settings", icon: <Settings className="w-5 h-5" /> },
+    { id: "messages", label: "Messages", icon: <Mail className="w-5 h-5" /> },
+    { id: "notifications", label: "Notifications", icon: <Bell className="w-5 h-5" /> },
   ];
 
   return (
-    <div className="max-w-md mx-auto p-4 w-full text-white">
-      <AnimatedTimeline 
-        items={items} 
-        orientation="vertical" 
-        lineColor="#3f3f46" 
+    <div className="h-[400px] w-full flex items-center justify-center">
+      <RadialMenu items={menuItems} radius={120} />
+    </div>
+  );
+}`
+  },
+  {
+    slug: "cursor-trail",
+    name: "Cursor Trail",
+    description: "Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail.",
+    installCmd: "npx uniqueui add cursor-trail",
+    icon: LayoutGrid,
+    category: "Cursor Effects",
+    props: [
+      {
+        "name": "color",
+        "type": "string",
+        "description": "The color of the trail particles."
+      },
+      {
+        "name": "trailLength",
+        "type": "number",
+        "description": "Maximum number of particles rendering concurrently."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "description": "Base size of the trailing particle dots."
+      },
+      {
+        "name": "decayDuration",
+        "type": "number",
+        "description": "How long it takes for a drawn particle to fade and shrink out."
+      }
+    ],
+    usageCode: `import { CursorTrail } from "@/components/ui/cursor-trail";
+
+export default function Example() {
+  return (
+    <div className="h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center">
+      <h3 className="text-white text-2xl font-bold uppercase tracking-widest pointer-events-none">
+        Move your mouse
+      </h3>
+      
+      {/* Ensures it captures pointer events across the block but doesn't block the content */}
+      <CursorTrail 
+        color="#a855f7"
+        size={14}
+        trailLength={25}
+        decayDuration={0.6}
       />
     </div>
   );

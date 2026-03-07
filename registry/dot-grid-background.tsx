@@ -1,12 +1,7 @@
 "use client";
-import React, { useCallback, useRef } from "react";
+import { cn } from "@/lib/utils";
+import React, { useCallback, useEffect, useRef } from "react";
 import { motion, useMotionValue, useTransform } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export interface DotGridBackgroundProps {
   children?: React.ReactNode;
@@ -28,13 +23,30 @@ export function DotGridBackground({
   hoverScale = 3,
 }: DotGridBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const updateRect = () => {
+      rectRef.current = container.getBoundingClientRect();
+    };
+
+    updateRect();
+    window.addEventListener("resize", updateRect);
+
+    return () => {
+      window.removeEventListener("resize", updateRect);
+    };
+  }, []);
+
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      const rect = rectRef.current;
+      if (!rect) return;
       mouseX.set(e.clientX - rect.left);
       mouseY.set(e.clientY - rect.top);
     },

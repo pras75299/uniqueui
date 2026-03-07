@@ -21,6 +21,14 @@ import { ConfettiBurst } from "@/components/ui/confetti-burst";
 import { DrawerSlide } from "@/components/ui/drawer-slide";
 import { NotificationStack, useNotifications } from "@/components/ui/notification-stack";
 import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+import { NestedComments } from "@/components/ui/nested-comments";
+import type { Comment } from "@/components/ui/nested-comments";
+import { HoverRevealCard } from "@/components/ui/hover-reveal-card";
+import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+import { ParticleField } from "@/components/ui/particle-field";
+import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-gallery";
+import { RadialMenu } from "@/components/ui/radial-menu";
+import { CursorTrail } from "@/components/ui/cursor-trail";
 import { useState } from "react";
 import {
   Ghost,
@@ -28,6 +36,9 @@ import {
   Layers,
   ScrollText,
   Terminal,
+  Zap,
+  Shield,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -146,18 +157,73 @@ function DrawerDemo() {
   );
 }
 
+// Helper for Nested Comments demo
+const DEMO_COMMENTS: Comment[] = [
+  {
+    id: "1",
+    author: "Alex Kim",
+    content: "This component is incredible! The spring animations feel so natural and snappy.",
+    timestamp: "2 hours ago",
+    likes: 14,
+    replies: [
+      {
+        id: "1-1",
+        author: "Sarah Chen",
+        content: "Agreed! The collapse animation is especially smooth. Love the thread lines too.",
+        timestamp: "1 hour ago",
+        likes: 6,
+        replies: [
+          {
+            id: "1-1-1",
+            author: "Alex Kim",
+            content: "Thanks! Motion.dev's layout animations make nested content effortless to build.",
+            timestamp: "45 min ago",
+            likes: 3,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "2",
+    author: "Jordan Lee",
+    content: "Love the inline reply box with ⌘+Enter shortcut. Very intuitive UX — try clicking Reply!",
+    timestamp: "3 hours ago",
+    likes: 9,
+  },
+  {
+    id: "3",
+    author: "Maya Patel",
+    content: "The like button spring animation is a nice touch. Small details make a big difference.",
+    timestamp: "4 hours ago",
+    likes: 21,
+  },
+];
+
+function NestedCommentsDemo() {
+  return (
+    <div className="w-full p-6 overflow-y-auto max-h-[520px]">
+      <NestedComments
+        comments={DEMO_COMMENTS}
+        maxDepth={4}
+        accentColor="#8b5cf6"
+      />
+    </div>
+  );
+}
+
 export const componentDemos: Record<string, React.ReactNode> = {
   "moving-border": (
     <div className="flex flex-wrap gap-6 items-center justify-center p-10">
       <Button
         borderRadius="1.75rem"
-        className="bg-slate-900 text-white border-neutral-200 dark:border-slate-800"
+        className="bg-zinc-950 text-white border-neutral-200 dark:border-slate-800"
       >
         Click me
       </Button>
       <Button
         borderRadius="1rem"
-        className="bg-slate-900 text-white border-neutral-200 dark:border-slate-800"
+        className="bg-zinc-950 text-white border-neutral-200 dark:border-slate-800"
         containerClassName="h-12 w-48"
       >
         Rounded Button
@@ -166,7 +232,7 @@ export const componentDemos: Record<string, React.ReactNode> = {
   ),
   "typewriter-text": (
     <div className="space-y-6 text-center p-10">
-      <div className="text-3xl font-bold">
+      <div className="text-3xl font-bold text-white">
         I love{" "}
         <TypewriterText
           words={["React", "TypeScript", "Motion", "Tailwind", "UniqueUI"]}
@@ -324,24 +390,26 @@ export const componentDemos: Record<string, React.ReactNode> = {
     </div>
   ),
   "scroll-reveal": (
-    <div className="flex flex-col items-center justify-start h-[400px] w-full overflow-y-auto p-10 relative rounded-xl border border-neutral-800">
-      <div className="min-h-[500px] w-full flex flex-col items-center justify-start pt-10">
-         <p className="text-neutral-500 font-medium animate-pulse">Scroll down ↓</p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-20 w-full">
-        {(["fade-up", "scale", "blur"] as const).map((preset, i) => (
-          <ScrollReveal key={preset} animation={preset} delay={i * 0.15} once={false}>
-            <div className="p-6 rounded-lg bg-neutral-900 border border-neutral-800 text-center shadow-lg h-full">
-              <div className="text-lg font-semibold mb-1 text-neutral-200">{preset}</div>
-              <p className="text-neutral-500 text-xs">Revealed!</p>
-            </div>
-          </ScrollReveal>
+    <div className="p-10 text-white">
+      <ScrollRevealGroup
+        animation="fade-up"
+        staggerDelay={0.15}
+        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+      >
+        {["fade-up", "scale", "blur"].map((preset) => (
+          <div
+            key={preset}
+            className="p-6 rounded-lg bg-neutral-900/50 border border-neutral-800 text-center"
+          >
+            <div className="text-lg font-semibold mb-1 text-neutral-200">{preset}</div>
+            <p className="text-neutral-500 text-xs">Scroll to reveal</p>
+          </div>
         ))}
-      </div>
+      </ScrollRevealGroup>
     </div>
   ),
   "skeleton-shimmer": (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full text-white">
       <SkeletonCard />
       <div className="space-y-4 p-6 rounded-xl border border-neutral-800 bg-neutral-900/50">
         <SkeletonShimmer width="80%" height={20} rounded="md" />
@@ -398,7 +466,7 @@ export const componentDemos: Record<string, React.ReactNode> = {
       <FlipCard
         className="w-60 h-40"
         front={
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800">
             <p className="text-lg font-bold">Hover to flip →</p>
           </div>
         }
@@ -412,12 +480,12 @@ export const componentDemos: Record<string, React.ReactNode> = {
         className="w-60 h-40"
         trigger="click"
         front={
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800">
             <p className="text-lg font-bold">Click to flip</p>
           </div>
         }
         back={
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full bg-zinc-800 rounded-xl border border-zinc-700">
             <p className="text-lg font-bold text-green-400">Click again!</p>
           </div>
         }
@@ -425,9 +493,9 @@ export const componentDemos: Record<string, React.ReactNode> = {
     </div>
   ),
   "dot-grid-background": (
-    <div className="p-10 w-full">
+    <div className="p-10 w-full text-white">
       <DotGridBackground className="rounded-xl h-[300px] flex items-center justify-center w-full">
-        <div className="text-center">
+        <div className="text-center z-10 w-full relative">
           <h3 className="text-2xl font-bold mb-2">Interactive Dots</h3>
           <p className="text-neutral-400">Move your cursor around</p>
         </div>
@@ -435,14 +503,14 @@ export const componentDemos: Record<string, React.ReactNode> = {
     </div>
   ),
   "floating-dock": (
-    <div className="flex items-center justify-center p-20">
+    <div className="flex items-center justify-center p-20 text-white">
       <FloatingDock
         items={[
-          { id: "home", icon: <Ghost className="w-5 h-5" />, label: "Home" },
-          { id: "search", icon: <Sparkles className="w-5 h-5" />, label: "Search" },
-          { id: "layers", icon: <Layers className="w-5 h-5" />, label: "Layers" },
-          { id: "scroll", icon: <ScrollText className="w-5 h-5" />, label: "Scroll" },
-          { id: "terminal", icon: <Terminal className="w-5 h-5" />, label: "Terminal" },
+          { id: "home", icon: <span className="text-xl">🏠</span>, label: "Home" },
+          { id: "search", icon: <span className="text-xl">✨</span>, label: "Search" },
+          { id: "layers", icon: <span className="text-xl">📚</span>, label: "Layers" },
+          { id: "scroll", icon: <span className="text-xl">📜</span>, label: "Scroll" },
+          { id: "terminal", icon: <span className="text-xl">💻</span>, label: "Terminal" },
         ]}
       />
     </div>
@@ -459,40 +527,212 @@ export const componentDemos: Record<string, React.ReactNode> = {
   ),
   "drawer-slide": <DrawerDemo />,
   "notification-stack": <NotificationDemo />,
-  "animated-timeline": (
-    <div className="p-10 w-full">
-        <AnimatedTimeline
-            items={[
-            {
-                id: "1",
-                title: "Project Started",
-                description: "Initial setup and planning for UniqueUI component library.",
-                date: "Jan 2026",
-                color: "#a855f7",
-            },
-            {
-                id: "2",
-                title: "Phase 1 Components",
-                description: "Built the first 11 animated components including Moving Border and Typewriter Text.",
-                date: "Jan 2026",
-                color: "#ec4899",
-            },
-            {
-                id: "3",
-                title: "Phase 2 Components",
-                description: "Added 10 more components including Flip Card, Meteors, and Notification Stack.",
-                date: "Feb 2026",
-                color: "#6366f1",
-            },
-            {
-                id: "4",
-                title: "CLI & Registry",
-                description: "Built the CLI tool and component registry for easy installation.",
-                date: "Feb 2026",
-                color: "#10b981",
-            },
-            ]}
+  // ─── Animated Timeline per-variant demos ─────────────────────────────────────
+  "animated-timeline/vertical": (
+    <div className="p-10 w-full max-w-sm mx-auto">
+      <AnimatedTimeline
+        variant="vertical"
+        lineColor="#3f3f46"
+        items={[
+          { id: "1", title: "Project Kickoff",  description: "Scope defined and team assembled.",             color: "#a855f7", date: "Jan 2026" },
+          { id: "2", title: "Design Phase",     description: "Wireframes and component system finalised.",    color: "#6366f1", date: "Jan 2026" },
+          { id: "3", title: "Dev Sprint",       description: "Core components built and tested end-to-end.", color: "#ec4899", date: "Feb 2026" },
+          { id: "4", title: "Public Launch",    description: "CLI published and registry live.",             color: "#10b981", date: "Feb 2026" },
+        ]}
+      />
+    </div>
+  ),
+  "animated-timeline/horizontal": (
+    <div className="p-10 w-full overflow-x-auto">
+      <AnimatedTimeline
+        variant="horizontal"
+        lineColor="#3f3f46"
+        items={[
+          { id: "1", title: "Kickoff",  description: "Scope agreed.",       color: "#a855f7", date: "Jan" },
+          { id: "2", title: "Design",   description: "Wireframes done.",    color: "#6366f1", date: "Jan" },
+          { id: "3", title: "Build",    description: "Components shipped.", color: "#ec4899", date: "Feb" },
+          { id: "4", title: "Launch",   description: "Registry live.",      color: "#10b981", date: "Feb" },
+        ]}
+      />
+    </div>
+  ),
+  "animated-timeline/cards": (
+    <div className="p-8 w-full max-w-lg mx-auto">
+      <AnimatedTimeline
+        variant="cards"
+        lineColor="#3f3f46"
+        items={[
+          { id: "1", title: "Project Kickoff",  description: "Scope defined and team assembled.",             color: "#a855f7", date: "Jan 2026" },
+          { id: "2", title: "Design Phase",     description: "Wireframes and component system finalised.",    color: "#6366f1", date: "Jan 2026" },
+          { id: "3", title: "Dev Sprint",       description: "Core components built and tested end-to-end.", color: "#ec4899", date: "Feb 2026" },
+          { id: "4", title: "Public Launch",    description: "CLI published and registry live.",             color: "#10b981", date: "Feb 2026" },
+        ]}
+      />
+    </div>
+  ),
+  "animated-timeline/steps": (
+    <div className="p-10 w-full max-w-sm mx-auto">
+      <AnimatedTimeline
+        variant="steps"
+        items={[
+          { id: "1", title: "Install the CLI",       description: "Run npx uniqueui init in your project.",        color: "#a855f7" },
+          { id: "2", title: "Add a component",       description: "Run npx uniqueui add animated-timeline.",       color: "#6366f1" },
+          { id: "3", title: "Import and customise",  description: "Use variant, color, and date props as needed.", color: "#ec4899" },
+          { id: "4", title: "Ship to production",    description: "Zero runtime dependency — fully your code.",    color: "#10b981" },
+        ]}
+      />
+    </div>
+  ),
+  "nested-comments": <NestedCommentsDemo />,
+  "hover-reveal-card": (
+    <div className="flex flex-wrap gap-6 items-start justify-center p-10">
+      <HoverRevealCard
+        image="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80"
+        imageAlt="People at a conference table"
+        tag="AI"
+        title="AI for inclusive growth: Leadership lessons from Davos"
+        subtitle="Article"
+        description="What are the practical ways to ensure AI expands opportunity, strengthens resilience and supports a more inclusive, equitable future?"
+        ctaText="Read the article →"
+        accentColor="#6366f1"
+        imageHeight={220}
+        className="w-72"
+      />
+    </div>
+  ),
+  // ─── Bento Grid per-variant demos ───────────────────────────────────────────
+  // These keys exactly match the demoKey in each ComponentVariant in components.ts
+  "bento-grid/features": (
+    <div className="p-6 w-full">
+      <BentoGrid>
+        <BentoCard
+          icon={<Sparkles className="w-5 h-5" />}
+          title="Beautiful animations"
+          description="Every interaction is crafted with spring-physics Motion.dev animations for a premium feel."
+          cta="Explore components"
+          className="col-span-2"
+          spinBorder
+          spinBorderColors={["#E2CBFF", "#393BB2"]}
         />
+        <BentoCard
+          icon={<Zap className="w-5 h-5" />}
+          title="Lightning fast"
+          description="Copy-paste components with zero runtime overhead."
+          spinBorder
+          spinBorderColors={["#a3e635", "#065f46"]}
+        />
+        <BentoCard
+          icon={<Shield className="w-5 h-5" />}
+          title="Type-safe props"
+          description="Fully typed with TypeScript for confidence at scale."
+          spinBorder
+          spinBorderColors={["#67e8f9", "#1e3a5f"]}
+        />
+        <BentoCard
+          icon={<Globe className="w-5 h-5" />}
+          title="Zero lock-in"
+          description="You own the code. No external runtime dependency."
+          cta="Get started"
+          className="col-span-2"
+          spinBorder
+          spinBorderColors={["#fda4af", "#9f1239"]}
+        />
+      </BentoGrid>
+    </div>
+  ),
+  "bento-grid/showcase": (
+    <div className="p-6 w-full">
+      <BentoGrid>
+        <BentoCard title="Aurora vibes" description="Layered animated gradients that feel alive." background={<div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse" />} cta="View component" className="col-span-2" />
+        <BentoCard title="Magnetic pull" description="Spring-physics cursor attraction." background={<div className="absolute inset-0 bg-gradient-to-br from-rose-700/25 to-orange-600/20" />} />
+        <BentoCard title="Spotlight effect" description="Radial light that follows your mouse." background={<div className="absolute inset-0 bg-gradient-to-br from-sky-700/25 to-indigo-700/20" />} />
+        <BentoCard title="Meteor storm" description="Shooting star particles raining through cards." background={<div className="absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20" />} cta="Try it" className="col-span-2" />
+      </BentoGrid>
+    </div>
+  ),
+  "bento-grid/stats": (
+    <div className="p-6 w-full">
+      <BentoGrid className="auto-rows-[160px]">
+        <BentoCard title="Components" description="Production-ready animated components" background={<div className="absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none">24</div>} icon={<span className="text-2xl font-black text-violet-400">24</span>} />
+        <BentoCard title="Zero dependencies" description="No UniqueUI runtime in your bundle" background={<div className="absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none">0</div>} icon={<span className="text-2xl font-black text-emerald-400">0</span>} />
+        <BentoCard title="Install time" description="Seconds from CLI to working component" icon={<span className="text-2xl font-black text-sky-400">~3s</span>} />
+        <BentoCard title="MIT License" description="Open source forever. Fork it, extend it, ship it." cta="View on GitHub" className="col-span-2" />
+        <BentoCard title="Tailwind compatible" description="v3 and v4 supported" icon={<span className="text-2xl font-black text-cyan-400">✓</span>} />
+      </BentoGrid>
+    </div>
+  ),
+  "bento-grid/team": (
+    <div className="p-6 w-full">
+      <BentoGrid className="auto-rows-[180px]">
+        {[
+          { name: "Alex Kim",   role: "Lead Engineer",    tag: "Motion",     color: "#a855f7" },
+          { name: "Sara Chen",  role: "Design Systems",   tag: "Tailwind",   color: "#6366f1" },
+          { name: "Jordan Lee", role: "DX Engineer",      tag: "CLI",        color: "#ec4899" },
+          { name: "Maya Patel", role: "Animations Lead",  tag: "Motion.dev", color: "#10b981" },
+          { name: "Ryan Wu",    role: "Accessibility",    tag: "ARIA",       color: "#f59e0b" },
+          { name: "Priya Shah", role: "TypeScript Infra", tag: "TS 5.x",    color: "#3b82f6" },
+        ].map((m) => (
+          <BentoCard
+            key={m.name} title={m.name} description={m.role} cta={m.tag}
+            background={<div className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-10" style={{ backgroundColor: m.color }} />}
+            icon={<div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: m.color + "33", border: `1.5px solid ${m.color}66` }}>{m.name.split(" ").map((n) => n[0]).join("")}</div>}
+          />
+        ))}
+      </BentoGrid>
+    </div>
+  ),
+  "particle-field": (
+    <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950">
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 text-center">
+          Interactive<br/>Particle Field
+        </h3>
+      </div>
+      <ParticleField 
+        particleCount={120}
+        particleColor="#a855f7"
+        speed={0.5}
+      />
+    </div>
+  ),
+  "horizontal-scroll-gallery": (
+    <HorizontalScrollGallery
+      items={[
+        <img key="1" src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b?q=80&w=800&auto=format&fit=crop" alt="Landscape 1" className="object-cover w-full h-full" />,
+        <img key="2" src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538?q=80&w=800&auto=format&fit=crop" alt="Landscape 2" className="object-cover w-full h-full" />,
+        <img key="3" src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b?q=80&w=800&auto=format&fit=crop" alt="Landscape 3" className="object-cover w-full h-full" />,
+        <div key="4" className="w-full h-full bg-neutral-900 flex items-center justify-center p-8 text-center text-white">
+          <h3 className="text-4xl font-bold">End of Gallery</h3>
+        </div>
+      ]}
+    />
+  ),
+  "radial-menu": (
+    <div className="h-[400px] w-full flex items-center justify-center p-12 bg-neutral-950 rounded-xl overflow-hidden shadow-inner border border-neutral-800">
+      <RadialMenu 
+        radius={110} 
+        startAngle={-180} 
+        endAngle={0} 
+        staggerDelay={0.06}
+        items={[
+          { id: "1", label: "Settings", icon: <Layers className="w-5 h-5" /> },
+          { id: "2", label: "Search", icon: <Ghost className="w-5 h-5" /> },
+          { id: "3", label: "Apps", icon: <Terminal className="w-5 h-5" /> },
+          { id: "4", label: "Docs", icon: <ScrollText className="w-5 h-5" /> },
+          { id: "5", label: "Theme", icon: <Sparkles className="w-5 h-5" /> },
+        ]} 
+      />
+    </div>
+  ),
+  "cursor-trail": (
+    <div className="h-[400px] w-full flex items-center justify-center p-12 bg-neutral-950 rounded-xl overflow-hidden shadow-inner border border-neutral-800">
+      <div className="text-center relative z-10 pointer-events-none">
+        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-neutral-500 mb-4">
+          Interactive Cursor Trail
+        </h3>
+        <p className="text-neutral-400">Move your mouse inside this block to see the effect.</p>
+      </div>
+      <CursorTrail color="#a855f7" trailLength={30} size={15} decayDuration={0.8} />
     </div>
   ),
 };
