@@ -2152,5 +2152,142 @@ export default function Example() {
     </div>
   );
 }`
+  },
+  {
+    slug: "glow-hero-section",
+    name: "Glow Hero Section",
+    description: "Physics-driven hero section with an interactive aqueous mesh canvas, spring-based motion text entrance, and fully configurable badge, heading, description, colors, and dimensions.",
+    installCmd: "npx uniqueui add glow-hero-section",
+    icon: Sparkles,
+    category: "Backgrounds",
+    props: [
+      {
+        name: "className",
+        type: "string",
+        description: "Extra CSS classes applied to the root container."
+      },
+      {
+        name: "height",
+        type: "string",
+        default: '"h-[520px]"',
+        description: "Tailwind height class for the component, e.g. \"h-screen\" or \"h-[600px]\"."
+      },
+      {
+        name: "badge",
+        type: "string | null",
+        default: '"Decentralized · Environmental · Protocol"',
+        description: "Text shown in the badge above the heading. Pass null to hide the badge entirely."
+      },
+      {
+        name: "heading",
+        type: "string",
+        default: '"The Gaia Protocol"',
+        description: "Main heading text."
+      },
+      {
+        name: "description",
+        type: "string",
+        default: '"A decentralized framework..."',
+        description: "Subheading / description paragraph beneath the heading."
+      },
+      {
+        name: "backgroundColor",
+        type: "string",
+        default: '"#f0f4f0"',
+        description: "CSS background color of the container behind the mesh canvas."
+      },
+      {
+        name: "meshColorStart",
+        type: "string",
+        default: '"rgba(255, 122, 0, 0.45)"',
+        description: "Start color of the linear gradient applied to mesh lines."
+      },
+      {
+        name: "meshColorEnd",
+        type: "string",
+        default: '"rgba(50, 205, 50, 0.45)"',
+        description: "End color of the linear gradient applied to mesh lines."
+      },
+      {
+        name: "meshOpacity",
+        type: "number",
+        default: "0.6",
+        description: "Overall opacity of the mesh canvas layer (0–1)."
+      },
+      {
+        name: "gridSize",
+        type: "number",
+        default: "30",
+        description: "Pixel size of each mesh grid cell. Smaller = denser mesh."
+      },
+      {
+        name: "mouseRadius",
+        type: "number",
+        default: "150",
+        description: "Radius in pixels within which mouse movement repels mesh grid points."
+      }
+    ],
+    variants: [
+      {
+        id: "default",
+        label: "Default",
+        demoKey: "glow-hero-section/default",
+        usageCode: `import GlowHeroSection from "@/components/ui/glow-hero-section";
+
+export default function Example() {
+  return (
+    <GlowHeroSection
+      height="h-[520px]"
+      badge="Decentralized · Environmental · Protocol"
+      heading="The Gaia Protocol"
+      description="A decentralized framework for global environmental synthesis, powered by a living, self-organizing data network."
+      backgroundColor="#f0f4f0"
+      meshColorStart="rgba(255, 122, 0, 0.45)"
+      meshColorEnd="rgba(50, 205, 50, 0.45)"
+      meshOpacity={0.6}
+      gridSize={30}
+      mouseRadius={150}
+    />
+  );
+}`
+      },
+      {
+        id: "dark",
+        label: "Dark Theme",
+        demoKey: "glow-hero-section/dark",
+        usageCode: `import GlowHeroSection from "@/components/ui/glow-hero-section";
+
+export default function Example() {
+  return (
+    <GlowHeroSection
+      backgroundColor="#0a0a0f"
+      meshColorStart="rgba(139, 92, 246, 0.5)"
+      meshColorEnd="rgba(6, 182, 212, 0.5)"
+      badge="Next-Gen · Web · Components"
+      heading="UniqueUI"
+      description="Premium animated React components, copy-paste ready."
+      gridSize={40}
+      mouseRadius={200}
+    />
+  );
+}`
+      },
+      {
+        id: "no-badge",
+        label: "No Badge",
+        demoKey: "glow-hero-section/no-badge",
+        usageCode: `import GlowHeroSection from "@/components/ui/glow-hero-section";
+
+export default function Example() {
+  return (
+    <GlowHeroSection
+      badge={null}
+      heading="Build Interfaces That Stand Out"
+      description="Drop-in animated components powered by Motion.dev and Tailwind CSS."
+    />
+  );
+}`
+      },
+    ],
   }
 ];

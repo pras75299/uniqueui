@@ -29,6 +29,7 @@ import { ParticleField } from "@/components/ui/particle-field";
 import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-gallery";
 import { RadialMenu } from "@/components/ui/radial-menu";
 import { CursorTrail } from "@/components/ui/cursor-trail";
+import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { useState } from "react";
 import {
   Ghost,
@@ -734,5 +735,29 @@ export const componentDemos: Record<string, React.ReactNode> = {
       </div>
       <CursorTrail color="#a855f7" trailLength={30} size={15} decayDuration={0.8} />
     </div>
+  ),
+  "glow-hero-section/default": (
+    <GlowHeroSection height="h-[520px]" />
+  ),
+  "glow-hero-section/dark": (
+    <GlowHeroSection
+      height="h-[520px]"
+      backgroundColor="#0a0a0f"
+      meshColorStart="rgba(139, 92, 246, 0.5)"
+      meshColorEnd="rgba(6, 182, 212, 0.5)"
+      badge="Next-Gen · Web · Components"
+      heading="UniqueUI"
+      description="Premium animated React components, copy-paste ready."
+      gridSize={40}
+      mouseRadius={200}
+    />
+  ),
+  "glow-hero-section/no-badge": (
+    <GlowHeroSection
+      height="h-[520px]"
+      badge={null}
+      heading="Build Interfaces That Stand Out"
+      description="Drop-in animated components powered by Motion.dev and Tailwind CSS."
+    />
   ),
 };
