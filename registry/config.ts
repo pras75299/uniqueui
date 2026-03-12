@@ -241,6 +241,14 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "horizontal-scroll-gallery",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "horizontal-scroll-gallery.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
     // ─── Phase 3 — Premium & Polish  ───
     {
         name: "particle-field",
@@ -263,6 +271,14 @@ export const registry: Registry = [
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
             { path: "cursor-trail.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "glow-hero-section",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "glow-hero-section.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
