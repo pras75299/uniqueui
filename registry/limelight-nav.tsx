@@ -28,6 +28,7 @@ export type NavItem = {
   id: string | number;
   icon: ReactElement;
   label?: string;
+  ariaLabel?: string;
   onClick?: () => void;
 };
 
@@ -82,16 +83,24 @@ export const LimelightNav = ({
       )}
       {...props}
     >
-      {items.map(({ id, icon, label, onClick }, index) => {
+      {items.map(({ id, icon, label, ariaLabel, onClick }, index) => {
         const isActive = activeIndex === index;
+
+        if (!label && !ariaLabel) {
+          console.warn(
+            `LimelightNav: Item with id "${id}" is missing both 'label' and 'ariaLabel'. An accessible name is required for screen readers.`
+          );
+        }
 
         return (
           <button
             key={id}
+            type="button"
             onClick={() => handleItemClick(index, onClick)}
-            aria-label={label}
+            aria-label={ariaLabel ?? label}
+            aria-current={isActive ? "page" : undefined}
             className={cn(
-              "relative z-20 flex h-full cursor-pointer items-center justify-center p-5 outline-none transition-colors",
+              "relative z-20 flex h-full cursor-pointer items-center justify-center p-5 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:rounded-xl",
               iconContainerClassName
             )}
           >

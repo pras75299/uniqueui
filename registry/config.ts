@@ -290,6 +290,7 @@ export const registry: Registry = [
                 path: "morphing-card-stack.tsx",
                 type: "registry:ui",
             },
+            cnUtilFile,
         ],
     },
     {

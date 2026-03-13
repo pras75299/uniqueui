@@ -126,6 +126,7 @@ export function MorphingCardStack({
           return (
             <button
               key={mode}
+              type="button"
               onClick={() => {
                 setLayout(mode);
                 setExpandedCard(null); // Reset expansion on mode change
@@ -137,6 +138,7 @@ export function MorphingCardStack({
                   : "text-neutral-500 hover:text-white hover:bg-neutral-800/50"
               )}
               aria-label={`Switch to ${mode} layout`}
+              aria-pressed={layout === mode}
             >
               <Icon className="h-4 w-4" />
             </button>
@@ -154,9 +156,10 @@ export function MorphingCardStack({
               const isTopCard = layout === "stack" && card.stackPosition === 0;
 
               return (
-                <motion.div
+                <motion.button
                   key={card.id}
                   layoutId={card.id}
+                  type="button"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{
                     opacity: 1,
@@ -182,8 +185,16 @@ export function MorphingCardStack({
                     setExpandedCard(isExpanded ? null : card.id);
                     onCardClick?.(card);
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setExpandedCard(isExpanded ? null : card.id);
+                      onCardClick?.(card);
+                    }
+                  }}
+                  aria-expanded={isExpanded}
                   className={cn(
-                    "cursor-pointer rounded-2xl border border-white/10 bg-neutral-950 p-5 shadow-xl",
+                    "relative text-left cursor-pointer rounded-2xl border border-white/10 bg-neutral-950 p-5 shadow-xl outline-none ring-offset-neutral-950 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2",
                     "hover:border-white/20 transition-colors",
                     layout === "stack" && "absolute w-[240px] h-[200px]",
                     layout === "stack" &&
@@ -232,7 +243,7 @@ export function MorphingCardStack({
                       </span>
                     </motion.div>
                   )}
-                </motion.div>
+                </motion.button>
               );
             })}
           </AnimatePresence>
@@ -245,6 +256,7 @@ export function MorphingCardStack({
           {cards.map((_, index) => (
             <button
               key={index}
+              type="button"
               onClick={() => setActiveIndex(index)}
               className={cn(
                 "h-1.5 rounded-full transition-all duration-300",
@@ -253,6 +265,7 @@ export function MorphingCardStack({
                   : "w-1.5 bg-neutral-700 hover:bg-neutral-500"
               )}
               aria-label={`Go to card ${index + 1}`}
+              aria-pressed={index === activeIndex}
             />
           ))}
         </div>
