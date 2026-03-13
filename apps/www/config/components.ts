@@ -2289,5 +2289,86 @@ export default function Example() {
 }`
       },
     ],
+  },
+  {
+    slug: "limelight-nav",
+    name: "Limelight Nav",
+    description: "Adaptive fluid navigation bar with a limelight spotlight and spring-animated tabs.",
+    installCmd: "npx uniqueui add limelight-nav",
+    icon: Layers,
+    category: "Navigation & Overlays",
+    props: [
+      {
+        name: "items",
+        type: "NavItem[]",
+        description: "Array of navigation items containing id, icon, label, and onClick."
+      },
+      {
+        name: "defaultActiveIndex",
+        type: "number",
+        default: "0",
+        description: "Initial active tab index."
+      },
+      {
+        name: "limelightColor",
+        type: "string",
+        default: '"#a855f7"',
+        description: "The CSS color passed inline to define the spotlight glow."
+      },
+      {
+        name: "className",
+        type: "string",
+        description: "Styles applied to the container."
+      }
+    ],
+    variants: [
+      {
+        id: "default",
+        label: "Default",
+        demoKey: "limelight-nav/default",
+        usageCode: `import { LimelightNav } from "@/components/ui/limelight-nav";
+import { Home, Compass, Bell } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="flex items-center justify-center p-12 h-[300px] w-full bg-neutral-950 rounded-xl border border-neutral-800">
+      <LimelightNav 
+        limelightColor="#a855f7"
+        items={[
+          { id: '1', icon: <Home />, label: 'Home' },
+          { id: '2', icon: <Compass />, label: 'Explore' },
+          { id: '3', icon: <Bell />, label: 'Notifications' }
+        ]}
+      />
+    </div>
+  );
+}`
+      },
+      {
+        id: "custom",
+        label: "Custom",
+        demoKey: "limelight-nav/custom",
+        usageCode: `import { LimelightNav } from "@/components/ui/limelight-nav";
+import { Home, Bookmark, PlusCircle, User, Settings } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="flex items-center justify-center p-12 h-[300px] w-full bg-neutral-950 rounded-xl border border-neutral-800">
+      <LimelightNav 
+        limelightColor="#06b6d4"
+        className="bg-neutral-900/50"
+        items={[
+          { id: '1', icon: <Home />, label: 'Home' },
+          { id: '2', icon: <Bookmark />, label: 'Bookmarks' },
+          { id: '3', icon: <PlusCircle />, label: 'Add' },
+          { id: '4', icon: <User />, label: 'Profile' },
+          { id: '5', icon: <Settings />, label: 'Settings' }
+        ]}
+      />
+    </div>
+  );
+}`
+      }
+    ]
   }
 ];
