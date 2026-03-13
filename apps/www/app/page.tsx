@@ -18,7 +18,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
-import { ScrambleText } from "@/components/ui/scramble-text";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -155,7 +154,6 @@ export default function Home() {
                  <p className="text-neutral-400">Parallax hover effects that add depth to your UI.</p>
             </TiltCard>
         </div>
-
         <div className="flex justify-center">
              <FloatingDock
                 items={[

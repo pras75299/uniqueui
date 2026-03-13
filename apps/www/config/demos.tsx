@@ -30,6 +30,7 @@ import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-galle
 import { RadialMenu } from "@/components/ui/radial-menu";
 import { CursorTrail } from "@/components/ui/cursor-trail";
 import GlowHeroSection from "@/components/ui/glow-hero-section";
+import { LimelightNav } from "@/components/ui/limelight-nav";
 import { useState } from "react";
 import {
   Ghost,
@@ -40,6 +41,13 @@ import {
   Zap,
   Shield,
   Globe,
+  Home as HomeIcon,
+  Bookmark,
+  PlusCircle,
+  User,
+  Settings,
+  Compass,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -759,5 +767,32 @@ export const componentDemos: Record<string, React.ReactNode> = {
       heading="Build Interfaces That Stand Out"
       description="Drop-in animated components powered by Motion.dev and Tailwind CSS."
     />
+  ),
+  "limelight-nav/default": (
+    <div className="flex items-center justify-center p-12 h-[300px] w-full bg-neutral-950 rounded-xl border border-neutral-800">
+      <LimelightNav 
+        limelightColor="#a855f7"
+        items={[
+          { id: '1', icon: <HomeIcon />, label: 'Home' },
+          { id: '2', icon: <Compass />, label: 'Explore' },
+          { id: '3', icon: <Bell />, label: 'Notifications' }
+        ]}
+      />
+    </div>
+  ),
+  "limelight-nav/custom": (
+    <div className="flex items-center justify-center p-12 h-[300px] w-full bg-neutral-950 rounded-xl border border-neutral-800">
+      <LimelightNav 
+        limelightColor="#06b6d4"
+        className="bg-neutral-900/50"
+        items={[
+          { id: '1', icon: <HomeIcon />, label: 'Home' },
+          { id: '2', icon: <Bookmark />, label: 'Bookmarks' },
+          { id: '3', icon: <PlusCircle />, label: 'Add' },
+          { id: '4', icon: <User />, label: 'Profile' },
+          { id: '5', icon: <Settings />, label: 'Settings' }
+        ]}
+      />
+    </div>
   ),
 };

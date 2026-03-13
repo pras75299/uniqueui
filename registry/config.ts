@@ -282,4 +282,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "limelight-nav",
+        dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            { path: "limelight-nav.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];
