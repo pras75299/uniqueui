@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, cloneElement, ReactElement, useId } from "react";
+import React, { useState, useEffect, cloneElement, ReactElement, useId } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -61,7 +61,19 @@ export const LimelightNav = ({
   iconClassName,
   ...props
 }: LimelightNavProps) => {
-  const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
+  const [activeIndex, setActiveIndex] = useState(() => {
+    if (items.length === 0) return -1;
+    return Math.min(Math.max(0, defaultActiveIndex), items.length - 1);
+  });
+
+  useEffect(() => {
+    if (items.length > 0 && activeIndex >= items.length) {
+      setActiveIndex(items.length - 1);
+    } else if (items.length === 0 && activeIndex !== -1) {
+      setActiveIndex(-1);
+    }
+  }, [items.length, activeIndex]);
+
   const componentId = useId();
 
   if (items.length === 0) {
