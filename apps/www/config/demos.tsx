@@ -31,6 +31,7 @@ import { RadialMenu } from "@/components/ui/radial-menu";
 import { CursorTrail } from "@/components/ui/cursor-trail";
 import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { LimelightNav } from "@/components/ui/limelight-nav";
+import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
 import { useState } from "react";
 import {
   Ghost,
@@ -48,6 +49,8 @@ import {
   Settings,
   Compass,
   Bell,
+  Palette,
+  Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -792,6 +795,38 @@ export const componentDemos: Record<string, React.ReactNode> = {
           { id: '4', icon: <User />, label: 'Profile' },
           { id: '5', icon: <Settings />, label: 'Settings' }
         ]}
+      />
+    </div>
+  ),
+  "morphing-card-stack/default": (
+    <div className="flex items-center justify-center p-12 min-h-[500px] w-full bg-neutral-950 rounded-xl border border-neutral-800">
+      <MorphingCardStack 
+        cards={[
+          {
+            id: "1",
+            title: "Magnetic Dock",
+            description: "Cursor-responsive scaling with smooth spring animations",
+            icon: <Layers className="h-5 w-5" />,
+          },
+          {
+            id: "2",
+            title: "Gradient Mesh",
+            description: "Dynamic animated gradient backgrounds that follow your cursor",
+            icon: <Palette className="h-5 w-5" />,
+          },
+          {
+            id: "3",
+            title: "Pulse Timeline",
+            description: "Interactive timeline with animated pulse nodes",
+            icon: <Clock className="h-5 w-5" />,
+          },
+          {
+            id: "4",
+            title: "Command Palette",
+            description: "Radial command menu with keyboard navigation",
+            icon: <Sparkles className="h-5 w-5" />,
+          },
+        ]} 
       />
     </div>
   ),

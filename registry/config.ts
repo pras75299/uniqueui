@@ -283,6 +283,16 @@ export const registry: Registry = [
         ],
     },
     {
+        name: "morphing-card-stack",
+        dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            {
+                path: "morphing-card-stack.tsx",
+                type: "registry:ui",
+            },
+        ],
+    },
+    {
         name: "limelight-nav",
         dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
         files: [

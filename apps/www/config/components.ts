@@ -2370,5 +2370,75 @@ export default function Example() {
 }`
       }
     ]
+  },
+  {
+    slug: "morphing-card-stack",
+    name: "Morphing Card Stack",
+    description: "An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using Framer Motion springs.",
+    installCmd: "npx uniqueui add morphing-card-stack",
+    icon: Layers,
+    category: "Cards",
+    props: [
+      {
+        name: "cards",
+        type: "CardData[]",
+        description: "Array of CardData containing id, title, description, icon, and optional color."
+      },
+      {
+        name: "defaultLayout",
+        type: '"stack" | "grid" | "list"',
+        default: '"stack"',
+        description: "Initial layout mode configuration."
+      },
+      {
+        name: "onCardClick",
+        type: "(card: CardData) => void",
+        description: "Callback function triggered when clicking a card."
+      }
+    ],
+    variants: [
+      {
+        id: "default",
+        label: "Default",
+        demoKey: "morphing-card-stack/default",
+        usageCode: `import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
+import { Layers, Palette, Clock, Sparkles } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="flex items-center justify-center p-12 min-h-[500px] w-full bg-neutral-950 rounded-xl border border-neutral-800">
+      <MorphingCardStack 
+        cards={[
+          {
+            id: "1",
+            title: "Magnetic Dock",
+            description: "Cursor-responsive scaling with smooth spring animations",
+            icon: <Layers className="h-5 w-5" />,
+          },
+          {
+            id: "2",
+            title: "Gradient Mesh",
+            description: "Dynamic animated gradient backgrounds that follow your cursor",
+            icon: <Palette className="h-5 w-5" />,
+          },
+          {
+            id: "3",
+            title: "Pulse Timeline",
+            description: "Interactive timeline with animated pulse nodes",
+            icon: <Clock className="h-5 w-5" />,
+          },
+          {
+            id: "4",
+            title: "Command Palette",
+            description: "Radial command menu with keyboard navigation",
+            icon: <Sparkles className="h-5 w-5" />,
+          },
+        ]} 
+      />
+    </div>
+  );
+}`
+      }
+    ]
   }
 ];
