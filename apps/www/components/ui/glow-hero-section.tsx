@@ -46,6 +46,7 @@ export interface GlowHeroSectionProps {
   gridSize?: number;
   /** Radius in pixels within which mouse repels mesh points */
   mouseRadius?: number;
+  theme?: "light" | "dark";
 }
 
 // --- Main Component ---
@@ -55,13 +56,15 @@ export default function GlowHeroSection({
   badge = "Decentralized · Environmental · Protocol",
   heading = "The Gaia Protocol",
   description = "A decentralized framework for global environmental synthesis, powered by a living, self-organizing data network.",
-  backgroundColor = "#f0f4f0",
+  backgroundColor,
   meshColorStart = "rgba(255, 122, 0, 0.45)",
   meshColorEnd = "rgba(50, 205, 50, 0.45)",
   meshOpacity = 0.6,
   gridSize = 30,
   mouseRadius = 150,
+  theme = "dark",
 }: GlowHeroSectionProps) {
+  const resolvedBg = backgroundColor ?? (theme === "dark" ? "#0a0a0f" : "#f0f4f0");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mousePos = useRef<{ x: number | undefined; y: number | undefined }>({
     x: undefined,
@@ -207,7 +210,7 @@ export default function GlowHeroSection({
         height,
         className
       )}
-      style={{ backgroundColor }}
+      style={{ backgroundColor: resolvedBg }}
     >
       {/* Animated mesh canvas */}
       <canvas

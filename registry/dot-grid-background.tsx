@@ -11,6 +11,7 @@ export interface DotGridBackgroundProps {
   gap?: number;
   hoverRadius?: number;
   hoverScale?: number;
+  theme?: "light" | "dark";
 }
 
 export function DotGridBackground({
@@ -21,6 +22,7 @@ export function DotGridBackground({
   gap = 24,
   hoverRadius = 120,
   hoverScale = 3,
+  theme = "dark",
 }: DotGridBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rectRef = useRef<DOMRect | null>(null);
@@ -64,7 +66,8 @@ export function DotGridBackground({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative overflow-hidden bg-neutral-950",
+        "relative overflow-hidden",
+        theme === "dark" ? "bg-neutral-950" : "bg-neutral-50",
         className
       )}
     >

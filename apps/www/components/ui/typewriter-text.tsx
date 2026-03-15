@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { cn } from "@/lib/utils";
 
 /**
  * TypewriterText is intended for a small number of simultaneous instances.
@@ -16,6 +16,7 @@ export interface TypewriterTextProps {
   delayBetweenWords?: number;
   loop?: boolean;
   cursor?: boolean;
+  theme?: "light" | "dark";
 }
 
 export function TypewriterText({
@@ -27,6 +28,7 @@ export function TypewriterText({
   delayBetweenWords = 1500,
   loop = true,
   cursor = true,
+  theme = "dark",
 }: TypewriterTextProps) {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");

@@ -35,6 +35,7 @@ export interface AnimatedTimelineProps {
   variant?: "vertical" | "horizontal" | "cards" | "steps";
   /** @deprecated Use variant="horizontal" instead */
   orientation?: "vertical" | "horizontal";
+  theme?: "light" | "dark";
 }
 
 // ─── Main component ──────────────────────────────────────────────────────────
@@ -45,18 +46,20 @@ export function AnimatedTimeline({
   lineColor = "rgba(255,255,255,0.08)",
   variant,
   orientation = "vertical",
+  theme = "dark",
 }: AnimatedTimelineProps) {
   // Support legacy orientation prop. variant takes precedence.
   const resolvedVariant = variant ?? (orientation === "horizontal" ? "horizontal" : "vertical");
+  const resolvedLineColor = theme === "light" ? "rgba(0,0,0,0.08)" : lineColor;
 
   if (resolvedVariant === "horizontal") {
-    return <HorizontalTimeline items={items} className={className} lineColor={lineColor} />;
+    return <HorizontalTimeline items={items} className={className} lineColor={resolvedLineColor} theme={theme} />;
   }
   if (resolvedVariant === "cards") {
-    return <CardsTimeline items={items} className={className} lineColor={lineColor} />;
+    return <CardsTimeline items={items} className={className} lineColor={resolvedLineColor} theme={theme} />;
   }
   if (resolvedVariant === "steps") {
-    return <StepsTimeline items={items} className={className} />;
+    return <StepsTimeline items={items} className={className} theme={theme} />;
   }
 
   // ── Vertical (default) ───────────────────────────────────────────────────
@@ -64,7 +67,7 @@ export function AnimatedTimeline({
     <div className={cn("relative", className)}>
       <div
         className="absolute top-0 bottom-0 w-px"
-        style={{ left: LINE_LEFT, backgroundColor: lineColor }}
+        style={{ left: LINE_LEFT, backgroundColor: resolvedLineColor }}
       />
       <div className="space-y-6">
         {items.map((item, index) => (
@@ -134,8 +137,8 @@ function TimelineNode({ item, index }: { item: TimelineItem; index: number }) {
 // ─── Horizontal timeline ──────────────────────────────────────────────────────
 // Animation: connecting line grows left-to-right, dots pop in with spring
 
-function HorizontalTimeline({ items, className, lineColor }: {
-  items: TimelineItem[]; className?: string; lineColor: string;
+function HorizontalTimeline({ items, className, lineColor, theme = "dark" }: {
+  items: TimelineItem[]; className?: string; lineColor: string; theme?: "light" | "dark";
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
@@ -224,8 +227,8 @@ function HorizontalTimeline({ items, className, lineColor }: {
 // ─── Cards timeline ───────────────────────────────────────────────────────────
 // Animation: center vertical line, items alternate left/right and slide in
 
-function CardsTimeline({ items, className, lineColor }: {
-  items: TimelineItem[]; className?: string; lineColor: string;
+function CardsTimeline({ items, className, lineColor, theme = "dark" }: {
+  items: TimelineItem[]; className?: string; lineColor: string; theme?: "light" | "dark";
 }) {
   return (
     <div className={cn("relative", className)}>
@@ -349,7 +352,7 @@ function CardContent({ item, color, isInView, index }: {
 // ─── Steps timeline ───────────────────────────────────────────────────────────
 // Animation: numbered circle fills radially, connector bar scales width, text blurs in
 
-function StepsTimeline({ items, className }: { items: TimelineItem[]; className?: string }) {
+function StepsTimeline({ items, className, theme = "dark" }: { items: TimelineItem[]; className?: string; theme?: "light" | "dark" }) {
   return (
     <div className={cn("space-y-0", className)}>
       {items.map((item, index) => (

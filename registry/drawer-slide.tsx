@@ -15,6 +15,7 @@ export interface DrawerSlideProps {
   width?: string;
   height?: string;
   dragToClose?: boolean;
+  theme?: "light" | "dark";
 }
 
 const positionStyles: Record<
@@ -72,6 +73,7 @@ export function DrawerSlide({
   width = "400px",
   height = "400px",
   dragToClose = true,
+  theme = "dark",
 }: DrawerSlideProps) {
   const config = positionStyles[position];
   const isHorizontal = position === "left" || position === "right";
@@ -131,7 +133,8 @@ export function DrawerSlide({
               if (shouldClose) onClose();
             }}
             className={cn(
-              "fixed z-50 border-neutral-800 bg-neutral-950 shadow-2xl",
+              "fixed z-50 shadow-2xl",
+              theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
               config.container,
               isHorizontal ? "border-l" : "border-t",
               className
@@ -157,7 +160,8 @@ export function DrawerSlide({
               >
                 <div
                   className={cn(
-                    "rounded-full bg-neutral-700",
+                    "rounded-full",
+                    theme === "dark" ? "bg-neutral-700" : "bg-neutral-300",
                     isHorizontal ? "w-1 h-8" : "h-1 w-8"
                   )}
                 />

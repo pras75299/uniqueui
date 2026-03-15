@@ -1,6 +1,6 @@
 "use client";
-import React, { useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
+import React, { useCallback, useRef } from "react";
 
 export interface ConfettiBurstProps {
   children: React.ReactNode;
@@ -9,6 +9,7 @@ export interface ConfettiBurstProps {
   colors?: string[];
   spread?: number;
   duration?: number;
+  theme?: "light" | "dark";
 }
 
 export function ConfettiBurst({
@@ -18,6 +19,7 @@ export function ConfettiBurst({
   colors = ["#a855f7", "#ec4899", "#6366f1", "#f59e0b", "#10b981", "#3b82f6"],
   spread = 200,
   duration = 1000,
+  theme = "dark",
 }: ConfettiBurstProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +39,7 @@ export function ConfettiBurst({
         const angle = Math.random() * Math.PI * 2;
         const velocity = Math.random() * spread + spread * 0.3;
         const targetX = Math.cos(angle) * velocity;
-        const targetY = Math.sin(angle) * velocity - 100;
+        const targetY = Math.sin(angle) * velocity - 100; // bias upward
         const rotation = Math.random() * 720 - 360;
 
         Object.assign(particle.style, {
@@ -57,6 +59,7 @@ export function ConfettiBurst({
 
         containerRef.current.appendChild(particle);
 
+        // Trigger animation in next frame
         requestAnimationFrame(() => {
           Object.assign(particle.style, {
             transform: `translate(calc(-50% + ${targetX}px), calc(-50% + ${targetY}px)) rotate(${rotation}deg)`,
@@ -64,6 +67,7 @@ export function ConfettiBurst({
           });
         });
 
+        // Cleanup
         setTimeout(() => {
           particle.remove();
         }, duration + 100);

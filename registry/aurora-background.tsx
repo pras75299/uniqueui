@@ -7,17 +7,20 @@ export interface AuroraBackgroundProps {
   children?: React.ReactNode;
   className?: string;
   showRadialGradient?: boolean;
+  theme?: "light" | "dark";
 }
 
 export function AuroraBackground({
   children,
   className,
   showRadialGradient = true,
+  theme = "dark",
 }: AuroraBackgroundProps) {
   return (
     <div
       className={cn(
-        "relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-neutral-950 text-white transition-all",
+        "relative flex min-h-screen flex-col items-center justify-center overflow-hidden transition-all",
+        theme === "dark" ? "bg-neutral-950 text-white" : "bg-neutral-50 text-neutral-900",
         className
       )}
     >
@@ -84,7 +87,7 @@ export function AuroraBackground({
         />
 
         {showRadialGradient && (
-          <div className="absolute inset-0 bg-neutral-950 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black_70%)]" />
+          <div className={cn("absolute inset-0", theme === "dark" ? "bg-neutral-950" : "bg-neutral-100", "[mask-image:radial-gradient(ellipse_at_center,transparent_20%,black_70%)]")} />
         )}
       </div>
 

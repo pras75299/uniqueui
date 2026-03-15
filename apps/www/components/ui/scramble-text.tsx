@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useInView } from "motion/react";
-import { cn } from "@/lib/utils";
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
 
@@ -13,6 +13,7 @@ export interface ScrambleTextProps {
   triggerOnView?: boolean;
   once?: boolean;
   characterSet?: string;
+  theme?: "light" | "dark";
 }
 
 export function ScrambleText({
@@ -23,6 +24,7 @@ export function ScrambleText({
   triggerOnView = true,
   once = true,
   characterSet = CHARS,
+  theme = "dark",
 }: ScrambleTextProps) {
   const [displayText, setDisplayText] = useState(text);
   const [isScrambling, setIsScrambling] = useState(false);
@@ -51,6 +53,7 @@ export function ScrambleText({
       const newText = originalChars
         .map((char, i) => {
           if (char === " ") return " ";
+          // Characters resolve left-to-right based on progress
           if (i / originalChars.length < progress) return char;
           return characterSet[Math.floor(Math.random() * characterSet.length)];
         })

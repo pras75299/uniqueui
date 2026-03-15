@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useRef, useState, useCallback } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
-import { cn } from "@/lib/utils";
 
 export interface MagneticButtonProps {
   children: React.ReactNode;
@@ -10,6 +10,7 @@ export interface MagneticButtonProps {
   magneticRadius?: number;
   onClick?: () => void;
   disabled?: boolean;
+  theme?: "light" | "dark";
 }
 
 export function MagneticButton({
@@ -19,6 +20,7 @@ export function MagneticButton({
   magneticRadius = 150,
   onClick,
   disabled = false,
+  theme = "dark",
 }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
   const [isHovering, setIsHovering] = useState(false);

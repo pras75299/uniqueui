@@ -32,16 +32,18 @@ export interface BentoCardProps {
    * Defaults to ["#E2CBFF", "#393BB2"] (purple–indigo).
    */
   spinBorderColors?: [string, string];
+  theme?: "light" | "dark";
 }
 
 export interface BentoGridProps {
   children: React.ReactNode;
   className?: string;
+  theme?: "light" | "dark";
 }
 
 // ─── BentoGrid ────────────────────────────────────────────────────────────────
 
-export function BentoGrid({ children, className }: BentoGridProps) {
+export function BentoGrid({ children, className, theme = "dark" }: BentoGridProps) {
   return (
     <div
       className={cn(
@@ -51,7 +53,7 @@ export function BentoGrid({ children, className }: BentoGridProps) {
     >
       {React.Children.map(children, (child, index) =>
         React.isValidElement(child)
-          ? React.cloneElement(child as React.ReactElement<BentoCardProps>, { index })
+          ? React.cloneElement(child as React.ReactElement<BentoCardProps>, { index, theme })
           : child
       )}
     </div>
@@ -71,6 +73,7 @@ export function BentoCard({
   index = 0,
   spinBorder = false,
   spinBorderColors = ["#E2CBFF", "#393BB2"],
+  theme = "dark",
 }: BentoCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -121,10 +124,13 @@ export function BentoCard({
         <Tag
           {...linkProps}
           className={cn(
-            "relative flex h-full w-full flex-col overflow-hidden rounded-2xl bg-neutral-950 p-6 transition-colors duration-300",
+            "relative flex h-full w-full flex-col overflow-hidden rounded-2xl p-6 transition-colors duration-300",
+            theme === "dark"
+              ? "bg-neutral-950"
+              : "bg-white",
             spinBorder
               ? "border-0" // gradient replaces the static border
-              : "border border-neutral-800 hover:border-neutral-600"
+              : theme === "dark" ? "border border-neutral-800 hover:border-neutral-600" : "border border-neutral-200 hover:border-neutral-400"
           )}
         >
           {/* Subtle hover glow */}
@@ -148,7 +154,12 @@ export function BentoCard({
             {/* Icon */}
             {icon && (
               <motion.div
-                className="mb-3 w-fit rounded-xl border border-neutral-800 bg-neutral-900 p-2.5 text-neutral-300 transition-colors duration-300 group-hover:border-neutral-700 group-hover:text-white"
+                className={cn(
+                "mb-3 w-fit rounded-xl border p-2.5 transition-colors duration-300",
+                theme === "dark"
+                  ? "border-neutral-800 bg-neutral-900 text-neutral-300 group-hover:border-neutral-700 group-hover:text-white"
+                  : "border-neutral-200 bg-neutral-100 text-neutral-700 group-hover:border-neutral-300 group-hover:text-neutral-900"
+              )}
                 whileHover={{ scale: 1.08 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
               >

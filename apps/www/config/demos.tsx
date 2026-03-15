@@ -54,8 +54,11 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+export type DemoThemeProps = { theme?: "light" | "dark" };
+export type DemoComponent = React.ComponentType<DemoThemeProps>;
+
 // Helper for notifications demo
-function NotificationDemo() {
+function NotificationDemo({ theme = "dark" }: DemoThemeProps) {
   const { notifications, addNotification, removeNotification } = useNotifications();
   return (
     <div className="flex flex-col items-center gap-4 w-full">
@@ -87,36 +90,38 @@ function NotificationDemo() {
           </button>
         ))}
       </div>
-      <NotificationStack notifications={notifications} onRemove={removeNotification} />
+      <NotificationStack theme={theme} notifications={notifications} onRemove={removeNotification} />
     </div>
   );
 }
 
 // Helper for Modal Demo
-function ModalDemo() {
+function ModalDemo({ theme = "dark" }: DemoThemeProps) {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
       <div className="flex items-center justify-center">
         <MorphingModalTrigger
+          theme={theme}
           layoutId="modal-demo"
           onClick={() => setModalOpen(true)}
-          className="p-6 rounded-xl bg-neutral-900/50 border border-neutral-800 hover:border-neutral-700 transition-colors max-w-xs"
+          className={cn("p-6 rounded-xl border transition-colors max-w-xs", theme === "dark" ? "bg-neutral-900/50 border-neutral-800 hover:border-neutral-700" : "bg-neutral-100 border-neutral-200 hover:border-neutral-300")}
         >
           <h3 className="text-lg font-bold mb-2">Click to open modal</h3>
-          <p className="text-neutral-400 text-sm">
+          <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
             This card morphs into a modal with spring physics.
           </p>
         </MorphingModalTrigger>
       </div>
       <MorphingModal
+        theme={theme}
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         layoutId="modal-demo"
       >
         <div className="pt-4">
           <h3 className="text-2xl font-bold mb-4">Morphing Modal</h3>
-          <p className="text-neutral-400 mb-6">
+          <p className={cn("mb-6", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
             This modal expands from the trigger element with spring-based animation. It supports
             Escape key to close, click-outside to dismiss, and an animated close button.
           </p>
@@ -141,7 +146,7 @@ function ModalDemo() {
 }
 
 // Helper for Drawer Demo
-function DrawerDemo() {
+function DrawerDemo({ theme = "dark" }: DemoThemeProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <>
@@ -153,9 +158,9 @@ function DrawerDemo() {
           Open Drawer
         </button>
       </div>
-      <DrawerSlide isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}>
+      <DrawerSlide theme={theme} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <h3 className="text-xl font-bold mb-4">Drawer Content</h3>
-        <p className="text-neutral-400 mb-4">
+        <p className={cn("mb-4", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
           This drawer slides in from the right with spring physics. You can drag it to dismiss.
         </p>
         <button
@@ -212,10 +217,11 @@ const DEMO_COMMENTS: Comment[] = [
   },
 ];
 
-function NestedCommentsDemo() {
+function NestedCommentsDemo({ theme = "dark" }: DemoThemeProps) {
   return (
     <div className="w-full p-6 overflow-y-auto max-h-[520px]">
       <NestedComments
+        theme={theme}
         comments={DEMO_COMMENTS}
         maxDepth={4}
         accentColor="#8b5cf6"
@@ -224,16 +230,18 @@ function NestedCommentsDemo() {
   );
 }
 
-export const componentDemos: Record<string, React.ReactNode> = {
-  "moving-border": (
+export const componentDemos: Record<string, DemoComponent> = {
+  "moving-border": ({ theme = "dark" }) => (
     <div className="flex flex-wrap gap-6 items-center justify-center p-10">
       <Button
+        theme={theme}
         borderRadius="1.75rem"
         className="bg-zinc-950 text-white border-neutral-200 dark:border-slate-800"
       >
         Click me
       </Button>
       <Button
+        theme={theme}
         borderRadius="1rem"
         className="bg-zinc-950 text-white border-neutral-200 dark:border-slate-800"
         containerClassName="h-12 w-48"
@@ -242,19 +250,21 @@ export const componentDemos: Record<string, React.ReactNode> = {
       </Button>
     </div>
   ),
-  "typewriter-text": (
-    <div className="space-y-6 text-center p-10">
-      <div className="text-3xl font-bold text-white">
+  "typewriter-text": ({ theme = "dark" }) => (
+    <div className={cn("space-y-6 text-center p-10", theme === "dark" ? "text-white" : "text-neutral-900")}>
+      <div className="text-3xl font-bold">
         I love{" "}
         <TypewriterText
+          theme={theme}
           words={["React", "TypeScript", "Motion", "Tailwind", "UniqueUI"]}
           className="text-purple-400"
           typingSpeed={100}
           deletingSpeed={60}
         />
       </div>
-      <div className="text-lg text-neutral-400">
+      <div className={cn("text-lg", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
         <TypewriterText
+          theme={theme}
           words={[
             "Building amazing user interfaces...",
             "With beautiful animations...",
@@ -267,19 +277,20 @@ export const componentDemos: Record<string, React.ReactNode> = {
       </div>
     </div>
   ),
-  "3d-tilt-card": (
+  "3d-tilt-card": ({ theme = "dark" }) => (
     <div className="flex flex-wrap gap-8 items-center justify-center p-10">
-      <TiltCard className="w-72 bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl p-6">
+      <TiltCard theme={theme} className={cn("w-72 rounded-xl p-6", theme === "dark" ? "bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700" : "bg-gradient-to-br from-neutral-100 to-neutral-200 border border-neutral-300")}>
         <h3 className="text-xl font-bold mb-2">Hover me</h3>
-        <p className="text-neutral-400 text-sm">
+        <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
           Move your cursor over this card to see the 3D tilt effect with glare.
         </p>
-        <div className="mt-4 h-24 rounded-lg bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-neutral-700/50" />
+        <div className={cn("mt-4 h-24 rounded-lg", theme === "dark" ? "bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-neutral-700/50" : "bg-gradient-to-br from-purple-200/40 to-pink-200/40 border border-neutral-300")} />
       </TiltCard>
       <TiltCard
+        theme={theme}
         tiltMaxDeg={25}
         glare={true}
-        className="w-72 bg-gradient-to-br from-purple-950 to-indigo-950 border border-purple-800/50 rounded-xl p-6"
+        className={cn("w-72 rounded-xl p-6", theme === "dark" ? "bg-gradient-to-br from-purple-950 to-indigo-950 border border-purple-800/50" : "bg-gradient-to-br from-purple-100 to-indigo-100 border border-purple-300/50")}
       >
         <h3 className="text-xl font-bold mb-2 text-purple-200">Extra Tilt</h3>
         <p className="text-purple-300/60 text-sm">
@@ -293,41 +304,42 @@ export const componentDemos: Record<string, React.ReactNode> = {
       </TiltCard>
     </div>
   ),
-  "spotlight-card": (
+  "spotlight-card": ({ theme = "dark" }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
-      <SpotlightCard>
+      <SpotlightCard theme={theme}>
         <h3 className="text-xl font-bold mb-2">Hover for spotlight</h3>
-        <p className="text-neutral-400 text-sm">
+        <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
           Move your mouse over the card to reveal a tracking spotlight effect.
         </p>
       </SpotlightCard>
-      <SpotlightCard spotlightColor="rgba(232, 121, 249, 0.1)" spotlightSize={300}>
+      <SpotlightCard theme={theme} spotlightColor="rgba(232, 121, 249, 0.1)" spotlightSize={300}>
         <h3 className="text-xl font-bold mb-2">Custom spotlight</h3>
-        <p className="text-neutral-400 text-sm">
+        <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
           Different color and size for the spotlight effect.
         </p>
       </SpotlightCard>
     </div>
   ),
-  "aurora-background": (
-    <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative">
-      <AuroraBackground className="min-h-0 h-full rounded-xl">
+  "aurora-background": ({ theme = "dark" }) => (
+    <div className={cn("rounded-xl overflow-hidden border h-[400px] w-full relative", theme === "dark" ? "border-neutral-800" : "border-neutral-200")}>
+      <AuroraBackground theme={theme} className="min-h-0 h-full rounded-xl">
         <div className="text-center z-10">
           <h3 className="text-2xl font-bold mb-2">Aurora Background</h3>
-          <p className="text-neutral-400">Beautiful animated gradients</p>
+          <p className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}>Beautiful animated gradients</p>
         </div>
       </AuroraBackground>
     </div>
   ),
-  "animated-tabs": (
+  "animated-tabs": ({ theme = "dark" }) => (
     <div className="max-w-md mx-auto p-10">
       <AnimatedTabs
+        theme={theme}
         tabs={[
           {
             id: "design",
             label: "Design",
             content: (
-              <div className="p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm">
+              <div className={cn("p-4 rounded-lg text-sm", theme === "dark" ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300" : "bg-neutral-100 border border-neutral-200 text-neutral-700")}>
                 Build stunning interfaces with our design system. Every component is crafted with
                 attention to detail.
               </div>
@@ -337,7 +349,7 @@ export const componentDemos: Record<string, React.ReactNode> = {
             id: "animate",
             label: "Animate",
             content: (
-              <div className="p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm">
+              <div className={cn("p-4 rounded-lg text-sm", theme === "dark" ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300" : "bg-neutral-100 border border-neutral-200 text-neutral-700")}>
                 Add life to your UI with spring-physics animations powered by Motion.dev.
               </div>
             ),
@@ -346,7 +358,7 @@ export const componentDemos: Record<string, React.ReactNode> = {
             id: "ship",
             label: "Ship",
             content: (
-              <div className="p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm">
+              <div className={cn("p-4 rounded-lg text-sm", theme === "dark" ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300" : "bg-neutral-100 border border-neutral-200 text-neutral-700")}>
                 Deploy with confidence. All components are production-ready and accessible.
               </div>
             ),
@@ -355,10 +367,11 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "magnetic-button": (
+  "magnetic-button": ({ theme = "dark" }) => (
     <div className="flex flex-wrap gap-8 items-center justify-center p-20">
-      <MagneticButton>Hover near me</MagneticButton>
+      <MagneticButton theme={theme}>Hover near me</MagneticButton>
       <MagneticButton
+        theme={theme}
         magneticStrength={0.5}
         magneticRadius={200}
         className="bg-gradient-to-b from-purple-700 to-purple-900"
@@ -367,9 +380,9 @@ export const componentDemos: Record<string, React.ReactNode> = {
       </MagneticButton>
     </div>
   ),
-  "infinite-marquee": (
+  "infinite-marquee": ({ theme = "dark" }) => (
     <div className="space-y-6 w-full p-10 overflow-hidden">
-      <InfiniteMarquee speed={30}>
+      <InfiniteMarquee theme={theme} speed={30}>
         {[
           "React",
           "Next.js",
@@ -381,11 +394,11 @@ export const componentDemos: Record<string, React.ReactNode> = {
           "Node.js",
         ].map((item) => (
           <MarqueeItem key={item}>
-            <span className="text-sm font-medium text-neutral-300">{item}</span>
+            <span className={cn("text-sm font-medium", theme === "dark" ? "text-neutral-300" : "text-neutral-600")}>{item}</span>
           </MarqueeItem>
         ))}
       </InfiniteMarquee>
-      <InfiniteMarquee speed={20} direction="right">
+      <InfiniteMarquee theme={theme} speed={20} direction="right">
         {[
           "⚡ Fast",
           "🎨 Beautiful",
@@ -401,9 +414,10 @@ export const componentDemos: Record<string, React.ReactNode> = {
       </InfiniteMarquee>
     </div>
   ),
-  "scroll-reveal": (
-    <div className="p-10 text-white">
+  "scroll-reveal": ({ theme = "dark" }) => (
+    <div className={cn("p-10", theme === "dark" ? "text-white" : "text-neutral-900")}>
       <ScrollRevealGroup
+        theme={theme}
         animation="fade-up"
         staggerDelay={0.15}
         className="grid grid-cols-1 md:grid-cols-3 gap-4"
@@ -411,37 +425,39 @@ export const componentDemos: Record<string, React.ReactNode> = {
         {["fade-up", "scale", "blur"].map((preset) => (
           <div
             key={preset}
-            className="p-6 rounded-lg bg-neutral-900/50 border border-neutral-800 text-center"
+            className={cn("p-6 rounded-lg text-center", theme === "dark" ? "bg-neutral-900/50 border border-neutral-800" : "bg-neutral-100 border border-neutral-200")}
           >
-            <div className="text-lg font-semibold mb-1 text-neutral-200">{preset}</div>
-            <p className="text-neutral-500 text-xs">Scroll to reveal</p>
+            <div className={cn("text-lg font-semibold mb-1", theme === "dark" ? "text-neutral-200" : "text-neutral-800")}>{preset}</div>
+            <p className={cn("text-xs", theme === "dark" ? "text-neutral-500" : "text-neutral-600")}>Scroll to reveal</p>
           </div>
         ))}
       </ScrollRevealGroup>
     </div>
   ),
-  "skeleton-shimmer": (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full text-white">
-      <SkeletonCard />
-      <div className="space-y-4 p-6 rounded-xl border border-neutral-800 bg-neutral-900/50">
-        <SkeletonShimmer width="80%" height={20} rounded="md" />
-        <SkeletonShimmer count={4} height={14} />
+  "skeleton-shimmer": ({ theme = "dark" }) => (
+    <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full", theme === "dark" ? "text-white" : "text-neutral-900")}>
+      <SkeletonCard theme={theme} />
+      <div className={cn("space-y-4 p-6 rounded-xl border", theme === "dark" ? "border-neutral-800 bg-neutral-900/50" : "border-neutral-200 bg-neutral-100")}>
+        <SkeletonShimmer theme={theme} width="80%" height={20} rounded="md" />
+        <SkeletonShimmer theme={theme} count={4} height={14} />
         <div className="flex gap-3">
-          <SkeletonShimmer width={100} height={36} rounded="lg" />
-          <SkeletonShimmer width={100} height={36} rounded="lg" />
+          <SkeletonShimmer theme={theme} width={100} height={36} rounded="lg" />
+          <SkeletonShimmer theme={theme} width={100} height={36} rounded="lg" />
         </div>
       </div>
     </div>
   ),
-  "morphing-modal": <ModalDemo />,
-  "gradient-text-reveal": (
+  "morphing-modal": ({ theme = "dark" }) => <ModalDemo theme={theme} />,
+  "gradient-text-reveal": ({ theme = "dark" }) => (
     <div className="space-y-8 text-center p-10">
       <GradientTextReveal
+        theme={theme}
         text="Build stunning interfaces with UniqueUI"
         as="h3"
         className="text-3xl font-bold justify-center"
       />
       <GradientTextReveal
+        theme={theme}
         text="Beautiful animated components for modern web apps"
         gradientFrom="#6366f1"
         gradientTo="#06b6d4"
@@ -449,36 +465,38 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "scramble-text": (
+  "scramble-text": ({ theme = "dark" }) => (
     <div className="space-y-6 text-center p-10">
-      <ScrambleText text="UNIQUEUI COMPONENTS" className="text-3xl font-bold tracking-wider" />
+      <ScrambleText theme={theme} text="UNIQUEUI COMPONENTS" className="text-3xl font-bold tracking-wider" />
       <ScrambleText
+        theme={theme}
         text="Hover to scramble again"
         triggerOnView={false}
-        className="text-lg text-neutral-400 cursor-pointer"
+        className={cn("text-lg cursor-pointer", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}
       />
     </div>
   ),
-  "meteors-card": (
+  "meteors-card": ({ theme = "dark" }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
-      <MeteorsCard>
+      <MeteorsCard theme={theme}>
         <h3 className="text-xl font-bold mb-2">Meteors Effect</h3>
-        <p className="text-neutral-400 text-sm">
+        <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
           Watch the shooting stars fall through this card&apos;s background.
         </p>
       </MeteorsCard>
-      <MeteorsCard meteorColor="#a855f7" meteorCount={30}>
+      <MeteorsCard theme={theme} meteorColor="#a855f7" meteorCount={30}>
         <h3 className="text-xl font-bold mb-2 text-purple-200">Purple Meteors</h3>
         <p className="text-purple-300/60 text-sm">Custom colored meteors with extra density.</p>
       </MeteorsCard>
     </div>
   ),
-  "flip-card": (
+  "flip-card": ({ theme = "dark" }) => (
     <div className="flex flex-wrap gap-8 items-center justify-center p-10">
       <FlipCard
+        theme={theme}
         className="w-60 h-40"
         front={
-          <div className="flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800">
+          <div className={cn("flex items-center justify-center h-full rounded-xl border", theme === "dark" ? "bg-zinc-900 border-zinc-800" : "bg-zinc-100 border-zinc-300")}>
             <p className="text-lg font-bold">Hover to flip →</p>
           </div>
         }
@@ -489,34 +507,35 @@ export const componentDemos: Record<string, React.ReactNode> = {
         }
       />
       <FlipCard
+        theme={theme}
         className="w-60 h-40"
         trigger="click"
         front={
-          <div className="flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800">
+          <div className={cn("flex items-center justify-center h-full rounded-xl border", theme === "dark" ? "bg-zinc-900 border-zinc-800" : "bg-zinc-100 border-zinc-300")}>
             <p className="text-lg font-bold">Click to flip</p>
           </div>
         }
         back={
-          <div className="flex items-center justify-center h-full bg-zinc-800 rounded-xl border border-zinc-700">
+          <div className={cn("flex items-center justify-center h-full rounded-xl border", theme === "dark" ? "bg-zinc-800 border-zinc-700" : "bg-zinc-200 border-zinc-400")}>
             <p className="text-lg font-bold text-green-400">Click again!</p>
           </div>
         }
       />
     </div>
   ),
-  "dot-grid-background": (
-    <div className="p-10 w-full text-white">
-      <DotGridBackground className="rounded-xl h-[300px] flex items-center justify-center w-full">
+  "dot-grid-background": ({ theme = "dark" }) => (
+    <div className={cn("p-10 w-full", theme === "dark" ? "text-white" : "text-neutral-900")}>
+      <DotGridBackground theme={theme} className="rounded-xl h-[300px] flex items-center justify-center w-full">
         <div className="text-center z-10 w-full relative">
           <h3 className="text-2xl font-bold mb-2">Interactive Dots</h3>
-          <p className="text-neutral-400">Move your cursor around</p>
+          <p className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}>Move your cursor around</p>
         </div>
       </DotGridBackground>
     </div>
   ),
-  "floating-dock": (
-    <div className="flex items-center justify-center p-20 text-white">
-      <FloatingDock
+  "floating-dock": ({ theme = "dark" }) => (
+    <div className={cn("flex items-center justify-center p-20", theme === "dark" ? "text-white" : "text-neutral-900")}>
+      <FloatingDock theme={theme}
         items={[
           { id: "home", icon: <span className="text-xl">🏠</span>, label: "Home" },
           { id: "search", icon: <span className="text-xl">✨</span>, label: "Search" },
@@ -527,22 +546,23 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "confetti-burst": (
+  "confetti-burst": ({ theme = "dark" }) => (
     <div className="flex items-center justify-center p-20">
-      <ConfettiBurst className="rounded-xl p-12 border border-neutral-800 bg-neutral-900/50 hover:border-neutral-700 transition-colors cursor-pointer">
+      <ConfettiBurst theme={theme} className={cn("rounded-xl p-12 border transition-colors cursor-pointer", theme === "dark" ? "border-neutral-800 bg-neutral-900/50 hover:border-neutral-700" : "border-neutral-200 bg-neutral-100 hover:border-neutral-300")}>
         <div className="text-center">
           <h3 className="text-xl font-bold mb-2">🎉 Click me!</h3>
-          <p className="text-neutral-400 text-sm">Click anywhere on this card for confetti</p>
+          <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>Click anywhere on this card for confetti</p>
         </div>
       </ConfettiBurst>
     </div>
   ),
-  "drawer-slide": <DrawerDemo />,
-  "notification-stack": <NotificationDemo />,
+  "drawer-slide": ({ theme = "dark" }) => <DrawerDemo theme={theme} />,
+  "notification-stack": ({ theme = "dark" }) => <NotificationDemo theme={theme} />,
   // ─── Animated Timeline per-variant demos ─────────────────────────────────────
-  "animated-timeline/vertical": (
+  "animated-timeline/vertical": ({ theme = "dark" }) => (
     <div className="p-10 w-full max-w-sm mx-auto">
       <AnimatedTimeline
+        theme={theme}
         variant="vertical"
         lineColor="#3f3f46"
         items={[
@@ -554,9 +574,10 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "animated-timeline/horizontal": (
+  "animated-timeline/horizontal": ({ theme = "dark" }) => (
     <div className="p-10 w-full overflow-x-auto">
       <AnimatedTimeline
+        theme={theme}
         variant="horizontal"
         lineColor="#3f3f46"
         items={[
@@ -568,9 +589,10 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "animated-timeline/cards": (
+  "animated-timeline/cards": ({ theme = "dark" }) => (
     <div className="p-8 w-full max-w-lg mx-auto">
       <AnimatedTimeline
+        theme={theme}
         variant="cards"
         lineColor="#3f3f46"
         items={[
@@ -582,9 +604,10 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "animated-timeline/steps": (
+  "animated-timeline/steps": ({ theme = "dark" }) => (
     <div className="p-10 w-full max-w-sm mx-auto">
       <AnimatedTimeline
+        theme={theme}
         variant="steps"
         items={[
           { id: "1", title: "Install the CLI",       description: "Run npx uniqueui init in your project.",        color: "#a855f7" },
@@ -595,10 +618,10 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "nested-comments": <NestedCommentsDemo />,
-  "hover-reveal-card": (
+  "nested-comments": ({ theme = "dark" }) => <NestedCommentsDemo theme={theme} />,
+  "hover-reveal-card": ({ theme = "dark" }) => (
     <div className="flex flex-wrap gap-6 items-start justify-center p-10">
-      <HoverRevealCard
+      <HoverRevealCard theme={theme}
         image="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80"
         imageAlt="People at a conference table"
         tag="AI"
@@ -614,10 +637,10 @@ export const componentDemos: Record<string, React.ReactNode> = {
   ),
   // ─── Bento Grid per-variant demos ───────────────────────────────────────────
   // These keys exactly match the demoKey in each ComponentVariant in components.ts
-  "bento-grid/features": (
+  "bento-grid/features": ({ theme = "dark" }) => (
     <div className="p-6 w-full">
-      <BentoGrid>
-        <BentoCard
+      <BentoGrid theme={theme}>
+        <BentoCard theme={theme}
           icon={<Sparkles className="w-5 h-5" />}
           title="Beautiful animations"
           description="Every interaction is crafted with spring-physics Motion.dev animations for a premium feel."
@@ -626,21 +649,21 @@ export const componentDemos: Record<string, React.ReactNode> = {
           spinBorder
           spinBorderColors={["#E2CBFF", "#393BB2"]}
         />
-        <BentoCard
+        <BentoCard theme={theme}
           icon={<Zap className="w-5 h-5" />}
           title="Lightning fast"
           description="Copy-paste components with zero runtime overhead."
           spinBorder
           spinBorderColors={["#a3e635", "#065f46"]}
         />
-        <BentoCard
+        <BentoCard theme={theme}
           icon={<Shield className="w-5 h-5" />}
           title="Type-safe props"
           description="Fully typed with TypeScript for confidence at scale."
           spinBorder
           spinBorderColors={["#67e8f9", "#1e3a5f"]}
         />
-        <BentoCard
+        <BentoCard theme={theme}
           icon={<Globe className="w-5 h-5" />}
           title="Zero lock-in"
           description="You own the code. No external runtime dependency."
@@ -652,30 +675,30 @@ export const componentDemos: Record<string, React.ReactNode> = {
       </BentoGrid>
     </div>
   ),
-  "bento-grid/showcase": (
+  "bento-grid/showcase": ({ theme = "dark" }) => (
     <div className="p-6 w-full">
-      <BentoGrid>
-        <BentoCard title="Aurora vibes" description="Layered animated gradients that feel alive." background={<div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse" />} cta="View component" className="col-span-2" />
-        <BentoCard title="Magnetic pull" description="Spring-physics cursor attraction." background={<div className="absolute inset-0 bg-gradient-to-br from-rose-700/25 to-orange-600/20" />} />
-        <BentoCard title="Spotlight effect" description="Radial light that follows your mouse." background={<div className="absolute inset-0 bg-gradient-to-br from-sky-700/25 to-indigo-700/20" />} />
-        <BentoCard title="Meteor storm" description="Shooting star particles raining through cards." background={<div className="absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20" />} cta="Try it" className="col-span-2" />
+      <BentoGrid theme={theme}>
+        <BentoCard theme={theme} title="Aurora vibes" description="Layered animated gradients that feel alive." background={<div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse" />} cta="View component" className="col-span-2" />
+        <BentoCard theme={theme} title="Magnetic pull" description="Spring-physics cursor attraction." background={<div className="absolute inset-0 bg-gradient-to-br from-rose-700/25 to-orange-600/20" />} />
+        <BentoCard theme={theme} title="Spotlight effect" description="Radial light that follows your mouse." background={<div className="absolute inset-0 bg-gradient-to-br from-sky-700/25 to-indigo-700/20" />} />
+        <BentoCard theme={theme} title="Meteor storm" description="Shooting star particles raining through cards." background={<div className="absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20" />} cta="Try it" className="col-span-2" />
       </BentoGrid>
     </div>
   ),
-  "bento-grid/stats": (
+  "bento-grid/stats": ({ theme = "dark" }) => (
     <div className="p-6 w-full">
-      <BentoGrid className="auto-rows-[160px]">
-        <BentoCard title="Components" description="Production-ready animated components" background={<div className="absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none">24</div>} icon={<span className="text-2xl font-black text-violet-400">24</span>} />
-        <BentoCard title="Zero dependencies" description="No UniqueUI runtime in your bundle" background={<div className="absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none">0</div>} icon={<span className="text-2xl font-black text-emerald-400">0</span>} />
-        <BentoCard title="Install time" description="Seconds from CLI to working component" icon={<span className="text-2xl font-black text-sky-400">~3s</span>} />
-        <BentoCard title="MIT License" description="Open source forever. Fork it, extend it, ship it." cta="View on GitHub" className="col-span-2" />
-        <BentoCard title="Tailwind compatible" description="v3 and v4 supported" icon={<span className="text-2xl font-black text-cyan-400">✓</span>} />
+      <BentoGrid theme={theme} className="auto-rows-[160px]">
+        <BentoCard theme={theme} title="Components" description="Production-ready animated components" background={<div className="absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none">24</div>} icon={<span className="text-2xl font-black text-violet-400">24</span>} />
+        <BentoCard theme={theme} title="Zero dependencies" description="No UniqueUI runtime in your bundle" background={<div className="absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none">0</div>} icon={<span className="text-2xl font-black text-emerald-400">0</span>} />
+        <BentoCard theme={theme} title="Install time" description="Seconds from CLI to working component" icon={<span className="text-2xl font-black text-sky-400">~3s</span>} />
+        <BentoCard theme={theme} title="MIT License" description="Open source forever. Fork it, extend it, ship it." cta="View on GitHub" className="col-span-2" />
+        <BentoCard theme={theme} title="Tailwind compatible" description="v3 and v4 supported" icon={<span className="text-2xl font-black text-cyan-400">✓</span>} />
       </BentoGrid>
     </div>
   ),
-  "bento-grid/team": (
+  "bento-grid/team": ({ theme = "dark" }) => (
     <div className="p-6 w-full">
-      <BentoGrid className="auto-rows-[180px]">
+      <BentoGrid theme={theme} className="auto-rows-[180px]">
         {[
           { name: "Alex Kim",   role: "Lead Engineer",    tag: "Motion",     color: "#a855f7" },
           { name: "Sara Chen",  role: "Design Systems",   tag: "Tailwind",   color: "#6366f1" },
@@ -685,7 +708,7 @@ export const componentDemos: Record<string, React.ReactNode> = {
           { name: "Priya Shah", role: "TypeScript Infra", tag: "TS 5.x",    color: "#3b82f6" },
         ].map((m) => (
           <BentoCard
-            key={m.name} title={m.name} description={m.role} cta={m.tag}
+            key={m.name} theme={theme} title={m.name} description={m.role} cta={m.tag}
             background={<div className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-10" style={{ backgroundColor: m.color }} />}
             icon={<div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: m.color + "33", border: `1.5px solid ${m.color}66` }}>{m.name.split(" ").map((n) => n[0]).join("")}</div>}
           />
@@ -693,35 +716,36 @@ export const componentDemos: Record<string, React.ReactNode> = {
       </BentoGrid>
     </div>
   ),
-  "particle-field": (
-    <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950">
+  "particle-field": ({ theme = "dark" }) => (
+    <div className={cn("rounded-xl overflow-hidden border h-[400px] w-full relative", theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-neutral-800")}>
       <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
-        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500 text-center">
+        <h3 className={cn("text-3xl font-bold bg-clip-text text-transparent text-center", theme === "dark" ? "bg-gradient-to-b from-white to-neutral-500" : "bg-gradient-to-b from-neutral-100 to-neutral-400")}>
           Interactive<br/>Particle Field
         </h3>
       </div>
-      <ParticleField 
+      <ParticleField
+        theme={theme}
         particleCount={120}
         particleColor="#a855f7"
         speed={0.5}
       />
     </div>
   ),
-  "horizontal-scroll-gallery": (
-    <HorizontalScrollGallery
+  "horizontal-scroll-gallery": ({ theme = "dark" }) => (
+    <HorizontalScrollGallery theme={theme}
       items={[
         <img key="1" src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b?q=80&w=800&auto=format&fit=crop" alt="Landscape 1" className="object-cover w-full h-full" />,
         <img key="2" src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538?q=80&w=800&auto=format&fit=crop" alt="Landscape 2" className="object-cover w-full h-full" />,
         <img key="3" src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b?q=80&w=800&auto=format&fit=crop" alt="Landscape 3" className="object-cover w-full h-full" />,
-        <div key="4" className="w-full h-full bg-neutral-900 flex items-center justify-center p-8 text-center text-white">
+        <div key="4" className={cn("w-full h-full flex items-center justify-center p-8 text-center", theme === "dark" ? "bg-neutral-900 text-white" : "bg-neutral-200 text-neutral-900")}>
           <h3 className="text-4xl font-bold">End of Gallery</h3>
         </div>
       ]}
     />
   ),
-  "radial-menu": (
-    <div className="h-[400px] w-full flex items-center justify-center p-12 bg-neutral-950 rounded-xl overflow-hidden shadow-inner border border-neutral-800">
-      <RadialMenu 
+  "radial-menu": ({ theme = "dark" }) => (
+    <div className={cn("h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
+      <RadialMenu theme={theme}
         radius={110} 
         startAngle={-180} 
         endAngle={0} 
@@ -736,22 +760,22 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "cursor-trail": (
-    <div className="h-[400px] w-full flex items-center justify-center p-12 bg-neutral-950 rounded-xl overflow-hidden shadow-inner border border-neutral-800">
+  "cursor-trail": ({ theme = "dark" }) => (
+    <div className={cn("h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
       <div className="text-center relative z-10 pointer-events-none">
-        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-neutral-500 mb-4">
+        <h3 className={cn("text-3xl font-bold bg-clip-text text-transparent mb-4", theme === "dark" ? "bg-gradient-to-br from-white to-neutral-500" : "bg-gradient-to-br from-neutral-900 to-neutral-600")}>
           Interactive Cursor Trail
         </h3>
-        <p className="text-neutral-400">Move your mouse inside this block to see the effect.</p>
+        <p className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}>Move your mouse inside this block to see the effect.</p>
       </div>
-      <CursorTrail color="#a855f7" trailLength={30} size={15} decayDuration={0.8} />
+      <CursorTrail theme={theme} color="#a855f7" trailLength={30} size={15} decayDuration={0.8} />
     </div>
   ),
-  "glow-hero-section/default": (
-    <GlowHeroSection height="h-[520px]" />
+  "glow-hero-section/default": ({ theme = "dark" }) => (
+    <GlowHeroSection theme={theme} height="h-[520px]" />
   ),
-  "glow-hero-section/dark": (
-    <GlowHeroSection
+  "glow-hero-section/dark": ({ theme = "dark" }) => (
+    <GlowHeroSection theme={theme}
       height="h-[520px]"
       backgroundColor="#0a0a0f"
       meshColorStart="rgba(139, 92, 246, 0.5)"
@@ -763,17 +787,17 @@ export const componentDemos: Record<string, React.ReactNode> = {
       mouseRadius={200}
     />
   ),
-  "glow-hero-section/no-badge": (
-    <GlowHeroSection
+  "glow-hero-section/no-badge": ({ theme = "dark" }) => (
+    <GlowHeroSection theme={theme}
       height="h-[520px]"
       badge={null}
       heading="Build Interfaces That Stand Out"
       description="Drop-in animated components powered by Motion.dev and Tailwind CSS."
     />
   ),
-  "limelight-nav/default": (
-    <div className="flex items-center justify-center p-12 h-[300px] w-full bg-neutral-950 rounded-xl border border-neutral-800">
-      <LimelightNav 
+  "limelight-nav/default": ({ theme = "dark" }) => (
+    <div className={cn("flex items-center justify-center p-12 h-[300px] w-full rounded-xl border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
+      <LimelightNav theme={theme}
         limelightColor="#a855f7"
         items={[
           { id: '1', icon: <HomeIcon />, label: 'Home' },
@@ -783,11 +807,11 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "limelight-nav/custom": (
-    <div className="flex items-center justify-center p-12 h-[300px] w-full bg-neutral-950 rounded-xl border border-neutral-800">
-      <LimelightNav 
+  "limelight-nav/custom": ({ theme = "dark" }) => (
+    <div className={cn("flex items-center justify-center p-12 h-[300px] w-full rounded-xl border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
+      <LimelightNav theme={theme}
         limelightColor="#06b6d4"
-        className="bg-neutral-900/50"
+        className={theme === "dark" ? "bg-neutral-900/50" : "bg-white/60"}
         items={[
           { id: '1', icon: <HomeIcon />, label: 'Home' },
           { id: '2', icon: <Bookmark />, label: 'Bookmarks' },
@@ -798,9 +822,9 @@ export const componentDemos: Record<string, React.ReactNode> = {
       />
     </div>
   ),
-  "morphing-card-stack/default": (
-    <div className="flex items-center justify-center p-12 min-h-[500px] w-full bg-neutral-950 rounded-xl border border-neutral-800">
-      <MorphingCardStack 
+  "morphing-card-stack/default": ({ theme = "dark" }) => (
+    <div className={cn("flex items-center justify-center p-12 min-h-[500px] w-full rounded-xl border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
+      <MorphingCardStack theme={theme}
         cards={[
           {
             id: "1",

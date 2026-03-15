@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useRef, useState, useCallback } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { cn } from "@/lib/utils";
 
 export interface TiltCardProps {
   children: React.ReactNode;
@@ -12,6 +12,7 @@ export interface TiltCardProps {
   scale?: number;
   glare?: boolean;
   glareMaxOpacity?: number;
+  theme?: "light" | "dark";
 }
 
 export function TiltCard({
@@ -23,6 +24,7 @@ export function TiltCard({
   scale = 1.05,
   glare = true,
   glareMaxOpacity = 0.35,
+  theme = "dark",
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);

@@ -11,6 +11,7 @@ export interface ParticleFieldProps
   interactionRadius?: number;
   particleSize?: { min: number; max: number };
   speed?: number;
+  theme?: "light" | "dark";
 }
 
 export function ParticleField({
@@ -20,6 +21,7 @@ export function ParticleField({
   interactionRadius = 150,
   particleSize = { min: 1, max: 3 },
   speed = 1,
+  theme = "dark",
   ...props
 }: ParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);

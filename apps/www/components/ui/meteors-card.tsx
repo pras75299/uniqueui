@@ -1,12 +1,13 @@
 "use client";
-import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from "react";
 
 export interface MeteorsCardProps {
   children: React.ReactNode;
   className?: string;
   meteorCount?: number;
   meteorColor?: string;
+  theme?: "light" | "dark";
 }
 
 export function MeteorsCard({
@@ -14,11 +15,13 @@ export function MeteorsCard({
   className,
   meteorCount = 20,
   meteorColor = "white",
+  theme = "dark",
 }: MeteorsCardProps) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950 p-8",
+        "relative overflow-hidden rounded-xl border p-8",
+        theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
         className
       )}
     >
@@ -37,15 +40,19 @@ interface MeteorData {
 }
 
 function Meteors({ count, color }: { count: number; color: string }) {
-  const [meteors, setMeteors] = useState<MeteorData[]>(() => 
-    Array.from({ length: count }).map(() => ({
-      left: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 5}s`,
-      duration: `${Math.random() * 3 + 2}s`,
-      size: Math.random() * 1.5 + 0.5,
-      tailWidth: Math.random() * 80 + 40,
-    }))
-  );
+  const [meteors, setMeteors] = useState<MeteorData[]>([]);
+
+  useEffect(() => {
+    setMeteors(
+      Array.from({ length: count }).map(() => ({
+        left: `${Math.random() * 100}%`,
+        delay: `${Math.random() * 5}s`,
+        duration: `${Math.random() * 3 + 2}s`,
+        size: Math.random() * 1.5 + 0.5,
+        tailWidth: Math.random() * 80 + 40,
+      }))
+    );
+  }, [count]);
 
   return (
     <>

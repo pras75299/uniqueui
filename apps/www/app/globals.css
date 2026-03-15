@@ -2,9 +2,15 @@
 
 @layer utilities {
   body {
-    background: #000;
-    color: #fff;
     min-height: 100vh;
+  }
+  [data-theme="dark"] body {
+    background: #0a0a0a;
+    color: #fff;
+  }
+  [data-theme="light"] body {
+    background: #fafafa;
+    color: #171717;
   }
 }
 

@@ -10,6 +10,7 @@ export interface MagneticButtonProps {
   magneticRadius?: number;
   onClick?: () => void;
   disabled?: boolean;
+  theme?: "light" | "dark";
 }
 
 export function MagneticButton({
@@ -19,6 +20,7 @@ export function MagneticButton({
   magneticRadius = 150,
   onClick,
   disabled = false,
+  theme = "dark",
 }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
   const [isHovering, setIsHovering] = useState(false);

@@ -15,6 +15,7 @@ export interface HoverRevealCardProps {
   accentColor?: string;
   className?: string;
   imageHeight?: number;
+  theme?: "light" | "dark";
 }
 
 export function HoverRevealCard({
@@ -29,6 +30,7 @@ export function HoverRevealCard({
   accentColor = "#6366f1",
   className,
   imageHeight = 240,
+  theme = "dark",
 }: HoverRevealCardProps) {
   const [hovered, setHovered] = useState(false);
 
@@ -43,7 +45,8 @@ export function HoverRevealCard({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={cn(
-        "relative overflow-hidden rounded-2xl bg-white shadow-md border border-neutral-200/60 cursor-pointer select-none block",
+        "relative overflow-hidden rounded-2xl shadow-md cursor-pointer select-none block",
+        theme === "dark" ? "bg-neutral-900 border border-neutral-800" : "bg-white border border-neutral-200/60",
         className
       )}
       style={{ minHeight: imageHeight + 140 }}

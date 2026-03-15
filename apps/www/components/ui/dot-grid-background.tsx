@@ -1,7 +1,7 @@
 "use client";
-import React, { useCallback, useEffect, useRef } from "react";
-import { motion, useMotionValue, useTransform, useMotionTemplate } from "motion/react";
 import { cn } from "@/lib/utils";
+import React, { useCallback, useEffect, useRef } from "react";
+import { motion, useMotionValue, useTransform } from "motion/react";
 
 export interface DotGridBackgroundProps {
   children?: React.ReactNode;
@@ -11,6 +11,7 @@ export interface DotGridBackgroundProps {
   gap?: number;
   hoverRadius?: number;
   hoverScale?: number;
+  theme?: "light" | "dark";
 }
 
 export function DotGridBackground({
@@ -21,6 +22,7 @@ export function DotGridBackground({
   gap = 24,
   hoverRadius = 120,
   hoverScale = 3,
+  theme = "dark",
 }: DotGridBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rectRef = useRef<DOMRect | null>(null);
@@ -58,18 +60,18 @@ export function DotGridBackground({
     mouseY.set(-1000);
   }, [mouseX, mouseY]);
 
-  const maskImage = useMotionTemplate`radial-gradient(circle ${hoverRadius}px at ${mouseX}px ${mouseY}px, black 0%, transparent 100%)`;
-
   return (
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative overflow-hidden bg-neutral-950",
+        "relative overflow-hidden",
+        theme === "dark" ? "bg-neutral-950" : "bg-neutral-50",
         className
       )}
     >
+      {/* Static dot grid via CSS pattern */}
       <div
         className="absolute inset-0 opacity-100"
         style={{
@@ -78,6 +80,7 @@ export function DotGridBackground({
         }}
       />
 
+      {/* Animated glow following cursor */}
       <motion.div
         className="pointer-events-none absolute"
         style={{
@@ -93,6 +96,7 @@ export function DotGridBackground({
         }}
       />
 
+      {/* Animated dot highlight effect - CSS mask reveals bigger dots near cursor */}
       <motion.div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -101,8 +105,8 @@ export function DotGridBackground({
             "0.8)"
           )} ${dotSize * hoverScale * 0.5}px, transparent ${dotSize * hoverScale * 0.5}px)`,
           backgroundSize: `${gap}px ${gap}px`,
-          maskImage,
-          WebkitMaskImage: maskImage,
+          maskImage: `radial-gradient(circle ${hoverRadius}px at var(--mx) var(--my), black 0%, transparent 100%)`,
+          WebkitMaskImage: `radial-gradient(circle ${hoverRadius}px at var(--mx) var(--my), black 0%, transparent 100%)`,
         }}
       />
 
@@ -110,4 +114,3 @@ export function DotGridBackground({
     </div>
   );
 }
-

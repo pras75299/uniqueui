@@ -1,7 +1,9 @@
 "use client";
-import React, { useRef } from "react";
-import { motion, useInView } from "motion/react";
 import { cn } from "@/lib/utils";
+import React from "react";
+import { motion, useInView } from "motion/react";
+import { useRef } from "react";
+
 
 export interface GradientTextRevealProps {
   text: string;
@@ -12,6 +14,7 @@ export interface GradientTextRevealProps {
   duration?: number;
   once?: boolean;
   as?: "h1" | "h2" | "h3" | "h4" | "p" | "span";
+  theme?: "light" | "dark";
 }
 
 export function GradientTextReveal({
@@ -23,14 +26,15 @@ export function GradientTextReveal({
   duration = 0.5,
   once = true,
   as: Tag = "p",
+  theme = "dark",
 }: GradientTextRevealProps) {
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once, amount: 0.3 });
   const words = text.split(" ");
 
   return (
     <Tag
-      ref={ref as React.RefObject<any>}
+      ref={ref as any}
       className={cn("flex flex-wrap gap-x-2 gap-y-1", className)}
     >
       {words.map((word, i) => (

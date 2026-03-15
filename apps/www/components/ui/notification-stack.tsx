@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { cn } from "@/lib/utils";
 
 export type NotificationType = "success" | "error" | "warning" | "info";
 
@@ -17,6 +17,7 @@ export interface NotificationStackProps {
   className?: string;
   position?: "top-right" | "top-left" | "bottom-right" | "bottom-left";
   maxVisible?: number;
+  theme?: "light" | "dark";
 }
 
 const typeStyles: Record<NotificationType, string> = {
@@ -47,6 +48,7 @@ const positionStyles: Record<string, string> = {
   "bottom-left": "bottom-4 left-4",
 };
 
+// Hook for managing notifications
 export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
@@ -74,13 +76,18 @@ export function NotificationStack({
   className,
   position = "top-right",
   maxVisible = 5,
-  notifications,
-  onRemove,
+  theme = "dark",
 }: NotificationStackProps & {
   notifications: Notification[];
   onRemove: (id: string) => void;
 }) {
-  const visible = notifications.slice(-maxVisible);
+  // Cast to get the extra props
+  const props = arguments[0] as NotificationStackProps & {
+    notifications: Notification[];
+    onRemove: (id: string) => void;
+  };
+
+  const visible = props.notifications.slice(-maxVisible);
   const isBottom = position.startsWith("bottom");
 
   return (
@@ -97,8 +104,9 @@ export function NotificationStack({
           <NotificationItem
             key={notification.id}
             notification={notification}
-            onRemove={onRemove}
+            onRemove={props.onRemove}
             position={position}
+            theme={theme}
           />
         ))}
       </AnimatePresence>
@@ -110,24 +118,23 @@ function NotificationItem({
   notification,
   onRemove,
   position,
+  theme = "dark",
 }: {
   notification: Notification;
   onRemove: (id: string) => void;
   position: string;
+  theme?: "light" | "dark";
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
-  const onRemoveRef = useRef(onRemove);
+  const [progress, setProgress] = useState(100);
   const timeoutRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    onRemoveRef.current = onRemove;
-  }, [onRemove]);
 
   useEffect(() => {
     if (duration <= 0) return;
 
     timeoutRef.current = window.setTimeout(() => {
-      onRemoveRef.current(id);
+      onRemove(id);
+      setProgress(0);
     }, duration);
 
     return () => {
@@ -135,7 +142,7 @@ function NotificationItem({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [id, duration]);
+  }, [id, duration, onRemove]);
 
   const isRight = position.includes("right");
 
@@ -173,19 +180,20 @@ function NotificationItem({
           {typeIcons[type]}
         </span>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-white">{title}</p>
+          <p className={cn("text-sm font-semibold", theme === "dark" ? "text-white" : "text-neutral-900")}>{title}</p>
           {description && (
-            <p className="text-xs text-neutral-400 mt-1">{description}</p>
+            <p className={cn("text-xs mt-1", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>{description}</p>
           )}
         </div>
         <button
           onClick={() => onRemove(id)}
-          className="flex-shrink-0 text-neutral-500 hover:text-white transition-colors text-sm"
+          className={cn("flex-shrink-0 transition-colors text-sm", theme === "dark" ? "text-neutral-500 hover:text-white" : "text-neutral-600 hover:text-neutral-900")}
         >
           ✕
         </button>
       </div>
 
+      {/* Progress bar */}
       {duration > 0 && (
         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-neutral-800">
           <motion.div

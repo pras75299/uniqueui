@@ -12,6 +12,7 @@ export interface FlipCardProps {
   trigger?: "hover" | "click";
   direction?: "horizontal" | "vertical";
   perspective?: number;
+  theme?: "light" | "dark";
 }
 
 export function FlipCard({
@@ -23,6 +24,7 @@ export function FlipCard({
   trigger = "hover",
   direction = "horizontal",
   perspective = 1000,
+  theme = "dark",
 }: FlipCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -47,7 +49,8 @@ export function FlipCard({
       {/* Front */}
       <motion.div
         className={cn(
-          "w-full h-full rounded-xl border border-neutral-800 bg-neutral-950 p-6 backface-hidden",
+          "w-full h-full rounded-xl border p-6 backface-hidden",
+          theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
           frontClassName
         )}
         style={{ backfaceVisibility: "hidden" }}
@@ -62,7 +65,8 @@ export function FlipCard({
       {/* Back */}
       <motion.div
         className={cn(
-          "absolute inset-0 w-full h-full rounded-xl border border-neutral-700 bg-neutral-900 p-6 backface-hidden",
+          "absolute inset-0 w-full h-full rounded-xl border p-6 backface-hidden",
+          theme === "dark" ? "border-neutral-700 bg-neutral-900" : "border-neutral-300 bg-neutral-100",
           backClassName
         )}
         style={{

@@ -1,13 +1,14 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useRef, useCallback } from "react";
 import { motion, useMotionValue, useMotionTemplate } from "motion/react";
-import { cn } from "@/lib/utils";
 
 export interface SpotlightCardProps {
   children: React.ReactNode;
   className?: string;
   spotlightColor?: string;
   spotlightSize?: number;
+  theme?: "light" | "dark";
 }
 
 export function SpotlightCard({
@@ -15,6 +16,7 @@ export function SpotlightCard({
   className,
   spotlightColor = "rgba(120, 119, 198, 0.15)",
   spotlightSize = 400,
+  theme = "dark",
 }: SpotlightCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(-spotlightSize);
@@ -43,7 +45,8 @@ export function SpotlightCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "group relative overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950 p-8",
+        "group relative overflow-hidden rounded-xl border p-8",
+        theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
         className
       )}
     >

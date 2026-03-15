@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React from "react";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
 
 export interface SkeletonShimmerProps {
   className?: string;
@@ -10,6 +10,7 @@ export interface SkeletonShimmerProps {
   rounded?: "sm" | "md" | "lg" | "xl" | "full";
   count?: number;
   gap?: number;
+  theme?: "light" | "dark";
 }
 
 export function SkeletonShimmer({
@@ -19,6 +20,7 @@ export function SkeletonShimmer({
   rounded = "md",
   count = 1,
   gap = 12,
+  theme = "dark",
 }: SkeletonShimmerProps) {
   const roundedMap = {
     sm: "rounded-sm",
@@ -27,6 +29,7 @@ export function SkeletonShimmer({
     xl: "rounded-xl",
     full: "rounded-full",
   };
+  const isDark = theme === "dark";
 
   return (
     <div className="flex flex-col" style={{ gap: `${gap}px` }}>
@@ -34,7 +37,8 @@ export function SkeletonShimmer({
         <div
           key={i}
           className={cn(
-            "relative overflow-hidden bg-neutral-800/50",
+            "relative overflow-hidden",
+            isDark ? "bg-neutral-800/50" : "bg-neutral-200/80",
             roundedMap[rounded],
             className
           )}
@@ -57,32 +61,47 @@ export function SkeletonShimmer({
               delay: i * 0.15,
             }}
           />
+          {/* Subtle pulse on top of shimmer */}
+          <motion.div
+            className={cn("absolute inset-0", isDark ? "bg-neutral-700/20" : "bg-neutral-300/20")}
+            animate={{
+              opacity: [0, 0.3, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatType: "loop",
+              ease: "easeInOut",
+              delay: i * 0.1,
+            }}
+          />
         </div>
       ))}
     </div>
   );
 }
 
-export function SkeletonCard({ className }: { className?: string }) {
+export function SkeletonCard({ className, theme = "dark" }: { className?: string; theme?: "light" | "dark" }) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-neutral-800 bg-neutral-900/50 p-6 space-y-4",
+        "rounded-xl border p-6 space-y-4",
+        theme === "dark" ? "border-neutral-800 bg-neutral-900/50" : "border-neutral-200 bg-neutral-100",
         className
       )}
     >
       {/* Avatar + name row */}
       <div className="flex items-center gap-3">
-        <SkeletonShimmer width={40} height={40} rounded="full" />
+        <SkeletonShimmer theme={theme} width={40} height={40} rounded="full" />
         <div className="flex-1 space-y-2">
-          <SkeletonShimmer width="60%" height={14} />
-          <SkeletonShimmer width="40%" height={10} />
+          <SkeletonShimmer theme={theme} width="60%" height={14} />
+          <SkeletonShimmer theme={theme} width="40%" height={10} />
         </div>
       </div>
       {/* Body lines */}
-      <SkeletonShimmer count={3} height={12} />
+      <SkeletonShimmer theme={theme} count={3} height={12} />
       {/* Image placeholder */}
-      <SkeletonShimmer height={160} rounded="lg" />
+      <SkeletonShimmer theme={theme} height={160} rounded="lg" />
     </div>
   );
 }

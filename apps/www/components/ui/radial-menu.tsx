@@ -31,6 +31,7 @@ export interface RadialMenuProps {
   triggerClassName?: string;
   /** Classes applied to individual menu item buttons */
   itemClassName?: string;
+  theme?: "light" | "dark";
 }
 
 export function RadialMenu({
@@ -43,6 +44,7 @@ export function RadialMenu({
   className,
   triggerClassName,
   itemClassName,
+  theme = "dark",
 }: RadialMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);

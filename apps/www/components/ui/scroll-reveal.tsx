@@ -7,30 +7,12 @@ import type { Variant } from "motion/react";
 type AnimationPreset = "fade-up" | "fade-down" | "fade-left" | "fade-right" | "scale" | "blur";
 
 const presets: Record<AnimationPreset, { hidden: Variant; visible: Variant }> = {
-  "fade-up": {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0 },
-  },
-  "fade-down": {
-    hidden: { opacity: 0, y: -40 },
-    visible: { opacity: 1, y: 0 },
-  },
-  "fade-left": {
-    hidden: { opacity: 0, x: -40 },
-    visible: { opacity: 1, x: 0 },
-  },
-  "fade-right": {
-    hidden: { opacity: 0, x: 40 },
-    visible: { opacity: 1, x: 0 },
-  },
-  scale: {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1 },
-  },
-  blur: {
-    hidden: { opacity: 0, filter: "blur(10px)" },
-    visible: { opacity: 1, filter: "blur(0px)" },
-  },
+  "fade-up": { hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0 } },
+  "fade-down": { hidden: { opacity: 0, y: -40 }, visible: { opacity: 1, y: 0 } },
+  "fade-left": { hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } },
+  "fade-right": { hidden: { opacity: 0, x: 40 }, visible: { opacity: 1, x: 0 } },
+  scale: { hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 1, scale: 1 } },
+  blur: { hidden: { opacity: 0, filter: "blur(10px)" }, visible: { opacity: 1, filter: "blur(0px)" } },
 };
 
 export interface ScrollRevealProps {
@@ -41,6 +23,7 @@ export interface ScrollRevealProps {
   duration?: number;
   threshold?: number;
   once?: boolean;
+  theme?: "light" | "dark";
 }
 
 export function ScrollReveal({
@@ -53,10 +36,7 @@ export function ScrollReveal({
   once = true,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, {
-    once,
-    amount: threshold,
-  });
+  const isInView = useInView(ref, { once, amount: threshold });
 
   const preset = presets[animation];
 
@@ -94,6 +74,7 @@ export interface ScrollRevealGroupProps {
   staggerDelay?: number;
   threshold?: number;
   once?: boolean;
+  theme?: "light" | "dark";
 }
 
 export function ScrollRevealGroup({
@@ -103,12 +84,10 @@ export function ScrollRevealGroup({
   staggerDelay = 0.1,
   threshold = 0.1,
   once = true,
+  theme = "dark",
 }: ScrollRevealGroupProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, {
-    once,
-    amount: threshold,
-  });
+  const isInView = useInView(ref, { once, amount: threshold });
 
   const preset = presets[animation];
 
