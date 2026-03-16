@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, Variants } from "motion/react";
 import { TypewriterText } from "@/components/ui/typewriter-text";
 import { TiltCard } from "@/components/ui/3d-tilt-card";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
@@ -21,11 +21,53 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { MorphingCardStack, type CardData } from "@/components/ui/morphing-card-stack";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === "dark";
+
+  const heroVariants: Variants = {
+    hidden: { opacity: 0, y: 24 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 260, damping: 28 },
+    },
+  };
+
+  const playgroundVariants: Variants = {
+    hidden: { opacity: 0, y: 32 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 260, damping: 28, delay: 0.05 },
+    },
+  };
+
+  const heroCards: CardData[] = [
+    {
+      id: "hero",
+      title: "Hero Sections",
+      description: "Glow, gradients, and depth that make your landing pages feel cinematic out of the box.",
+    },
+    {
+      id: "cards",
+      title: "Card Grids",
+      description: "Responsive, animated card layouts with hover depth, tilt, and spotlight interactions.",
+    },
+    {
+      id: "nav",
+      title: "Navigation",
+      description: "Floating docks, limelight navs, and magnetic buttons to anchor your app’s structure.",
+    },
+    {
+      id: "timelines",
+      title: "Timelines",
+      description: "Animated timelines and progress stories for roadmaps, onboarding, and product journeys.",
+    },
+  ];
 
   const copyCommand = () => {
     navigator.clipboard.writeText("npx uniqueui init");
@@ -56,7 +98,7 @@ export default function Home() {
       />
 
       {/* Header */}
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex p-4 md:p-8 pt-8 relative">
+      <div className="z-10 w-full max-w-6xl items-center justify-between font-mono text-sm lg:flex p-4 md:p-8 pt-8 relative">
         <p
           className={cn(
             "fixed left-0 top-0 flex w-full justify-center border-b backdrop-blur-md pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:border lg:p-4 z-50 lg:z-auto",
@@ -71,7 +113,7 @@ export default function Home() {
         <div
           className={cn(
             "fixed bottom-0 left-0 flex h-48 w-full items-end justify-center lg:static lg:h-auto lg:w-auto lg:bg-none z-50 lg:z-auto pointer-events-none lg:pointer-events-auto",
-            isDark ? "bg-gradient-to-t from-black via-black" : "bg-gradient-to-t from-neutral-100 via-neutral-50"
+            isDark ? "bg-linear-to-t from-black via-black" : "bg-linear-to-t from-neutral-100 via-neutral-50"
           )}
         >
             <div className="pointer-events-auto flex items-center gap-6 p-8 lg:p-0">
@@ -101,189 +143,396 @@ export default function Home() {
       </div>
 
       {/* Hero */}
-      <div className="relative z-10 flex flex-col items-center text-center mt-28 lg:mt-20 px-4 max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+      <section className="relative z-10 mt-28 lg:mt-20 px-4 w-full max-w-6xl mx-auto">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">
+          {/* Hero copy + CTAs */}
+          <motion.div
+            variants={heroVariants}
+            initial="hidden"
+            animate="visible"
+            className="text-left"
+          >
+            <span
+              className={cn(
+                "inline-flex items-center gap-2 rounded-full border text-xs mb-6 px-3 py-1 font-medium",
+                isDark
+                  ? "bg-neutral-900 border-neutral-800 text-neutral-400"
+                  : "bg-neutral-100 border-neutral-200 text-neutral-600"
+              )}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
+              Animated React components · motion.dev
+            </span>
+
+            <h1
+              className={cn(
+                "text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent tracking-tight mb-4",
+                isDark
+                  ? "bg-linear-to-b from-white to-neutral-400"
+                  : "bg-linear-to-b from-neutral-900 to-neutral-600"
+              )}
+            >
+              Ship cinematic UI
+              <br />
+              in minutes, not weeks.
+            </h1>
+
+            <div
+              className={cn(
+                "mt-3 mb-8 text-base md:text-lg max-w-xl flex flex-wrap items-center gap-2",
+                isDark ? "text-neutral-400" : "text-neutral-600"
+              )}
+            >
+              <span>Copy‑pasteable</span>
+              <TypewriterText
+                words={["heroes", "cards", "navbars", "backgrounds", "timelines"]}
+                className="text-purple-400 font-semibold"
+              />
+              <span>powered by motion.dev and Tailwind.</span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6">
+              <Link href="/components" className="w-full sm:w-auto">
+                <button
+                  className={cn(
+                    "w-full sm:w-auto px-7 py-3.5 rounded-full font-semibold flex items-center justify-center gap-2 transition-colors",
+                    isDark
+                      ? "bg-white text-black hover:bg-neutral-200"
+                      : "bg-neutral-900 text-white hover:bg-neutral-800"
+                  )}
+                >
+                  Browse components
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+
+              <motion.div
+                variants={playgroundVariants}
+                initial="hidden"
+                animate="visible"
+                className="relative group w-full sm:w-auto"
+              >
+                <div className="absolute -inset-0.5 bg-linear-to-r from-purple-600 to-pink-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-700 group-hover:duration-150" />
+                <div
+                  className={cn(
+                    "relative flex items-center rounded-full leading-none",
+                    isDark ? "bg-black" : "bg-neutral-900"
+                  )}
+                >
+                  <div className="flex items-center px-5 py-3.5">
+                    <Terminal
+                      className={cn(
+                        "w-4 h-4 mr-3",
+                        isDark ? "text-neutral-400" : "text-neutral-500"
+                      )}
+                    />
+                    <code
+                      className={cn(
+                        "font-mono text-xs md:text-sm",
+                        isDark ? "text-neutral-200" : "text-neutral-100"
+                      )}
+                    >
+                      npx uniqueui add hero
+                    </code>
+                  </div>
+                  <button
+                    onClick={copyCommand}
+                    aria-label="Copy install command"
+                    className={cn(
+                      "p-3.5 rounded-r-full transition-colors border-l",
+                      isDark
+                        ? "hover:bg-neutral-900 border-neutral-800"
+                        : "hover:bg-neutral-800 border-neutral-700"
+                    )}
+                  >
+                    {copied ? (
+                      <Check className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-neutral-400" />
+                    )}
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+
+            <p
+              className={cn(
+                "text-xs md:text-sm flex flex-wrap items-center gap-2",
+                isDark ? "text-neutral-500" : "text-neutral-500"
+              )}
+            >
+              <span>Works with Next.js & React ·</span>
+              <span>Zero-config motion.dev animations ·</span>
+              <span>Copy-paste architecture</span>
+            </p>
+          </motion.div>
+
+          {/* Component playground */}
+          <motion.div
+            variants={playgroundVariants}
+            initial="hidden"
+            animate="visible"
+            className="relative"
+          >
+            <div
+              className={cn(
+                "pointer-events-auto rounded-3xl border backdrop-blur-xl p-4 sm:p-6 lg:p-7 shadow-2xl",
+                isDark
+                  ? "border-neutral-800 bg-neutral-950/80"
+                  : "border-neutral-200 bg-white/80"
+              )}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide">
+                  <span
+                    className={cn(
+                      "h-6 px-3 inline-flex items-center rounded-full",
+                      isDark
+                        ? "bg-purple-500/10 text-purple-200 border border-purple-500/30"
+                        : "bg-purple-50 text-purple-700 border border-purple-200"
+                    )}
+                  >
+                    Live playground
+                  </span>
+                  <span
+                    className={cn(
+                      "hidden sm:inline-block",
+                      isDark ? "text-neutral-500" : "text-neutral-500"
+                    )}
+                  >
+                    Try different layouts
+                  </span>
+                </div>
+              </div>
+
+              <MorphingCardStack
+                cards={heroCards}
+                theme={isDark ? "dark" : "light"}
+                className="mx-auto"
+              />
+            </div>
+
+            <div className="pointer-events-none absolute -inset-x-10 -bottom-6 h-24 bg-linear-to-t from-black/40 to-transparent dark:from-black/40" />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Social proof */}
+      <section className="w-full max-w-6xl px-4 relative z-10 mt-20">
+        <div
+          className={cn(
+            "flex flex-col md:flex-row md:items-center md:justify-between gap-6 rounded-2xl border px-5 py-6 md:px-8 md:py-7",
+            isDark
+              ? "border-neutral-800 bg-neutral-950/60"
+              : "border-neutral-200 bg-white/80"
+          )}
         >
-          <span
+          <div>
+            <p
+              className={cn(
+                "text-xs font-medium uppercase tracking-[0.18em] mb-2",
+                isDark ? "text-neutral-400" : "text-neutral-600"
+              )}
+            >
+              Trusted building blocks
+            </p>
+            <p
+              className={cn(
+                "text-sm md:text-base",
+                isDark ? "text-neutral-400" : "text-neutral-600"
+              )}
+            >
+              Designed for production teams who care about motion, craft, and copy‑paste speed.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-4 text-xs md:text-sm">
+            <div className="flex flex-col">
+              <span className="font-semibold">Dozens</span>
+              <span className={cn(isDark ? "text-neutral-500" : "text-neutral-600")}>
+                of animated components
+              </span>
+            </div>
+            <div className="h-10 w-px bg-linear-to-b from-transparent via-neutral-500/30 to-transparent" />
+            <div className="flex flex-col">
+              <span className="font-semibold">Motion‑first</span>
+              <span className={cn(isDark ? "text-neutral-500" : "text-neutral-600")}>
+                built on motion.dev springs
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Component strip */}
+      <section className="w-full max-w-6xl px-4 relative z-10 mt-20 space-y-8">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-semibold">Component gallery</h2>
+            <p
+              className={cn(
+                "mt-2 text-sm md:text-base max-w-xl",
+                isDark ? "text-neutral-400" : "text-neutral-600"
+              )}
+            >
+              A curated set of motion‑rich components you can drop into any React or Next.js app.
+            </p>
+          </div>
+          <Link
+            href="/components"
             className={cn(
-              "px-3 py-1 rounded-full border text-xs mb-6 inline-block",
-              isDark ? "bg-neutral-900 border-neutral-800 text-neutral-400" : "bg-neutral-100 border-neutral-200 text-neutral-600"
+              "hidden md:inline-flex text-sm items-center gap-1 font-medium",
+              isDark ? "text-purple-300 hover:text-purple-200" : "text-purple-700 hover:text-purple-600"
             )}
           >
-            Beta Release 0.1.0
-          </span>
-          <h1
+            Browse all components
+            <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card
+            theme={theme}
+            title="Aurora hero"
+            description="Gradient‑driven hero layout with floating aurora background and layered depth."
+            icon={<Sparkles className="w-6 h-6" />}
+          />
+          <Card
+            theme={theme}
+            title="Morphing stack"
+            description="Interactive card stack that morphs between layouts with springs."
+            icon={<Layers className="w-6 h-6" />}
+          />
+          <Card
+            theme={theme}
+            title="Spotlight cards"
+            description="Cards that track your cursor with soft, cinematic lighting."
+            icon={<Ghost className="w-6 h-6" />}
+          />
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="w-full max-w-6xl px-4 relative z-10 mt-24 space-y-10">
+        <div className="text-center space-y-3">
+          <h2 className="text-2xl md:text-3xl font-semibold">How UniqueUI fits your stack</h2>
+          <p
             className={cn(
-              "text-5xl md:text-7xl lg:text-8xl font-bold bg-clip-text text-transparent tracking-tight mb-6",
-              isDark ? "bg-gradient-to-b from-white to-neutral-500" : "bg-gradient-to-b from-neutral-900 to-neutral-600"
-            )}
-          >
-            Build Interfaces <br />That Stand Out.
-          </h1>
-          <div
-            className={cn(
-              "mt-2 mb-10 text-lg md:text-xl max-w-2xl mx-auto flex items-center justify-center gap-2 flex-wrap",
+              "max-w-2xl mx-auto text-sm md:text-base",
               isDark ? "text-neutral-400" : "text-neutral-600"
             )}
           >
-            <span>Beautiful, animated</span>
-            <TypewriterText
-              words={["components", "buttons", "cards", "modals", "backgrounds"]}
-              className="text-purple-400 font-semibold"
-            />
-            <span>for modern web apps.</span>
-          </div>
-        </motion.div>
-
-        <div className="flex flex-col md:flex-row items-center gap-4 mb-16">
-            <Link href="/components">
-                <button className="px-8 py-3.5 rounded-full bg-white text-black font-bold hover:bg-neutral-200 transition-colors flex items-center gap-2">
-                    Browse Components <ArrowRight className="w-4 h-4" />
-                </button>
-            </Link>
-            
-            <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="relative group"
-            >
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt" />
-            <div
-              className={cn(
-                "relative flex items-center rounded-full leading-none",
-                isDark ? "bg-black" : "bg-neutral-800"
-              )}
-            >
-                <div className="flex items-center px-6 py-3.5">
-                <Terminal className={cn("w-4 h-4 mr-3", isDark ? "text-neutral-400" : "text-neutral-500")} />
-                <code className={cn("font-mono text-sm", isDark ? "text-neutral-300" : "text-neutral-200")}>
-                    npx uniqueui init
-                </code>
-                </div>
-              <button
-                onClick={copyCommand}
-                aria-label="Copy install command"
-                className={cn(
-                  "p-3.5 rounded-r-full transition-colors border-l",
-                  isDark ? "hover:bg-neutral-900 border-neutral-800" : "hover:bg-neutral-700 border-neutral-600"
-                )}
-              >
-                {copied ? (
-                    <Check className="w-4 h-4 text-green-500" />
-                ) : (
-                    <Copy className="w-4 h-4 text-neutral-400" />
-                )}
-                </button>
-            </div>
-            </motion.div>
+            From install to customization in three steps. No design system overhaul, just focused drops of
+            motion where it matters.
+          </p>
         </div>
-      </div>
 
-      {/* Feature Cards */}
-      <div className="z-10 grid text-center lg:max-w-5xl lg:w-full lg:grid-cols-3 lg:text-left gap-6 px-4 mb-32">
-        <Card theme={theme}
-          title="Install"
-          description="Get started quickly by installing our CLI tool globally on your machine."
-          icon={<Terminal className="w-6 h-6" />}
-        />
-        <Card theme={theme}
-          title="Add Components"
-          description="Add components to your project with a single command. No complex setup."
-          icon={<Ghost className="w-6 h-6" />}
-        />
-        <Card theme={theme}
-          title="Customizable"
-          description="Built on top of Tailwind CSS and Motion.dev. Fully customizable and accessible."
-          icon={<Sparkles className="w-6 h-6" />}
-        />
-      </div>
-
-      {/* Featured Preview Section */}
-      <div className="w-full max-w-6xl px-4 relative z-10 space-y-24 mb-32">
-        <div className="text-center space-y-4">
-             <h2 className="text-3xl md:text-5xl font-bold">Featured Components</h2>
-             <p className={cn("max-w-2xl mx-auto", isDark ? "text-neutral-400" : "text-neutral-600")}>
-                A glimpse of what you can build. Check the documentation for the full library.
-             </p>
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card
+            theme={theme}
+            title="1 · Install the CLI"
+            description="Run `npx uniqueui init` once in your project to set up the generator and base styles."
+            icon={<Terminal className="w-6 h-6" />}
+          />
+          <Card
+            theme={theme}
+            title="2 · Add components"
+            description="Use `npx uniqueui add <component>` to drop in animated sections as single‑file React components."
+            icon={<ScrollText className="w-6 h-6" />}
+          />
+          <Card
+            theme={theme}
+            title="3 · Tune the details"
+            description="Edit Tailwind classes and motion.dev props to match your brand without touching low‑level motion."
+            icon={<Sparkles className="w-6 h-6" />}
+          />
         </div>
-        
+      </section>
+
+      {/* Motion-rich preview band */}
+      <section className="w-full max-w-6xl px-4 relative z-10 mt-24 mb-28 space-y-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <SpotlightCard theme={theme} className="h-64 flex flex-col justify-center items-center text-center">
-                 <h3 className="text-2xl font-bold mb-2">Spotlight Card</h3>
-                 <p className={isDark ? "text-neutral-400" : "text-neutral-600"}>Interactive lighting effect that follows your mouse.</p>
-            </SpotlightCard>
-            
-            <TiltCard theme={theme} className={cn("h-64 p-8 flex flex-col justify-center items-center text-center border", isDark ? "bg-neutral-900/50 border-neutral-800" : "bg-neutral-100/80 border-neutral-200")}>
-                 <h3 className="text-2xl font-bold mb-2">3D Tilt</h3>
-                 <p className={isDark ? "text-neutral-400" : "text-neutral-600"}>Parallax hover effects that add depth to your UI.</p>
-            </TiltCard>
-        </div>
-        <div className="flex justify-center">
-             <FloatingDock theme={theme}
-                items={[
-                  { id: "home", icon: <Ghost className="w-5 h-5" />, label: "Home" },
-                  { id: "search", icon: <Sparkles className="w-5 h-5" />, label: "Search" },
-                  { id: "layers", icon: <Layers className="w-5 h-5" />, label: "Layers" },
-                  { id: "scroll", icon: <ScrollText className="w-5 h-5" />, label: "Scroll" },
-                  { id: "terminal", icon: <Terminal className="w-5 h-5" />, label: "Terminal" },
-                ]}
-              />
+          <SpotlightCard
+            theme={theme}
+            className="h-64 flex flex-col justify-center items-center text-center"
+          >
+            <h3 className="text-2xl font-semibold mb-2">Spotlight hero</h3>
+            <p className={isDark ? "text-neutral-400" : "text-neutral-600"}>
+              Layer spotlight, gradients, and depth to turn any heading into a centerpiece.
+            </p>
+          </SpotlightCard>
+
+          <TiltCard
+            theme={theme}
+            className={cn(
+              "h-64 p-8 flex flex-col justify-center items-center text-center border",
+              isDark
+                ? "bg-neutral-900/50 border-neutral-800"
+                : "bg-neutral-100/80 border-neutral-200"
+            )}
+          >
+            <h3 className="text-2xl font-semibold mb-2">3D tilt cards</h3>
+            <p className={isDark ? "text-neutral-400" : "text-neutral-600"}>
+              Parallax hover interactions that respect motion preferences and keep performance snappy.
+            </p>
+          </TiltCard>
         </div>
 
         <div
+          className={cn(
+            "w-full h-80 relative rounded-2xl overflow-hidden border mt-8 group",
+            isDark ? "border-neutral-800 bg-black" : "border-neutral-200 bg-neutral-900"
+          )}
+        >
+          <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center p-6 text-center">
+            <h3
+              className={cn(
+                "text-3xl font-semibold bg-clip-text text-transparent mb-2",
+                isDark
+                  ? "bg-linear-to-b from-white to-neutral-500"
+                  : "bg-linear-to-b from-neutral-100 to-neutral-400"
+              )}
+            >
+              Particle field
+            </h3>
+            <p className="text-neutral-400">
+              Physics‑inspired motion that reacts to your cursor without overwhelming the page.
+            </p>
+          </div>
+          <ParticleField
+            theme={theme}
+            particleCount={140}
+            particleColor="#a855f7"
+            speed={0.5}
+            className="opacity-50 group-hover:opacity-100 transition-opacity duration-700"
+          />
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <Link
+            href="/components"
             className={cn(
-              "w-full h-80 relative rounded-2xl overflow-hidden border mt-16 group",
-              isDark ? "border-neutral-800 bg-black" : "border-neutral-200 bg-neutral-800"
+              "focus:outline-none focus:ring-2 focus:ring-offset-2",
+              isDark
+                ? "focus:ring-slate-400 focus:ring-offset-slate-50"
+                : "focus:ring-slate-500 focus:ring-offset-white"
             )}
           >
-             <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center p-6 text-center">
-                 <h3
-                   className={cn(
-                     "text-3xl font-bold bg-clip-text text-transparent mb-2",
-                     isDark ? "bg-gradient-to-b from-white to-neutral-500" : "bg-gradient-to-b from-neutral-100 to-neutral-400"
-                   )}
-                 >
-                   Particle Field
-                 </h3>
-                 <p className="text-neutral-400">Physics-based particle system with mouse interaction. Hover me!</p>
-             </div>
-             <ParticleField theme={theme}
-                particleCount={150}
-                particleColor="#a855f7"
-                speed={0.5}
-                className="opacity-50 group-hover:opacity-100 transition-opacity duration-700"
-             />
+            <div className="group relative inline-flex h-11 overflow-hidden rounded-full p-px">
+              <span className="absolute inset-[-150%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <span
+                className={cn(
+                  "inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-7 text-sm font-medium backdrop-blur-3xl transition-colors",
+                  isDark
+                    ? "bg-slate-950 text-white hover:bg-slate-900"
+                    : "bg-white text-slate-900 hover:bg-slate-100"
+                )}
+              >
+                Explore all components
+              </span>
+            </div>
+          </Link>
         </div>
-
-        <div className="flex justify-center mt-16">
-           <Link
-             href="/components"
-             className={cn(
-               "focus:outline-none focus:ring-2 focus:ring-offset-2",
-               isDark ? "focus:ring-slate-400 focus:ring-offset-slate-50" : "focus:ring-slate-500 focus:ring-offset-white"
-             )}
-           >
-               <div className={cn(
-                     "group relative inline-flex h-12 overflow-hidden rounded-full p-[1px]"
-                   )}>
-                    <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-                    <span
-                      className={cn(
-                        "inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-8 py-1 text-sm font-medium backdrop-blur-3xl transition-colors",
-                        isDark ? "bg-slate-950 text-white hover:bg-slate-900" : "bg-white text-slate-900 hover:bg-slate-100"
-                      )}
-                    >
-                    Explore All Components
-                    </span>
-                </div>
-            </Link>
-        </div>
-
-      </div>
+      </section>
 
       {/* Footer */}
       <footer className="w-full max-w-5xl mt-12 mb-16 px-4 relative z-10">
