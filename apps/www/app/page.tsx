@@ -76,24 +76,24 @@ export default function Home() {
   };
 
   return (
-    <motion.main
-      className={cn(
-        "flex min-h-screen flex-col items-center selection:bg-purple-500/30 overflow-x-hidden",
-        isDark ? "text-white" : "text-neutral-900"
-      )}
-      initial={false}
-      animate={{
-        backgroundColor: isDark ? "#0a0a0a" : "#fafafa",
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-    >
+      <motion.main
+        className={cn(
+          "flex min-h-screen flex-col items-center selection:bg-purple-500/30 overflow-x-hidden",
+          isDark ? "text-white" : "text-neutral-900"
+        )}
+        initial={false}
+        animate={{
+          backgroundColor: isDark ? "#0a0a0a" : "#f5f3ff",
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
       {/* Background Gradient */}
       <div
         className={cn(
           "fixed inset-0 z-0 h-full w-full items-center px-5 py-24 pointer-events-none",
           isDark
             ? "[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20"
-            : "[background:radial-gradient(125%_125%_at_50%_10%,#e0e0e0_40%,#c4b5fd_100%)] opacity-30"
+            : "[background:radial-gradient(120%_160%_at_0%_0%,#e0f2fe_0%,#eef2ff_35%,#fdf2ff_70%,#f5f3ff_100%)] opacity-70"
         )}
       />
 
@@ -104,7 +104,7 @@ export default function Home() {
             "fixed left-0 top-0 flex w-full justify-center border-b backdrop-blur-md pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:border lg:p-4 z-50 lg:z-auto",
             isDark
               ? "border-neutral-800 bg-neutral-950/50 text-neutral-400 lg:bg-neutral-900/30"
-              : "border-neutral-200 bg-white/80 text-neutral-500 lg:bg-neutral-100/80"
+              : "border-purple-100 bg-white/80 text-neutral-600 lg:bg-white/80 shadow-sm"
           )}
         >
           UniqueUI &nbsp;
@@ -113,7 +113,9 @@ export default function Home() {
         <div
           className={cn(
             "fixed bottom-0 left-0 flex h-48 w-full items-end justify-center lg:static lg:h-auto lg:w-auto lg:bg-none z-50 lg:z-auto pointer-events-none lg:pointer-events-auto",
-            isDark ? "bg-linear-to-t from-black via-black" : "bg-linear-to-t from-neutral-100 via-neutral-50"
+            isDark
+              ? "bg-linear-to-t from-black via-black"
+              : "bg-linear-to-t from-white via-purple-100/40"
           )}
         >
             <div className="pointer-events-auto flex items-center gap-6 p-8 lg:p-0">
@@ -157,7 +159,7 @@ export default function Home() {
                 "inline-flex items-center gap-2 rounded-full border text-xs mb-6 px-3 py-1 font-medium",
                 isDark
                   ? "bg-neutral-900 border-neutral-800 text-neutral-400"
-                  : "bg-neutral-100 border-neutral-200 text-neutral-600"
+                  : "bg-white/90 border-purple-100 text-purple-700 shadow-xs"
               )}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
@@ -169,7 +171,7 @@ export default function Home() {
                 "text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent tracking-tight mb-4",
                 isDark
                   ? "bg-linear-to-b from-white to-neutral-400"
-                  : "bg-linear-to-b from-neutral-900 to-neutral-600"
+                  : "bg-linear-to-b from-neutral-900 to-purple-700"
               )}
             >
               Ship cinematic UI
@@ -180,7 +182,7 @@ export default function Home() {
             <div
               className={cn(
                 "mt-3 mb-8 text-base md:text-lg max-w-xl flex flex-wrap items-center gap-2",
-                isDark ? "text-neutral-400" : "text-neutral-600"
+                isDark ? "text-neutral-400" : "text-neutral-700"
               )}
             >
               <span>Copy‑pasteable</span>
@@ -324,7 +326,7 @@ export default function Home() {
             "flex flex-col md:flex-row md:items-center md:justify-between gap-6 rounded-2xl border px-5 py-6 md:px-8 md:py-7",
             isDark
               ? "border-neutral-800 bg-neutral-950/60"
-              : "border-neutral-200 bg-white/80"
+                  : "border-purple-100/70 bg-white/90 shadow-lg shadow-purple-100/40"
           )}
         >
           <div>
@@ -480,7 +482,9 @@ export default function Home() {
         <div
           className={cn(
             "w-full h-80 relative rounded-2xl overflow-hidden border mt-8 group",
-            isDark ? "border-neutral-800 bg-black" : "border-neutral-200 bg-neutral-900"
+            isDark
+              ? "border-neutral-800 bg-black"
+              : "border-purple-200 bg-linear-to-br from-purple-500 via-sky-500 to-indigo-500"
           )}
         >
           <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center p-6 text-center">
@@ -517,11 +521,11 @@ export default function Home() {
                 : "focus:ring-slate-500 focus:ring-offset-white"
             )}
           >
-            <div className="group relative inline-flex h-11 overflow-hidden rounded-full p-px">
-              <span className="absolute inset-[-150%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+            <div className="group relative inline-flex h-12 overflow-hidden rounded-full p-[1px]">
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
               <span
                 className={cn(
-                  "inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-7 text-sm font-medium backdrop-blur-3xl transition-colors",
+                  "inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-8 py-1 text-sm font-medium backdrop-blur-3xl transition-colors",
                   isDark
                     ? "bg-slate-950 text-white hover:bg-slate-900"
                     : "bg-white text-slate-900 hover:bg-slate-100"
@@ -579,10 +583,10 @@ function Card({
     <motion.div
       whileHover={{ y: -5 }}
       className={cn(
-        "group rounded-lg border px-5 py-8 transition-colors",
+        "group rounded-lg border px-5 py-8 transition-colors shadow-sm",
         isDark
           ? "border-neutral-800 bg-neutral-950/50 hover:border-neutral-700 hover:bg-neutral-900/50"
-          : "border-neutral-200 bg-white/60 hover:border-neutral-300 hover:bg-white/80"
+          : "border-neutral-200 bg-white hover:border-purple-200 hover:bg-purple-50/40"
       )}
     >
       <div
