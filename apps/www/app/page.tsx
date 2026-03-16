@@ -248,7 +248,7 @@ export default function Home() {
                  >
                    Particle Field
                  </h3>
-                 <p className={isDark ? "text-neutral-400" : "text-neutral-400"}>Physics-based particle system with mouse interaction. Hover me!</p>
+                 <p className="text-neutral-400">Physics-based particle system with mouse interaction. Hover me!</p>
              </div>
              <ParticleField theme={theme}
                 particleCount={150}
