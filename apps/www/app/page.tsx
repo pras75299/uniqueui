@@ -164,13 +164,14 @@ export default function Home() {
                     npx uniqueui init
                 </code>
                 </div>
-                <button
+              <button
                 onClick={copyCommand}
+                aria-label="Copy install command"
                 className={cn(
                   "p-3.5 rounded-r-full transition-colors border-l",
                   isDark ? "hover:bg-neutral-900 border-neutral-800" : "hover:bg-neutral-700 border-neutral-600"
                 )}
-                >
+              >
                 {copied ? (
                     <Check className="w-4 h-4 text-green-500" />
                 ) : (
