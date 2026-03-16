@@ -4,8 +4,6 @@ import { motion, Variants } from "motion/react";
 import { TypewriterText } from "@/components/ui/typewriter-text";
 import { TiltCard } from "@/components/ui/3d-tilt-card";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
-import { FloatingDock } from "@/components/ui/floating-dock";
-import { ParticleField } from "@/components/ui/particle-field";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
 import { useState } from "react";
@@ -21,7 +19,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { MorphingCardStack, type CardData } from "@/components/ui/morphing-card-stack";
+import {
+  MorphingCardStack,
+  type CardData,
+} from "@/components/ui/morphing-card-stack";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -50,22 +51,26 @@ export default function Home() {
     {
       id: "hero",
       title: "Hero Sections",
-      description: "Glow, gradients, and depth that make your landing pages feel cinematic out of the box.",
+      description:
+        "Glow, gradients, and depth that make your landing pages feel cinematic out of the box.",
     },
     {
       id: "cards",
       title: "Card Grids",
-      description: "Responsive, animated card layouts with hover depth, tilt, and spotlight interactions.",
+      description:
+        "Responsive, animated card layouts with hover depth, tilt, and spotlight interactions.",
     },
     {
       id: "nav",
       title: "Navigation",
-      description: "Floating docks, limelight navs, and magnetic buttons to anchor your app’s structure.",
+      description:
+        "Floating docks, limelight navs, and magnetic buttons to anchor your app’s structure.",
     },
     {
       id: "timelines",
       title: "Timelines",
-      description: "Animated timelines and progress stories for roadmaps, onboarding, and product journeys.",
+      description:
+        "Animated timelines and progress stories for roadmaps, onboarding, and product journeys.",
     },
   ];
 
@@ -76,24 +81,24 @@ export default function Home() {
   };
 
   return (
-      <motion.main
-        className={cn(
-          "flex min-h-screen flex-col items-center selection:bg-purple-500/30 overflow-x-hidden",
-          isDark ? "text-white" : "text-neutral-900"
-        )}
-        initial={false}
-        animate={{
-          backgroundColor: isDark ? "#0a0a0a" : "#f5f3ff",
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      >
+    <motion.main
+      className={cn(
+        "flex min-h-screen flex-col items-center selection:bg-purple-500/30 overflow-x-hidden",
+        isDark ? "text-white" : "text-neutral-900",
+      )}
+      initial={false}
+      animate={{
+        backgroundColor: isDark ? "#0a0a0a" : "#f5f3ff",
+      }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    >
       {/* Background Gradient */}
       <div
         className={cn(
           "fixed inset-0 z-0 h-full w-full items-center px-5 py-24 pointer-events-none",
           isDark
             ? "[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20"
-            : "[background:radial-gradient(120%_160%_at_0%_0%,#e0f2fe_0%,#eef2ff_35%,#fdf2ff_70%,#f5f3ff_100%)] opacity-70"
+            : "[background:radial-gradient(120%_160%_at_0%_0%,#e0f2fe_0%,#eef2ff_35%,#fdf2ff_70%,#f5f3ff_100%)] opacity-70",
         )}
       />
 
@@ -104,43 +109,54 @@ export default function Home() {
             "fixed left-0 top-0 flex w-full justify-center border-b backdrop-blur-md pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:border lg:p-4 z-50 lg:z-auto",
             isDark
               ? "border-neutral-800 bg-neutral-950/50 text-neutral-400 lg:bg-neutral-900/30"
-              : "border-purple-100 bg-white/80 text-neutral-600 lg:bg-white/80 shadow-sm"
+              : "border-purple-100 bg-white/80 text-neutral-600 lg:bg-white/80 shadow-sm",
           )}
         >
           UniqueUI &nbsp;
-          <span className={cn("font-normal", isDark ? "text-neutral-500" : "text-neutral-600")}>v1.0.0</span>
+          <span
+            className={cn(
+              "font-normal",
+              isDark ? "text-neutral-500" : "text-neutral-600",
+            )}
+          >
+            v1.0.0
+          </span>
         </p>
         <div
           className={cn(
             "fixed bottom-0 left-0 flex h-48 w-full items-end justify-center lg:static lg:h-auto lg:w-auto lg:bg-none z-50 lg:z-auto pointer-events-none lg:pointer-events-auto",
             isDark
               ? "bg-linear-to-t from-black via-black"
-              : "bg-linear-to-t from-white via-purple-100/40"
+              : "bg-linear-to-t from-white via-purple-100/40",
           )}
         >
-            <div className="pointer-events-auto flex items-center gap-6 p-8 lg:p-0">
-                <ThemeToggle className="shrink-0" />
-                <Link
-                  href="/components"
-                  className={cn(
-                    "font-semibold transition-colors",
-                    isDark ? "text-white hover:text-purple-400" : "text-neutral-900 hover:text-purple-600"
-                  )}
-                >
-                    Components
-                </Link>
-                <a
-                    className={cn(
-                      "flex place-items-center gap-2 transition-colors",
-                      isDark ? "text-neutral-400 hover:text-white" : "text-neutral-600 hover:text-neutral-900"
-                    )}
-                    href="https://github.com/pras75299/uniqueui"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    GitHub
-                </a>
-            </div>
+          <div className="pointer-events-auto flex items-center gap-6 p-8 lg:p-0">
+            <ThemeToggle className="shrink-0" />
+            <Link
+              href="/components"
+              className={cn(
+                "font-semibold transition-colors",
+                isDark
+                  ? "text-white hover:text-purple-400"
+                  : "text-neutral-900 hover:text-purple-600",
+              )}
+            >
+              Components
+            </Link>
+            <a
+              className={cn(
+                "flex place-items-center gap-2 transition-colors",
+                isDark
+                  ? "text-neutral-400 hover:text-white"
+                  : "text-neutral-600 hover:text-neutral-900",
+              )}
+              href="https://github.com/pras75299/uniqueui"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+          </div>
         </div>
       </div>
 
@@ -159,7 +175,7 @@ export default function Home() {
                 "inline-flex items-center gap-2 rounded-full border text-xs mb-6 px-3 py-1 font-medium",
                 isDark
                   ? "bg-neutral-900 border-neutral-800 text-neutral-400"
-                  : "bg-white/90 border-purple-100 text-purple-700 shadow-xs"
+                  : "bg-white/90 border-purple-100 text-purple-700 shadow-xs",
               )}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />
@@ -171,23 +187,21 @@ export default function Home() {
                 "text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent tracking-tight mb-4",
                 isDark
                   ? "bg-linear-to-b from-white to-neutral-400"
-                  : "bg-linear-to-b from-neutral-900 to-purple-700"
+                  : "bg-linear-to-b from-neutral-900 to-purple-700",
               )}
             >
-              Ship cinematic UI
-              <br />
-              in minutes, not weeks.
+              Ship cinematic UI in minutes, not weeks.
             </h1>
 
             <div
               className={cn(
                 "mt-3 mb-8 text-base md:text-lg max-w-xl flex flex-wrap items-center gap-2",
-                isDark ? "text-neutral-400" : "text-neutral-700"
+                isDark ? "text-neutral-400" : "text-neutral-700",
               )}
             >
               <span>Copy‑pasteable</span>
               <TypewriterText
-                words={["heroes", "cards", "navbars", "backgrounds", "timelines"]}
+                words={["heroes", "cards", "navbars", "timelines"]}
                 className="text-purple-400 font-semibold"
               />
               <span>powered by motion.dev and Tailwind.</span>
@@ -200,7 +214,7 @@ export default function Home() {
                     "w-full sm:w-auto px-7 py-3.5 rounded-full font-semibold flex items-center justify-center gap-2 transition-colors",
                     isDark
                       ? "bg-white text-black hover:bg-neutral-200"
-                      : "bg-neutral-900 text-white hover:bg-neutral-800"
+                      : "bg-neutral-900 text-white hover:bg-neutral-800",
                   )}
                 >
                   Browse components
@@ -218,20 +232,20 @@ export default function Home() {
                 <div
                   className={cn(
                     "relative flex items-center rounded-full leading-none",
-                    isDark ? "bg-black" : "bg-neutral-900"
+                    isDark ? "bg-black" : "bg-neutral-900",
                   )}
                 >
                   <div className="flex items-center px-5 py-3.5">
                     <Terminal
                       className={cn(
                         "w-4 h-4 mr-3",
-                        isDark ? "text-neutral-400" : "text-neutral-500"
+                        isDark ? "text-neutral-400" : "text-neutral-500",
                       )}
                     />
                     <code
                       className={cn(
                         "font-mono text-xs md:text-sm",
-                        isDark ? "text-neutral-200" : "text-neutral-100"
+                        isDark ? "text-neutral-200" : "text-neutral-100",
                       )}
                     >
                       npx uniqueui add hero
@@ -244,7 +258,7 @@ export default function Home() {
                       "p-3.5 rounded-r-full transition-colors border-l",
                       isDark
                         ? "hover:bg-neutral-900 border-neutral-800"
-                        : "hover:bg-neutral-800 border-neutral-700"
+                        : "hover:bg-neutral-800 border-neutral-700",
                     )}
                   >
                     {copied ? (
@@ -260,7 +274,7 @@ export default function Home() {
             <p
               className={cn(
                 "text-xs md:text-sm flex flex-wrap items-center gap-2",
-                isDark ? "text-neutral-500" : "text-neutral-500"
+                isDark ? "text-neutral-500" : "text-neutral-500",
               )}
             >
               <span>Works with Next.js & React ·</span>
@@ -281,7 +295,7 @@ export default function Home() {
                 "pointer-events-auto rounded-3xl border backdrop-blur-xl p-4 sm:p-6 lg:p-7 shadow-2xl",
                 isDark
                   ? "border-neutral-800 bg-neutral-950/80"
-                  : "border-purple-200/70 bg-white/95 shadow-[0_24px_80px_rgba(129,140,248,0.45)]"
+                  : "border-purple-200/70 bg-white/95 shadow-[0_24px_80px_rgba(129,140,248,0.45)]",
               )}
             >
               <div className="flex items-center justify-between mb-4">
@@ -291,7 +305,7 @@ export default function Home() {
                       "h-6 px-3 inline-flex items-center rounded-full",
                       isDark
                         ? "bg-purple-500/10 text-purple-200 border border-purple-500/30"
-                        : "bg-purple-50 text-purple-700 border border-purple-200"
+                        : "bg-purple-50 text-purple-700 border border-purple-200",
                     )}
                   >
                     Live playground
@@ -299,7 +313,7 @@ export default function Home() {
                   <span
                     className={cn(
                       "hidden sm:inline-block",
-                      isDark ? "text-neutral-500" : "text-neutral-500"
+                      isDark ? "text-neutral-500" : "text-neutral-500",
                     )}
                   >
                     Try different layouts
@@ -326,14 +340,14 @@ export default function Home() {
             "flex flex-col md:flex-row md:items-center md:justify-between gap-6 rounded-2xl border px-5 py-6 md:px-8 md:py-7",
             isDark
               ? "border-neutral-800 bg-neutral-950/60"
-                  : "border-purple-100/70 bg-white/90 shadow-lg shadow-purple-100/40"
+              : "border-purple-100/70 bg-white/90 shadow-lg shadow-purple-100/40",
           )}
         >
           <div>
             <p
               className={cn(
                 "text-xs font-medium uppercase tracking-[0.18em] mb-2",
-                isDark ? "text-neutral-400" : "text-neutral-600"
+                isDark ? "text-neutral-400" : "text-neutral-600",
               )}
             >
               Trusted building blocks
@@ -341,23 +355,28 @@ export default function Home() {
             <p
               className={cn(
                 "text-sm md:text-base",
-                isDark ? "text-neutral-400" : "text-neutral-600"
+                isDark ? "text-neutral-400" : "text-neutral-600",
               )}
             >
-              Designed for production teams who care about motion, craft, and copy‑paste speed.
+              Designed for production teams who care about motion, craft, and
+              copy‑paste speed.
             </p>
           </div>
           <div className="flex flex-wrap gap-4 text-xs md:text-sm">
             <div className="flex flex-col">
               <span className="font-semibold">Dozens</span>
-              <span className={cn(isDark ? "text-neutral-500" : "text-neutral-600")}>
+              <span
+                className={cn(isDark ? "text-neutral-500" : "text-neutral-600")}
+              >
                 of animated components
               </span>
             </div>
             <div className="h-10 w-px bg-linear-to-b from-transparent via-neutral-500/30 to-transparent" />
             <div className="flex flex-col">
               <span className="font-semibold">Motion‑first</span>
-              <span className={cn(isDark ? "text-neutral-500" : "text-neutral-600")}>
+              <span
+                className={cn(isDark ? "text-neutral-500" : "text-neutral-600")}
+              >
                 built on motion.dev springs
               </span>
             </div>
@@ -369,21 +388,25 @@ export default function Home() {
       <section className="w-full max-w-6xl px-4 relative z-10 mt-20 space-y-8">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl md:text-3xl font-semibold">Component gallery</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold">
+              Component gallery
+            </h2>
             <p
               className={cn(
                 "mt-2 text-sm md:text-base max-w-xl",
-                isDark ? "text-neutral-400" : "text-neutral-700"
+                isDark ? "text-neutral-400" : "text-neutral-700",
               )}
             >
-              A curated set of motion‑rich components you can drop into any React or Next.js app.
+              A curated set of motion‑rich components
             </p>
           </div>
           <Link
             href="/components"
             className={cn(
               "hidden md:inline-flex text-sm items-center gap-1 font-medium",
-              isDark ? "text-purple-300 hover:text-purple-200" : "text-purple-700 hover:text-purple-600"
+              isDark
+                ? "text-purple-300 hover:text-purple-200"
+                : "text-purple-700 hover:text-purple-600",
             )}
           >
             Browse all components
@@ -416,15 +439,17 @@ export default function Home() {
       {/* How it works */}
       <section className="w-full max-w-6xl px-4 relative z-10 mt-24 space-y-10">
         <div className="text-center space-y-3">
-          <h2 className="text-2xl md:text-3xl font-semibold">How UniqueUI fits your stack</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold">
+            How UniqueUI fits your stack
+          </h2>
           <p
             className={cn(
               "max-w-2xl mx-auto text-sm md:text-base",
-              isDark ? "text-neutral-400" : "text-neutral-600"
+              isDark ? "text-neutral-400" : "text-neutral-600",
             )}
           >
-            From install to customization in three steps. No design system overhaul, just focused drops of
-            motion where it matters.
+            From install to customization in three steps. No design system
+            overhaul, just focused drops of motion where it matters.
           </p>
         </div>
 
@@ -459,7 +484,8 @@ export default function Home() {
           >
             <h3 className="text-2xl font-semibold mb-2">Spotlight hero</h3>
             <p className={isDark ? "text-neutral-400" : "text-neutral-700"}>
-              Layer spotlight, gradients, and depth to turn any heading into a centerpiece.
+              Layer spotlight, gradients, and depth to turn any heading into a
+              centerpiece.
             </p>
           </SpotlightCard>
 
@@ -469,46 +495,15 @@ export default function Home() {
               "h-64 p-8 flex flex-col justify-center items-center text-center border",
               isDark
                 ? "bg-neutral-900/50 border-neutral-800"
-                : "bg-linear-to-br from-white/95 via-purple-50/70 to-sky-50/80 border-purple-100"
+                : "bg-linear-to-br from-white/95 via-purple-50/70 to-sky-50/80 border-purple-100",
             )}
           >
             <h3 className="text-2xl font-semibold mb-2">3D tilt cards</h3>
             <p className={isDark ? "text-neutral-400" : "text-neutral-600"}>
-              Parallax hover interactions that respect motion preferences and keep performance snappy.
+              Parallax hover interactions that respect motion preferences and
+              keep performance snappy.
             </p>
           </TiltCard>
-        </div>
-
-        <div
-          className={cn(
-            "w-full h-80 relative rounded-2xl overflow-hidden border mt-8 group",
-            isDark
-              ? "border-neutral-800 bg-black"
-              : "border-purple-200 bg-linear-to-br from-purple-500 via-sky-500 to-indigo-500"
-          )}
-        >
-          <div className="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center p-6 text-center">
-            <h3
-              className={cn(
-                "text-3xl font-semibold bg-clip-text text-transparent mb-2",
-                isDark
-                  ? "bg-linear-to-b from-white to-neutral-500"
-                  : "bg-linear-to-b from-neutral-100 to-neutral-400"
-              )}
-            >
-              Particle field
-            </h3>
-            <p className="text-neutral-400">
-              Physics‑inspired motion that reacts to your cursor without overwhelming the page.
-            </p>
-          </div>
-          <ParticleField
-            theme={theme}
-            particleCount={140}
-            particleColor="#a855f7"
-            speed={0.5}
-            className="opacity-50 group-hover:opacity-100 transition-opacity duration-700"
-          />
         </div>
 
         <div className="flex justify-center mt-6">
@@ -518,7 +513,7 @@ export default function Home() {
               "focus:outline-none focus:ring-2 focus:ring-offset-2",
               isDark
                 ? "focus:ring-slate-400 focus:ring-offset-slate-50"
-                : "focus:ring-slate-500 focus:ring-offset-white"
+                : "focus:ring-slate-500 focus:ring-offset-white",
             )}
           >
             <div className="group relative inline-flex h-12 overflow-hidden rounded-full p-px">
@@ -528,7 +523,7 @@ export default function Home() {
                   "inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-8 py-1 text-sm font-medium backdrop-blur-3xl transition-colors",
                   isDark
                     ? "bg-slate-950 text-white hover:bg-slate-900"
-                    : "bg-white text-slate-900 hover:bg-slate-100"
+                    : "bg-white text-slate-900 hover:bg-slate-100",
                 )}
               >
                 Explore all components
@@ -543,22 +538,53 @@ export default function Home() {
         <div
           className={cn(
             "border-t pt-8 text-center text-sm",
-            isDark ? "border-neutral-800 text-neutral-500" : "border-neutral-200 text-neutral-600"
+            isDark
+              ? "border-neutral-800 text-neutral-500"
+              : "border-neutral-200 text-neutral-600",
           )}
         >
           <p>
             Built with ❤️ by{" "}
             <a
               href="https://github.com/pras75299"
-              className={cn("transition-colors", isDark ? "text-neutral-300 hover:text-white" : "text-neutral-700 hover:text-neutral-900")}
+              className={cn(
+                "transition-colors",
+                isDark
+                  ? "text-neutral-300 hover:text-white"
+                  : "text-neutral-700 hover:text-neutral-900",
+              )}
             >
               Prashant
             </a>
           </p>
           <div className="mt-4 flex justify-center gap-6">
-             <Link href="/components" className={cn("transition-colors", isDark ? "hover:text-white" : "hover:text-neutral-900")}>Documentation</Link>
-             <a href="https://github.com/pras75299/uniqueui" className={cn("transition-colors", isDark ? "hover:text-white" : "hover:text-neutral-900")}>GitHub</a>
-             <a href="https://twitter.com" className={cn("transition-colors", isDark ? "hover:text-white" : "hover:text-neutral-900")}>Twitter</a>
+            <Link
+              href="/components"
+              className={cn(
+                "transition-colors",
+                isDark ? "hover:text-white" : "hover:text-neutral-900",
+              )}
+            >
+              Documentation
+            </Link>
+            <a
+              href="https://github.com/pras75299/uniqueui"
+              className={cn(
+                "transition-colors",
+                isDark ? "hover:text-white" : "hover:text-neutral-900",
+              )}
+            >
+              GitHub
+            </a>
+            <a
+              href="https://twitter.com"
+              className={cn(
+                "transition-colors",
+                isDark ? "hover:text-white" : "hover:text-neutral-900",
+              )}
+            >
+              Twitter
+            </a>
           </div>
         </div>
       </footer>
@@ -586,13 +612,15 @@ function Card({
         "group rounded-lg border px-5 py-8 transition-colors shadow-sm",
         isDark
           ? "border-neutral-800 bg-neutral-950/50 hover:border-neutral-700 hover:bg-neutral-900/50"
-          : "border-neutral-200 bg-white hover:border-purple-200 hover:bg-purple-50/40"
+          : "border-neutral-200 bg-white hover:border-purple-200 hover:bg-purple-50/40",
       )}
     >
       <div
         className={cn(
           "mb-4 inline-block rounded-lg p-3",
-          isDark ? "bg-neutral-900 text-neutral-200 group-hover:text-white" : "bg-neutral-100 text-neutral-700 group-hover:text-neutral-900"
+          isDark
+            ? "bg-neutral-900 text-neutral-200 group-hover:text-white"
+            : "bg-neutral-100 text-neutral-700 group-hover:text-neutral-900",
         )}
       >
         {icon}
@@ -603,7 +631,14 @@ function Card({
           -&gt;
         </span>
       </h2>
-      <p className={cn("m-0 max-w-[30ch] text-sm", isDark ? "opacity-50" : "text-neutral-600")}>{description}</p>
+      <p
+        className={cn(
+          "m-0 max-w-[30ch] text-sm",
+          isDark ? "opacity-50" : "text-neutral-600",
+        )}
+      >
+        {description}
+      </p>
     </motion.div>
   );
 }
