@@ -9,6 +9,7 @@ export interface HorizontalScrollGalleryProps
   items: React.ReactNode[];
   direction?: "left" | "right";
   itemClassName?: string;
+  theme?: "light" | "dark";
 }
 
 export function HorizontalScrollGallery({
@@ -16,6 +17,7 @@ export function HorizontalScrollGallery({
   items,
   direction = "left",
   itemClassName,
+  theme = "dark",
   ...props
 }: HorizontalScrollGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);

@@ -32,6 +32,7 @@ type NestedCommentsProps = {
   accentColor?: string;
   onReply?: (commentId: string, content: string) => void;
   onLike?: (commentId: string) => void;
+  theme?: "light" | "dark";
 };
 
 // ─── Avatar ──────────────────────────────────────────────────────────────────
@@ -409,11 +410,13 @@ export function NestedComments({
   accentColor = "#8b5cf6",
   onReply,
   onLike,
+  theme = "dark",
 }: NestedCommentsProps) {
   const [localComments, setLocalComments] = useState<Comment[]>(comments);
   const [newComment, setNewComment] = useState("");
   const [posting, setPosting] = useState(false);
   const count = localComments.length;
+  const isDark = theme === "dark";
 
   const handlePost = () => {
     if (!newComment.trim()) return;
@@ -436,16 +439,16 @@ export function NestedComments({
     <div className={cn("w-full max-w-2xl mx-auto", className)}>
       {/* Header */}
       <div className="flex items-center gap-2 mb-5">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 text-neutral-400">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={cn("w-5 h-5", isDark ? "text-neutral-400" : "text-neutral-500")}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
         </svg>
-        <span className="text-base font-semibold text-neutral-200">
+        <span className={cn("text-base font-semibold", isDark ? "text-neutral-200" : "text-neutral-800")}>
           {count} {count === 1 ? "Comment" : "Comments"}
         </span>
       </div>
 
       {/* New comment composer */}
-      <div className="mb-6 rounded-xl border border-white/10 bg-white/[0.03] overflow-hidden">
+      <div className={cn("mb-6 rounded-xl border overflow-hidden", isDark ? "border-white/10 bg-white/[0.03]" : "border-neutral-200 bg-neutral-50")}>
         <textarea
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
@@ -454,10 +457,10 @@ export function NestedComments({
           }}
           placeholder="Share your thoughts… (⌘+Enter to post)"
           rows={3}
-          className="w-full bg-transparent px-4 pt-4 pb-2 text-sm text-neutral-200 placeholder-neutral-600 resize-none outline-none"
+          className={cn("w-full bg-transparent px-4 pt-4 pb-2 text-sm resize-none outline-none", isDark ? "text-neutral-200 placeholder-neutral-600" : "text-neutral-800 placeholder-neutral-500")}
         />
         <div className="flex items-center justify-between px-4 pb-3">
-          <span className="text-xs text-neutral-600">{newComment.length > 0 ? `${newComment.length} chars` : "⌘+Enter to post"}</span>
+          <span className={cn("text-xs", isDark ? "text-neutral-600" : "text-neutral-500")}>{newComment.length > 0 ? `${newComment.length} chars` : "⌘+Enter to post"}</span>
           <motion.button
             whileTap={{ scale: 0.95 }}
             animate={posting ? { scale: [1, 0.97, 1] } : {}}
@@ -467,7 +470,7 @@ export function NestedComments({
               "px-4 py-1.5 text-xs rounded-lg font-semibold transition-all duration-200",
               newComment.trim() && !posting
                 ? "text-white bg-violet-600 hover:bg-violet-500"
-                : "text-neutral-600 bg-white/5 cursor-not-allowed"
+                : isDark ? "text-neutral-600 bg-white/5 cursor-not-allowed" : "text-neutral-500 bg-neutral-200 cursor-not-allowed"
             )}
           >
             {posting ? "Posting…" : "Post Comment"}
@@ -496,7 +499,7 @@ export function NestedComments({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-12 text-neutral-600 text-sm"
+            className={cn("text-center py-12 text-sm", isDark ? "text-neutral-600" : "text-neutral-500")}
           >
             No comments yet. Be the first to share your thoughts!
           </motion.div>

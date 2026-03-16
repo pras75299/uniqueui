@@ -14,6 +14,7 @@ export interface CursorTrailProps {
   /** How long it takes for a particle to decay */
   decayDuration?: number;
   className?: string;
+  theme?: "light" | "dark";
 }
 
 export function CursorTrail({
@@ -22,6 +23,7 @@ export function CursorTrail({
   size = 12,
   decayDuration = 0.5,
   className,
+  theme = "dark",
 }: CursorTrailProps) {
   const [positions, setPositions] = useState<{ id: number; x: number; y: number }[]>([]);
 

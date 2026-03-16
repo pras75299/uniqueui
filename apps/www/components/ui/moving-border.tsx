@@ -1,12 +1,6 @@
 "use client";
-import React, { useRef, useEffect } from "react";
-import {
-  motion,
-  useAnimationFrame,
-  useMotionTemplate,
-  useMotionValue,
-  useTransform,
-} from "motion/react";
+import React from "react";
+import { useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 export function Button({
@@ -17,6 +11,7 @@ export function Button({
   borderClassName,
   duration,
   className,
+  theme = "dark",
   ...otherProps
 }: {
   borderRadius?: string;
@@ -26,6 +21,7 @@ export function Button({
   borderClassName?: string;
   duration?: number;
   className?: string;
+  theme?: "light" | "dark";
   [key: string]: unknown;
 }) {
   return (
@@ -55,7 +51,8 @@ export function Button({
 
       <div
         className={cn(
-          "relative bg-slate-900 border border-slate-800 text-white flex items-center justify-center w-full h-full text-sm antialiased",
+          "relative flex items-center justify-center w-full h-full text-sm antialiased",
+          theme === "dark" ? "bg-slate-900 border border-slate-800 text-white" : "bg-slate-100 border border-slate-300 text-slate-900",
           className
         )}
         style={{
@@ -79,10 +76,10 @@ export const MovingBorder = ({
   duration?: number;
   rx?: string;
   ry?: string;
-  [key: string]: unknown;
+  [key: string]: any;
 }) => {
   const safeDuration = duration > 0 ? duration : 2000;
-  const pathRef = useRef<SVGRectElement>(null);
+  const pathRef = useRef<SVGRectElement | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
   const pathLengthRef = useRef<number | null>(null);
@@ -155,3 +152,5 @@ export const MovingBorder = ({
     </>
   );
 };
+
+

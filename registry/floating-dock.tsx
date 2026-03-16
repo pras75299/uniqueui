@@ -21,6 +21,7 @@ export interface FloatingDockProps {
   iconSize?: number;
   maxScale?: number;
   magneticRange?: number;
+  theme?: "light" | "dark";
 }
 
 export function FloatingDock({
@@ -29,6 +30,7 @@ export function FloatingDock({
   iconSize = 40,
   maxScale = 1.8,
   magneticRange = 120,
+  theme = "dark",
 }: FloatingDockProps) {
   const mouseX = useMotionValue(Infinity);
 
@@ -37,7 +39,8 @@ export function FloatingDock({
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        "inline-flex items-end gap-2 rounded-2xl border border-neutral-800 bg-neutral-900/80 backdrop-blur-md px-4 py-3",
+        "inline-flex items-end gap-2 rounded-2xl border backdrop-blur-md px-4 py-3",
+        theme === "dark" ? "border-neutral-800 bg-neutral-900/80" : "border-neutral-200 bg-white/90",
         className
       )}
     >
@@ -48,6 +51,7 @@ export function FloatingDock({
           iconSize={iconSize}
           maxScale={maxScale}
           magneticRange={magneticRange}
+          theme={theme}
           {...item}
         />
       ))}
@@ -64,6 +68,7 @@ function DockItem({
   iconSize,
   maxScale,
   magneticRange,
+  theme = "dark",
 }: {
   icon: React.ReactNode;
   label: string;
@@ -73,6 +78,7 @@ function DockItem({
   iconSize: number;
   maxScale: number;
   magneticRange: number;
+  theme?: "light" | "dark";
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const centerXRef = useRef<number | null>(null);
@@ -126,12 +132,15 @@ function DockItem({
       <motion.div
         ref={ref}
         style={{ width: size, height: size, y }}
-        className="flex items-center justify-center rounded-xl bg-neutral-800 border border-neutral-700 text-neutral-300 hover:text-white transition-colors"
+        className={cn(
+          "flex items-center justify-center rounded-xl border transition-colors",
+          theme === "dark" ? "bg-neutral-800 border-neutral-700 text-neutral-300 hover:text-white" : "bg-neutral-100 border-neutral-300 text-neutral-700 hover:text-neutral-900"
+        )}
       >
         {icon}
       </motion.div>
       <div className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-        <div className="whitespace-nowrap rounded-md bg-neutral-800 border border-neutral-700 px-2 py-1 text-xs text-neutral-200 shadow-lg">
+        <div className={cn("whitespace-nowrap rounded-md border px-2 py-1 text-xs shadow-lg", theme === "dark" ? "bg-neutral-800 border-neutral-700 text-neutral-200" : "bg-neutral-800 border-neutral-600 text-neutral-200")}>
           {label}
         </div>
       </div>

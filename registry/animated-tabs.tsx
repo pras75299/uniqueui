@@ -14,6 +14,7 @@ export interface AnimatedTabsProps {
   activeTabClassName?: string;
   contentClassName?: string;
   onChange?: (id: string) => void;
+  theme?: "light" | "dark";
 }
 
 export function AnimatedTabs({
@@ -23,8 +24,10 @@ export function AnimatedTabs({
   activeTabClassName,
   contentClassName,
   onChange,
+  theme = "dark",
 }: AnimatedTabsProps) {
   const [activeTab, setActiveTab] = useState(tabs[0]?.id);
+  const isDark = theme === "dark";
 
   const handleTabClick = (id: string) => {
     setActiveTab(id);
@@ -33,7 +36,7 @@ export function AnimatedTabs({
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="relative flex items-center gap-1 rounded-lg bg-neutral-900/50 p-1 border border-neutral-800">
+      <div className={cn("relative flex items-center gap-1 rounded-lg p-1 border", isDark ? "bg-neutral-900/50 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -41,15 +44,15 @@ export function AnimatedTabs({
             className={cn(
               "relative z-10 flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200",
               activeTab === tab.id
-                ? cn("text-white", activeTabClassName)
-                : "text-neutral-400 hover:text-neutral-200",
+                ? cn(isDark ? "text-white" : "text-neutral-900", activeTabClassName)
+                : isDark ? "text-neutral-400 hover:text-neutral-200" : "text-neutral-600 hover:text-neutral-900",
               tabClassName
             )}
           >
             {activeTab === tab.id && (
               <motion.div
                 layoutId="animated-tab-pill"
-                className="absolute inset-0 rounded-md bg-neutral-800 border border-neutral-700"
+                className={cn("absolute inset-0 rounded-md border", isDark ? "bg-neutral-800 border-neutral-700" : "bg-white border-neutral-300 shadow-sm")}
                 transition={{
                   type: "spring",
                   stiffness: 500,

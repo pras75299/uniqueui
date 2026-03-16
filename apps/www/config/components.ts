@@ -52,6 +52,11 @@ export const componentsList: ComponentItem[] = [
     category: "Effects & Animations",
     props: [
       {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "description": "Visual theme; light or dark. Default: dark."
+      },
+      {
         "name": "borderRadius",
         "type": "string",
         "description": "The radius for rounding the button edges and the orbiting path."
@@ -118,6 +123,7 @@ export default function Example() {
     icon: Terminal,
     category: "Text",
     props: [
+      { name: "theme", type: "\"light\" | \"dark\"", description: "Visual theme; light or dark. Default: dark." },
       {
         "name": "words",
         "type": "string[]",

@@ -21,6 +21,7 @@ export interface MorphingCardStackProps {
   className?: string;
   defaultLayout?: LayoutMode;
   onCardClick?: (card: CardData) => void;
+  theme?: "light" | "dark";
 }
 
 const layoutIcons = {
@@ -40,6 +41,7 @@ export function MorphingCardStack({
   className,
   defaultLayout = "stack",
   onCardClick,
+  theme = "dark",
 }: MorphingCardStackProps) {
   const [layout, setLayout] = useState<LayoutMode>(defaultLayout);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
@@ -120,7 +122,7 @@ export function MorphingCardStack({
   return (
     <div className={cn("space-y-4", className)}>
       {/* Layout Toggle */}
-      <div className="flex items-center justify-center gap-1 rounded-lg bg-neutral-900/50 border border-neutral-800 p-1 w-fit mx-auto relative z-20">
+      <div className={cn("flex items-center justify-center gap-1 rounded-lg border p-1 w-fit mx-auto relative z-20", theme === "dark" ? "bg-neutral-900/50 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
         {(Object.keys(layoutIcons) as LayoutMode[]).map((mode) => {
           const Icon = layoutIcons[mode];
           return (
@@ -134,8 +136,8 @@ export function MorphingCardStack({
               className={cn(
                 "rounded-md p-2 transition-all",
                 layout === mode
-                  ? "bg-neutral-800 text-white shadow-sm"
-                  : "text-neutral-500 hover:text-white hover:bg-neutral-800/50"
+                  ? (theme === "dark" ? "bg-neutral-800 text-white shadow-sm" : "bg-neutral-300 text-neutral-900 shadow-sm")
+                  : theme === "dark" ? "text-neutral-500 hover:text-white hover:bg-neutral-800/50" : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200"
               )}
               aria-label={`Switch to ${mode} layout`}
               aria-pressed={layout === mode}
@@ -194,7 +196,8 @@ export function MorphingCardStack({
                   }}
                   aria-expanded={isExpanded}
                   className={cn(
-                    "relative text-left cursor-pointer rounded-2xl border border-white/10 bg-neutral-950 p-5 shadow-xl outline-none ring-offset-neutral-950 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2",
+                    "relative text-left cursor-pointer rounded-2xl border p-5 shadow-xl outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2",
+                    theme === "dark" ? "border-white/10 bg-neutral-950 ring-offset-neutral-950" : "border-neutral-200 bg-white ring-offset-white",
                     "hover:border-white/20 transition-colors",
                     layout === "stack" && "absolute w-[240px] h-[200px]",
                     layout === "stack" &&
@@ -210,17 +213,18 @@ export function MorphingCardStack({
                 >
                   <div className="flex items-start gap-4">
                     {card.icon && (
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-neutral-900 border border-white/5 text-white">
+                      <div className={cn("flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border", theme === "dark" ? "bg-neutral-900 border-white/5 text-white" : "bg-neutral-100 border-neutral-200 text-neutral-900")}>
                         {card.icon}
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-white truncate text-base">
+                      <h3 className={cn("font-semibold truncate text-base", theme === "dark" ? "text-white" : "text-neutral-900")}>
                         {card.title}
                       </h3>
                       <p
                         className={cn(
-                          "text-sm text-neutral-400 mt-1.5 leading-relaxed",
+                          "text-sm mt-1.5 leading-relaxed",
+                          theme === "dark" ? "text-neutral-400" : "text-neutral-600",
                           layout === "stack" && (isExpanded ? "" : "line-clamp-3"),
                           layout === "grid" && "line-clamp-2",
                           layout === "list" && "line-clamp-2"
@@ -238,7 +242,7 @@ export function MorphingCardStack({
                       transition={{ delay: 0.5 }}
                       className="absolute bottom-3 left-0 right-0 text-center pointer-events-none"
                     >
-                      <span className="text-xs font-medium text-neutral-500 bg-neutral-900/80 px-2 py-1 rounded-full border border-white/5">
+                      <span className={cn("text-xs font-medium px-2 py-1 rounded-full border", theme === "dark" ? "text-neutral-500 bg-neutral-900/80 border-white/5" : "text-neutral-600 bg-neutral-100 border-neutral-200")}>
                         Swipe to flip
                       </span>
                     </motion.div>
@@ -262,7 +266,7 @@ export function MorphingCardStack({
                 "h-1.5 rounded-full transition-all duration-300",
                 index === activeIndex
                   ? "w-6 bg-white"
-                  : "w-1.5 bg-neutral-700 hover:bg-neutral-500"
+                  : theme === "dark" ? "w-1.5 bg-neutral-700 hover:bg-neutral-500" : "w-1.5 bg-neutral-300 hover:bg-neutral-500"
               )}
               aria-label={`Go to card ${index + 1}`}
               aria-pressed={index === activeIndex}

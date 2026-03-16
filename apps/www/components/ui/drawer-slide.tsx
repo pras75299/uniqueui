@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
+import React, { useEffect, useCallback } from "react";
+import { motion, AnimatePresence, useDragControls } from "motion/react";
 
 export type DrawerPosition = "left" | "right" | "top" | "bottom";
 
@@ -15,6 +15,7 @@ export interface DrawerSlideProps {
   width?: string;
   height?: string;
   dragToClose?: boolean;
+  theme?: "light" | "dark";
 }
 
 const positionStyles: Record<
@@ -72,6 +73,7 @@ export function DrawerSlide({
   width = "400px",
   height = "400px",
   dragToClose = true,
+  theme = "dark",
 }: DrawerSlideProps) {
   const config = positionStyles[position];
   const isHorizontal = position === "left" || position === "right";
@@ -98,6 +100,7 @@ export function DrawerSlide({
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -110,6 +113,7 @@ export function DrawerSlide({
             )}
           />
 
+          {/* Drawer */}
           <motion.div
             initial={config.initial}
             animate={config.animate}
@@ -129,7 +133,8 @@ export function DrawerSlide({
               if (shouldClose) onClose();
             }}
             className={cn(
-              "fixed z-50 border-neutral-800 bg-neutral-950 shadow-2xl",
+              "fixed z-50 shadow-2xl",
+              theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
               config.container,
               isHorizontal ? "border-l" : "border-t",
               className
@@ -139,6 +144,7 @@ export function DrawerSlide({
               height: !isHorizontal ? height : undefined,
             }}
           >
+            {/* Drag handle */}
             {dragToClose && (
               <div
                 className={cn(
@@ -154,7 +160,8 @@ export function DrawerSlide({
               >
                 <div
                   className={cn(
-                    "rounded-full bg-neutral-700",
+                    "rounded-full",
+                    theme === "dark" ? "bg-neutral-700" : "bg-neutral-300",
                     isHorizontal ? "w-1 h-8" : "h-1 w-8"
                   )}
                 />

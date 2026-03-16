@@ -17,6 +17,7 @@ export interface NotificationStackProps {
   className?: string;
   position?: "top-right" | "top-left" | "bottom-right" | "bottom-left";
   maxVisible?: number;
+  theme?: "light" | "dark";
 }
 
 const typeStyles: Record<NotificationType, string> = {
@@ -75,6 +76,7 @@ export function NotificationStack({
   className,
   position = "top-right",
   maxVisible = 5,
+  theme = "dark",
 }: NotificationStackProps & {
   notifications: Notification[];
   onRemove: (id: string) => void;
@@ -104,6 +106,7 @@ export function NotificationStack({
             notification={notification}
             onRemove={props.onRemove}
             position={position}
+            theme={theme}
           />
         ))}
       </AnimatePresence>
@@ -115,10 +118,12 @@ function NotificationItem({
   notification,
   onRemove,
   position,
+  theme = "dark",
 }: {
   notification: Notification;
   onRemove: (id: string) => void;
   position: string;
+  theme?: "light" | "dark";
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
   const [progress, setProgress] = useState(100);
@@ -175,14 +180,14 @@ function NotificationItem({
           {typeIcons[type]}
         </span>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-white">{title}</p>
+          <p className={cn("text-sm font-semibold", theme === "dark" ? "text-white" : "text-neutral-900")}>{title}</p>
           {description && (
-            <p className="text-xs text-neutral-400 mt-1">{description}</p>
+            <p className={cn("text-xs mt-1", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>{description}</p>
           )}
         </div>
         <button
           onClick={() => onRemove(id)}
-          className="flex-shrink-0 text-neutral-500 hover:text-white transition-colors text-sm"
+          className={cn("flex-shrink-0 transition-colors text-sm", theme === "dark" ? "text-neutral-500 hover:text-white" : "text-neutral-600 hover:text-neutral-900")}
         >
           ✕
         </button>

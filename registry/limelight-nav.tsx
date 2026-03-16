@@ -46,6 +46,7 @@ export interface LimelightNavProps extends React.HTMLAttributes<HTMLElement> {
   limelightClassName?: string;
   iconContainerClassName?: string;
   iconClassName?: string;
+  theme?: "light" | "dark";
 }
 
 /**
@@ -60,6 +61,7 @@ export const LimelightNav = ({
   limelightClassName,
   iconContainerClassName,
   iconClassName,
+  theme = "dark",
   ...props
 }: LimelightNavProps) => {
   const [activeIndex, setActiveIndex] = useState(() => {
@@ -90,7 +92,8 @@ export const LimelightNav = ({
   return (
     <nav
       className={cn(
-        "relative inline-flex items-center h-16 rounded-2xl bg-neutral-950 text-foreground border border-white/10 px-2 overflow-hidden",
+        "relative inline-flex items-center h-16 rounded-2xl text-foreground px-2 overflow-hidden",
+        theme === "dark" ? "bg-neutral-950 border border-white/10" : "bg-white border border-neutral-200",
         className
       )}
       {...props}

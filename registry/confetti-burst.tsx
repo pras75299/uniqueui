@@ -9,6 +9,7 @@ export interface ConfettiBurstProps {
   colors?: string[];
   spread?: number;
   duration?: number;
+  theme?: "light" | "dark";
 }
 
 export function ConfettiBurst({
@@ -18,6 +19,7 @@ export function ConfettiBurst({
   colors = ["#a855f7", "#ec4899", "#6366f1", "#f59e0b", "#10b981", "#3b82f6"],
   spread = 200,
   duration = 1000,
+  theme = "dark",
 }: ConfettiBurstProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 

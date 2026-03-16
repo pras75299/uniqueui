@@ -11,6 +11,7 @@ export function Button({
   borderClassName,
   duration,
   className,
+  theme = "dark",
   ...otherProps
 }: {
   borderRadius?: string;
@@ -20,6 +21,7 @@ export function Button({
   borderClassName?: string;
   duration?: number;
   className?: string;
+  theme?: "light" | "dark";
   [key: string]: unknown;
 }) {
   return (
@@ -49,7 +51,8 @@ export function Button({
 
       <div
         className={cn(
-          "relative bg-slate-900 border border-slate-800 text-white flex items-center justify-center w-full h-full text-sm antialiased",
+          "relative flex items-center justify-center w-full h-full text-sm antialiased",
+          theme === "dark" ? "bg-slate-900 border border-slate-800 text-white" : "bg-slate-100 border border-slate-300 text-slate-900",
           className
         )}
         style={{

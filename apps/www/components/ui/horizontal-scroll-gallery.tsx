@@ -9,6 +9,7 @@ export interface HorizontalScrollGalleryProps
   items: React.ReactNode[];
   direction?: "left" | "right";
   itemClassName?: string;
+  theme?: "light" | "dark";
 }
 
 export function HorizontalScrollGallery({
@@ -16,6 +17,7 @@ export function HorizontalScrollGallery({
   items,
   direction = "left",
   itemClassName,
+  theme = "dark",
   ...props
 }: HorizontalScrollGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -52,24 +54,22 @@ export function HorizontalScrollGallery({
       className={cn("relative h-[300vh] w-full", className)}
       {...props}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center bg-neutral-950">
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center">
         <motion.div
           style={{ x } as any}
-          className="flex h-full w-max items-center px-4 md:px-12"
+          className="flex h-full w-max items-center px-4"
         >
           {items.map((item, index) => (
             <div
               key={index}
               className={cn(
-                "relative flex-shrink-0 mx-4 h-[50vh] w-[75vw] sm:w-[45vw] md:w-[35vw] lg:w-[25vw] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900/50 shadow-2xl",
+                "relative flex-shrink-0 mx-4 h-[60vh] w-[80vw] sm:w-[50vw] md:w-[40vw] lg:w-[30vw] xl:w-[25vw] rounded-2xl overflow-hidden",
                 itemClassName
               )}
             >
               {item}
             </div>
           ))}
-          {/* Add a spacer at the end to allow the last item to reach the center of the screen if desired, or just to pad the scroll edge */}
-          <div className="w-[50vw] flex-shrink-0"></div>
         </motion.div>
       </div>
     </motion.div>

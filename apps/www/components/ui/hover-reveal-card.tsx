@@ -15,6 +15,7 @@ export interface HoverRevealCardProps {
   accentColor?: string;
   className?: string;
   imageHeight?: number;
+  theme?: "light" | "dark";
 }
 
 export function HoverRevealCard({
@@ -29,6 +30,7 @@ export function HoverRevealCard({
   accentColor = "#6366f1",
   className,
   imageHeight = 240,
+  theme = "dark",
 }: HoverRevealCardProps) {
   const [hovered, setHovered] = useState(false);
 
@@ -43,7 +45,8 @@ export function HoverRevealCard({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={cn(
-        "relative overflow-hidden rounded-2xl bg-white shadow-md border border-neutral-200/60 cursor-pointer select-none block",
+        "relative overflow-hidden rounded-2xl shadow-md cursor-pointer select-none block",
+        theme === "dark" ? "bg-neutral-900 border border-neutral-800" : "bg-white border border-neutral-200/60",
         className
       )}
       style={{ minHeight: imageHeight + 140 }}
@@ -74,11 +77,11 @@ export function HoverRevealCard({
             {tag}
           </span>
         )}
-        <h3 className="text-base font-bold text-neutral-900 leading-snug line-clamp-2">
+        <h3 className={cn("text-base font-bold leading-snug line-clamp-2", theme === "dark" ? "text-white" : "text-neutral-900")}>
           {title}
         </h3>
         {subtitle && (
-          <p className="text-sm text-neutral-500 mt-2">{subtitle}</p>
+          <p className={cn("text-sm mt-2", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>{subtitle}</p>
         )}
       </motion.div>
 
@@ -169,7 +172,7 @@ export function HoverRevealCard({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5, transition: { delay: 0.22, duration: 0.25 } }}
                 exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                className="text-xs text-neutral-500 mt-4"
+                className={cn("text-xs mt-4", theme === "dark" ? "text-neutral-500" : "text-neutral-600")}
               >
                 {subtitle}
               </motion.p>
