@@ -281,7 +281,7 @@ export default function Home() {
                 "pointer-events-auto rounded-3xl border backdrop-blur-xl p-4 sm:p-6 lg:p-7 shadow-2xl",
                 isDark
                   ? "border-neutral-800 bg-neutral-950/80"
-                  : "border-neutral-200 bg-white/80"
+                  : "border-purple-200/70 bg-white/95 shadow-[0_24px_80px_rgba(129,140,248,0.45)]"
               )}
             >
               <div className="flex items-center justify-between mb-4">
@@ -373,7 +373,7 @@ export default function Home() {
             <p
               className={cn(
                 "mt-2 text-sm md:text-base max-w-xl",
-                isDark ? "text-neutral-400" : "text-neutral-600"
+                isDark ? "text-neutral-400" : "text-neutral-700"
               )}
             >
               A curated set of motion‑rich components you can drop into any React or Next.js app.
@@ -458,7 +458,7 @@ export default function Home() {
             className="h-64 flex flex-col justify-center items-center text-center"
           >
             <h3 className="text-2xl font-semibold mb-2">Spotlight hero</h3>
-            <p className={isDark ? "text-neutral-400" : "text-neutral-600"}>
+            <p className={isDark ? "text-neutral-400" : "text-neutral-700"}>
               Layer spotlight, gradients, and depth to turn any heading into a centerpiece.
             </p>
           </SpotlightCard>
@@ -469,7 +469,7 @@ export default function Home() {
               "h-64 p-8 flex flex-col justify-center items-center text-center border",
               isDark
                 ? "bg-neutral-900/50 border-neutral-800"
-                : "bg-neutral-100/80 border-neutral-200"
+                : "bg-linear-to-br from-white/95 via-purple-50/70 to-sky-50/80 border-purple-100"
             )}
           >
             <h3 className="text-2xl font-semibold mb-2">3D tilt cards</h3>
@@ -521,7 +521,7 @@ export default function Home() {
                 : "focus:ring-slate-500 focus:ring-offset-white"
             )}
           >
-            <div className="group relative inline-flex h-12 overflow-hidden rounded-full p-[1px]">
+            <div className="group relative inline-flex h-12 overflow-hidden rounded-full p-px">
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
               <span
                 className={cn(
