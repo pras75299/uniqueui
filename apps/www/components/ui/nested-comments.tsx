@@ -89,14 +89,17 @@ function LikeButton({
   count,
   onLike,
   accentColor,
+  theme = "dark",
 }: {
   count: number;
   onLike?: () => void;
   accentColor: string;
+  theme?: "light" | "dark";
 }) {
   const [liked, setLiked] = useState(false);
   const [displayCount, setDisplayCount] = useState(count);
   const scale = useSpring(1, { stiffness: 600, damping: 15 });
+  const isDark = theme === "dark";
 
   const handleLike = () => {
     if (liked) return;
@@ -114,7 +117,9 @@ function LikeButton({
         "flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full transition-all duration-200",
         liked
           ? "text-rose-400 bg-rose-500/10"
-          : "text-neutral-500 hover:text-neutral-300 hover:bg-white/5"
+          : isDark
+            ? "text-neutral-500 hover:text-neutral-300 hover:bg-white/5"
+            : "text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100"
       )}
     >
       <motion.span style={{ scale }} className="inline-flex">
@@ -242,6 +247,7 @@ function CommentNode({
   onReply,
   onLike,
   isLast,
+  theme = "dark",
 }: {
   comment: Comment;
   depth: number;
@@ -250,7 +256,9 @@ function CommentNode({
   onReply?: (id: string, content: string) => void;
   onLike?: (id: string) => void;
   isLast: boolean;
+  theme?: "light" | "dark";
 }) {
+  const isDark = theme === "dark";
   const [replying, setReplying] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [localReplies, setLocalReplies] = useState<Comment[]>(comment.replies ?? []);
@@ -297,8 +305,8 @@ function CommentNode({
         <div className="flex-1 min-w-0 pb-3">
           {/* Header */}
           <div className="flex items-baseline gap-2 flex-wrap mb-1.5">
-            <span className="text-sm font-semibold text-neutral-100">{comment.author}</span>
-            <span className="text-xs text-neutral-600">{comment.timestamp}</span>
+            <span className={cn("text-sm font-semibold", isDark ? "text-neutral-100" : "text-neutral-900")}>{comment.author}</span>
+            <span className={cn("text-xs", isDark ? "text-neutral-500" : "text-neutral-500")}>{comment.timestamp}</span>
             {depth > 0 && (
               <span
                 className="text-xs px-1.5 py-0.5 rounded-full"
@@ -310,7 +318,7 @@ function CommentNode({
           </div>
 
           {/* Content */}
-          <p className="text-sm text-neutral-300 leading-relaxed mb-2">
+          <p className={cn("text-sm leading-relaxed mb-2", isDark ? "text-neutral-300" : "text-neutral-600")}>
             {comment.content}
           </p>
 
@@ -320,13 +328,14 @@ function CommentNode({
               count={comment.likes}
               onLike={() => onLike?.(comment.id)}
               accentColor={accentColor}
+              theme={theme}
             />
 
             {canReply && (
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setReplying((v) => !v)}
-                className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full text-neutral-500 hover:text-neutral-300 hover:bg-white/5 transition-all duration-200"
+                className={cn("flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full transition-all duration-200", isDark ? "text-neutral-500 hover:text-neutral-300 hover:bg-white/5" : "text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100")}
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
@@ -339,7 +348,7 @@ function CommentNode({
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setCollapsed((v) => !v)}
-                className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full text-neutral-500 hover:text-neutral-300 hover:bg-white/5 transition-all duration-200"
+                className={cn("flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full transition-all duration-200", isDark ? "text-neutral-500 hover:text-neutral-300 hover:bg-white/5" : "text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100")}
               >
                 <motion.svg
                   viewBox="0 0 24 24"
@@ -392,6 +401,7 @@ function CommentNode({
                 onReply={onReply}
                 onLike={onLike}
                 isLast={i === localReplies.length - 1}
+                theme={theme}
               />
             ))}
           </motion.div>
@@ -491,6 +501,7 @@ export function NestedComments({
               onReply={onReply}
               onLike={onLike}
               isLast={i === localComments.length - 1}
+              theme={theme}
             />
           ))}
         </AnimatePresence>

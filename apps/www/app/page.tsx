@@ -216,7 +216,7 @@ export default function Home() {
                  <p className={isDark ? "text-neutral-400" : "text-neutral-600"}>Interactive lighting effect that follows your mouse.</p>
             </SpotlightCard>
             
-            <TiltCard theme={theme} className={cn("h-64 p-8 flex flex-col justify-center items-center text-center", isDark ? "bg-neutral-900/50 border-neutral-800" : "bg-neutral-100/80 border-neutral-200")}>
+            <TiltCard theme={theme} className={cn("h-64 p-8 flex flex-col justify-center items-center text-center border", isDark ? "bg-neutral-900/50 border-neutral-800" : "bg-neutral-100/80 border-neutral-200")}>
                  <h3 className="text-2xl font-bold mb-2">3D Tilt</h3>
                  <p className={isDark ? "text-neutral-400" : "text-neutral-600"}>Parallax hover effects that add depth to your UI.</p>
             </TiltCard>

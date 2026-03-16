@@ -38,7 +38,7 @@ export function SkeletonShimmer({
           key={i}
           className={cn(
             "relative overflow-hidden",
-            isDark ? "bg-neutral-800/50" : "bg-neutral-200/80",
+            isDark ? "bg-neutral-800/50" : "bg-neutral-300/90",
             roundedMap[rounded],
             className
           )}
@@ -47,8 +47,9 @@ export function SkeletonShimmer({
           <motion.div
             className="absolute inset-0"
             style={{
-              background:
-                "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)",
+              background: isDark
+                ? "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)"
+                : "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.08) 50%, transparent 100%)",
             }}
             animate={{
               x: ["-100%", "100%"],

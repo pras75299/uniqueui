@@ -50,17 +50,17 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
       <div className="space-y-10">
         {/* Header */}
         <div className="space-y-4">
-          <h1 className="text-3xl font-bold tracking-tight text-white lg:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white lg:text-4xl">
             {component.name}
           </h1>
-          <p className="text-lg text-neutral-400 max-w-3xl leading-relaxed">
+          <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
             {component.description}
           </p>
         </div>
 
         {/* Install Command */}
-        <div className="rounded-lg border border-neutral-800 bg-neutral-900 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3 font-mono text-sm text-neutral-300">
+        <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300">
             <Terminal className="w-4 h-4 text-neutral-500" />
             <span>{component.installCmd}</span>
           </div>
@@ -76,32 +76,32 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
 
         {/* Props Reference */}
         {component.props && component.props.length > 0 && (
-          <section className="space-y-4 pt-8 border-t border-neutral-800">
-            <h2 className="text-xl font-semibold text-white">Props</h2>
-            <div className="rounded-lg border border-neutral-800 overflow-hidden bg-neutral-950">
+          <section className="space-y-4 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Props</h2>
+            <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-neutral-950">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
-                  <thead className="text-xs uppercase bg-neutral-900 text-neutral-400 border-b border-neutral-800">
+                  <thead className="text-xs uppercase bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
                     <tr>
                       <th scope="col" className="px-4 py-3 font-medium">Prop</th>
                       <th scope="col" className="px-4 py-3 font-medium">Type</th>
                       <th scope="col" className="px-4 py-3 font-medium">Description</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-neutral-800">
+                  <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
                     {component.props.map((prop, idx) => (
-                      <tr key={idx} className="hover:bg-neutral-900/50 transition-colors">
-                        <td className="px-4 py-3 border-r border-neutral-800/50">
-                          <code className="text-purple-400 bg-purple-400/10 px-1.5 py-0.5 rounded text-xs">
+                      <tr key={idx} className="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors">
+                        <td className="px-4 py-3 border-r border-neutral-200 dark:border-neutral-800/50">
+                          <code className="text-purple-600 dark:text-purple-400 bg-purple-400/10 px-1.5 py-0.5 rounded text-xs">
                             {prop.name}
                           </code>
                         </td>
-                        <td className="px-4 py-3 text-neutral-300 border-r border-neutral-800/50">
-                          <code className="text-blue-400/80 bg-blue-400/10 px-1.5 py-0.5 rounded text-xs break-all">
+                        <td className="px-4 py-3 text-neutral-700 dark:text-neutral-300 border-r border-neutral-200 dark:border-neutral-800/50">
+                          <code className="text-blue-600 dark:text-blue-400/80 bg-blue-400/10 px-1.5 py-0.5 rounded text-xs break-all">
                             {prop.type}
                           </code>
                         </td>
-                        <td className="px-4 py-3 text-neutral-400">{prop.description}</td>
+                        <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{prop.description}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -124,17 +124,17 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
     <div className="space-y-10">
       {/* Header */}
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold tracking-tight text-white lg:text-4xl">
+        <h1 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white lg:text-4xl">
           {component.name}
         </h1>
-        <p className="text-lg text-neutral-400 max-w-3xl leading-relaxed">
+        <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
           {component.description}
         </p>
       </div>
 
       {/* Install Command */}
-      <div className="rounded-lg border border-neutral-800 bg-neutral-900 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3 font-mono text-sm text-neutral-300">
+      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300">
             <Terminal className="w-4 h-4 text-neutral-500" />
             <span>{component.installCmd}</span>
         </div>
@@ -143,15 +143,15 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
 
       {/* Preview */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-white">Preview</h2>
+        <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Preview</h2>
         <ComponentPreview slug={component.slug} />
       </section>
 
       {/* Usage section */}
       {component.usageCode && (
-        <section className="space-y-4 pt-8 border-t border-neutral-800">
-          <h2 className="text-xl font-semibold text-white">Usage</h2>
-          <div className="relative group rounded-lg overflow-hidden border border-neutral-800 bg-neutral-950">
+        <section className="space-y-4 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+          <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Usage</h2>
+          <div className="relative group rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950">
             <div 
               className="p-4 overflow-x-auto text-sm font-mono [&>pre]:!bg-transparent [&>pre]:!p-0"
               style={{
@@ -168,32 +168,32 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
 
       {/* Props Reference section */}
       {component.props && component.props.length > 0 && (
-        <section className="space-y-4 pt-8 border-t border-neutral-800">
-          <h2 className="text-xl font-semibold text-white">Props</h2>
-          <div className="rounded-lg border border-neutral-800 overflow-hidden bg-neutral-950">
+        <section className="space-y-4 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+          <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Props</h2>
+          <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-neutral-950">
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="text-xs uppercase bg-neutral-900 text-neutral-400 border-b border-neutral-800">
+                <thead className="text-xs uppercase bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
                   <tr>
                     <th scope="col" className="px-4 py-3 font-medium">Prop</th>
                     <th scope="col" className="px-4 py-3 font-medium">Type</th>
                     <th scope="col" className="px-4 py-3 font-medium">Description</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-800">
+                <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
                   {component.props.map((prop, idx) => (
-                    <tr key={idx} className="hover:bg-neutral-900/50 transition-colors">
-                      <td className="px-4 py-3 border-r border-neutral-800/50">
-                        <code className="text-purple-400 bg-purple-400/10 px-1.5 py-0.5 rounded text-xs">
+                    <tr key={idx} className="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors">
+                      <td className="px-4 py-3 border-r border-neutral-200 dark:border-neutral-800/50">
+                        <code className="text-purple-600 dark:text-purple-400 bg-purple-400/10 px-1.5 py-0.5 rounded text-xs">
                           {prop.name}
                         </code>
                       </td>
-                      <td className="px-4 py-3 text-neutral-300 border-r border-neutral-800/50">
-                        <code className="text-blue-400/80 bg-blue-400/10 px-1.5 py-0.5 rounded text-xs break-all">
+                      <td className="px-4 py-3 text-neutral-700 dark:text-neutral-300 border-r border-neutral-200 dark:border-neutral-800/50">
+                        <code className="text-blue-600 dark:text-blue-400/80 bg-blue-400/10 px-1.5 py-0.5 rounded text-xs break-all">
                           {prop.type}
                         </code>
                       </td>
-                      <td className="px-4 py-3 text-neutral-400">
+                      <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
                         {prop.description}
                       </td>
                     </tr>

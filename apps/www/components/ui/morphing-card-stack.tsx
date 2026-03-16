@@ -218,12 +218,13 @@ export function MorphingCardStack({
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-white truncate text-base">
+                      <h3 className={cn("font-semibold truncate text-base", theme === "dark" ? "text-white" : "text-neutral-900")}>
                         {card.title}
                       </h3>
                       <p
                         className={cn(
-                          "text-sm text-neutral-400 mt-1.5 leading-relaxed",
+                          "text-sm mt-1.5 leading-relaxed",
+                          theme === "dark" ? "text-neutral-400" : "text-neutral-600",
                           layout === "stack" && (isExpanded ? "" : "line-clamp-3"),
                           layout === "grid" && "line-clamp-2",
                           layout === "list" && "line-clamp-2"
