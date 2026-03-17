@@ -208,18 +208,18 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6">
-              <Link href="/components" className="w-full sm:w-auto">
-                <button
-                  className={cn(
-                    "w-full sm:w-auto px-7 py-3.5 rounded-full font-semibold flex items-center justify-center gap-2 transition-colors",
-                    isDark
-                      ? "bg-white text-black hover:bg-neutral-200"
-                      : "bg-neutral-900 text-white hover:bg-neutral-800",
-                  )}
-                >
-                  Browse components
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+              <Link
+                href="/components"
+                className={cn(
+                  "w-full sm:w-auto px-7 py-3.5 rounded-full font-semibold flex items-center justify-center gap-2 transition-colors",
+                  isDark
+                    ? "bg-white text-black hover:bg-neutral-200"
+                    : "bg-neutral-900 text-white hover:bg-neutral-800",
+                )}
+                aria-label="Browse components"
+              >
+                Browse components
+                <ArrowRight className="w-4 h-4" />
               </Link>
 
               <motion.div
