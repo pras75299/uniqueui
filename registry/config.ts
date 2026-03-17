@@ -301,4 +301,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "data-table",
+        dependencies: ["clsx", "tailwind-merge"],
+        files: [
+            { path: "data-table.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];
