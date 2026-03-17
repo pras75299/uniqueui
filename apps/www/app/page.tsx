@@ -517,8 +517,8 @@ export default function Home() {
             )}
           >
             <div className="group relative inline-flex h-12 overflow-hidden rounded-full p-px">
-              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-              <span
+              <motion.span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <motion.span
                 className={cn(
                   "inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-8 py-1 text-sm font-medium backdrop-blur-3xl transition-colors",
                   isDark
@@ -527,7 +527,7 @@ export default function Home() {
                 )}
               >
                 Explore all components
-              </span>
+              </motion.span>
             </div>
           </Link>
         </div>
