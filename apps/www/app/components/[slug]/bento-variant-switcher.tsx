@@ -8,6 +8,7 @@ import { useTheme } from "@/contexts/theme-context";
 import { cn } from "@/lib/utils";
 
 interface BentoVariantSwitcherProps {
+  slug?: string;
   variants: ComponentVariant[];
   /** Pre-highlighted HTML per variant id, produced by shiki on the server */
   highlightedCodes: Record<string, string>;
@@ -16,6 +17,7 @@ interface BentoVariantSwitcherProps {
 }
 
 export default function BentoVariantSwitcher({
+  slug,
   variants,
   highlightedCodes,
   rawCodes,
@@ -54,7 +56,7 @@ export default function BentoVariantSwitcher({
       {/* Preview panel */}
       <section className="space-y-2">
         <h2 className={cn("text-xl font-semibold", isDark ? "text-white" : "text-neutral-900")}>Preview</h2>
-        <div className={cn("relative rounded-xl border min-h-[320px] overflow-hidden", isDark ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-neutral-50")}>
+        <div className={cn("relative rounded-xl border min-h-[320px]", slug === "data-table" ? "overflow-x-auto" : "overflow-hidden", isDark ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-neutral-50")}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeId + "-preview"}
