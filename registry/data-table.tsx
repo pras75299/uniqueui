@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 const STICKY_COL_WIDTH_PX = 112;
 
@@ -102,6 +102,20 @@ export function DataTable({
   );
 
   const safePage = Math.min(Math.max(currentPage, 1), totalPages);
+
+  // Keep pagination state consistent if `data` length (or pageSize) changes.
+  useEffect(() => {
+    if (!paginated) return;
+
+    setCurrentPage((prev) => {
+      const clamped = Math.min(Math.max(prev, 1), totalPages);
+      if (clamped !== prev) {
+        onPageChange?.(clamped, currentPageSize);
+        return clamped;
+      }
+      return prev;
+    });
+  }, [paginated, totalPages, currentPageSize, onPageChange]);
 
   const pageStartIndex = paginated ? (safePage - 1) * currentPageSize : 0;
   const pageEndIndex = paginated ? pageStartIndex + currentPageSize : totalItems;

@@ -61,7 +61,17 @@ export default function BentoVariantSwitcher({
       {/* Preview panel */}
       <section className="space-y-2">
         <h2 className={cn("text-xl font-semibold", isDark ? "text-white" : "text-neutral-900")}>Preview</h2>
-        <div className={cn("relative rounded-xl border min-h-[320px]", slug === "data-table" ? "overflow-x-auto" : "overflow-hidden", isDark ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-neutral-50")}>
+        <div
+          className={cn(
+            "relative rounded-xl border min-h-[320px]",
+            // DataTable already manages its own horizontal scrolling internally.
+            // Using `overflow-x-auto` here can clip the pagination footer vertically.
+            slug === "data-table" ? "overflow-y-visible" : "overflow-hidden",
+            isDark
+              ? "border-neutral-800 bg-neutral-950"
+              : "border-neutral-200 bg-neutral-50",
+          )}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={activeId + "-preview"}
@@ -87,7 +97,7 @@ export default function BentoVariantSwitcher({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.18 }}
-              className="p-4 overflow-x-auto text-sm font-mono [&>pre]:!bg-transparent [&>pre]:!p-0"
+              className="p-4 overflow-x-auto text-sm font-mono [&>pre]:bg-transparent! [&>pre]:p-0!"
               style={{ backgroundColor: "#0a0a0a" }}
               dangerouslySetInnerHTML={{ __html: highlightedCodes[activeId] ?? "" }}
             />
