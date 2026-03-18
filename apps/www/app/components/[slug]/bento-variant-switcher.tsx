@@ -31,12 +31,17 @@ export default function BentoVariantSwitcher({
   return (
     <div className="space-y-6">
       {/* Tab bar — same pill-style as AnimatedTabs */}
-      <div className={cn("relative flex w-fit gap-1 rounded-xl border p-1", isDark ? "border-neutral-800 bg-neutral-900/60" : "border-neutral-200 bg-neutral-100")}>
+      <div
+        className={cn(
+          "relative flex w-full gap-1 rounded-xl border p-1 overflow-x-auto",
+          isDark ? "border-neutral-800 bg-neutral-900/60" : "border-neutral-200 bg-neutral-100",
+        )}
+      >
         {variants.map((v) => (
           <button
             key={v.id}
             onClick={() => setActiveId(v.id)}
-            className="relative z-10 px-4 py-1.5 text-sm font-medium transition-colors duration-200 rounded-lg"
+            className="relative z-10 px-4 py-1.5 text-sm font-medium transition-colors duration-200 rounded-lg whitespace-nowrap shrink-0"
             style={{
               color: activeId === v.id ? (isDark ? "#fff" : "#171717") : isDark ? "#a3a3a3" : "#737373",
             }}
@@ -48,7 +53,7 @@ export default function BentoVariantSwitcher({
                 transition={{ type: "spring", stiffness: 380, damping: 34 }}
               />
             )}
-            <span className="relative">{v.label}</span>
+            <span className="relative whitespace-nowrap">{v.label}</span>
           </button>
         ))}
       </div>

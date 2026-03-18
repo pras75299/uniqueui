@@ -2392,6 +2392,11 @@ export default function Example() {
       { name: "freezeColumns", type: '"none" | "left" | "right" | "both"', default: '"none"', description: "Which side to freeze columns when horizontally scrolling." },
       { name: "freezeCount", type: "number", default: "1", description: "Number of columns to freeze on the left when freezeColumns is left or both." },
       { name: "freezeRightCount", type: "number", default: "1", description: "When freezeColumns is \"both\", number of columns to freeze on the right." },
+      { name: "paginated", type: "boolean", default: "false", description: "Enable built-in pagination controls." },
+      { name: "pageSize", type: "number", default: "8", description: "Number of rows per page when paginated is true." },
+      { name: "pageSizeOptions", type: "number[]", description: "Optional list of page sizes to show in a selector." },
+      { name: "initialPage", type: "number", default: "1", description: "Initial page index (1-based) when paginated is true." },
+      { name: "onPageChange", type: "(page: number, pageSize: number) => void", description: "Called when the current page or page size changes." },
       { name: "headerTextColor", type: "string", description: "Tailwind class for header text, e.g. text-neutral-900." },
       { name: "bodyTextColor", type: "string", description: "Tailwind class for body cell text." },
       { name: "headerBackground", type: "string", description: "Tailwind class for header background, e.g. bg-neutral-100." },
@@ -2431,7 +2436,7 @@ const data = [
 export default function Example() {
   return (
     <div className="w-full p-6">
-      <DataTable columns={columns} data={data} theme="dark" />
+      <DataTable columns={columns} data={data} paginated pageSize={5} theme="dark" />
     </div>
   );
 }`,
@@ -2472,6 +2477,8 @@ export default function Example() {
         data={data}
         freezeColumns="left"
         freezeCount={2}
+        paginated
+        pageSize={5}
         theme="dark"
       />
     </div>
@@ -2514,6 +2521,8 @@ export default function Example() {
         data={data}
         freezeColumns="right"
         freezeCount={1}
+        paginated
+        pageSize={5}
         theme="dark"
       />
     </div>
@@ -2557,6 +2566,8 @@ export default function Example() {
         freezeColumns="both"
         freezeCount={2}
         freezeRightCount={1}
+        paginated
+        pageSize={5}
         theme="dark"
       />
     </div>
@@ -2591,7 +2602,7 @@ const data = [
 export default function Example() {
   return (
     <div className="w-full p-6">
-      <DataTable columns={columns} data={data} border theme="dark" />
+      <DataTable columns={columns} data={data} border paginated pageSize={5} theme="dark" />
     </div>
   );
 }`,
@@ -2623,7 +2634,7 @@ const data = [
 export default function Example() {
   return (
     <div className="w-full p-6">
-      <DataTable columns={columns} data={data} sortable theme="dark" />
+      <DataTable columns={columns} data={data} sortable paginated pageSize={5} theme="dark" />
     </div>
   );
 }`,
@@ -2663,6 +2674,8 @@ export default function Example() {
         bodyTextColor="text-neutral-800"
         headerBackground="bg-purple-100"
         bodyBackground="bg-purple-50/50"
+        paginated
+        pageSize={5}
         border
         theme="dark"
       />
@@ -2710,6 +2723,12 @@ export default function Example() {
         bodyBackground="bg-neutral-950"
         border
         sortable
+        paginated
+        pageSize={5}
+        pageSizeOptions={[5, 10, 20]}
+        onPageChange={(page, pageSize) =>
+          console.log("page changed", page, "pageSize", pageSize)
+        }
         theme="dark"
       />
     </div>

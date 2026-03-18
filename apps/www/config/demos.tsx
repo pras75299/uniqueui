@@ -876,7 +876,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} theme={theme} />
+        <DataTable columns={columns} data={data} paginated pageSize={5} theme={theme} />
       </div>
     );
   },
@@ -904,7 +904,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} freezeColumns="left" freezeCount={2} theme={theme} />
+        <DataTable columns={columns} data={data} freezeColumns="left" freezeCount={2} paginated pageSize={5} theme={theme} />
       </div>
     );
   },
@@ -932,7 +932,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} freezeColumns="right" freezeCount={1} theme={theme} />
+        <DataTable columns={columns} data={data} freezeColumns="right" freezeCount={1} paginated pageSize={5} theme={theme} />
       </div>
     );
   },
@@ -960,7 +960,16 @@ export const componentDemos: Record<string, DemoComponent> = {
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} freezeColumns="both" freezeCount={2} freezeRightCount={1} theme={theme} />
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="both"
+          freezeCount={2}
+          freezeRightCount={1}
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
       </div>
     );
   },
@@ -985,7 +994,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} border theme={theme} />
+        <DataTable columns={columns} data={data} border paginated pageSize={5} theme={theme} />
       </div>
     );
   },
@@ -1009,7 +1018,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} sortable theme={theme} />
+        <DataTable columns={columns} data={data} sortable paginated pageSize={5} theme={theme} />
       </div>
     );
   },
@@ -1041,6 +1050,8 @@ export const componentDemos: Record<string, DemoComponent> = {
           bodyTextColor="text-neutral-800"
           headerBackground="bg-purple-100"
           bodyBackground="bg-purple-50/50"
+          paginated
+          pageSize={5}
           border
           theme={theme}
         />
@@ -1080,6 +1091,12 @@ export const componentDemos: Record<string, DemoComponent> = {
           bodyBackground="bg-neutral-950"
           border
           sortable
+          paginated
+          pageSize={5}
+          pageSizeOptions={[5, 10, 20]}
+          onPageChange={(page, pageSize) =>
+            console.log("page changed", page, "pageSize", pageSize)
+          }
           theme={theme}
         />
       </div>
