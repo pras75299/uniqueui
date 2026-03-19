@@ -43,7 +43,7 @@ import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { LimelightNav } from "@/components/ui/limelight-nav";
 import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
 import { DataTable } from "@/components/ui/data-table";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Ghost,
   Sparkles,
@@ -106,6 +106,52 @@ function NotificationDemo({ theme = "dark" }: DemoThemeProps) {
         theme={theme}
         notifications={notifications}
         onRemove={removeNotification}
+      />
+    </div>
+  );
+}
+
+function PenCursorDemo({ theme = "dark" }: DemoThemeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      ref={containerRef}
+      className={cn(
+        "relative h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <div className="text-center relative z-10 pointer-events-none select-none">
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent mb-4",
+            theme === "dark"
+              ? "bg-gradient-to-br from-white to-neutral-500"
+              : "bg-gradient-to-br from-neutral-900 to-neutral-600",
+          )}
+        >
+          Ribbon trail
+        </h3>
+        <p
+          className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}
+        >
+          Move your mouse — a physics-driven ribbon trails the pointer.
+        </p>
+      </div>
+      <PenCursor
+        containerRef={containerRef}
+        trailLength={40}
+        maxWidth={1}
+        minWidth={1}
+        colorHead={theme === "dark" ? "159, 175, 155" : "100, 80, 200"}
+        colorTail={theme === "dark" ? "198, 167, 106" : "180, 120, 230"}
+        alphaHead={0.95}
+        alphaTail={0}
+        damping={0.55}
+        speedInfluence={0.8}
+        speedMax={500}
       />
     </div>
   );
@@ -1495,41 +1541,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       />
     </div>
   ),
-  "pen-cursor": ({ theme = "dark" }) => (
-    <div
-      className={cn(
-        "h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border",
-        theme === "dark"
-          ? "bg-neutral-950 border-neutral-800"
-          : "bg-neutral-100 border-neutral-200",
-      )}
-    >
-      <div className="text-center relative z-10 pointer-events-none">
-        <h3
-          className={cn(
-            "text-3xl font-bold bg-clip-text text-transparent mb-4",
-            theme === "dark"
-              ? "bg-gradient-to-br from-white to-neutral-500"
-              : "bg-gradient-to-br from-neutral-900 to-neutral-600",
-          )}
-        >
-          Drawing stroke
-        </h3>
-        <p
-          className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}
-        >
-          Move your mouse — fading ink trail follows; your normal cursor stays visible.
-        </p>
-      </div>
-      <PenCursor
-        color={theme === "dark" ? "#a3a3a3" : "#525252"}
-        lineWidth={2.75}
-        fadeDurationMs={380}
-        maxPoints={220}
-        spring={{ stiffness: 260, damping: 34, mass: 0.5 }}
-      />
-    </div>
-  ),
+  "pen-cursor": ({ theme = "dark" }) => <PenCursorDemo theme={theme} />,
   "glow-hero-section/default": ({ theme = "dark" }) => (
     <GlowHeroSection theme={theme} height="h-[520px]" />
   ),

@@ -2300,65 +2300,95 @@ export default function Example() {
     slug: "pen-cursor",
     name: "Pen Cursor",
     description:
-      "Spring-smoothed drawing stroke with a fast-fading ink tail; system cursor stays visible by default. Grey stroke, customizable.",
+      "Physics-driven ribbon trail rendered on canvas — a chain of linked points follows the mouse with spring-damping inertia, width scales with speed, and colors interpolate head-to-tail. Inspired by obsidianassembly.com.",
     installCmd: "npx uniqueui add pen-cursor",
     icon: Pen,
     category: "Cursor Effects",
     props: [
       {
-        name: "color",
+        name: "trailLength",
+        type: "number",
+        description: "Number of chain-linked trail points. Default 60.",
+      },
+      {
+        name: "maxWidth",
+        type: "number",
+        description: "Maximum ribbon width in px (scales with speed). Default 1.",
+      },
+      {
+        name: "minWidth",
+        type: "number",
+        description: "Minimum ribbon width in px at the tail. Default 1.",
+      },
+      {
+        name: "damping",
+        type: "number",
+        description: "Spring damping for the head point (0–1). Default 0.6.",
+      },
+      {
+        name: "speedInfluence",
+        type: "number",
+        description: "How much mouse speed widens the ribbon (0–1). Default 0.9.",
+      },
+      {
+        name: "colorHead",
         type: "string",
-        description: "Stroke color (default neutral grey).",
+        description: 'RGB string for the ribbon head color. Default "159, 175, 155" (sage green).',
       },
       {
-        name: "lineWidth",
+        name: "colorTail",
+        type: "string",
+        description: 'RGB string for the ribbon tail color. Default "198, 167, 106" (warm gold).',
+      },
+      {
+        name: "alphaHead",
         type: "number",
-        description: "Stroke width in CSS pixels.",
+        description: "Opacity at the ribbon head (0–1). Default 0.9.",
       },
       {
-        name: "fadeDurationMs",
+        name: "alphaTail",
         type: "number",
-        description:
-          "How long each segment stays visible before fully fading (ms); lower feels snappier.",
-      },
-      {
-        name: "minDistance",
-        type: "number",
-        description: "Minimum distance between samples to reduce jitter (px).",
-      },
-      {
-        name: "maxPoints",
-        type: "number",
-        description: "Safety cap on stored points.",
-      },
-      {
-        name: "spring",
-        type: "{ stiffness?: number; damping?: number; mass?: number }",
-        description:
-          "Motion spring config for how much the stroke lags behind the pointer.",
+        description: "Opacity at the ribbon tail (0–1). Default 0.",
       },
       {
         name: "hideSystemCursor",
         type: "boolean",
-        default: "false",
+        description: "Hide the system cursor while mounted. Default false.",
+      },
+      {
+        name: "containerRef",
+        type: "RefObject<HTMLElement | null>",
         description:
-          "Hide the system cursor while mounted (default keeps the normal pointer).",
+          "Optional. Limits drawing to this element; parent should be `relative`. Omit for full-window tracking.",
       },
       {
         name: "className",
         type: "string",
-        description: "Extra classes on the root overlay container.",
+        description: "Extra classes on the canvas element.",
       },
     ],
-    usageCode: `import { PenCursor } from "@/components/ui/pen-cursor";
+    usageCode: `import { useRef } from "react";
+import { PenCursor } from "@/components/ui/pen-cursor";
 
 export default function Example() {
+  const containerRef = useRef<HTMLDivElement>(null);
   return (
-    <div className="h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center">
+    <div
+      ref={containerRef}
+      className="h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center"
+    >
       <h3 className="text-white text-2xl font-bold uppercase tracking-widest pointer-events-none">
         Move your mouse
       </h3>
-      <PenCursor color="#737373" lineWidth={3} fadeDurationMs={400} />
+      <PenCursor
+        containerRef={containerRef}
+        trailLength={40}
+        maxWidth={1}
+        colorHead="159, 175, 155"
+        colorTail="198, 167, 106"
+        alphaHead={0.95}
+        damping={0.55}
+      />
     </div>
   );
 }`,

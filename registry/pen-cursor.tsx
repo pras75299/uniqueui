@@ -1,185 +1,138 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useId, useMemo, useRef, useState } from "react";
-import { useMotionValue, useSpring } from "motion/react";
+import React, {
+  useEffect,
+  useRef,
+  type RefObject,
+} from "react";
 
-const DEFAULT_COLOR = "#737373";
+// ─── Types ──────────────────────────────────────────────────────────────────
 
-const DEFAULT_SPRING = {
-  stiffness: 280,
-  damping: 36,
-  mass: 0.55,
-} as const;
-
-/** Default: ink-like tail that fades quickly (ms). */
-const DEFAULT_FADE_MS = 420;
-
-/** Denser samples = smoother line (px between points). */
-const DEFAULT_MIN_DISTANCE = 1.15;
+interface TrailPoint {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+}
 
 export interface PenCursorProps {
-  /** Stroke color (default neutral grey). */
-  color?: string;
-  /** Stroke width in CSS pixels. */
-  lineWidth?: number;
-  /** How long each part of the stroke stays visible before fading out (ms). */
-  fadeDurationMs?: number;
-  /** Minimum distance between samples to reduce jitter (px); lower = smoother line. */
-  minDistance?: number;
-  /** Cap on stored points (safety limit). */
-  maxPoints?: number;
-  /** Spring physics so the stroke follows the pointer with a drawing-like lag. */
-  spring?: {
-    stiffness?: number;
-    damping?: number;
-    mass?: number;
-  };
   /**
-   * When true, hides the system cursor. Default false so the normal pointer stays visible
-   * while the stroke draws underneath.
+   * Number of chain-linked trail points.
+   * More points = longer, more dramatic ribbon. Default 60.
+   */
+  trailLength?: number;
+  /**
+   * Maximum ribbon width in CSS pixels. Scales with mouse speed. Default 20.
+   */
+  maxWidth?: number;
+  /**
+   * Minimum ribbon width in CSS pixels at the tail. Default 1.
+   */
+  minWidth?: number;
+  /**
+   * Spring damping for the first (head) point (0–1). Default 0.6.
+   */
+  damping?: number;
+  /**
+   * How much inertia each point retains between frames. Default 0.8.
+   */
+  inertiaRetention?: number;
+  /**
+   * How strongly the inertia accumulates. Default 0.3.
+   */
+  inertiaInfluence?: number;
+  /**
+   * Scalar for inertia displacement per frame. Default 0.025.
+   */
+  inertiaStrength?: number;
+  /**
+   * How much mouse speed widens the ribbon (0–1). Default 0.9.
+   */
+  speedInfluence?: number;
+  /**
+   * Mouse speed (px/s) considered "maximum" for scaling purposes. Default 600.
+   */
+  speedMax?: number;
+  /**
+   * Low-pass smoothing for the measured speed (0–1, lower = smoother). Default 0.2.
+   */
+  speedSmoothing?: number;
+  /**
+   * RGB string for the ribbon head color. Default sage green "159, 175, 155".
+   */
+  colorHead?: string;
+  /**
+   * RGB string for the ribbon tail color. Default warm gold "198, 167, 106".
+   */
+  colorTail?: string;
+  /**
+   * Opacity at the ribbon head (0–1). Default 0.9.
+   */
+  alphaHead?: number;
+  /**
+   * Opacity at the ribbon tail (0–1). Default 0.
+   */
+  alphaTail?: number;
+  /**
+   * Canvas globalCompositeOperation. Default "source-over".
+   */
+  blendMode?: GlobalCompositeOperation;
+  /**
+   * When true, hides the native system cursor. Default false.
    */
   hideSystemCursor?: boolean;
+  /**
+   * Constrain tracking to this element (coordinates relative to the element).
+   * The parent must be `position: relative`. Omit for full-viewport.
+   */
+  containerRef?: RefObject<HTMLElement | null>;
   className?: string;
 }
 
-type StrokePoint = { x: number; y: number; t: number };
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
-/**
- * Catmull-Rom–style smooth cubic through points (one continuous path, no segment gaps).
- */
-function smoothPathD(points: { x: number; y: number }[]): string {
-  const n = points.length;
-  if (n === 0) return "";
-  if (n === 1) {
-    const p = points[0];
-    return `M ${p.x} ${p.y} L ${p.x + 0.01} ${p.y}`;
-  }
-  if (n === 2) {
-    return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
-  }
-
-  let d = `M ${points[0].x} ${points[0].y}`;
-  for (let i = 0; i < n - 1; i++) {
-    const p0 = i === 0 ? points[0] : points[i - 1];
-    const p1 = points[i];
-    const p2 = points[i + 1];
-    const p3 = i + 2 < n ? points[i + 2] : points[i + 1];
-    const cp1x = p1.x + (p2.x - p0.x) / 6;
-    const cp1y = p1.y + (p2.y - p0.y) / 6;
-    const cp2x = p2.x - (p3.x - p1.x) / 6;
-    const cp2y = p2.y - (p3.y - p1.y) / 6;
-    d += ` C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${p2.x} ${p2.y}`;
-  }
-  return d;
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
 }
 
+function makePoints(n: number): TrailPoint[] {
+  return Array.from({ length: n }, () => ({ x: 0, y: 0, vx: 0, vy: 0 }));
+}
+
+// ─── Component ───────────────────────────────────────────────────────────────
+
 /**
- * Decorative drawing stroke: one smooth path + soft tail via mask gradient (no “drops”).
- * System cursor stays visible unless `hideSystemCursor` is set.
+ * PenCursor — a physics-driven ribbon trail canvas overlay inspired by
+ * obsidianassembly.com. A chain of `trailLength` points follows the mouse with
+ * damped spring + inertia physics. The ribbon width scales with cursor speed,
+ * and colors interpolate head-to-tail via per-segment linear gradients.
  */
 export function PenCursor({
-  color = DEFAULT_COLOR,
-  lineWidth = 2.5,
-  fadeDurationMs = DEFAULT_FADE_MS,
-  minDistance = DEFAULT_MIN_DISTANCE,
-  maxPoints = 240,
-  spring,
+  trailLength = 60,
+  maxWidth = 20,
+  minWidth = 1,
+  damping = 0.6,
+  inertiaRetention = 0.8,
+  inertiaInfluence = 0.3,
+  inertiaStrength = 0.025,
+  speedInfluence = 0.9,
+  speedMax = 600,
+  speedSmoothing = 0.2,
+  colorHead = "159, 175, 155",
+  colorTail = "198, 167, 106",
+  alphaHead = 0.9,
+  alphaTail = 0,
+  blendMode = "source-over",
   hideSystemCursor = false,
+  containerRef,
   className,
 }: PenCursorProps) {
-  const springConfig = {
-    stiffness: spring?.stiffness ?? DEFAULT_SPRING.stiffness,
-    damping: spring?.damping ?? DEFAULT_SPRING.damping,
-    mass: spring?.mass ?? DEFAULT_SPRING.mass,
-  };
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const targetX = useMotionValue(-100);
-  const targetY = useMotionValue(-100);
-
-  const x = useSpring(targetX, springConfig);
-  const y = useSpring(targetY, springConfig);
-
-  const [points, setPoints] = useState<StrokePoint[]>([]);
-  const startedRef = useRef(false);
-
-  const [viewport, setViewport] = useState({ w: 1, h: 1 });
-
-  const reactId = useId();
-  const svgIds = useMemo(
-    () => ({
-      grad: `pen-cursor-grad-${reactId.replace(/:/g, "")}`,
-      mask: `pen-cursor-mask-${reactId.replace(/:/g, "")}`,
-    }),
-    [reactId],
-  );
-
-  useEffect(() => {
-    const handleMove = (e: MouseEvent) => {
-      if (!startedRef.current) {
-        startedRef.current = true;
-        targetX.set(e.clientX);
-        targetY.set(e.clientY);
-        x.set(e.clientX);
-        y.set(e.clientY);
-      } else {
-        targetX.set(e.clientX);
-        targetY.set(e.clientY);
-      }
-    };
-
-    window.addEventListener("mousemove", handleMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMove);
-    };
-  }, [targetX, targetY, x, y]);
-
-  useEffect(() => {
-    let raf = 0;
-    const loop = () => {
-      const now = Date.now();
-
-      const px = x.get();
-      const py = y.get();
-      if (startedRef.current && px >= 0 && py >= 0) {
-        setPoints((prev) => {
-          const next = prev.filter((p) => now - p.t < fadeDurationMs);
-          const last = next[next.length - 1];
-          if (
-            last &&
-            Math.hypot(px - last.x, py - last.y) < minDistance
-          ) {
-            return next;
-          }
-          const appended: StrokePoint[] = [
-            ...next,
-            { x: px, y: py, t: now },
-          ];
-          return appended.length > maxPoints
-            ? appended.slice(-maxPoints)
-            : appended;
-        });
-      }
-
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [x, y, maxPoints, minDistance, fadeDurationMs]);
-
-  useEffect(() => {
-    const sync = () => {
-      setViewport({
-        w: typeof window !== "undefined" ? window.innerWidth : 1,
-        h: typeof window !== "undefined" ? window.innerHeight : 1,
-      });
-    };
-    sync();
-    window.addEventListener("resize", sync);
-    return () => window.removeEventListener("resize", sync);
-  }, []);
-
+  // -------------------------------------------------------------------
+  // Hide / restore native cursor
+  // -------------------------------------------------------------------
   useEffect(() => {
     if (!hideSystemCursor || typeof document === "undefined") return;
     const prev = document.documentElement.style.cursor;
@@ -189,77 +142,260 @@ export function PenCursor({
     };
   }, [hideSystemCursor]);
 
-  const pathD = useMemo(() => {
-    const plain = points.map((p) => ({ x: p.x, y: p.y }));
-    return smoothPathD(plain);
-  }, [points]);
+  // -------------------------------------------------------------------
+  // Main render loop
+  // -------------------------------------------------------------------
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const gradientLine = useMemo(() => {
-    if (points.length < 2) {
-      return { x1: 0, y1: 0, x2: 1, y2: 0 };
-    }
-    const a = points[0];
-    const b = points[points.length - 1];
-    return { x1: a.x, y1: a.y, x2: b.x, y2: b.y };
-  }, [points]);
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return;
 
-  /** Soft tail: mask stroke uses same path + gradient white alpha (tail → tip). */
-  const maskStrokeW = lineWidth + 6;
+    // ── State ──
+    const points = makePoints(trailLength);
+    const mouse = { x: -9999, y: -9999 };
+    let speed = 0;
+    let lastTime = performance.now();
+    let started = false;
+    let raf = 0;
+    let cancelled = false;
+
+    // ── Resize ──
+    let roCleanup: (() => void) | undefined;
+
+    const syncSize = (el: HTMLElement | null) => {
+      if (el) {
+        canvas.width = el.clientWidth || 1;
+        canvas.height = el.clientHeight || 1;
+      } else {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    };
+
+    // ── Mouse ──
+    const onMove = (e: MouseEvent) => {
+      const now = performance.now();
+      const dt = Math.max(1, now - lastTime) / 1000;
+
+      const el = containerRef?.current ?? null;
+      let nx: number;
+      let ny: number;
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        nx = e.clientX - rect.left;
+        ny = e.clientY - rect.top;
+      } else {
+        nx = e.clientX;
+        ny = e.clientY;
+      }
+
+      // Snap all points to first mouse position on first move
+      if (!started) {
+        for (const p of points) {
+          p.x = nx;
+          p.y = ny;
+        }
+        started = true;
+        mouse.x = nx;
+        mouse.y = ny;
+        lastTime = now;
+        return;
+      }
+
+      const dx = nx - mouse.x;
+      const dy = ny - mouse.y;
+      const instantSpeed = Math.hypot(dx, dy) / dt;
+      const targetRatio = Math.min(1, instantSpeed / speedMax);
+      speed += (targetRatio - speed) * speedSmoothing;
+
+      mouse.x = nx;
+      mouse.y = ny;
+      lastTime = now;
+    };
+
+    // ── Draw ──
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (!started) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
+
+      const speedFactor = 1 + speedInfluence * speed;
+
+      // Update head point toward mouse
+      const p0 = points[0];
+      const hdx = (mouse.x - p0.x) * (damping + 0.1);
+      const hdy = (mouse.y - p0.y) * (damping + 0.1);
+      p0.vx = p0.vx * inertiaRetention + hdx * inertiaInfluence * speedFactor;
+      p0.vy = p0.vy * inertiaRetention + hdy * inertiaInfluence * speedFactor;
+      p0.x += hdx + p0.vx * inertiaStrength * speedFactor;
+      p0.y += hdy + p0.vy * inertiaStrength * speedFactor;
+
+      // Update rest of chain
+      for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+        const sdx = (prev.x - curr.x) * damping;
+        const sdy = (prev.y - curr.y) * damping;
+        curr.vx = curr.vx * inertiaRetention + sdx * inertiaInfluence * 2;
+        curr.vy = curr.vy * inertiaRetention + sdy * inertiaInfluence * 4;
+        curr.x += sdx + curr.vx * inertiaStrength;
+        curr.y += sdy + curr.vy * inertiaStrength;
+      }
+
+      // ── Draw ribbon ──
+      ctx.save();
+      ctx.globalCompositeOperation = blendMode;
+      const n = points.length;
+
+      for (let i = 0; i < n - 1; i++) {
+        const tNear = i / (n - 1);       // 0 at head, 1 at tail
+        const tFar = (i + 1) / (n - 1);
+
+        const a = points[i];
+        const b = points[i + 1];
+
+        // Width at this segment
+        const wNear = lerp(maxWidth, minWidth, tNear) * speedFactor;
+        const wFar = lerp(maxWidth, minWidth, tFar) * speedFactor;
+
+        // Perpendicular normal to the segment direction
+        const dxSeg = b.x - a.x;
+        const dySeg = b.y - a.y;
+        const len = Math.hypot(dxSeg, dySeg) || 0.0001;
+        const nx2 = -dySeg / len;
+        const ny2 = dxSeg / len;
+
+        // Four corners of the ribbon quad
+        const ax1 = a.x + nx2 * wNear;
+        const ay1 = a.y + ny2 * wNear;
+        const ax2 = a.x - nx2 * wNear;
+        const ay2 = a.y - ny2 * wNear;
+        const bx1 = b.x + nx2 * wFar;
+        const by1 = b.y + ny2 * wFar;
+        const bx2 = b.x - nx2 * wFar;
+        const by2 = b.y - ny2 * wFar;
+
+        // Per-segment alpha + color interpolated along gradient head → tail
+        const alphaA = lerp(alphaHead, alphaTail, tNear);
+        const alphaB = lerp(alphaHead, alphaTail, tFar);
+        // Color: interpolate between colorHead and colorTail by t
+        const colorA = tNear <= 0.5 ? colorHead : colorTail;
+        const colorB = tFar <= 0.5 ? colorHead : colorTail;
+
+        let grad: CanvasGradient;
+        try {
+          grad = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+        } catch {
+          continue;
+        }
+        grad.addColorStop(0, `rgba(${colorA}, ${alphaA})`);
+        grad.addColorStop(1, `rgba(${colorB}, ${alphaB})`);
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(ax1, ay1);
+        ctx.lineTo(bx1, by1);
+        ctx.lineTo(bx2, by2);
+        ctx.lineTo(ax2, ay2);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      ctx.restore();
+      raf = requestAnimationFrame(draw);
+    };
+
+    // ── Attach with retry for containerRef ──
+    // The ref may not be populated yet on first render tick.
+    // We retry up to 120 rAF frames (~2s) before falling back to window.
+    let rafRetries = 0;
+
+    const attach = () => {
+      const el = containerRef?.current ?? null;
+
+      if (containerRef && !el) {
+        // ref provided but not yet populated → retry
+        rafRetries++;
+        if (!cancelled && rafRetries < 120) {
+          requestAnimationFrame(attach);
+        } else if (!cancelled) {
+          // Fallback to window
+          window.addEventListener("mousemove", onMove);
+          syncSize(null);
+          window.addEventListener("resize", () => syncSize(null));
+          raf = requestAnimationFrame(draw);
+        }
+        return;
+      }
+
+      // el is our container (or null = viewport)
+      const target: EventTarget = el ?? window;
+      target.addEventListener("mousemove", onMove as EventListener);
+
+      if (el) {
+        const ro = new ResizeObserver(() => syncSize(el));
+        ro.observe(el);
+        syncSize(el);
+        roCleanup = () => ro.disconnect();
+      } else {
+        syncSize(null);
+        const onResize = () => syncSize(null);
+        window.addEventListener("resize", onResize);
+        roCleanup = () => window.removeEventListener("resize", onResize);
+      }
+
+      raf = requestAnimationFrame(draw);
+
+      // Store target for cleanup
+      (canvas as any).__cleanupTarget = target;
+    };
+
+    attach();
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      const target = (canvas as any).__cleanupTarget as EventTarget | undefined;
+      if (target) {
+        target.removeEventListener("mousemove", onMove as EventListener);
+      }
+      roCleanup?.();
+    };
+  }, [
+    containerRef,
+    trailLength,
+    maxWidth,
+    minWidth,
+    damping,
+    inertiaRetention,
+    inertiaInfluence,
+    inertiaStrength,
+    speedInfluence,
+    speedMax,
+    speedSmoothing,
+    colorHead,
+    colorTail,
+    alphaHead,
+    alphaTail,
+    blendMode,
+  ]);
 
   return (
-    <div
+    <canvas
+      ref={canvasRef}
+      aria-hidden
       className={cn(
-        "pointer-events-none fixed inset-0 z-[9999] overflow-hidden",
+        "pointer-events-none z-[9999]",
+        containerRef
+          ? "absolute inset-0 h-full w-full"
+          : "fixed inset-0 h-screen w-screen",
         className,
       )}
-      aria-hidden
-    >
-      <svg
-        className="absolute inset-0 h-full w-full"
-        width={viewport.w}
-        height={viewport.h}
-        viewBox={`0 0 ${viewport.w} ${viewport.h}`}
-        aria-hidden
-      >
-        <defs>
-          <linearGradient
-            id={svgIds.grad}
-            gradientUnits="userSpaceOnUse"
-            x1={gradientLine.x1}
-            y1={gradientLine.y1}
-            x2={gradientLine.x2}
-            y2={gradientLine.y2}
-          >
-            <stop offset="0%" stopColor="white" stopOpacity="0" />
-            <stop offset="18%" stopColor="white" stopOpacity="0.2" />
-            <stop offset="55%" stopColor="white" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="white" stopOpacity="1" />
-          </linearGradient>
-          <mask id={svgIds.mask} maskUnits="userSpaceOnUse">
-            {pathD ? (
-              <path
-                d={pathD}
-                fill="none"
-                stroke={`url(#${svgIds.grad})`}
-                strokeWidth={maskStrokeW}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            ) : null}
-          </mask>
-        </defs>
-        {pathD ? (
-          <path
-            d={pathD}
-            fill="none"
-            stroke={color}
-            strokeWidth={lineWidth}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            mask={`url(#${svgIds.mask})`}
-          />
-        ) : null}
-      </svg>
-    </div>
+    />
   );
 }

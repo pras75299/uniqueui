@@ -6,7 +6,7 @@ import { TiltCard } from "@/components/ui/3d-tilt-card";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Check,
   Copy,
@@ -27,6 +27,7 @@ import { PenCursor } from "@/components/ui/pen-cursor";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
+  const playgroundCardRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -292,8 +293,9 @@ export default function Home() {
             className="relative"
           >
             <div
+              ref={playgroundCardRef}
               className={cn(
-                "pointer-events-auto rounded-3xl border backdrop-blur-xl p-4 sm:p-6 lg:p-7 shadow-2xl",
+                "relative overflow-hidden pointer-events-auto rounded-3xl border backdrop-blur-xl p-4 sm:p-6 lg:p-7 shadow-2xl",
                 isDark
                   ? "border-neutral-800 bg-neutral-950/80"
                   : "border-purple-200/70 bg-white/95 shadow-[0_24px_80px_rgba(129,140,248,0.45)]",
@@ -340,7 +342,7 @@ export default function Home() {
                     isDark ? "text-neutral-500" : "text-neutral-600",
                   )}
                 >
-                  Drawing stroke
+                  Ribbon trail
                 </p>
                 <p
                   className={cn(
@@ -348,14 +350,21 @@ export default function Home() {
                     isDark ? "text-neutral-400" : "text-neutral-600",
                   )}
                 >
-                  Move your mouse — a fading ink line trails the pointer (cursor stays visible).
+                  Move your mouse — a physics-driven ribbon trails the pointer.
                 </p>
               </div>
               <PenCursor
-                color={isDark ? "#a3a3a3" : "#525252"}
-                lineWidth={2.75}
-                fadeDurationMs={400}
-                maxPoints={180}
+                containerRef={playgroundCardRef}
+                trailLength={40}
+                maxWidth={1}
+                minWidth={1}
+                colorHead={isDark ? "159, 175, 155" : "100, 80, 200"}
+                colorTail={isDark ? "198, 167, 106" : "180, 120, 230"}
+                alphaHead={0.95}
+                alphaTail={0}
+                damping={0.55}
+                speedInfluence={0.8}
+                speedMax={500}
               />
             </div>
 
