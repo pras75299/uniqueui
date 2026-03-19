@@ -2807,4 +2807,90 @@ export default function Example() {
       }
     ]
   }
+  ,
+  {
+    slug: "scroll-expansion-hero",
+    name: "Scroll Expansion Hero",
+    description:
+      "Scroll-driven media expansion hero with Motion.dev transitions and optional content reveal.",
+    installCmd: "npx uniqueui add scroll-expansion-hero",
+    icon: ScrollText,
+    category: "Effects & Animations",
+    props: [
+      {
+        name: "mediaType",
+        type: "\"video\" | \"image\"",
+        default: "\"video\"",
+        description: "Controls whether the expanding media is a video or static image. Default: video.",
+      },
+      {
+        name: "mediaSrc",
+        type: "string",
+        description: "Source URL of the video/image.",
+      },
+      {
+        name: "posterSrc",
+        type: "string",
+        description: "Optional poster/thumbnail URL for videos.",
+      },
+      {
+        name: "bgImageSrc",
+        type: "string",
+        description: "Background image URL shown behind the expanding media.",
+      },
+      {
+        name: "title",
+        type: "string",
+        description: "Hero title text split into two lines during scroll expansion.",
+      },
+      {
+        name: "date",
+        type: "string",
+        description: "Optional label displayed above the media once it expands.",
+      },
+      {
+        name: "scrollToExpand",
+        type: "string",
+        description: "Optional helper text shown while scrolling to expand.",
+      },
+      {
+        name: "textBlend",
+        type: "boolean",
+        description: "Switch between `mix-blend-difference` and normal blending for the hero text.",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description: "Content revealed once media is fully expanded.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description: "Extra Tailwind classes applied to the root container.",
+      },
+    ],
+    usageCode: `import { ScrollExpansionHero } from "@/components/ui/scroll-expansion-hero";
+
+export default function Example() {
+  return (
+    <ScrollExpansionHero
+      mediaType="video"
+      mediaSrc="https://me7aitdbxq.ufs.sh/f/2wsMIGDMQRdYuZ5R8ahEEZ4aQK56LizRdfBSqeDMsmUIrJN1"
+      posterSrc="https://images.pexels.com/videos/5752729/space-earth-universe-cosmos-5752729.jpeg"
+      bgImageSrc="https://me7aitdbxq.ufs.sh/f/2wsMIGDMQRdYMNjMlBUYHaeYpxduXPVNwf8mnFA61L7rkcoS"
+      title="Immersive Video Experience"
+      date="Cosmic Journey"
+      scrollToExpand="Scroll to Expand Demo"
+      textBlend
+    >
+      <div className="max-w-2xl mx-auto text-neutral-200">
+        <h3 className="text-2xl font-bold mb-2">Expanded content</h3>
+        <p className="text-neutral-400">
+          Scroll the page to expand the media, then this section fades in.
+        </p>
+      </div>
+    </ScrollExpansionHero>
+  );
+}`,
+  }
 ];

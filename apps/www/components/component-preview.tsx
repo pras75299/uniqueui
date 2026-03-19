@@ -17,7 +17,8 @@ export default function ComponentPreview({ slug }: { slug: string }) {
     );
   }
 
-  const hasOverflowHidden = slug !== "horizontal-scroll-gallery";
+  const hasOverflowHidden =
+    slug !== "horizontal-scroll-gallery" && slug !== "scroll-expansion-hero";
   const isDark = theme === "dark";
 
   return (

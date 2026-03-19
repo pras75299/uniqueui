@@ -309,4 +309,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "scroll-expansion-hero",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "scroll-expansion-hero.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

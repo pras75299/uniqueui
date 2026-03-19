@@ -5,6 +5,7 @@ import { registry } from '../registry/config';
 
 const REGISTRY_DIR = path.join(__dirname, '../registry');
 const OUTPUT_FILE = path.join(__dirname, '../registry.json'); // Hosting it at root for easy raw access
+const PUBLIC_OUTPUT_FILE = path.join(__dirname, '../apps/www/public/registry.json'); // Used by apps/www API route
 
 async function buildRegistry() {
     console.log('Building registry...');
@@ -45,6 +46,7 @@ async function buildRegistry() {
     }
 
     await fs.outputJson(OUTPUT_FILE, result, { spaces: 2 });
+    await fs.outputJson(PUBLIC_OUTPUT_FILE, result, { spaces: 2 });
     console.log(`Registry built successfully: ${OUTPUT_FILE}`);
 }
 

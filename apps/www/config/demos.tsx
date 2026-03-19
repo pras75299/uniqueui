@@ -33,6 +33,7 @@ import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { LimelightNav } from "@/components/ui/limelight-nav";
 import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
 import { DataTable } from "@/components/ui/data-table";
+import { ScrollExpansionHero } from "@/components/ui/scroll-expansion-hero";
 import { useState } from "react";
 import {
   Ghost,
@@ -1102,4 +1103,23 @@ export const componentDemos: Record<string, DemoComponent> = {
       </div>
     );
   },
+  "scroll-expansion-hero": ({ theme = "dark" }) => (
+    <ScrollExpansionHero
+      mediaType="video"
+      mediaSrc="https://me7aitdbxq.ufs.sh/f/2wsMIGDMQRdYuZ5R8ahEEZ4aQK56LizRdfBSqeDMsmUIrJN1"
+      posterSrc="https://images.pexels.com/videos/5752729/space-earth-universe-cosmos-5752729.jpeg"
+      bgImageSrc="https://me7aitdbxq.ufs.sh/f/2wsMIGDMQRdYMNjMlBUYHaeYpxduXPVNwf8mnFA61L7rkcoS"
+      title="Immersive Video Experience"
+      date="Cosmic Journey"
+      scrollToExpand="Scroll to Expand Demo"
+      textBlend
+    >
+      <div className={cn("max-w-2xl mx-auto", theme === "dark" ? "text-neutral-200" : "text-neutral-900")}>
+        <h3 className="text-2xl font-bold mb-2">Expanded content</h3>
+        <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
+          Scroll the page to expand the media, then this section fades in.
+        </p>
+      </div>
+    </ScrollExpansionHero>
+  ),
 };
