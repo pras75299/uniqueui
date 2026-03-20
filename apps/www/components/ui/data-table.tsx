@@ -63,7 +63,7 @@ export interface DataTableColumn {
   sortKey?: string;
 }
 
-export interface DataTableProps {
+export interface DataTableOwnProps {
   columns: DataTableColumn[];
   data: Record<string, React.ReactNode>[];
   freezeColumns?: "none" | "left" | "right" | "both";
@@ -101,6 +101,9 @@ export interface DataTableProps {
   theme?: "light" | "dark";
 }
 
+export type DataTableProps = DataTableOwnProps &
+  Omit<React.HTMLAttributes<HTMLDivElement>, keyof DataTableOwnProps | "children">;
+
 const defaultHeaderTextColor = (theme: "light" | "dark") =>
   theme === "dark" ? "text-neutral-200" : "text-neutral-900";
 const defaultBodyTextColor = (theme: "light" | "dark") =>
@@ -133,6 +136,7 @@ export function DataTable({
   onSort,
   className,
   theme = "dark",
+  ...rest
 }: DataTableProps) {
   const pageSizeSelectId = useId();
   const tableRef = useRef<HTMLTableElement>(null);
@@ -282,30 +286,29 @@ export function DataTable({
     effectivePageSize,
   ]);
 
-  const getLeftOffset = useCallback(
-    (colIndex: number) => {
-      if (colWidths.length > colIndex && colIndex > 0) {
-        return colWidths.slice(0, colIndex).reduce((a, b) => a + b, 0);
-      }
-      return colIndex * STICKY_COL_WIDTH_PX;
-    },
-    [colWidths]
-  );
-
-  const getRightOffset = useCallback(
-    (colIndex: number) => {
-      if (colWidths.length > colIndex + 1) {
-        return colWidths.slice(colIndex + 1).reduce((a, b) => a + b, 0);
-      }
-      return (n - 1 - colIndex) * STICKY_COL_WIDTH_PX;
-    },
-    [colWidths, n]
-  );
-
-  const getStickyColWidth = useCallback(
-    (colIndex: number) => colWidths[colIndex] ?? STICKY_COL_WIDTH_PX,
-    [colWidths]
-  );
+  const stickyOffsets = useMemo(() => {
+    const widths: number[] = [];
+    for (let i = 0; i < n; i++) {
+      const w = colWidths[i];
+      widths.push(
+        w !== undefined && Number.isFinite(w) && w > 0
+          ? w
+          : STICKY_COL_WIDTH_PX
+      );
+    }
+    const leftOffsets: number[] = new Array(n);
+    leftOffsets[0] = 0;
+    for (let i = 1; i < n; i++) {
+      leftOffsets[i] = leftOffsets[i - 1] + widths[i - 1];
+    }
+    const rightOffsets: number[] = new Array(n);
+    let acc = 0;
+    for (let i = n - 1; i >= 0; i--) {
+      rightOffsets[i] = acc;
+      acc += widths[i];
+    }
+    return { leftOffsets, rightOffsets, widths };
+  }, [colWidths, n]);
 
   // Keep pagination state consistent if `data` length (or pageSize) changes.
   useEffect(() => {
@@ -336,7 +339,10 @@ export function DataTable({
   );
 
   return (
-    <div className={cn("w-full rounded-lg", className)}>
+    <div
+      {...rest}
+      className={cn("w-full rounded-lg", className)}
+    >
       <div className="w-full overflow-x-auto">
         <table
           ref={tableRef}
@@ -350,10 +356,10 @@ export function DataTable({
                 const isStickyRight =
                   isRightFreeze && colIndex >= n - rightFreezeCount;
                 const stickyLeft = isStickyLeft
-                  ? getLeftOffset(colIndex)
+                  ? stickyOffsets.leftOffsets[colIndex]
                   : undefined;
                 const stickyRight = isStickyRight
-                  ? getRightOffset(colIndex)
+                  ? stickyOffsets.rightOffsets[colIndex]
                   : undefined;
                 const canSort = sortable && col.sortKey != null;
                 const ariaSort =
@@ -362,7 +368,7 @@ export function DataTable({
                       ? "ascending"
                       : "descending"
                     : undefined;
-                const cw = getStickyColWidth(colIndex);
+                const cw = stickyOffsets.widths[colIndex];
 
                 return (
                   <th
@@ -373,8 +379,7 @@ export function DataTable({
                       "px-4 py-3 font-medium whitespace-nowrap",
                       headerText,
                       headerBg,
-                      headerCellBorderClass,
-                      canSort && "cursor-pointer select-none hover:opacity-80"
+                      headerCellBorderClass
                     )}
                     style={{
                       ...(isStickyLeft && {
@@ -399,29 +404,31 @@ export function DataTable({
                             : undefined,
                       }),
                     }}
-                    onClick={() =>
-                      canSort && col.sortKey && handleSort(col.sortKey)
-                    }
                   >
                     {canSort ? (
-                      <span
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            if (col.sortKey) handleSort(col.sortKey);
-                          }
-                        }}
+                      <button
+                        type="button"
                         aria-label={`Sort by ${col.label} ${ariaSort ?? ""}`.trim()}
+                        onClick={() =>
+                          col.sortKey && handleSort(col.sortKey)
+                        }
+                        className={cn(
+                          "inline-flex w-full max-w-full items-center gap-1 rounded-sm bg-transparent p-0 text-left font-inherit",
+                          headerText,
+                          "cursor-pointer select-none hover:opacity-80",
+                          "outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+                          theme === "dark"
+                            ? "focus-visible:ring-neutral-600 focus-visible:ring-offset-neutral-950"
+                            : "focus-visible:ring-neutral-400 focus-visible:ring-offset-white"
+                        )}
                       >
                         {col.label}
                         {sortKey === col.sortKey && (
-                          <span className="ml-1">
+                          <span className="ml-1" aria-hidden>
                             {sortDirection === "asc" ? " ↑" : " ↓"}
                           </span>
                         )}
-                      </span>
+                      </button>
                     ) : (
                       col.label
                     )}
@@ -453,12 +460,12 @@ export function DataTable({
                     const isStickyRight =
                       isRightFreeze && colIndex >= n - rightFreezeCount;
                     const stickyLeft = isStickyLeft
-                      ? getLeftOffset(colIndex)
+                      ? stickyOffsets.leftOffsets[colIndex]
                       : undefined;
                     const stickyRight = isStickyRight
-                      ? getRightOffset(colIndex)
+                      ? stickyOffsets.rightOffsets[colIndex]
                       : undefined;
-                    const cw = getStickyColWidth(colIndex);
+                    const cw = stickyOffsets.widths[colIndex];
 
                     return (
                       <td
