@@ -155,6 +155,7 @@ export function DataTable({
   const effectivePageSize = normalizePageSize(currentPageSize, PAGE_SIZE_FALLBACK);
 
   useEffect(() => {
+    if (!paginated) return;
     if (!pageSizeOptions?.length) return;
     if (!pageSizeOptions.includes(effectivePageSize)) {
       const next = normalizePageSize(pageSizeOptions[0], PAGE_SIZE_FALLBACK);
@@ -162,7 +163,7 @@ export function DataTable({
       setCurrentPage(1);
       onPageChange?.(1, next);
     }
-  }, [pageSizeOptions, effectivePageSize, onPageChange]);
+  }, [paginated, pageSizeOptions, effectivePageSize, onPageChange]);
 
   const headerText = headerTextColor ?? defaultHeaderTextColor(theme);
   const bodyText = bodyTextColor ?? defaultBodyTextColor(theme);
@@ -259,6 +260,8 @@ export function DataTable({
     columns,
     leftFreezeCount,
     rightFreezeCount,
+    safePage,
+    effectivePageSize,
   ]);
 
   useEffect(() => {
@@ -272,7 +275,12 @@ export function DataTable({
       ro.disconnect();
       window.removeEventListener("resize", measureColWidths);
     };
-  }, [needsStickyMeasure, measureColWidths]);
+  }, [
+    needsStickyMeasure,
+    measureColWidths,
+    safePage,
+    effectivePageSize,
+  ]);
 
   const getLeftOffset = useCallback(
     (colIndex: number) => {
@@ -333,7 +341,6 @@ export function DataTable({
         <table
           ref={tableRef}
           className={cn("w-full min-w-max text-sm text-left", borderClass)}
-          role="grid"
         >
           <thead>
             <tr className={cn(headerBg)}>
