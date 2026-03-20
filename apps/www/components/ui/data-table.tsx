@@ -2,9 +2,60 @@
 
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
+/** Fallback width when column widths are not measured yet. */
 const STICKY_COL_WIDTH_PX = 112;
+
+const PAGE_SIZE_FALLBACK = 8;
+
+function normalizePageSize(input: unknown, fallback: number): number {
+  const n = Math.floor(Number(input));
+  if (!Number.isFinite(n) || n < 1) return fallback;
+  return n;
+}
+
+function defaultGetRowKey(
+  row: Record<string, React.ReactNode>,
+  index: number
+): React.Key {
+  const id = row["id"];
+  const key = row["key"];
+  if (typeof id === "string" || typeof id === "number") return String(id);
+  if (typeof key === "string" || typeof key === "number") return String(key);
+  return `__row-${index}`;
+}
+
+/** Compact page list: first, window around current, last; ellipses when gaps exist. */
+function getPaginationItems(
+  currentPage: number,
+  totalPages: number
+): Array<number | "ellipsis"> {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+  const delta = 1;
+  const items: Array<number | "ellipsis"> = [1];
+  if (currentPage - delta > 2) items.push("ellipsis");
+  for (
+    let p = Math.max(2, currentPage - delta);
+    p <= Math.min(totalPages - 1, currentPage + delta);
+    p++
+  ) {
+    items.push(p);
+  }
+  if (currentPage + delta < totalPages - 1) items.push("ellipsis");
+  if (totalPages > 1) items.push(totalPages);
+  return items;
+}
 
 export interface DataTableColumn {
   key: string;
@@ -16,8 +67,15 @@ export interface DataTableProps {
   columns: DataTableColumn[];
   data: Record<string, React.ReactNode>[];
   freezeColumns?: "none" | "left" | "right" | "both";
+  /**
+   * How many columns to freeze on the **left** when `freezeColumns` is `"left"` or `"both"`.
+   * When `freezeColumns` is `"right"` only, this controls how many columns freeze on the **right** (see `freezeRightCount` when using `"both"`).
+   */
   freezeCount?: number;
-  /** When freezeColumns is "both", number of columns to freeze on the right. Default 1. */
+  /**
+   * When `freezeColumns` is `"both"`, how many columns to freeze on the **right**.
+   * Ignored when `freezeColumns` is `"left"` or `"none"`.
+   */
   freezeRightCount?: number;
   paginated?: boolean;
   pageSize?: number;
@@ -28,6 +86,10 @@ export interface DataTableProps {
   paginationPreviousLabel?: React.ReactNode;
   /** Content for the next-page control; defaults to a right chevron icon. */
   paginationNextLabel?: React.ReactNode;
+  /**
+   * Stable key for each row (sorting, pagination). Defaults to `row.id` / `row.key` when string/number, else a generated key.
+   */
+  getRowKey?: (row: Record<string, React.ReactNode>, index: number) => React.Key;
   headerTextColor?: string;
   bodyTextColor?: string;
   headerBackground?: string;
@@ -55,12 +117,13 @@ export function DataTable({
   freezeCount = 1,
   freezeRightCount: freezeRightCountProp,
   paginated = false,
-  pageSize = 8,
+  pageSize = PAGE_SIZE_FALLBACK,
   pageSizeOptions,
   initialPage = 1,
   onPageChange,
   paginationPreviousLabel = <ChevronLeft className="size-4" aria-hidden />,
   paginationNextLabel = <ChevronRight className="size-4" aria-hidden />,
+  getRowKey,
   headerTextColor,
   bodyTextColor,
   headerBackground,
@@ -71,15 +134,63 @@ export function DataTable({
   className,
   theme = "dark",
 }: DataTableProps) {
+  const pageSizeSelectId = useId();
+  const tableRef = useRef<HTMLTableElement>(null);
+  const [colWidths, setColWidths] = useState<number[]>([]);
+
+  const normalizedInitialPageSize = useMemo(
+    () => normalizePageSize(pageSize, PAGE_SIZE_FALLBACK),
+    [pageSize]
+  );
+
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [currentPageSize, setCurrentPageSize] = useState(pageSize);
+  const [currentPageSize, setCurrentPageSize] = useState(normalizedInitialPageSize);
+
+  useEffect(() => {
+    setCurrentPageSize(normalizedInitialPageSize);
+  }, [normalizedInitialPageSize]);
+
+  const effectivePageSize = normalizePageSize(currentPageSize, PAGE_SIZE_FALLBACK);
+
+  useEffect(() => {
+    if (!pageSizeOptions?.length) return;
+    if (!pageSizeOptions.includes(effectivePageSize)) {
+      const next = normalizePageSize(pageSizeOptions[0], PAGE_SIZE_FALLBACK);
+      setCurrentPageSize(next);
+      setCurrentPage(1);
+      onPageChange?.(1, next);
+    }
+  }, [pageSizeOptions, effectivePageSize, onPageChange]);
 
   const headerText = headerTextColor ?? defaultHeaderTextColor(theme);
   const bodyText = bodyTextColor ?? defaultBodyTextColor(theme);
   const headerBg = headerBackground ?? defaultHeaderBackground(theme);
   const bodyBg = bodyBackground ?? defaultBodyBackground(theme);
+
+  const borderColor =
+    theme === "dark" ? "border-neutral-700" : "border-neutral-200";
+  const borderClass = border ? cn("border", borderColor) : "";
+  const cellBorderClass = border
+    ? cn("border-b border-r last:border-r-0", borderColor)
+    : "";
+  const headerCellBorderClass = border
+    ? cn("border-b border-r last:border-r-0", borderColor)
+    : "";
+  const rowSepBorderClass = border ? cn("border-b", borderColor) : "";
+
+  const paginationBtnBase =
+    theme === "dark"
+      ? "border-neutral-700 hover:bg-neutral-800"
+      : "border-neutral-300 hover:bg-neutral-100";
+  const paginationBtnActive =
+    theme === "dark"
+      ? "bg-neutral-100 text-neutral-900 border-neutral-300"
+      : "bg-neutral-900 text-white border-neutral-700";
+  const paginationBtnDisabled = "cursor-not-allowed opacity-40 border-neutral-700";
+  const selectBorder =
+    theme === "dark" ? "border-neutral-700" : "border-neutral-300";
 
   const handleSort = (key: string) => {
     if (!sortable) return;
@@ -105,206 +216,284 @@ export function DataTable({
   const totalItems = sortedData.length;
   const totalPages = Math.max(
     1,
-    Math.ceil(totalItems / (paginated ? currentPageSize : totalItems || 1))
+    Math.ceil(
+      totalItems / (paginated ? effectivePageSize : totalItems || 1)
+    )
   );
 
   const safePage = Math.min(Math.max(currentPage, 1), totalPages);
 
-  // Keep pagination state consistent if `data` length (or pageSize) changes.
-  // Without this, `currentPage` can point past the end and the footer/page buttons
-  // may render in an unexpected state.
-  useEffect(() => {
-    if (!paginated) return;
-
-    setCurrentPage((prev) => {
-      const clamped = Math.min(Math.max(prev, 1), totalPages);
-      if (clamped !== prev) {
-        onPageChange?.(clamped, currentPageSize);
-        return clamped;
-      }
-      return prev;
-    });
-  }, [paginated, totalPages, currentPageSize, onPageChange]);
-
-  const pageStartIndex = paginated ? (safePage - 1) * currentPageSize : 0;
-  const pageEndIndex = paginated
-    ? pageStartIndex + currentPageSize
-    : totalItems;
-
-  const visibleData = paginated
-    ? sortedData.slice(pageStartIndex, pageEndIndex)
-    : sortedData;
-
   const n = columns.length;
   const isLeftFreeze = freezeColumns === "left" || freezeColumns === "both";
   const isRightFreeze = freezeColumns === "right" || freezeColumns === "both";
-  const rightCount = freezeColumns === "both" ? (freezeRightCountProp ?? 1) : freezeCount;
+  const rightCount =
+    freezeColumns === "both" ? (freezeRightCountProp ?? 1) : freezeCount;
   const leftFreezeCount = isLeftFreeze ? Math.min(freezeCount, n) : 0;
   let rightFreezeCount = isRightFreeze ? Math.min(rightCount, n) : 0;
   if (freezeColumns === "both" && leftFreezeCount + rightFreezeCount > n) {
     rightFreezeCount = Math.max(0, n - leftFreezeCount);
   }
 
-  const borderClass = border
-    ? "border border-neutral-200 dark:border-neutral-700"
-    : "";
-  const cellBorderClass = border
-    ? "border-b border-r border-neutral-200 dark:border-neutral-700 last:border-r-0"
-    : "";
-  const headerCellBorderClass = border
-    ? "border-b border-r border-neutral-200 dark:border-neutral-700 last:border-r-0"
-    : "";
+  const needsStickyMeasure = isLeftFreeze || isRightFreeze;
+
+  const measureColWidths = useCallback(() => {
+    if (!needsStickyMeasure) return;
+    const table = tableRef.current;
+    if (!table) return;
+    const firstRow = table.querySelector("thead tr");
+    if (!firstRow) return;
+    const ths = firstRow.querySelectorAll("th");
+    if (ths.length !== n) return;
+    const w: number[] = [];
+    ths.forEach((th) => w.push(th.getBoundingClientRect().width));
+    if (w.length && w.every((x) => Number.isFinite(x) && x > 0)) {
+      setColWidths(w);
+    }
+  }, [needsStickyMeasure, n]);
+
+  useLayoutEffect(() => {
+    measureColWidths();
+  }, [
+    measureColWidths,
+    sortedData,
+    columns,
+    leftFreezeCount,
+    rightFreezeCount,
+  ]);
+
+  useEffect(() => {
+    if (!needsStickyMeasure) return;
+    const table = tableRef.current;
+    if (!table) return;
+    const ro = new ResizeObserver(() => measureColWidths());
+    ro.observe(table);
+    window.addEventListener("resize", measureColWidths);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measureColWidths);
+    };
+  }, [needsStickyMeasure, measureColWidths]);
+
+  const getLeftOffset = useCallback(
+    (colIndex: number) => {
+      if (colWidths.length > colIndex && colIndex > 0) {
+        return colWidths.slice(0, colIndex).reduce((a, b) => a + b, 0);
+      }
+      return colIndex * STICKY_COL_WIDTH_PX;
+    },
+    [colWidths]
+  );
+
+  const getRightOffset = useCallback(
+    (colIndex: number) => {
+      if (colWidths.length > colIndex + 1) {
+        return colWidths.slice(colIndex + 1).reduce((a, b) => a + b, 0);
+      }
+      return (n - 1 - colIndex) * STICKY_COL_WIDTH_PX;
+    },
+    [colWidths, n]
+  );
+
+  const getStickyColWidth = useCallback(
+    (colIndex: number) => colWidths[colIndex] ?? STICKY_COL_WIDTH_PX,
+    [colWidths]
+  );
+
+  // Keep pagination state consistent if `data` length (or pageSize) changes.
+  useEffect(() => {
+    if (!paginated) return;
+
+    setCurrentPage((prev) => {
+      const clamped = Math.min(Math.max(prev, 1), totalPages);
+      if (clamped !== prev) {
+        onPageChange?.(clamped, effectivePageSize);
+        return clamped;
+      }
+      return prev;
+    });
+  }, [paginated, totalPages, effectivePageSize, onPageChange]);
+
+  const pageStartIndex = paginated ? (safePage - 1) * effectivePageSize : 0;
+  const pageEndIndex = paginated
+    ? pageStartIndex + effectivePageSize
+    : totalItems;
+
+  const visibleData = paginated
+    ? sortedData.slice(pageStartIndex, pageEndIndex)
+    : sortedData;
+
+  const pageItems = useMemo(
+    () => getPaginationItems(safePage, totalPages),
+    [safePage, totalPages]
+  );
 
   return (
     <div className={cn("w-full rounded-lg", className)}>
       <div className="w-full overflow-x-auto">
         <table
+          ref={tableRef}
           className={cn("w-full min-w-max text-sm text-left", borderClass)}
           role="grid"
         >
           <thead>
             <tr className={cn(headerBg)}>
               {columns.map((col, colIndex) => {
-              const isStickyLeft =
-                isLeftFreeze && colIndex < leftFreezeCount;
-              const isStickyRight =
-                isRightFreeze && colIndex >= n - rightFreezeCount;
-              const stickyLeft =
-                isStickyLeft ? colIndex * STICKY_COL_WIDTH_PX : undefined;
-              const stickyRight = isStickyRight
-                ? (n - 1 - colIndex) * STICKY_COL_WIDTH_PX
-                : undefined;
-              const canSort = sortable && col.sortKey != null;
-              const ariaSort =
-                canSort && sortKey === col.sortKey
-                  ? sortDirection === "asc"
-                    ? "ascending"
-                    : "descending"
-                  : undefined;
-
-              return (
-                <th
-                  key={col.key}
-                  scope="col"
-                  aria-sort={ariaSort}
-                  className={cn(
-                    "px-4 py-3 font-medium whitespace-nowrap",
-                    headerText,
-                    headerBg,
-                    headerCellBorderClass,
-                    canSort && "cursor-pointer select-none hover:opacity-80"
-                  )}
-                  style={{
-                    ...(isStickyLeft && {
-                      position: "sticky",
-                      left: stickyLeft,
-                      zIndex: 10,
-                      minWidth: STICKY_COL_WIDTH_PX,
-                      boxShadow: stickyLeft
-                        ? "4px 0 6px -2px rgba(0,0,0,0.1)"
-                        : undefined,
-                    }),
-                    ...(isStickyRight && {
-                      position: "sticky",
-                      right: stickyRight,
-                      zIndex: 10,
-                      minWidth: STICKY_COL_WIDTH_PX,
-                      boxShadow:
-                        stickyRight !== undefined
-                          ? "-4px 0 6px -2px rgba(0,0,0,0.1)"
-                          : undefined,
-                    }),
-                  }}
-                  onClick={() => canSort && col.sortKey && handleSort(col.sortKey)}
-                >
-                  {canSort ? (
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          if (col.sortKey) handleSort(col.sortKey);
-                        }
-                      }}
-                      aria-label={`Sort by ${col.label} ${ariaSort ?? ""}`.trim()}
-                    >
-                      {col.label}
-                      {sortKey === col.sortKey && (
-                        <span className="ml-1">
-                          {sortDirection === "asc" ? " ↑" : " ↓"}
-                        </span>
-                      )}
-                    </span>
-                  ) : (
-                    col.label
-                  )}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {visibleData.map((row, rowIndex) => (
-            <tr
-              key={rowIndex}
-              className={cn(
-                bodyBg,
-                rowIndex < visibleData.length - 1 &&
-                  border &&
-                  "border-b border-neutral-200 dark:border-neutral-700"
-              )}
-            >
-              {columns.map((col, colIndex) => {
                 const isStickyLeft =
                   isLeftFreeze && colIndex < leftFreezeCount;
                 const isStickyRight =
                   isRightFreeze && colIndex >= n - rightFreezeCount;
                 const stickyLeft = isStickyLeft
-                  ? colIndex * STICKY_COL_WIDTH_PX
+                  ? getLeftOffset(colIndex)
                   : undefined;
                 const stickyRight = isStickyRight
-                  ? (n - 1 - colIndex) * STICKY_COL_WIDTH_PX
+                  ? getRightOffset(colIndex)
                   : undefined;
+                const canSort = sortable && col.sortKey != null;
+                const ariaSort =
+                  canSort && sortKey === col.sortKey
+                    ? sortDirection === "asc"
+                      ? "ascending"
+                      : "descending"
+                    : undefined;
+                const cw = getStickyColWidth(colIndex);
 
                 return (
-                  <td
+                  <th
                     key={col.key}
+                    scope="col"
+                    aria-sort={ariaSort}
                     className={cn(
-                      "px-4 py-3",
-                      bodyText,
-                      bodyBg,
-                      cellBorderClass
+                      "px-4 py-3 font-medium whitespace-nowrap",
+                      headerText,
+                      headerBg,
+                      headerCellBorderClass,
+                      canSort && "cursor-pointer select-none hover:opacity-80"
                     )}
                     style={{
                       ...(isStickyLeft && {
                         position: "sticky",
                         left: stickyLeft,
-                        zIndex: 5,
-                        minWidth: STICKY_COL_WIDTH_PX,
+                        zIndex: 10,
+                        width: cw,
+                        minWidth: cw,
                         boxShadow: stickyLeft
-                          ? "4px 0 6px -2px rgba(0,0,0,0.08)"
+                          ? "4px 0 6px -2px rgba(0,0,0,0.1)"
                           : undefined,
                       }),
                       ...(isStickyRight && {
                         position: "sticky",
                         right: stickyRight,
-                        zIndex: 5,
-                        minWidth: STICKY_COL_WIDTH_PX,
+                        zIndex: 10,
+                        width: cw,
+                        minWidth: cw,
                         boxShadow:
                           stickyRight !== undefined
-                            ? "-4px 0 6px -2px rgba(0,0,0,0.08)"
+                            ? "-4px 0 6px -2px rgba(0,0,0,0.1)"
                             : undefined,
                       }),
                     }}
+                    onClick={() =>
+                      canSort && col.sortKey && handleSort(col.sortKey)
+                    }
                   >
-                    {row[col.key]}
-                  </td>
+                    {canSort ? (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            if (col.sortKey) handleSort(col.sortKey);
+                          }
+                        }}
+                        aria-label={`Sort by ${col.label} ${ariaSort ?? ""}`.trim()}
+                      >
+                        {col.label}
+                        {sortKey === col.sortKey && (
+                          <span className="ml-1">
+                            {sortDirection === "asc" ? " ↑" : " ↓"}
+                          </span>
+                        )}
+                      </span>
+                    ) : (
+                      col.label
+                    )}
+                  </th>
                 );
               })}
             </tr>
-          ))}
-        </tbody>
+          </thead>
+          <tbody>
+            {visibleData.map((row, rowIndex) => {
+              const globalRowIndex = paginated
+                ? pageStartIndex + rowIndex
+                : rowIndex;
+              const rowKey =
+                getRowKey?.(row, globalRowIndex) ??
+                defaultGetRowKey(row, globalRowIndex);
+
+              return (
+                <tr
+                  key={rowKey}
+                  className={cn(
+                    bodyBg,
+                    rowIndex < visibleData.length - 1 && border && rowSepBorderClass
+                  )}
+                >
+                  {columns.map((col, colIndex) => {
+                    const isStickyLeft =
+                      isLeftFreeze && colIndex < leftFreezeCount;
+                    const isStickyRight =
+                      isRightFreeze && colIndex >= n - rightFreezeCount;
+                    const stickyLeft = isStickyLeft
+                      ? getLeftOffset(colIndex)
+                      : undefined;
+                    const stickyRight = isStickyRight
+                      ? getRightOffset(colIndex)
+                      : undefined;
+                    const cw = getStickyColWidth(colIndex);
+
+                    return (
+                      <td
+                        key={col.key}
+                        className={cn(
+                          "px-4 py-3",
+                          bodyText,
+                          bodyBg,
+                          cellBorderClass
+                        )}
+                        style={{
+                          ...(isStickyLeft && {
+                            position: "sticky",
+                            left: stickyLeft,
+                            zIndex: 5,
+                            width: cw,
+                            minWidth: cw,
+                            boxShadow: stickyLeft
+                              ? "4px 0 6px -2px rgba(0,0,0,0.08)"
+                              : undefined,
+                          }),
+                          ...(isStickyRight && {
+                            position: "sticky",
+                            right: stickyRight,
+                            zIndex: 5,
+                            width: cw,
+                            minWidth: cw,
+                            boxShadow:
+                              stickyRight !== undefined
+                                ? "-4px 0 6px -2px rgba(0,0,0,0.08)"
+                                : undefined,
+                          }),
+                        }}
+                      >
+                        {row[col.key]}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
       </div>
 
@@ -325,15 +514,25 @@ export function DataTable({
           <div className="flex items-center gap-3">
             {pageSizeOptions && pageSizeOptions.length > 0 && (
               <div className="flex items-center gap-1">
-                <span className="hidden sm:inline">Rows per page</span>
+                <label
+                  htmlFor={pageSizeSelectId}
+                  className="hidden sm:inline"
+                >
+                  Rows per page
+                </label>
                 <select
+                  id={pageSizeSelectId}
                   className={cn(
-                    "h-8 rounded-md border border-neutral-300 bg-transparent px-2 text-xs sm:text-sm outline-none",
-                    "dark:border-neutral-700"
+                    "h-8 rounded-md border bg-transparent px-2 text-xs sm:text-sm outline-none",
+                    selectBorder
                   )}
-                  value={currentPageSize}
+                  aria-label="Rows per page"
+                  value={effectivePageSize}
                   onChange={(e) => {
-                    const nextSize = Number(e.target.value) || currentPageSize;
+                    const nextSize = normalizePageSize(
+                      e.target.value,
+                      effectivePageSize
+                    );
                     setCurrentPageSize(nextSize);
                     const nextPage = 1;
                     setCurrentPage(nextPage);
@@ -355,38 +554,42 @@ export function DataTable({
                 aria-label="Previous page"
                 className={cn(
                   "inline-flex h-8 min-w-8 shrink-0 items-center justify-center px-2 rounded-md border text-xs sm:text-sm leading-none",
-                  safePage === 1
-                    ? "cursor-not-allowed opacity-40 border-neutral-700"
-                    : "hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-300 dark:border-neutral-700"
+                  safePage === 1 ? paginationBtnDisabled : paginationBtnBase
                 )}
                 onClick={() => {
                   if (safePage <= 1) return;
                   const nextPage = safePage - 1;
                   setCurrentPage(nextPage);
-                  onPageChange?.(nextPage, currentPageSize);
+                  onPageChange?.(nextPage, effectivePageSize);
                 }}
                 disabled={safePage === 1}
               >
                 {paginationPreviousLabel}
               </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
+              {pageItems.map((item, itemIdx) =>
+                item === "ellipsis" ? (
+                  <span
+                    key={`ellipsis-${itemIdx}`}
+                    className="inline-flex h-8 min-w-8 shrink-0 items-center justify-center px-1 text-xs sm:text-sm tabular-nums text-neutral-500"
+                    aria-hidden
+                  >
+                    …
+                  </span>
+                ) : (
                   <button
-                    key={page}
+                    key={item}
                     type="button"
                     className={cn(
                       "inline-flex h-8 min-w-8 shrink-0 items-center justify-center px-2 rounded-md border text-xs sm:text-sm leading-none tabular-nums",
-                      page === safePage
-                        ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 border-neutral-700 dark:border-neutral-300"
-                        : "hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-300 dark:border-neutral-700"
+                      item === safePage ? paginationBtnActive : paginationBtnBase
                     )}
-                    aria-current={page === safePage ? "page" : undefined}
+                    aria-current={item === safePage ? "page" : undefined}
                     onClick={() => {
-                      setCurrentPage(page);
-                      onPageChange?.(page, currentPageSize);
+                      setCurrentPage(item);
+                      onPageChange?.(item, effectivePageSize);
                     }}
                   >
-                    {page}
+                    {item}
                   </button>
                 )
               )}
@@ -396,14 +599,14 @@ export function DataTable({
                 className={cn(
                   "inline-flex h-8 min-w-8 shrink-0 items-center justify-center px-2 rounded-md border text-xs sm:text-sm leading-none",
                   safePage === totalPages
-                    ? "cursor-not-allowed opacity-40 border-neutral-700"
-                    : "hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-300 dark:border-neutral-700"
+                    ? paginationBtnDisabled
+                    : paginationBtnBase
                 )}
                 onClick={() => {
                   if (safePage >= totalPages) return;
                   const nextPage = safePage + 1;
                   setCurrentPage(nextPage);
-                  onPageChange?.(nextPage, currentPageSize);
+                  onPageChange?.(nextPage, effectivePageSize);
                 }}
                 disabled={safePage === totalPages}
               >
