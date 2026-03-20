@@ -2397,6 +2397,8 @@ export default function Example() {
       { name: "pageSizeOptions", type: "number[]", description: "Optional list of page sizes to show in a selector." },
       { name: "initialPage", type: "number", default: "1", description: "Initial page index (1-based) when paginated is true." },
       { name: "onPageChange", type: "(page: number, pageSize: number) => void", description: "Called when the current page or page size changes." },
+      { name: "paginationPreviousLabel", type: "React.ReactNode", description: "Previous-page control content; defaults to a left chevron icon." },
+      { name: "paginationNextLabel", type: "React.ReactNode", description: "Next-page control content; defaults to a right chevron icon." },
       { name: "headerTextColor", type: "string", description: "Tailwind class for header text, e.g. text-neutral-900." },
       { name: "bodyTextColor", type: "string", description: "Tailwind class for body cell text." },
       { name: "headerBackground", type: "string", description: "Tailwind class for header background, e.g. bg-neutral-100." },

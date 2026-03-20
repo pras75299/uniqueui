@@ -303,7 +303,7 @@ export const registry: Registry = [
     },
     {
         name: "data-table",
-        dependencies: ["clsx", "tailwind-merge"],
+        dependencies: ["lucide-react", "clsx", "tailwind-merge"],
         files: [
             { path: "data-table.tsx", type: "registry:ui" },
             cnUtilFile,

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 
 const STICKY_COL_WIDTH_PX = 112;
@@ -23,6 +24,10 @@ export interface DataTableProps {
   pageSizeOptions?: number[];
   initialPage?: number;
   onPageChange?: (page: number, pageSize: number) => void;
+  /** Content for the previous-page control; defaults to a left chevron icon. */
+  paginationPreviousLabel?: React.ReactNode;
+  /** Content for the next-page control; defaults to a right chevron icon. */
+  paginationNextLabel?: React.ReactNode;
   headerTextColor?: string;
   bodyTextColor?: string;
   headerBackground?: string;
@@ -54,6 +59,8 @@ export function DataTable({
   pageSizeOptions,
   initialPage = 1,
   onPageChange,
+  paginationPreviousLabel = <ChevronLeft className="size-4" aria-hidden />,
+  paginationNextLabel = <ChevronRight className="size-4" aria-hidden />,
   headerTextColor,
   bodyTextColor,
   headerBackground,
@@ -345,8 +352,9 @@ export function DataTable({
             <div className="flex items-center gap-1">
               <button
                 type="button"
+                aria-label="Previous page"
                 className={cn(
-                  "px-2 py-1 rounded-md border text-xs sm:text-sm",
+                  "inline-flex h-8 min-w-8 shrink-0 items-center justify-center px-2 rounded-md border text-xs sm:text-sm leading-none",
                   safePage === 1
                     ? "cursor-not-allowed opacity-40 border-neutral-700"
                     : "hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-300 dark:border-neutral-700"
@@ -359,7 +367,7 @@ export function DataTable({
                 }}
                 disabled={safePage === 1}
               >
-                Prev
+                {paginationPreviousLabel}
               </button>
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                 (page) => (
@@ -367,7 +375,7 @@ export function DataTable({
                     key={page}
                     type="button"
                     className={cn(
-                      "px-2 py-1 rounded-md border text-xs sm:text-sm",
+                      "inline-flex h-8 min-w-8 shrink-0 items-center justify-center px-2 rounded-md border text-xs sm:text-sm leading-none tabular-nums",
                       page === safePage
                         ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 border-neutral-700 dark:border-neutral-300"
                         : "hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-300 dark:border-neutral-700"
@@ -384,8 +392,9 @@ export function DataTable({
               )}
               <button
                 type="button"
+                aria-label="Next page"
                 className={cn(
-                  "px-2 py-1 rounded-md border text-xs sm:text-sm",
+                  "inline-flex h-8 min-w-8 shrink-0 items-center justify-center px-2 rounded-md border text-xs sm:text-sm leading-none",
                   safePage === totalPages
                     ? "cursor-not-allowed opacity-40 border-neutral-700"
                     : "hover:bg-neutral-100 dark:hover:bg-neutral-800 border-neutral-300 dark:border-neutral-700"
@@ -398,7 +407,7 @@ export function DataTable({
                 }}
                 disabled={safePage === totalPages}
               >
-                Next
+                {paginationNextLabel}
               </button>
             </div>
           </div>
