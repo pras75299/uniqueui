@@ -8,6 +8,7 @@ import { useTheme } from "@/contexts/theme-context";
 import { cn } from "@/lib/utils";
 
 interface BentoVariantSwitcherProps {
+  slug?: string;
   variants: ComponentVariant[];
   /** Pre-highlighted HTML per variant id, produced by shiki on the server */
   highlightedCodes: Record<string, string>;
@@ -16,6 +17,7 @@ interface BentoVariantSwitcherProps {
 }
 
 export default function BentoVariantSwitcher({
+  slug,
   variants,
   highlightedCodes,
   rawCodes,
@@ -29,12 +31,17 @@ export default function BentoVariantSwitcher({
   return (
     <div className="space-y-6">
       {/* Tab bar — same pill-style as AnimatedTabs */}
-      <div className={cn("relative flex w-fit gap-1 rounded-xl border p-1", isDark ? "border-neutral-800 bg-neutral-900/60" : "border-neutral-200 bg-neutral-100")}>
+      <div
+        className={cn(
+          "relative flex w-full gap-1 rounded-xl border p-1 overflow-x-auto",
+          isDark ? "border-neutral-800 bg-neutral-900/60" : "border-neutral-200 bg-neutral-100",
+        )}
+      >
         {variants.map((v) => (
           <button
             key={v.id}
             onClick={() => setActiveId(v.id)}
-            className="relative z-10 px-4 py-1.5 text-sm font-medium transition-colors duration-200 rounded-lg"
+            className="relative z-10 px-4 py-1.5 text-sm font-medium transition-colors duration-200 rounded-lg whitespace-nowrap shrink-0"
             style={{
               color: activeId === v.id ? (isDark ? "#fff" : "#171717") : isDark ? "#a3a3a3" : "#737373",
             }}
@@ -46,7 +53,7 @@ export default function BentoVariantSwitcher({
                 transition={{ type: "spring", stiffness: 380, damping: 34 }}
               />
             )}
-            <span className="relative">{v.label}</span>
+            <span className="relative whitespace-nowrap">{v.label}</span>
           </button>
         ))}
       </div>
@@ -54,7 +61,17 @@ export default function BentoVariantSwitcher({
       {/* Preview panel */}
       <section className="space-y-2">
         <h2 className={cn("text-xl font-semibold", isDark ? "text-white" : "text-neutral-900")}>Preview</h2>
-        <div className={cn("relative rounded-xl border min-h-[320px] overflow-hidden", isDark ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-neutral-50")}>
+        <div
+          className={cn(
+            "relative rounded-xl border min-h-[320px]",
+            // DataTable already manages its own horizontal scrolling internally.
+            // Using `overflow-x-auto` here can clip the pagination footer vertically.
+            slug === "data-table" ? "overflow-y-visible" : "overflow-hidden",
+            isDark
+              ? "border-neutral-800 bg-neutral-950"
+              : "border-neutral-200 bg-neutral-50",
+          )}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={activeId + "-preview"}
@@ -80,7 +97,7 @@ export default function BentoVariantSwitcher({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.18 }}
-              className="p-4 overflow-x-auto text-sm font-mono [&>pre]:!bg-transparent [&>pre]:!p-0"
+              className="p-4 overflow-x-auto text-sm font-mono [&>pre]:bg-transparent! [&>pre]:p-0!"
               style={{ backgroundColor: "#0a0a0a" }}
               dangerouslySetInnerHTML={{ __html: highlightedCodes[activeId] ?? "" }}
             />

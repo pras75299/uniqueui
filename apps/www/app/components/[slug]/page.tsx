@@ -69,6 +69,7 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
 
         {/* Synced variant switcher — handles both Preview and Usage in one block */}
         <BentoVariantSwitcher
+          slug={component.slug}
           variants={component.variants}
           highlightedCodes={highlightedCodes}
           rawCodes={rawCodes}
