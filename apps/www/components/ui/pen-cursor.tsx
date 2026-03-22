@@ -226,6 +226,8 @@ export function PenCursor({
     let lastDrawFrame = performance.now();
     let started = false;
     let raf = 0;
+    let attachRetryRafId = 0;
+    let syncRafId = 0;
     let cancelled = false;
 
     /** CSS pixel dimensions (logical drawing space after DPR scale). */
@@ -307,10 +309,12 @@ export function PenCursor({
 
     // ── Draw ──
     const draw = () => {
+      if (cancelled) return;
+
       ctx.clearRect(0, 0, cssW, cssH);
 
       if (!started) {
-        raf = requestAnimationFrame(draw);
+        if (!cancelled) raf = requestAnimationFrame(draw);
         return;
       }
 
@@ -405,7 +409,7 @@ export function PenCursor({
       }
 
       ctx.restore();
-      raf = requestAnimationFrame(draw);
+      if (!cancelled) raf = requestAnimationFrame(draw);
     };
 
     // ── Attach with retry for containerRef ──
@@ -414,13 +418,15 @@ export function PenCursor({
     let rafRetries = 0;
 
     const attach = () => {
+      if (cancelled) return;
+
       const el = containerRef?.current ?? null;
 
       if (containerRef && !el) {
         // ref provided but not yet populated → retry
         rafRetries++;
         if (!cancelled && rafRetries < 120) {
-          requestAnimationFrame(attach);
+          attachRetryRafId = requestAnimationFrame(attach);
         } else if (!cancelled) {
           // Fallback to window coords + full-viewport canvas (matches viewport sizing)
           useViewportCoordsRef.current = true;
@@ -434,7 +440,7 @@ export function PenCursor({
             window.removeEventListener("resize", windowResizeHandler);
           };
           raf = requestAnimationFrame(draw);
-          requestAnimationFrame(() => {
+          syncRafId = requestAnimationFrame(() => {
             if (!cancelled) syncSize(null);
           });
         }
@@ -468,7 +474,10 @@ export function PenCursor({
 
     return () => {
       cancelled = true;
+      rafRetries = 0;
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(attachRetryRafId);
+      cancelAnimationFrame(syncRafId);
       const target = cleanupTargetRef.current;
       cleanupTargetRef.current = null;
       if (target) {
