@@ -276,7 +276,7 @@ export const registry: Registry = [
     },
     {
         name: "pen-cursor",
-        dependencies: ["motion", "clsx", "tailwind-merge"],
+        dependencies: ["clsx", "tailwind-merge"],
         files: [
             { path: "pen-cursor.tsx", type: "registry:ui" },
             cnUtilFile,

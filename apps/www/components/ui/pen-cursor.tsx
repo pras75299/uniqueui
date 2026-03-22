@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import React, {
   useEffect,
   useRef,
+  useState,
   type RefObject,
 } from "react";
 
@@ -129,8 +130,20 @@ function lerpRgbCss(head: string, tail: string, t: number): string {
   return `${r}, ${g}, ${b}`;
 }
 
+/** Upper bound prevents pathological allocations from huge/Infinity inputs. */
+const MAX_TRAIL_POINTS = 500;
+
+/** Safe, finite trail length for `makePoints` and effect setup. */
+function clampTrailPointCount(n: unknown): number {
+  const v = Number(n);
+  if (!Number.isFinite(v)) return 60;
+  const i = Math.floor(v);
+  return Math.max(1, Math.min(MAX_TRAIL_POINTS, i));
+}
+
 function makePoints(n: number): TrailPoint[] {
-  return Array.from({ length: n }, () => ({ x: 0, y: 0, vx: 0, vy: 0 }));
+  const count = clampTrailPointCount(n);
+  return Array.from({ length: count }, () => ({ x: 0, y: 0, vx: 0, vy: 0 }));
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -167,8 +180,11 @@ export function PenCursor({
 }: PenCursorProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cleanupTargetRef = useRef<EventTarget | null>(null);
+  /** When true, pointer coords are viewport (clientX/Y); when false, relative to container. */
+  const useViewportCoordsRef = useRef(false);
+  const [viewportFallbackActive, setViewportFallbackActive] = useState(false);
 
-  const pointCount = Math.max(1, Math.floor(trailLength ?? 0));
+  const pointCount = clampTrailPointCount(trailLength);
 
   // -------------------------------------------------------------------
   // Hide / restore native cursor
@@ -190,6 +206,9 @@ export function PenCursor({
   // Main render loop
   // -------------------------------------------------------------------
   useEffect(() => {
+    setViewportFallbackActive(false);
+    useViewportCoordsRef.current = false;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -206,17 +225,37 @@ export function PenCursor({
     let raf = 0;
     let cancelled = false;
 
+    /** CSS pixel dimensions (logical drawing space after DPR scale). */
+    let cssW = 1;
+    let cssH = 1;
+
     // ── Resize ──
     let roCleanup: (() => void) | undefined;
 
-    const syncSize = (el: HTMLElement | null) => {
-      if (el) {
-        canvas.width = el.clientWidth || 1;
-        canvas.height = el.clientHeight || 1;
+    const applyHiDpiCanvas = () => {
+      const dpr = window.devicePixelRatio || 1;
+      if (typeof ctx.resetTransform === "function") {
+        ctx.resetTransform();
       } else {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
       }
+      ctx.scale(dpr, dpr);
+    };
+
+    const syncSize = (el: HTMLElement | null) => {
+      const dpr = window.devicePixelRatio || 1;
+      if (el) {
+        cssW = Math.max(1, el.clientWidth || 1);
+        cssH = Math.max(1, el.clientHeight || 1);
+      } else {
+        cssW = Math.max(1, window.innerWidth || 1);
+        cssH = Math.max(1, window.innerHeight || 1);
+      }
+      canvas.width = Math.max(1, Math.floor(cssW * dpr));
+      canvas.height = Math.max(1, Math.floor(cssH * dpr));
+      canvas.style.width = `${cssW}px`;
+      canvas.style.height = `${cssH}px`;
+      applyHiDpiCanvas();
     };
 
     // ── Mouse ──
@@ -227,7 +266,10 @@ export function PenCursor({
       const el = containerRef?.current ?? null;
       let nx: number;
       let ny: number;
-      if (el) {
+      if (useViewportCoordsRef.current) {
+        nx = e.clientX;
+        ny = e.clientY;
+      } else if (el) {
         const rect = el.getBoundingClientRect();
         nx = e.clientX - rect.left;
         ny = e.clientY - rect.top;
@@ -262,7 +304,7 @@ export function PenCursor({
 
     // ── Draw ──
     const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, cssW, cssH);
 
       if (!started) {
         raf = requestAnimationFrame(draw);
@@ -377,7 +419,9 @@ export function PenCursor({
         if (!cancelled && rafRetries < 120) {
           requestAnimationFrame(attach);
         } else if (!cancelled) {
-          // Fallback to window — register removable listeners and track cleanup target
+          // Fallback to window coords + full-viewport canvas (matches viewport sizing)
+          useViewportCoordsRef.current = true;
+          setViewportFallbackActive(true);
           const windowResizeHandler = () => syncSize(null);
           window.addEventListener("mousemove", onMove);
           window.addEventListener("resize", windowResizeHandler);
@@ -387,6 +431,9 @@ export function PenCursor({
             window.removeEventListener("resize", windowResizeHandler);
           };
           raf = requestAnimationFrame(draw);
+          requestAnimationFrame(() => {
+            if (!cancelled) syncSize(null);
+          });
         }
         return;
       }
@@ -396,11 +443,13 @@ export function PenCursor({
       target.addEventListener("mousemove", onMove as EventListener);
 
       if (el) {
+        useViewportCoordsRef.current = false;
         const ro = new ResizeObserver(() => syncSize(el));
         ro.observe(el);
         syncSize(el);
         roCleanup = () => ro.disconnect();
       } else {
+        useViewportCoordsRef.current = true;
         syncSize(null);
         const onResize = () => syncSize(null);
         window.addEventListener("resize", onResize);
@@ -453,7 +502,7 @@ export function PenCursor({
       aria-hidden={canvasProps["aria-hidden"] ?? true}
       className={cn(
         "pointer-events-none z-50",
-        containerRef
+        containerRef && !viewportFallbackActive
           ? "absolute inset-0 h-full w-full"
           : "fixed inset-0 h-screen w-screen",
         className,
