@@ -120,13 +120,13 @@ function parseRgbComponents(s: string): [number, number, number] {
   return [0, 0, 0];
 }
 
-/** Linear blend of two "r, g, b" CSS rgb() component strings for use inside `rgba(..., a)`. */
-function lerpRgbCss(head: string, tail: string, t: number): string {
-  const [r0, g0, b0] = parseRgbComponents(head);
-  const [r1, g1, b1] = parseRgbComponents(tail);
-  const r = lerp(r0, r1, t);
-  const g = lerp(g0, g1, t);
-  const b = lerp(b0, b1, t);
+type RgbTuple = [number, number, number];
+
+/** Linear blend of pre-parsed head/tail RGB tuples; returns "r, g, b" for `rgba(..., a)`. */
+function lerpRgbCss(head: RgbTuple, tail: RgbTuple, t: number): string {
+  const r = lerp(head[0], tail[0], t);
+  const g = lerp(head[1], tail[1], t);
+  const b = lerp(head[2], tail[2], t);
   return `${r}, ${g}, ${b}`;
 }
 
@@ -214,6 +214,9 @@ export function PenCursor({
 
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
+
+    const rgbHead = parseRgbComponents(colorHead);
+    const rgbTail = parseRgbComponents(colorTail);
 
     // ── State ──
     const points = makePoints(pointCount);
@@ -379,8 +382,8 @@ export function PenCursor({
         // Per-segment alpha + color interpolated along gradient head → tail
         const alphaA = lerp(alphaHead, alphaTail, tNear);
         const alphaB = lerp(alphaHead, alphaTail, tFar);
-        const colorA = lerpRgbCss(colorHead, colorTail, tNear);
-        const colorB = lerpRgbCss(colorHead, colorTail, tFar);
+        const colorA = lerpRgbCss(rgbHead, rgbTail, tNear);
+        const colorB = lerpRgbCss(rgbHead, rgbTail, tFar);
 
         let grad: CanvasGradient;
         try {
