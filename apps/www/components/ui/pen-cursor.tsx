@@ -16,7 +16,7 @@ interface TrailPoint {
   vy: number;
 }
 
-export interface PenCursorProps {
+export interface PenCursorProps extends React.ComponentPropsWithoutRef<"canvas"> {
   /**
    * Number of chain-linked trail points.
    * More points = longer, more dramatic ribbon. Default 60.
@@ -47,6 +47,16 @@ export interface PenCursorProps {
    */
   inertiaStrength?: number;
   /**
+   * Horizontal inertia gain on chain segments (relative to vertical). Default 2.
+   * Slightly lower than vertical so the ribbon resists lateral wobble while staying fluid vertically.
+   */
+  xInertiaMultiplier?: number;
+  /**
+   * Vertical inertia gain on chain segments. Default 4.
+   * Higher than horizontal so the tail follows with a softer, more vertical “drape.”
+   */
+  yInertiaMultiplier?: number;
+  /**
    * How much mouse speed widens the ribbon (0–1). Default 0.9.
    */
   speedInfluence?: number;
@@ -58,6 +68,11 @@ export interface PenCursorProps {
    * Low-pass smoothing for the measured speed (0–1, lower = smoother). Default 0.2.
    */
   speedSmoothing?: number;
+  /**
+   * Per-second decay factor for normalized speed when the pointer is idle (applied each frame).
+   * Higher = ribbon narrows to min width faster after a flick. Default 10.
+   */
+  speedDecayPerSecond?: number;
   /**
    * RGB string for the ribbon head color. Default sage green "159, 175, 155".
    */
@@ -96,6 +111,24 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
+function parseRgbComponents(s: string): [number, number, number] {
+  const parts = s.split(",").map((x) => parseFloat(x.trim()));
+  if (parts.length >= 3 && parts.every((n) => Number.isFinite(n))) {
+    return [parts[0], parts[1], parts[2]];
+  }
+  return [0, 0, 0];
+}
+
+/** Linear blend of two "r, g, b" CSS rgb() component strings for use inside `rgba(..., a)`. */
+function lerpRgbCss(head: string, tail: string, t: number): string {
+  const [r0, g0, b0] = parseRgbComponents(head);
+  const [r1, g1, b1] = parseRgbComponents(tail);
+  const r = lerp(r0, r1, t);
+  const g = lerp(g0, g1, t);
+  const b = lerp(b0, b1, t);
+  return `${r}, ${g}, ${b}`;
+}
+
 function makePoints(n: number): TrailPoint[] {
   return Array.from({ length: n }, () => ({ x: 0, y: 0, vx: 0, vy: 0 }));
 }
@@ -116,9 +149,12 @@ export function PenCursor({
   inertiaRetention = 0.8,
   inertiaInfluence = 0.3,
   inertiaStrength = 0.025,
+  xInertiaMultiplier = 2,
+  yInertiaMultiplier = 4,
   speedInfluence = 0.9,
   speedMax = 600,
   speedSmoothing = 0.2,
+  speedDecayPerSecond = 10,
   colorHead = "159, 175, 155",
   colorTail = "198, 167, 106",
   alphaHead = 0.9,
@@ -127,20 +163,28 @@ export function PenCursor({
   hideSystemCursor = false,
   containerRef,
   className,
+  ...canvasProps
 }: PenCursorProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cleanupTargetRef = useRef<EventTarget | null>(null);
+
+  const pointCount = Math.max(1, Math.floor(trailLength ?? 0));
 
   // -------------------------------------------------------------------
   // Hide / restore native cursor
   // -------------------------------------------------------------------
   useEffect(() => {
-    if (!hideSystemCursor || typeof document === "undefined") return;
-    const prev = document.documentElement.style.cursor;
-    document.documentElement.style.cursor = "none";
+    if (!hideSystemCursor) return;
+    const el =
+      containerRef?.current ??
+      (typeof document !== "undefined" ? document.documentElement : null);
+    if (!el) return;
+    const prev = el.style.cursor;
+    el.style.cursor = "none";
     return () => {
-      document.documentElement.style.cursor = prev;
+      el.style.cursor = prev;
     };
-  }, [hideSystemCursor]);
+  }, [hideSystemCursor, containerRef]);
 
   // -------------------------------------------------------------------
   // Main render loop
@@ -153,10 +197,11 @@ export function PenCursor({
     if (!ctx) return;
 
     // ── State ──
-    const points = makePoints(trailLength);
+    const points = makePoints(pointCount);
     const mouse = { x: -9999, y: -9999 };
     let speed = 0;
     let lastTime = performance.now();
+    let lastDrawFrame = performance.now();
     let started = false;
     let raf = 0;
     let cancelled = false;
@@ -224,6 +269,11 @@ export function PenCursor({
         return;
       }
 
+      const nowFrame = performance.now();
+      const dtFrame = Math.max(0, (nowFrame - lastDrawFrame) / 1000);
+      lastDrawFrame = nowFrame;
+      speed = Math.max(0, speed * (1 - speedDecayPerSecond * dtFrame));
+
       const speedFactor = 1 + speedInfluence * speed;
 
       // Update head point toward mouse
@@ -241,8 +291,12 @@ export function PenCursor({
         const curr = points[i];
         const sdx = (prev.x - curr.x) * damping;
         const sdy = (prev.y - curr.y) * damping;
-        curr.vx = curr.vx * inertiaRetention + sdx * inertiaInfluence * 2;
-        curr.vy = curr.vy * inertiaRetention + sdy * inertiaInfluence * 4;
+        curr.vx =
+          curr.vx * inertiaRetention +
+          sdx * inertiaInfluence * xInertiaMultiplier;
+        curr.vy =
+          curr.vy * inertiaRetention +
+          sdy * inertiaInfluence * yInertiaMultiplier;
         curr.x += sdx + curr.vx * inertiaStrength;
         curr.y += sdy + curr.vy * inertiaStrength;
       }
@@ -253,7 +307,7 @@ export function PenCursor({
       const n = points.length;
 
       for (let i = 0; i < n - 1; i++) {
-        const tNear = i / (n - 1);       // 0 at head, 1 at tail
+        const tNear = i / (n - 1); // 0 at head, 1 at tail
         const tFar = (i + 1) / (n - 1);
 
         const a = points[i];
@@ -283,9 +337,8 @@ export function PenCursor({
         // Per-segment alpha + color interpolated along gradient head → tail
         const alphaA = lerp(alphaHead, alphaTail, tNear);
         const alphaB = lerp(alphaHead, alphaTail, tFar);
-        // Color: interpolate between colorHead and colorTail by t
-        const colorA = tNear <= 0.5 ? colorHead : colorTail;
-        const colorB = tFar <= 0.5 ? colorHead : colorTail;
+        const colorA = lerpRgbCss(colorHead, colorTail, tNear);
+        const colorB = lerpRgbCss(colorHead, colorTail, tFar);
 
         let grad: CanvasGradient;
         try {
@@ -324,10 +377,15 @@ export function PenCursor({
         if (!cancelled && rafRetries < 120) {
           requestAnimationFrame(attach);
         } else if (!cancelled) {
-          // Fallback to window
+          // Fallback to window — register removable listeners and track cleanup target
+          const windowResizeHandler = () => syncSize(null);
           window.addEventListener("mousemove", onMove);
+          window.addEventListener("resize", windowResizeHandler);
           syncSize(null);
-          window.addEventListener("resize", () => syncSize(null));
+          cleanupTargetRef.current = window;
+          roCleanup = () => {
+            window.removeEventListener("resize", windowResizeHandler);
+          };
           raf = requestAnimationFrame(draw);
         }
         return;
@@ -351,8 +409,7 @@ export function PenCursor({
 
       raf = requestAnimationFrame(draw);
 
-      // Store target for cleanup
-      (canvas as any).__cleanupTarget = target;
+      cleanupTargetRef.current = target;
     };
 
     attach();
@@ -360,7 +417,8 @@ export function PenCursor({
     return () => {
       cancelled = true;
       cancelAnimationFrame(raf);
-      const target = (canvas as any).__cleanupTarget as EventTarget | undefined;
+      const target = cleanupTargetRef.current;
+      cleanupTargetRef.current = null;
       if (target) {
         target.removeEventListener("mousemove", onMove as EventListener);
       }
@@ -368,16 +426,19 @@ export function PenCursor({
     };
   }, [
     containerRef,
-    trailLength,
+    pointCount,
     maxWidth,
     minWidth,
     damping,
     inertiaRetention,
     inertiaInfluence,
     inertiaStrength,
+    xInertiaMultiplier,
+    yInertiaMultiplier,
     speedInfluence,
     speedMax,
     speedSmoothing,
+    speedDecayPerSecond,
     colorHead,
     colorTail,
     alphaHead,
@@ -388,9 +449,10 @@ export function PenCursor({
   return (
     <canvas
       ref={canvasRef}
-      aria-hidden
+      {...canvasProps}
+      aria-hidden={canvasProps["aria-hidden"] ?? true}
       className={cn(
-        "pointer-events-none z-[9999]",
+        "pointer-events-none z-50",
         containerRef
           ? "absolute inset-0 h-full w-full"
           : "fixed inset-0 h-screen w-screen",
