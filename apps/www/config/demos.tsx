@@ -9,8 +9,14 @@ import { AnimatedTabs } from "@/components/ui/animated-tabs";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { InfiniteMarquee, MarqueeItem } from "@/components/ui/infinite-marquee";
 import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
-import { SkeletonShimmer, SkeletonCard } from "@/components/ui/skeleton-shimmer";
-import { MorphingModal, MorphingModalTrigger } from "@/components/ui/morphing-modal";
+import {
+  SkeletonShimmer,
+  SkeletonCard,
+} from "@/components/ui/skeleton-shimmer";
+import {
+  MorphingModal,
+  MorphingModalTrigger,
+} from "@/components/ui/morphing-modal";
 import { GradientTextReveal } from "@/components/ui/gradient-text-reveal";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { MeteorsCard } from "@/components/ui/meteors-card";
@@ -19,7 +25,10 @@ import { DotGridBackground } from "@/components/ui/dot-grid-background";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { ConfettiBurst } from "@/components/ui/confetti-burst";
 import { DrawerSlide } from "@/components/ui/drawer-slide";
-import { NotificationStack, useNotifications } from "@/components/ui/notification-stack";
+import {
+  NotificationStack,
+  useNotifications,
+} from "@/components/ui/notification-stack";
 import { AnimatedTimeline } from "@/components/ui/animated-timeline";
 import { NestedComments } from "@/components/ui/nested-comments";
 import type { Comment } from "@/components/ui/nested-comments";
@@ -29,11 +38,12 @@ import { ParticleField } from "@/components/ui/particle-field";
 import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-gallery";
 import { RadialMenu } from "@/components/ui/radial-menu";
 import { CursorTrail } from "@/components/ui/cursor-trail";
+import { PenCursor } from "@/components/ui/pen-cursor";
 import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { LimelightNav } from "@/components/ui/limelight-nav";
 import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
 import { DataTable } from "@/components/ui/data-table";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Ghost,
   Sparkles,
@@ -60,7 +70,8 @@ export type DemoComponent = React.ComponentType<DemoThemeProps>;
 
 // Helper for notifications demo
 function NotificationDemo({ theme = "dark" }: DemoThemeProps) {
-  const { notifications, addNotification, removeNotification } = useNotifications();
+  const { notifications, addNotification, removeNotification } =
+    useNotifications();
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       <div className="flex flex-wrap gap-3 items-center justify-center">
@@ -84,14 +95,64 @@ function NotificationDemo({ theme = "dark" }: DemoThemeProps) {
               type === "warning" &&
                 "bg-yellow-900/50 border border-yellow-800/50 hover:bg-yellow-900/80 text-yellow-300",
               type === "info" &&
-                "bg-blue-900/50 border border-blue-800/50 hover:bg-blue-900/80 text-blue-300"
+                "bg-blue-900/50 border border-blue-800/50 hover:bg-blue-900/80 text-blue-300",
             )}
           >
             {type}
           </button>
         ))}
       </div>
-      <NotificationStack theme={theme} notifications={notifications} onRemove={removeNotification} />
+      <NotificationStack
+        theme={theme}
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
+    </div>
+  );
+}
+
+function PenCursorDemo({ theme = "dark" }: DemoThemeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      ref={containerRef}
+      className={cn(
+        "relative h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <div className="text-center relative z-10 pointer-events-none select-none">
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent mb-4",
+            theme === "dark"
+              ? "bg-gradient-to-br from-white to-neutral-500"
+              : "bg-gradient-to-br from-neutral-900 to-neutral-600",
+          )}
+        >
+          Ribbon trail
+        </h3>
+        <p
+          className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}
+        >
+          Move your mouse — a physics-driven ribbon trails the pointer.
+        </p>
+      </div>
+      <PenCursor
+        containerRef={containerRef}
+        trailLength={40}
+        maxWidth={1}
+        minWidth={1}
+        colorHead={theme === "dark" ? "159, 175, 155" : "100, 80, 200"}
+        colorTail={theme === "dark" ? "198, 167, 106" : "180, 120, 230"}
+        alphaHead={0.95}
+        alphaTail={0}
+        damping={0.55}
+        speedInfluence={0.8}
+        speedMax={500}
+      />
     </div>
   );
 }
@@ -106,10 +167,27 @@ function ModalDemo({ theme = "dark" }: DemoThemeProps) {
           theme={theme}
           layoutId="modal-demo"
           onClick={() => setModalOpen(true)}
-          className={cn("p-6 rounded-xl border transition-colors max-w-xs", theme === "dark" ? "bg-neutral-900/50 border-neutral-800 hover:border-neutral-700" : "bg-neutral-100 border-neutral-200 hover:border-neutral-300")}
+          className={cn(
+            "p-6 rounded-xl border transition-colors max-w-xs",
+            theme === "dark"
+              ? "bg-neutral-900/50 border-neutral-800 hover:border-neutral-700"
+              : "bg-neutral-100 border-neutral-200 hover:border-neutral-300",
+          )}
         >
-          <h3 className={cn("text-lg font-bold mb-2", theme === "dark" ? "text-white" : "text-neutral-900")}>Click to open modal</h3>
-          <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
+          <h3
+            className={cn(
+              "text-lg font-bold mb-2",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Click to open modal
+          </h3>
+          <p
+            className={cn(
+              "text-sm",
+              theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+            )}
+          >
             This card morphs into a modal with spring physics.
           </p>
         </MorphingModalTrigger>
@@ -121,10 +199,23 @@ function ModalDemo({ theme = "dark" }: DemoThemeProps) {
         layoutId="modal-demo"
       >
         <div className="pt-4">
-          <h3 className={cn("text-2xl font-bold mb-4", theme === "dark" ? "text-white" : "text-neutral-900")}>Morphing Modal</h3>
-          <p className={cn("mb-6", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
-            This modal expands from the trigger element with spring-based animation. It supports
-            Escape key to close, click-outside to dismiss, and an animated close button.
+          <h3
+            className={cn(
+              "text-2xl font-bold mb-4",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Morphing Modal
+          </h3>
+          <p
+            className={cn(
+              "mb-6",
+              theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+            )}
+          >
+            This modal expands from the trigger element with spring-based
+            animation. It supports Escape key to close, click-outside to
+            dismiss, and an animated close button.
           </p>
           <div className="flex gap-3">
             <button
@@ -135,7 +226,12 @@ function ModalDemo({ theme = "dark" }: DemoThemeProps) {
             </button>
             <button
               onClick={() => setModalOpen(false)}
-              className={cn("px-4 py-2 rounded-lg transition-colors text-sm font-medium", theme === "dark" ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-300" : "bg-neutral-200 hover:bg-neutral-300 text-neutral-700")}
+              className={cn(
+                "px-4 py-2 rounded-lg transition-colors text-sm font-medium",
+                theme === "dark"
+                  ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-300"
+                  : "bg-neutral-200 hover:bg-neutral-300 text-neutral-700",
+              )}
             >
               Cancel
             </button>
@@ -159,14 +255,36 @@ function DrawerDemo({ theme = "dark" }: DemoThemeProps) {
           Open Drawer
         </button>
       </div>
-      <DrawerSlide theme={theme} isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <h3 className={cn("text-xl font-bold mb-4", theme === "dark" ? "text-white" : "text-neutral-900")}>Drawer Content</h3>
-        <p className={cn("mb-4", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
-          This drawer slides in from the right with spring physics. You can drag it to dismiss.
+      <DrawerSlide
+        theme={theme}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
+        <h3
+          className={cn(
+            "text-xl font-bold mb-4",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Drawer Content
+        </h3>
+        <p
+          className={cn(
+            "mb-4",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
+          This drawer slides in from the right with spring physics. You can drag
+          it to dismiss.
         </p>
         <button
           onClick={() => setDrawerOpen(false)}
-          className={cn("px-4 py-2 rounded-lg transition-colors text-sm", theme === "dark" ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-300" : "bg-neutral-200 hover:bg-neutral-300 text-neutral-700")}
+          className={cn(
+            "px-4 py-2 rounded-lg transition-colors text-sm",
+            theme === "dark"
+              ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-300"
+              : "bg-neutral-200 hover:bg-neutral-300 text-neutral-700",
+          )}
         >
           Close Drawer
         </button>
@@ -180,21 +298,24 @@ const DEMO_COMMENTS: Comment[] = [
   {
     id: "1",
     author: "Alex Kim",
-    content: "This component is incredible! The spring animations feel so natural and snappy.",
+    content:
+      "This component is incredible! The spring animations feel so natural and snappy.",
     timestamp: "2 hours ago",
     likes: 14,
     replies: [
       {
         id: "1-1",
         author: "Sarah Chen",
-        content: "Agreed! The collapse animation is especially smooth. Love the thread lines too.",
+        content:
+          "Agreed! The collapse animation is especially smooth. Love the thread lines too.",
         timestamp: "1 hour ago",
         likes: 6,
         replies: [
           {
             id: "1-1-1",
             author: "Alex Kim",
-            content: "Thanks! Motion.dev's layout animations make nested content effortless to build.",
+            content:
+              "Thanks! Motion.dev's layout animations make nested content effortless to build.",
             timestamp: "45 min ago",
             likes: 3,
           },
@@ -205,14 +326,16 @@ const DEMO_COMMENTS: Comment[] = [
   {
     id: "2",
     author: "Jordan Lee",
-    content: "Love the inline reply box with ⌘+Enter shortcut. Very intuitive UX — try clicking Reply!",
+    content:
+      "Love the inline reply box with ⌘+Enter shortcut. Very intuitive UX — try clicking Reply!",
     timestamp: "3 hours ago",
     likes: 9,
   },
   {
     id: "3",
     author: "Maya Patel",
-    content: "The like button spring animation is a nice touch. Small details make a big difference.",
+    content:
+      "The like button spring animation is a nice touch. Small details make a big difference.",
     timestamp: "4 hours ago",
     likes: 21,
   },
@@ -252,8 +375,18 @@ export const componentDemos: Record<string, DemoComponent> = {
     </div>
   ),
   "typewriter-text": ({ theme = "dark" }) => (
-    <div className={cn("space-y-6 text-center p-10", theme === "dark" ? "text-white" : "text-neutral-900")}>
-      <div className={cn("text-3xl font-bold", theme === "dark" ? "text-white" : "text-neutral-900")}>
+    <div
+      className={cn(
+        "space-y-6 text-center p-10",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <div
+        className={cn(
+          "text-3xl font-bold",
+          theme === "dark" ? "text-white" : "text-neutral-900",
+        )}
+      >
         I love{" "}
         <TypewriterText
           theme={theme}
@@ -263,7 +396,12 @@ export const componentDemos: Record<string, DemoComponent> = {
           deletingSpeed={60}
         />
       </div>
-      <div className={cn("text-lg", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
+      <div
+        className={cn(
+          "text-lg",
+          theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+        )}
+      >
         <TypewriterText
           theme={theme}
           words={[
@@ -280,21 +418,65 @@ export const componentDemos: Record<string, DemoComponent> = {
   ),
   "3d-tilt-card": ({ theme = "dark" }) => (
     <div className="flex flex-wrap gap-8 items-center justify-center p-10">
-      <TiltCard theme={theme} className={cn("w-72 rounded-xl p-6", theme === "dark" ? "bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700" : "bg-gradient-to-br from-neutral-100 to-neutral-200 border border-neutral-300")}>
-        <h3 className={cn("text-xl font-bold mb-2", theme === "dark" ? "text-white" : "text-neutral-900")}>Hover me</h3>
-        <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
+      <TiltCard
+        theme={theme}
+        className={cn(
+          "w-72 rounded-xl p-6",
+          theme === "dark"
+            ? "bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700"
+            : "bg-gradient-to-br from-neutral-100 to-neutral-200 border border-neutral-300",
+        )}
+      >
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Hover me
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
           Move your cursor over this card to see the 3D tilt effect with glare.
         </p>
-        <div className={cn("mt-4 h-24 rounded-lg", theme === "dark" ? "bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-neutral-700/50" : "bg-gradient-to-br from-purple-200/40 to-pink-200/40 border border-neutral-300")} />
+        <div
+          className={cn(
+            "mt-4 h-24 rounded-lg",
+            theme === "dark"
+              ? "bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-neutral-700/50"
+              : "bg-gradient-to-br from-purple-200/40 to-pink-200/40 border border-neutral-300",
+          )}
+        />
       </TiltCard>
       <TiltCard
         theme={theme}
         tiltMaxDeg={25}
         glare={true}
-        className={cn("w-72 rounded-xl p-6", theme === "dark" ? "bg-gradient-to-br from-purple-950 to-indigo-950 border border-purple-800/50" : "bg-gradient-to-br from-purple-100 to-indigo-100 border border-purple-300/50")}
+        className={cn(
+          "w-72 rounded-xl p-6",
+          theme === "dark"
+            ? "bg-gradient-to-br from-purple-950 to-indigo-950 border border-purple-800/50"
+            : "bg-gradient-to-br from-purple-100 to-indigo-100 border border-purple-300/50",
+        )}
       >
-        <h3 className={cn("text-xl font-bold mb-2", theme === "dark" ? "text-purple-200" : "text-purple-800")}>Extra Tilt</h3>
-        <p className={cn("text-sm", theme === "dark" ? "text-purple-300/60" : "text-purple-700/80")}>
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-purple-200" : "text-purple-800",
+          )}
+        >
+          Extra Tilt
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-purple-300/60" : "text-purple-700/80",
+          )}
+        >
           This card has a stronger tilt angle for a more dramatic effect.
         </p>
         <div className="mt-4 flex gap-2">
@@ -308,25 +490,71 @@ export const componentDemos: Record<string, DemoComponent> = {
   "spotlight-card": ({ theme = "dark" }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
       <SpotlightCard theme={theme}>
-        <h3 className={cn("text-xl font-bold mb-2", theme === "dark" ? "text-white" : "text-neutral-900")}>Hover for spotlight</h3>
-        <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Hover for spotlight
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
           Move your mouse over the card to reveal a tracking spotlight effect.
         </p>
       </SpotlightCard>
-      <SpotlightCard theme={theme} spotlightColor="rgba(232, 121, 249, 0.1)" spotlightSize={300}>
-        <h3 className={cn("text-xl font-bold mb-2", theme === "dark" ? "text-white" : "text-neutral-900")}>Custom spotlight</h3>
-        <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
+      <SpotlightCard
+        theme={theme}
+        spotlightColor="rgba(232, 121, 249, 0.1)"
+        spotlightSize={300}
+      >
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Custom spotlight
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
           Different color and size for the spotlight effect.
         </p>
       </SpotlightCard>
     </div>
   ),
   "aurora-background": ({ theme = "dark" }) => (
-    <div className={cn("rounded-xl overflow-hidden border h-[400px] w-full relative", theme === "dark" ? "border-neutral-800" : "border-neutral-200")}>
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark" ? "border-neutral-800" : "border-neutral-200",
+      )}
+    >
       <AuroraBackground theme={theme} className="min-h-0 h-full rounded-xl">
         <div className="text-center z-10">
-          <h3 className={cn("text-2xl font-bold mb-2", theme === "dark" ? "text-white" : "text-neutral-900")}>Aurora Background</h3>
-          <p className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}>Beautiful animated gradients</p>
+          <h3
+            className={cn(
+              "text-2xl font-bold mb-2",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Aurora Background
+          </h3>
+          <p
+            className={
+              theme === "dark" ? "text-neutral-400" : "text-neutral-600"
+            }
+          >
+            Beautiful animated gradients
+          </p>
         </div>
       </AuroraBackground>
     </div>
@@ -340,9 +568,16 @@ export const componentDemos: Record<string, DemoComponent> = {
             id: "design",
             label: "Design",
             content: (
-              <div className={cn("p-4 rounded-lg text-sm", theme === "dark" ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300" : "bg-neutral-100 border border-neutral-200 text-neutral-700")}>
-                Build stunning interfaces with our design system. Every component is crafted with
-                attention to detail.
+              <div
+                className={cn(
+                  "p-4 rounded-lg text-sm",
+                  theme === "dark"
+                    ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300"
+                    : "bg-neutral-100 border border-neutral-200 text-neutral-700",
+                )}
+              >
+                Build stunning interfaces with our design system. Every
+                component is crafted with attention to detail.
               </div>
             ),
           },
@@ -350,8 +585,16 @@ export const componentDemos: Record<string, DemoComponent> = {
             id: "animate",
             label: "Animate",
             content: (
-              <div className={cn("p-4 rounded-lg text-sm", theme === "dark" ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300" : "bg-neutral-100 border border-neutral-200 text-neutral-700")}>
-                Add life to your UI with spring-physics animations powered by Motion.dev.
+              <div
+                className={cn(
+                  "p-4 rounded-lg text-sm",
+                  theme === "dark"
+                    ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300"
+                    : "bg-neutral-100 border border-neutral-200 text-neutral-700",
+                )}
+              >
+                Add life to your UI with spring-physics animations powered by
+                Motion.dev.
               </div>
             ),
           },
@@ -359,8 +602,16 @@ export const componentDemos: Record<string, DemoComponent> = {
             id: "ship",
             label: "Ship",
             content: (
-              <div className={cn("p-4 rounded-lg text-sm", theme === "dark" ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300" : "bg-neutral-100 border border-neutral-200 text-neutral-700")}>
-                Deploy with confidence. All components are production-ready and accessible.
+              <div
+                className={cn(
+                  "p-4 rounded-lg text-sm",
+                  theme === "dark"
+                    ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300"
+                    : "bg-neutral-100 border border-neutral-200 text-neutral-700",
+                )}
+              >
+                Deploy with confidence. All components are production-ready and
+                accessible.
               </div>
             ),
           },
@@ -395,7 +646,14 @@ export const componentDemos: Record<string, DemoComponent> = {
           "Node.js",
         ].map((item) => (
           <MarqueeItem key={item}>
-            <span className={cn("text-sm font-medium", theme === "dark" ? "text-neutral-300" : "text-neutral-600")}>{item}</span>
+            <span
+              className={cn(
+                "text-sm font-medium",
+                theme === "dark" ? "text-neutral-300" : "text-neutral-600",
+              )}
+            >
+              {item}
+            </span>
           </MarqueeItem>
         ))}
       </InfiniteMarquee>
@@ -408,15 +666,34 @@ export const componentDemos: Record<string, DemoComponent> = {
           "🔧 Customizable",
           "🚀 Production Ready",
         ].map((item) => (
-          <MarqueeItem key={item} className={theme === "dark" ? "bg-purple-950/30 border-purple-800/50" : "bg-purple-100 border-purple-200/50"}>
-            <span className={cn("text-sm font-medium", theme === "dark" ? "text-purple-300" : "text-purple-700")}>{item}</span>
+          <MarqueeItem
+            key={item}
+            className={
+              theme === "dark"
+                ? "bg-purple-950/30 border-purple-800/50"
+                : "bg-purple-100 border-purple-200/50"
+            }
+          >
+            <span
+              className={cn(
+                "text-sm font-medium",
+                theme === "dark" ? "text-purple-300" : "text-purple-700",
+              )}
+            >
+              {item}
+            </span>
           </MarqueeItem>
         ))}
       </InfiniteMarquee>
     </div>
   ),
   "scroll-reveal": ({ theme = "dark" }) => (
-    <div className={cn("p-10", theme === "dark" ? "text-white" : "text-neutral-900")}>
+    <div
+      className={cn(
+        "p-10",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
       <ScrollRevealGroup
         theme={theme}
         animation="fade-up"
@@ -426,19 +703,50 @@ export const componentDemos: Record<string, DemoComponent> = {
         {["fade-up", "scale", "blur"].map((preset) => (
           <div
             key={preset}
-            className={cn("p-6 rounded-lg text-center", theme === "dark" ? "bg-neutral-900/50 border border-neutral-800" : "bg-neutral-100 border border-neutral-200")}
+            className={cn(
+              "p-6 rounded-lg text-center",
+              theme === "dark"
+                ? "bg-neutral-900/50 border border-neutral-800"
+                : "bg-neutral-100 border border-neutral-200",
+            )}
           >
-            <div className={cn("text-lg font-semibold mb-1", theme === "dark" ? "text-neutral-200" : "text-neutral-800")}>{preset}</div>
-            <p className={cn("text-xs", theme === "dark" ? "text-neutral-500" : "text-neutral-600")}>Scroll to reveal</p>
+            <div
+              className={cn(
+                "text-lg font-semibold mb-1",
+                theme === "dark" ? "text-neutral-200" : "text-neutral-800",
+              )}
+            >
+              {preset}
+            </div>
+            <p
+              className={cn(
+                "text-xs",
+                theme === "dark" ? "text-neutral-500" : "text-neutral-600",
+              )}
+            >
+              Scroll to reveal
+            </p>
           </div>
         ))}
       </ScrollRevealGroup>
     </div>
   ),
   "skeleton-shimmer": ({ theme = "dark" }) => (
-    <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full", theme === "dark" ? "text-white" : "text-neutral-900")}>
+    <div
+      className={cn(
+        "grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
       <SkeletonCard theme={theme} />
-      <div className={cn("space-y-4 p-6 rounded-xl border", theme === "dark" ? "border-neutral-800 bg-neutral-900/50" : "border-neutral-200 bg-neutral-100")}>
+      <div
+        className={cn(
+          "space-y-4 p-6 rounded-xl border",
+          theme === "dark"
+            ? "border-neutral-800 bg-neutral-900/50"
+            : "border-neutral-200 bg-neutral-100",
+        )}
+      >
         <SkeletonShimmer theme={theme} width="80%" height={20} rounded="md" />
         <SkeletonShimmer theme={theme} count={4} height={14} />
         <div className="flex gap-3">
@@ -450,44 +758,91 @@ export const componentDemos: Record<string, DemoComponent> = {
   ),
   "morphing-modal": ({ theme = "dark" }) => <ModalDemo theme={theme} />,
   "gradient-text-reveal": ({ theme = "dark" }) => (
-    <div className={cn("space-y-8 text-center p-10", theme === "dark" ? "text-white" : "text-neutral-900")}>
+    <div
+      className={cn(
+        "space-y-8 text-center p-10",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
       <GradientTextReveal
         theme={theme}
         text="Build stunning interfaces with UniqueUI"
         as="h3"
-        className={cn("text-3xl font-bold justify-center", theme === "dark" ? "text-white" : "text-neutral-900")}
+        className={cn(
+          "text-3xl font-bold justify-center",
+          theme === "dark" ? "text-white" : "text-neutral-900",
+        )}
       />
       <GradientTextReveal
         theme={theme}
         text="Beautiful animated components for modern web apps"
         gradientFrom="#6366f1"
         gradientTo="#06b6d4"
-        className={cn("text-lg justify-center", theme === "dark" ? "text-neutral-300" : "text-neutral-600")}
+        className={cn(
+          "text-lg justify-center",
+          theme === "dark" ? "text-neutral-300" : "text-neutral-600",
+        )}
       />
     </div>
   ),
   "scramble-text": ({ theme = "dark" }) => (
     <div className="space-y-6 text-center p-10">
-      <ScrambleText theme={theme} text="UNIQUEUI COMPONENTS" className={cn("text-3xl font-bold tracking-wider", theme === "dark" ? "text-white" : "text-neutral-900")} />
+      <ScrambleText
+        theme={theme}
+        text="UNIQUEUI COMPONENTS"
+        className={cn(
+          "text-3xl font-bold tracking-wider",
+          theme === "dark" ? "text-white" : "text-neutral-900",
+        )}
+      />
       <ScrambleText
         theme={theme}
         text="Hover to scramble again"
         triggerOnView={false}
-        className={cn("text-lg cursor-pointer", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}
+        className={cn(
+          "text-lg cursor-pointer",
+          theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+        )}
       />
     </div>
   ),
   "meteors-card": ({ theme = "dark" }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
       <MeteorsCard theme={theme}>
-        <h3 className={cn("text-xl font-bold mb-2", theme === "dark" ? "text-white" : "text-neutral-900")}>Meteors Effect</h3>
-        <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Meteors Effect
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
           Watch the shooting stars fall through this card&apos;s background.
         </p>
       </MeteorsCard>
       <MeteorsCard theme={theme} meteorColor="#a855f7" meteorCount={30}>
-        <h3 className={cn("text-xl font-bold mb-2", theme === "dark" ? "text-purple-200" : "text-purple-800")}>Purple Meteors</h3>
-        <p className={cn("text-sm", theme === "dark" ? "text-purple-300/60" : "text-purple-700/80")}>Custom colored meteors with extra density.</p>
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-purple-200" : "text-purple-800",
+          )}
+        >
+          Purple Meteors
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-purple-300/60" : "text-purple-700/80",
+          )}
+        >
+          Custom colored meteors with extra density.
+        </p>
       </MeteorsCard>
     </div>
   ),
@@ -497,8 +852,22 @@ export const componentDemos: Record<string, DemoComponent> = {
         theme={theme}
         className="w-60 h-40"
         front={
-          <div className={cn("flex items-center justify-center h-full rounded-xl border", theme === "dark" ? "bg-zinc-900 border-zinc-800" : "bg-zinc-100 border-zinc-300")}>
-            <p className={cn("text-lg font-bold", theme === "dark" ? "text-white" : "text-neutral-900")}>Hover to flip →</p>
+          <div
+            className={cn(
+              "flex items-center justify-center h-full rounded-xl border",
+              theme === "dark"
+                ? "bg-zinc-900 border-zinc-800"
+                : "bg-zinc-100 border-zinc-300",
+            )}
+          >
+            <p
+              className={cn(
+                "text-lg font-bold",
+                theme === "dark" ? "text-white" : "text-neutral-900",
+              )}
+            >
+              Hover to flip →
+            </p>
           </div>
         }
         back={
@@ -512,53 +881,152 @@ export const componentDemos: Record<string, DemoComponent> = {
         className="w-60 h-40"
         trigger="click"
         front={
-          <div className={cn("flex items-center justify-center h-full rounded-xl border", theme === "dark" ? "bg-zinc-900 border-zinc-800" : "bg-zinc-100 border-zinc-300")}>
-            <p className={cn("text-lg font-bold", theme === "dark" ? "text-white" : "text-neutral-900")}>Click to flip</p>
+          <div
+            className={cn(
+              "flex items-center justify-center h-full rounded-xl border",
+              theme === "dark"
+                ? "bg-zinc-900 border-zinc-800"
+                : "bg-zinc-100 border-zinc-300",
+            )}
+          >
+            <p
+              className={cn(
+                "text-lg font-bold",
+                theme === "dark" ? "text-white" : "text-neutral-900",
+              )}
+            >
+              Click to flip
+            </p>
           </div>
         }
         back={
-          <div className={cn("flex items-center justify-center h-full rounded-xl border", theme === "dark" ? "bg-zinc-800 border-zinc-700" : "bg-zinc-200 border-zinc-400")}>
-            <p className={cn("text-lg font-bold", theme === "dark" ? "text-green-400" : "text-green-700")}>Click again!</p>
+          <div
+            className={cn(
+              "flex items-center justify-center h-full rounded-xl border",
+              theme === "dark"
+                ? "bg-zinc-800 border-zinc-700"
+                : "bg-zinc-200 border-zinc-400",
+            )}
+          >
+            <p
+              className={cn(
+                "text-lg font-bold",
+                theme === "dark" ? "text-green-400" : "text-green-700",
+              )}
+            >
+              Click again!
+            </p>
           </div>
         }
       />
     </div>
   ),
   "dot-grid-background": ({ theme = "dark" }) => (
-    <div className={cn("p-10 w-full", theme === "dark" ? "text-white" : "text-neutral-900")}>
-      <DotGridBackground theme={theme} className="rounded-xl h-[300px] flex items-center justify-center w-full">
+    <div
+      className={cn(
+        "p-10 w-full",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <DotGridBackground
+        theme={theme}
+        className="rounded-xl h-[300px] flex items-center justify-center w-full"
+      >
         <div className="text-center z-10 w-full relative">
-          <h3 className={cn("text-2xl font-bold mb-2", theme === "dark" ? "text-white" : "text-neutral-900")}>Interactive Dots</h3>
-          <p className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}>Move your cursor around</p>
+          <h3
+            className={cn(
+              "text-2xl font-bold mb-2",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Interactive Dots
+          </h3>
+          <p
+            className={
+              theme === "dark" ? "text-neutral-400" : "text-neutral-600"
+            }
+          >
+            Move your cursor around
+          </p>
         </div>
       </DotGridBackground>
     </div>
   ),
   "floating-dock": ({ theme = "dark" }) => (
-    <div className={cn("flex items-center justify-center p-20", theme === "dark" ? "text-white" : "text-neutral-900")}>
-      <FloatingDock theme={theme}
+    <div
+      className={cn(
+        "flex items-center justify-center p-20",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <FloatingDock
+        theme={theme}
         items={[
-          { id: "home", icon: <span className="text-xl">🏠</span>, label: "Home" },
-          { id: "search", icon: <span className="text-xl">✨</span>, label: "Search" },
-          { id: "layers", icon: <span className="text-xl">📚</span>, label: "Layers" },
-          { id: "scroll", icon: <span className="text-xl">📜</span>, label: "Scroll" },
-          { id: "terminal", icon: <span className="text-xl">💻</span>, label: "Terminal" },
+          {
+            id: "home",
+            icon: <span className="text-xl">🏠</span>,
+            label: "Home",
+          },
+          {
+            id: "search",
+            icon: <span className="text-xl">✨</span>,
+            label: "Search",
+          },
+          {
+            id: "layers",
+            icon: <span className="text-xl">📚</span>,
+            label: "Layers",
+          },
+          {
+            id: "scroll",
+            icon: <span className="text-xl">📜</span>,
+            label: "Scroll",
+          },
+          {
+            id: "terminal",
+            icon: <span className="text-xl">💻</span>,
+            label: "Terminal",
+          },
         ]}
       />
     </div>
   ),
   "confetti-burst": ({ theme = "dark" }) => (
     <div className="flex items-center justify-center p-20">
-      <ConfettiBurst theme={theme} className={cn("rounded-xl p-12 border transition-colors cursor-pointer", theme === "dark" ? "border-neutral-800 bg-neutral-900/50 hover:border-neutral-700" : "border-neutral-200 bg-neutral-100 hover:border-neutral-300")}>
+      <ConfettiBurst
+        theme={theme}
+        className={cn(
+          "rounded-xl p-12 border transition-colors cursor-pointer",
+          theme === "dark"
+            ? "border-neutral-800 bg-neutral-900/50 hover:border-neutral-700"
+            : "border-neutral-200 bg-neutral-100 hover:border-neutral-300",
+        )}
+      >
         <div className="text-center">
-          <h3 className={cn("text-xl font-bold mb-2", theme === "dark" ? "text-white" : "text-neutral-900")}>🎉 Click me!</h3>
-          <p className={cn("text-sm", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>Click anywhere on this card for confetti</p>
+          <h3
+            className={cn(
+              "text-xl font-bold mb-2",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            🎉 Click me!
+          </h3>
+          <p
+            className={cn(
+              "text-sm",
+              theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+            )}
+          >
+            Click anywhere on this card for confetti
+          </p>
         </div>
       </ConfettiBurst>
     </div>
   ),
   "drawer-slide": ({ theme = "dark" }) => <DrawerDemo theme={theme} />,
-  "notification-stack": ({ theme = "dark" }) => <NotificationDemo theme={theme} />,
+  "notification-stack": ({ theme = "dark" }) => (
+    <NotificationDemo theme={theme} />
+  ),
   // ─── Animated Timeline per-variant demos ─────────────────────────────────────
   "animated-timeline/vertical": ({ theme = "dark" }) => (
     <div className="p-10 w-full max-w-sm mx-auto">
@@ -567,10 +1035,34 @@ export const componentDemos: Record<string, DemoComponent> = {
         variant="vertical"
         lineColor="#3f3f46"
         items={[
-          { id: "1", title: "Project Kickoff",  description: "Scope defined and team assembled.",             color: "#a855f7", date: "Jan 2026" },
-          { id: "2", title: "Design Phase",     description: "Wireframes and component system finalised.",    color: "#6366f1", date: "Jan 2026" },
-          { id: "3", title: "Dev Sprint",       description: "Core components built and tested end-to-end.", color: "#ec4899", date: "Feb 2026" },
-          { id: "4", title: "Public Launch",    description: "CLI published and registry live.",             color: "#10b981", date: "Feb 2026" },
+          {
+            id: "1",
+            title: "Project Kickoff",
+            description: "Scope defined and team assembled.",
+            color: "#a855f7",
+            date: "Jan 2026",
+          },
+          {
+            id: "2",
+            title: "Design Phase",
+            description: "Wireframes and component system finalised.",
+            color: "#6366f1",
+            date: "Jan 2026",
+          },
+          {
+            id: "3",
+            title: "Dev Sprint",
+            description: "Core components built and tested end-to-end.",
+            color: "#ec4899",
+            date: "Feb 2026",
+          },
+          {
+            id: "4",
+            title: "Public Launch",
+            description: "CLI published and registry live.",
+            color: "#10b981",
+            date: "Feb 2026",
+          },
         ]}
       />
     </div>
@@ -582,10 +1074,34 @@ export const componentDemos: Record<string, DemoComponent> = {
         variant="horizontal"
         lineColor="#3f3f46"
         items={[
-          { id: "1", title: "Kickoff",  description: "Scope agreed.",       color: "#a855f7", date: "Jan" },
-          { id: "2", title: "Design",   description: "Wireframes done.",    color: "#6366f1", date: "Jan" },
-          { id: "3", title: "Build",    description: "Components shipped.", color: "#ec4899", date: "Feb" },
-          { id: "4", title: "Launch",   description: "Registry live.",      color: "#10b981", date: "Feb" },
+          {
+            id: "1",
+            title: "Kickoff",
+            description: "Scope agreed.",
+            color: "#a855f7",
+            date: "Jan",
+          },
+          {
+            id: "2",
+            title: "Design",
+            description: "Wireframes done.",
+            color: "#6366f1",
+            date: "Jan",
+          },
+          {
+            id: "3",
+            title: "Build",
+            description: "Components shipped.",
+            color: "#ec4899",
+            date: "Feb",
+          },
+          {
+            id: "4",
+            title: "Launch",
+            description: "Registry live.",
+            color: "#10b981",
+            date: "Feb",
+          },
         ]}
       />
     </div>
@@ -597,10 +1113,34 @@ export const componentDemos: Record<string, DemoComponent> = {
         variant="cards"
         lineColor="#3f3f46"
         items={[
-          { id: "1", title: "Project Kickoff",  description: "Scope defined and team assembled.",             color: "#a855f7", date: "Jan 2026" },
-          { id: "2", title: "Design Phase",     description: "Wireframes and component system finalised.",    color: "#6366f1", date: "Jan 2026" },
-          { id: "3", title: "Dev Sprint",       description: "Core components built and tested end-to-end.", color: "#ec4899", date: "Feb 2026" },
-          { id: "4", title: "Public Launch",    description: "CLI published and registry live.",             color: "#10b981", date: "Feb 2026" },
+          {
+            id: "1",
+            title: "Project Kickoff",
+            description: "Scope defined and team assembled.",
+            color: "#a855f7",
+            date: "Jan 2026",
+          },
+          {
+            id: "2",
+            title: "Design Phase",
+            description: "Wireframes and component system finalised.",
+            color: "#6366f1",
+            date: "Jan 2026",
+          },
+          {
+            id: "3",
+            title: "Dev Sprint",
+            description: "Core components built and tested end-to-end.",
+            color: "#ec4899",
+            date: "Feb 2026",
+          },
+          {
+            id: "4",
+            title: "Public Launch",
+            description: "CLI published and registry live.",
+            color: "#10b981",
+            date: "Feb 2026",
+          },
         ]}
       />
     </div>
@@ -611,18 +1151,41 @@ export const componentDemos: Record<string, DemoComponent> = {
         theme={theme}
         variant="steps"
         items={[
-          { id: "1", title: "Install the CLI",       description: "Run npx uniqueui init in your project.",        color: "#a855f7" },
-          { id: "2", title: "Add a component",       description: "Run npx uniqueui add animated-timeline.",       color: "#6366f1" },
-          { id: "3", title: "Import and customise",  description: "Use variant, color, and date props as needed.", color: "#ec4899" },
-          { id: "4", title: "Ship to production",    description: "Zero runtime dependency — fully your code.",    color: "#10b981" },
+          {
+            id: "1",
+            title: "Install the CLI",
+            description: "Run npx uniqueui init in your project.",
+            color: "#a855f7",
+          },
+          {
+            id: "2",
+            title: "Add a component",
+            description: "Run npx uniqueui add animated-timeline.",
+            color: "#6366f1",
+          },
+          {
+            id: "3",
+            title: "Import and customise",
+            description: "Use variant, color, and date props as needed.",
+            color: "#ec4899",
+          },
+          {
+            id: "4",
+            title: "Ship to production",
+            description: "Zero runtime dependency — fully your code.",
+            color: "#10b981",
+          },
         ]}
       />
     </div>
   ),
-  "nested-comments": ({ theme = "dark" }) => <NestedCommentsDemo theme={theme} />,
+  "nested-comments": ({ theme = "dark" }) => (
+    <NestedCommentsDemo theme={theme} />
+  ),
   "hover-reveal-card": ({ theme = "dark" }) => (
     <div className="flex flex-wrap gap-6 items-start justify-center p-10">
-      <HoverRevealCard theme={theme}
+      <HoverRevealCard
+        theme={theme}
         image="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80"
         imageAlt="People at a conference table"
         tag="AI"
@@ -641,7 +1204,8 @@ export const componentDemos: Record<string, DemoComponent> = {
   "bento-grid/features": ({ theme = "dark" }) => (
     <div className="p-6 w-full">
       <BentoGrid theme={theme}>
-        <BentoCard theme={theme}
+        <BentoCard
+          theme={theme}
           icon={<Sparkles className="w-5 h-5" />}
           title="Beautiful animations"
           description="Every interaction is crafted with spring-physics Motion.dev animations for a premium feel."
@@ -650,21 +1214,24 @@ export const componentDemos: Record<string, DemoComponent> = {
           spinBorder
           spinBorderColors={["#E2CBFF", "#393BB2"]}
         />
-        <BentoCard theme={theme}
+        <BentoCard
+          theme={theme}
           icon={<Zap className="w-5 h-5" />}
           title="Lightning fast"
           description="Copy-paste components with zero runtime overhead."
           spinBorder
           spinBorderColors={["#a3e635", "#065f46"]}
         />
-        <BentoCard theme={theme}
+        <BentoCard
+          theme={theme}
           icon={<Shield className="w-5 h-5" />}
           title="Type-safe props"
           description="Fully typed with TypeScript for confidence at scale."
           spinBorder
           spinBorderColors={["#67e8f9", "#1e3a5f"]}
         />
-        <BentoCard theme={theme}
+        <BentoCard
+          theme={theme}
           icon={<Globe className="w-5 h-5" />}
           title="Zero lock-in"
           description="You own the code. No external runtime dependency."
@@ -679,21 +1246,99 @@ export const componentDemos: Record<string, DemoComponent> = {
   "bento-grid/showcase": ({ theme = "dark" }) => (
     <div className="p-6 w-full">
       <BentoGrid theme={theme}>
-        <BentoCard theme={theme} title="Aurora vibes" description="Layered animated gradients that feel alive." background={<div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse" />} cta="View component" className="col-span-2" />
-        <BentoCard theme={theme} title="Magnetic pull" description="Spring-physics cursor attraction." background={<div className="absolute inset-0 bg-gradient-to-br from-rose-700/25 to-orange-600/20" />} />
-        <BentoCard theme={theme} title="Spotlight effect" description="Radial light that follows your mouse." background={<div className="absolute inset-0 bg-gradient-to-br from-sky-700/25 to-indigo-700/20" />} />
-        <BentoCard theme={theme} title="Meteor storm" description="Shooting star particles raining through cards." background={<div className="absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20" />} cta="Try it" className="col-span-2" />
+        <BentoCard
+          theme={theme}
+          title="Aurora vibes"
+          description="Layered animated gradients that feel alive."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse" />
+          }
+          cta="View component"
+          className="col-span-2"
+        />
+        <BentoCard
+          theme={theme}
+          title="Magnetic pull"
+          description="Spring-physics cursor attraction."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-700/25 to-orange-600/20" />
+          }
+        />
+        <BentoCard
+          theme={theme}
+          title="Spotlight effect"
+          description="Radial light that follows your mouse."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-sky-700/25 to-indigo-700/20" />
+          }
+        />
+        <BentoCard
+          theme={theme}
+          title="Meteor storm"
+          description="Shooting star particles raining through cards."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20" />
+          }
+          cta="Try it"
+          className="col-span-2"
+        />
       </BentoGrid>
     </div>
   ),
   "bento-grid/stats": ({ theme = "dark" }) => (
     <div className="p-6 w-full">
       <BentoGrid theme={theme} className="auto-rows-[160px]">
-        <BentoCard theme={theme} title="Components" description="Production-ready animated components" background={<div className={cn("absolute top-4 right-4 text-6xl font-black select-none", theme === "dark" ? "text-white/[0.06]" : "text-neutral-900/10")}>24</div>} icon={<span className="text-2xl font-black text-violet-400">24</span>} />
-        <BentoCard theme={theme} title="Zero dependencies" description="No UniqueUI runtime in your bundle" background={<div className={cn("absolute top-4 right-4 text-6xl font-black select-none", theme === "dark" ? "text-white/[0.06]" : "text-neutral-900/10")}>0</div>} icon={<span className="text-2xl font-black text-emerald-400">0</span>} />
-        <BentoCard theme={theme} title="Install time" description="Seconds from CLI to working component" icon={<span className="text-2xl font-black text-sky-400">~3s</span>} />
-        <BentoCard theme={theme} title="MIT License" description="Open source forever. Fork it, extend it, ship it." cta="View on GitHub" className="col-span-2" />
-        <BentoCard theme={theme} title="Tailwind compatible" description="v3 and v4 supported" icon={<span className="text-2xl font-black text-cyan-400">✓</span>} />
+        <BentoCard
+          theme={theme}
+          title="Components"
+          description="Production-ready animated components"
+          background={
+            <div
+              className={cn(
+                "absolute top-4 right-4 text-6xl font-black select-none",
+                theme === "dark" ? "text-white/[0.06]" : "text-neutral-900/10",
+              )}
+            >
+              24
+            </div>
+          }
+          icon={<span className="text-2xl font-black text-violet-400">24</span>}
+        />
+        <BentoCard
+          theme={theme}
+          title="Zero dependencies"
+          description="No UniqueUI runtime in your bundle"
+          background={
+            <div
+              className={cn(
+                "absolute top-4 right-4 text-6xl font-black select-none",
+                theme === "dark" ? "text-white/[0.06]" : "text-neutral-900/10",
+              )}
+            >
+              0
+            </div>
+          }
+          icon={<span className="text-2xl font-black text-emerald-400">0</span>}
+        />
+        <BentoCard
+          theme={theme}
+          title="Install time"
+          description="Seconds from CLI to working component"
+          icon={<span className="text-2xl font-black text-sky-400">~3s</span>}
+        />
+        <BentoCard
+          theme={theme}
+          title="MIT License"
+          description="Open source forever. Fork it, extend it, ship it."
+          cta="View on GitHub"
+          className="col-span-2"
+        />
+        <BentoCard
+          theme={theme}
+          title="Tailwind compatible"
+          description="v3 and v4 supported"
+          icon={<span className="text-2xl font-black text-cyan-400">✓</span>}
+        />
       </BentoGrid>
     </div>
   ),
@@ -701,27 +1346,95 @@ export const componentDemos: Record<string, DemoComponent> = {
     <div className="p-6 w-full">
       <BentoGrid theme={theme} className="auto-rows-[180px]">
         {[
-          { name: "Alex Kim",   role: "Lead Engineer",    tag: "Motion",     color: "#a855f7" },
-          { name: "Sara Chen",  role: "Design Systems",   tag: "Tailwind",   color: "#6366f1" },
-          { name: "Jordan Lee", role: "DX Engineer",      tag: "CLI",        color: "#ec4899" },
-          { name: "Maya Patel", role: "Animations Lead",  tag: "Motion.dev", color: "#10b981" },
-          { name: "Ryan Wu",    role: "Accessibility",    tag: "ARIA",       color: "#f59e0b" },
-          { name: "Priya Shah", role: "TypeScript Infra", tag: "TS 5.x",    color: "#3b82f6" },
+          {
+            name: "Alex Kim",
+            role: "Lead Engineer",
+            tag: "Motion",
+            color: "#a855f7",
+          },
+          {
+            name: "Sara Chen",
+            role: "Design Systems",
+            tag: "Tailwind",
+            color: "#6366f1",
+          },
+          {
+            name: "Jordan Lee",
+            role: "DX Engineer",
+            tag: "CLI",
+            color: "#ec4899",
+          },
+          {
+            name: "Maya Patel",
+            role: "Animations Lead",
+            tag: "Motion.dev",
+            color: "#10b981",
+          },
+          {
+            name: "Ryan Wu",
+            role: "Accessibility",
+            tag: "ARIA",
+            color: "#f59e0b",
+          },
+          {
+            name: "Priya Shah",
+            role: "TypeScript Infra",
+            tag: "TS 5.x",
+            color: "#3b82f6",
+          },
         ].map((m) => (
           <BentoCard
-            key={m.name} theme={theme} title={m.name} description={m.role} cta={m.tag}
-            background={<div className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-10" style={{ backgroundColor: m.color }} />}
-            icon={<div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: m.color + "33", border: `1.5px solid ${m.color}66` }}>{m.name.split(" ").map((n) => n[0]).join("")}</div>}
+            key={m.name}
+            theme={theme}
+            title={m.name}
+            description={m.role}
+            cta={m.tag}
+            background={
+              <div
+                className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-10"
+                style={{ backgroundColor: m.color }}
+              />
+            }
+            icon={
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                style={{
+                  backgroundColor: m.color + "33",
+                  border: `1.5px solid ${m.color}66`,
+                }}
+              >
+                {m.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+              </div>
+            }
           />
         ))}
       </BentoGrid>
     </div>
   ),
   "particle-field": ({ theme = "dark" }) => (
-    <div className={cn("rounded-xl overflow-hidden border h-[400px] w-full relative", theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-neutral-800")}>
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark"
+          ? "border-neutral-800 bg-neutral-950"
+          : "border-neutral-200 bg-neutral-800",
+      )}
+    >
       <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
-        <h3 className={cn("text-3xl font-bold bg-clip-text text-transparent text-center", theme === "dark" ? "bg-gradient-to-b from-white to-neutral-500" : "bg-gradient-to-b from-neutral-100 to-neutral-400")}>
-          Interactive<br/>Particle Field
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent text-center",
+            theme === "dark"
+              ? "bg-gradient-to-b from-white to-neutral-500"
+              : "bg-gradient-to-b from-neutral-100 to-neutral-400",
+          )}
+        >
+          Interactive
+          <br />
+          Particle Field
         </h3>
       </div>
       <ParticleField
@@ -733,23 +1446,55 @@ export const componentDemos: Record<string, DemoComponent> = {
     </div>
   ),
   "horizontal-scroll-gallery": ({ theme = "dark" }) => (
-    <HorizontalScrollGallery theme={theme}
+    <HorizontalScrollGallery
+      theme={theme}
       items={[
-        <img key="1" src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b?q=80&w=800&auto=format&fit=crop" alt="Landscape 1" className="object-cover w-full h-full" />,
-        <img key="2" src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538?q=80&w=800&auto=format&fit=crop" alt="Landscape 2" className="object-cover w-full h-full" />,
-        <img key="3" src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b?q=80&w=800&auto=format&fit=crop" alt="Landscape 3" className="object-cover w-full h-full" />,
-        <div key="4" className={cn("w-full h-full flex items-center justify-center p-8 text-center", theme === "dark" ? "bg-neutral-900 text-white" : "bg-neutral-200 text-neutral-900")}>
+        <img
+          key="1"
+          src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b?q=80&w=800&auto=format&fit=crop"
+          alt="Landscape 1"
+          className="object-cover w-full h-full"
+        />,
+        <img
+          key="2"
+          src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538?q=80&w=800&auto=format&fit=crop"
+          alt="Landscape 2"
+          className="object-cover w-full h-full"
+        />,
+        <img
+          key="3"
+          src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b?q=80&w=800&auto=format&fit=crop"
+          alt="Landscape 3"
+          className="object-cover w-full h-full"
+        />,
+        <div
+          key="4"
+          className={cn(
+            "w-full h-full flex items-center justify-center p-8 text-center",
+            theme === "dark"
+              ? "bg-neutral-900 text-white"
+              : "bg-neutral-200 text-neutral-900",
+          )}
+        >
           <h3 className="text-4xl font-bold">End of Gallery</h3>
-        </div>
+        </div>,
       ]}
     />
   ),
   "radial-menu": ({ theme = "dark" }) => (
-    <div className={cn("h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
-      <RadialMenu theme={theme}
-        radius={110} 
-        startAngle={-180} 
-        endAngle={0} 
+    <div
+      className={cn(
+        "h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <RadialMenu
+        theme={theme}
+        radius={110}
+        startAngle={-180}
+        endAngle={0}
         staggerDelay={0.06}
         items={[
           { id: "1", label: "Settings", icon: <Layers className="w-5 h-5" /> },
@@ -757,26 +1502,52 @@ export const componentDemos: Record<string, DemoComponent> = {
           { id: "3", label: "Apps", icon: <Terminal className="w-5 h-5" /> },
           { id: "4", label: "Docs", icon: <ScrollText className="w-5 h-5" /> },
           { id: "5", label: "Theme", icon: <Sparkles className="w-5 h-5" /> },
-        ]} 
+        ]}
       />
     </div>
   ),
   "cursor-trail": ({ theme = "dark" }) => (
-    <div className={cn("h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
+    <div
+      className={cn(
+        "h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
       <div className="text-center relative z-10 pointer-events-none">
-        <h3 className={cn("text-3xl font-bold bg-clip-text text-transparent mb-4", theme === "dark" ? "bg-gradient-to-br from-white to-neutral-500" : "bg-gradient-to-br from-neutral-900 to-neutral-600")}>
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent mb-4",
+            theme === "dark"
+              ? "bg-gradient-to-br from-white to-neutral-500"
+              : "bg-gradient-to-br from-neutral-900 to-neutral-600",
+          )}
+        >
           Interactive Cursor Trail
         </h3>
-        <p className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}>Move your mouse inside this block to see the effect.</p>
+        <p
+          className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}
+        >
+          Move your mouse inside this block to see the effect.
+        </p>
       </div>
-      <CursorTrail theme={theme} color="#a855f7" trailLength={30} size={15} decayDuration={0.8} />
+      <CursorTrail
+        theme={theme}
+        color="#a855f7"
+        trailLength={30}
+        size={15}
+        decayDuration={0.8}
+      />
     </div>
   ),
+  "pen-cursor": ({ theme = "dark" }) => <PenCursorDemo theme={theme} />,
   "glow-hero-section/default": ({ theme = "dark" }) => (
     <GlowHeroSection theme={theme} height="h-[520px]" />
   ),
   "glow-hero-section/dark": ({ theme = "dark" }) => (
-    <GlowHeroSection theme={theme}
+    <GlowHeroSection
+      theme={theme}
       height="h-[520px]"
       backgroundColor="#0a0a0f"
       meshColorStart="rgba(139, 92, 246, 0.5)"
@@ -789,7 +1560,8 @@ export const componentDemos: Record<string, DemoComponent> = {
     />
   ),
   "glow-hero-section/no-badge": ({ theme = "dark" }) => (
-    <GlowHeroSection theme={theme}
+    <GlowHeroSection
+      theme={theme}
       height="h-[520px]"
       badge={null}
       heading="Build Interfaces That Stand Out"
@@ -797,46 +1569,72 @@ export const componentDemos: Record<string, DemoComponent> = {
     />
   ),
   "limelight-nav/default": ({ theme = "dark" }) => (
-    <div className={cn("flex items-center justify-center p-12 h-[300px] w-full rounded-xl border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
-      <LimelightNav theme={theme}
+    <div
+      className={cn(
+        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <LimelightNav
+        theme={theme}
         limelightColor="#a855f7"
         items={[
-          { id: '1', icon: <HomeIcon />, label: 'Home' },
-          { id: '2', icon: <Compass />, label: 'Explore' },
-          { id: '3', icon: <Bell />, label: 'Notifications' }
+          { id: "1", icon: <HomeIcon />, label: "Home" },
+          { id: "2", icon: <Compass />, label: "Explore" },
+          { id: "3", icon: <Bell />, label: "Notifications" },
         ]}
       />
     </div>
   ),
   "limelight-nav/custom": ({ theme = "dark" }) => (
-    <div className={cn("flex items-center justify-center p-12 h-[300px] w-full rounded-xl border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
-      <LimelightNav theme={theme}
+    <div
+      className={cn(
+        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <LimelightNav
+        theme={theme}
         limelightColor="#06b6d4"
         className={theme === "dark" ? "bg-neutral-900/50" : "bg-white/60"}
         items={[
-          { id: '1', icon: <HomeIcon />, label: 'Home' },
-          { id: '2', icon: <Bookmark />, label: 'Bookmarks' },
-          { id: '3', icon: <PlusCircle />, label: 'Add' },
-          { id: '4', icon: <User />, label: 'Profile' },
-          { id: '5', icon: <Settings />, label: 'Settings' }
+          { id: "1", icon: <HomeIcon />, label: "Home" },
+          { id: "2", icon: <Bookmark />, label: "Bookmarks" },
+          { id: "3", icon: <PlusCircle />, label: "Add" },
+          { id: "4", icon: <User />, label: "Profile" },
+          { id: "5", icon: <Settings />, label: "Settings" },
         ]}
       />
     </div>
   ),
   "morphing-card-stack/default": ({ theme = "dark" }) => (
-    <div className={cn("flex items-center justify-center p-12 min-h-[500px] w-full rounded-xl border", theme === "dark" ? "bg-neutral-950 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
-      <MorphingCardStack theme={theme}
+    <div
+      className={cn(
+        "flex items-center justify-center p-12 min-h-[500px] w-full rounded-xl border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <MorphingCardStack
+        theme={theme}
         cards={[
           {
             id: "1",
             title: "Magnetic Dock",
-            description: "Cursor-responsive scaling with smooth spring animations",
+            description:
+              "Cursor-responsive scaling with smooth spring animations",
             icon: <Layers className="h-5 w-5" />,
           },
           {
             id: "2",
             title: "Gradient Mesh",
-            description: "Dynamic animated gradient backgrounds that follow your cursor",
+            description:
+              "Dynamic animated gradient backgrounds that follow your cursor",
             icon: <Palette className="h-5 w-5" />,
           },
           {
@@ -851,7 +1649,7 @@ export const componentDemos: Record<string, DemoComponent> = {
             description: "Radial command menu with keyboard navigation",
             icon: <Sparkles className="h-5 w-5" />,
           },
-        ]} 
+        ]}
       />
     </div>
   ),
@@ -865,18 +1663,80 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "joined", label: "Joined" },
     ];
     const data = [
-      { name: "Alex Kim", role: "Engineer", email: "alex@example.com", department: "Platform", status: "Active", joined: "2023-01" },
-      { name: "Sara Chen", role: "Designer", email: "sara@example.com", department: "Product", status: "Active", joined: "2023-03" },
-      { name: "Jordan Lee", role: "PM", email: "jordan@example.com", department: "Growth", status: "Away", joined: "2023-06" },
-      { name: "Maya Patel", role: "Engineer", email: "maya@example.com", department: "Platform", status: "Active", joined: "2024-01" },
-      { name: "Ryan Wu", role: "Designer", email: "ryan@example.com", department: "Product", status: "Away", joined: "2024-02" },
-      { name: "Priya Shah", role: "PM", email: "priya@example.com", department: "Growth", status: "Active", joined: "2024-04" },
-      { name: "Sam Rivera", role: "Engineer", email: "sam@example.com", department: "Platform", status: "Active", joined: "2024-05" },
-      { name: "Jess Taylor", role: "Designer", email: "jess@example.com", department: "Product", status: "Active", joined: "2024-06" },
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        email: "alex@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2023-01",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        email: "sara@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2023-03",
+      },
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        email: "jordan@example.com",
+        department: "Growth",
+        status: "Away",
+        joined: "2023-06",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        email: "maya@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-01",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        email: "ryan@example.com",
+        department: "Product",
+        status: "Away",
+        joined: "2024-02",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        email: "priya@example.com",
+        department: "Growth",
+        status: "Active",
+        joined: "2024-04",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        email: "sam@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-05",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        email: "jess@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2024-06",
+      },
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} paginated pageSize={5} theme={theme} />
+        <DataTable
+          columns={columns}
+          data={data}
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
       </div>
     );
   },
@@ -893,18 +1753,106 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "actions", label: "Actions" },
     ];
     const data = [
-      { id: "1", name: "Alex Kim", email: "alex@example.com", role: "Engineer", department: "Platform", region: "West", joined: "2023-01", status: "Active", actions: "Edit · View" },
-      { id: "2", name: "Sara Chen", email: "sara@example.com", role: "Designer", department: "Product", region: "East", joined: "2023-03", status: "Active", actions: "Edit · View" },
-      { id: "3", name: "Jordan Lee", email: "jordan@example.com", role: "PM", department: "Growth", region: "Central", joined: "2023-06", status: "Away", actions: "Edit · View" },
-      { id: "4", name: "Maya Patel", email: "maya@example.com", role: "Engineer", department: "Platform", region: "West", joined: "2024-01", status: "Active", actions: "Edit · View" },
-      { id: "5", name: "Ryan Wu", email: "ryan@example.com", role: "Designer", department: "Product", region: "East", joined: "2024-02", status: "Away", actions: "Edit · View" },
-      { id: "6", name: "Priya Shah", email: "priya@example.com", role: "PM", department: "Growth", region: "Central", joined: "2024-04", status: "Active", actions: "Edit · View" },
-      { id: "7", name: "Sam Rivera", email: "sam@example.com", role: "Engineer", department: "Platform", region: "West", joined: "2024-05", status: "Active", actions: "Edit · View" },
-      { id: "8", name: "Jess Taylor", email: "jess@example.com", role: "Designer", department: "Product", region: "East", joined: "2024-06", status: "Active", actions: "Edit · View" },
+      {
+        id: "1",
+        name: "Alex Kim",
+        email: "alex@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2023-01",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "2",
+        name: "Sara Chen",
+        email: "sara@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2023-03",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "3",
+        name: "Jordan Lee",
+        email: "jordan@example.com",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2023-06",
+        status: "Away",
+        actions: "Edit · View",
+      },
+      {
+        id: "4",
+        name: "Maya Patel",
+        email: "maya@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-01",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "5",
+        name: "Ryan Wu",
+        email: "ryan@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-02",
+        status: "Away",
+        actions: "Edit · View",
+      },
+      {
+        id: "6",
+        name: "Priya Shah",
+        email: "priya@example.com",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2024-04",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "7",
+        name: "Sam Rivera",
+        email: "sam@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-05",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "8",
+        name: "Jess Taylor",
+        email: "jess@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-06",
+        status: "Active",
+        actions: "Edit · View",
+      },
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} freezeColumns="left" freezeCount={2} paginated pageSize={5} theme={theme} />
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="left"
+          freezeCount={2}
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
       </div>
     );
   },
@@ -921,18 +1869,106 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "actions", label: "Actions" },
     ];
     const data = [
-      { name: "Alex Kim", role: "Engineer", department: "Platform", region: "West", status: "Active", email: "alex@example.com", joined: "2023-01", lastActive: "2024-03", actions: "Edit · View" },
-      { name: "Sara Chen", role: "Designer", department: "Product", region: "East", status: "Active", email: "sara@example.com", joined: "2023-03", lastActive: "2024-03", actions: "Edit · View" },
-      { name: "Jordan Lee", role: "PM", department: "Growth", region: "Central", status: "Away", email: "jordan@example.com", joined: "2023-06", lastActive: "2024-02", actions: "Edit · View" },
-      { name: "Maya Patel", role: "Engineer", department: "Platform", region: "West", status: "Active", email: "maya@example.com", joined: "2024-01", lastActive: "2024-03", actions: "Edit · View" },
-      { name: "Ryan Wu", role: "Designer", department: "Product", region: "East", status: "Away", email: "ryan@example.com", joined: "2024-02", lastActive: "2024-01", actions: "Edit · View" },
-      { name: "Priya Shah", role: "PM", department: "Growth", region: "Central", status: "Active", email: "priya@example.com", joined: "2024-04", lastActive: "2024-03", actions: "Edit · View" },
-      { name: "Sam Rivera", role: "Engineer", department: "Platform", region: "West", status: "Active", email: "sam@example.com", joined: "2024-05", lastActive: "2024-03", actions: "Edit · View" },
-      { name: "Jess Taylor", role: "Designer", department: "Product", region: "East", status: "Active", email: "jess@example.com", joined: "2024-06", lastActive: "2024-03", actions: "Edit · View" },
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        status: "Active",
+        email: "alex@example.com",
+        joined: "2023-01",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        status: "Active",
+        email: "sara@example.com",
+        joined: "2023-03",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        status: "Away",
+        email: "jordan@example.com",
+        joined: "2023-06",
+        lastActive: "2024-02",
+        actions: "Edit · View",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        status: "Active",
+        email: "maya@example.com",
+        joined: "2024-01",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        status: "Away",
+        email: "ryan@example.com",
+        joined: "2024-02",
+        lastActive: "2024-01",
+        actions: "Edit · View",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        status: "Active",
+        email: "priya@example.com",
+        joined: "2024-04",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        status: "Active",
+        email: "sam@example.com",
+        joined: "2024-05",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        status: "Active",
+        email: "jess@example.com",
+        joined: "2024-06",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} freezeColumns="right" freezeCount={1} paginated pageSize={5} theme={theme} />
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="right"
+          freezeCount={1}
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
       </div>
     );
   },
@@ -949,14 +1985,94 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "actions", label: "Actions" },
     ];
     const data = [
-      { id: "1", name: "Alex Kim", email: "alex@example.com", role: "Engineer", department: "Platform", region: "West", joined: "2023-01", status: "Active", actions: "Edit · View" },
-      { id: "2", name: "Sara Chen", email: "sara@example.com", role: "Designer", department: "Product", region: "East", joined: "2023-03", status: "Active", actions: "Edit · View" },
-      { id: "3", name: "Jordan Lee", email: "jordan@example.com", role: "PM", department: "Growth", region: "Central", joined: "2023-06", status: "Away", actions: "Edit · View" },
-      { id: "4", name: "Maya Patel", email: "maya@example.com", role: "Engineer", department: "Platform", region: "West", joined: "2024-01", status: "Active", actions: "Edit · View" },
-      { id: "5", name: "Ryan Wu", email: "ryan@example.com", role: "Designer", department: "Product", region: "East", joined: "2024-02", status: "Away", actions: "Edit · View" },
-      { id: "6", name: "Priya Shah", email: "priya@example.com", role: "PM", department: "Growth", region: "Central", joined: "2024-04", status: "Active", actions: "Edit · View" },
-      { id: "7", name: "Sam Rivera", email: "sam@example.com", role: "Engineer", department: "Platform", region: "West", joined: "2024-05", status: "Active", actions: "Edit · View" },
-      { id: "8", name: "Jess Taylor", email: "jess@example.com", role: "Designer", department: "Product", region: "East", joined: "2024-06", status: "Active", actions: "Edit · View" },
+      {
+        id: "1",
+        name: "Alex Kim",
+        email: "alex@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2023-01",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "2",
+        name: "Sara Chen",
+        email: "sara@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2023-03",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "3",
+        name: "Jordan Lee",
+        email: "jordan@example.com",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2023-06",
+        status: "Away",
+        actions: "Edit · View",
+      },
+      {
+        id: "4",
+        name: "Maya Patel",
+        email: "maya@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-01",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "5",
+        name: "Ryan Wu",
+        email: "ryan@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-02",
+        status: "Away",
+        actions: "Edit · View",
+      },
+      {
+        id: "6",
+        name: "Priya Shah",
+        email: "priya@example.com",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2024-04",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "7",
+        name: "Sam Rivera",
+        email: "sam@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-05",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "8",
+        name: "Jess Taylor",
+        email: "jess@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-06",
+        status: "Active",
+        actions: "Edit · View",
+      },
     ];
     return (
       <div className="w-full p-6">
@@ -983,18 +2099,81 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "joined", label: "Joined" },
     ];
     const data = [
-      { name: "Alex Kim", role: "Engineer", email: "alex@example.com", department: "Platform", status: "Active", joined: "2023-01" },
-      { name: "Sara Chen", role: "Designer", email: "sara@example.com", department: "Product", status: "Active", joined: "2023-03" },
-      { name: "Jordan Lee", role: "PM", email: "jordan@example.com", department: "Growth", status: "Away", joined: "2023-06" },
-      { name: "Maya Patel", role: "Engineer", email: "maya@example.com", department: "Platform", status: "Active", joined: "2024-01" },
-      { name: "Ryan Wu", role: "Designer", email: "ryan@example.com", department: "Product", status: "Away", joined: "2024-02" },
-      { name: "Priya Shah", role: "PM", email: "priya@example.com", department: "Growth", status: "Active", joined: "2024-04" },
-      { name: "Sam Rivera", role: "Engineer", email: "sam@example.com", department: "Platform", status: "Active", joined: "2024-05" },
-      { name: "Jess Taylor", role: "Designer", email: "jess@example.com", department: "Product", status: "Active", joined: "2024-06" },
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        email: "alex@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2023-01",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        email: "sara@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2023-03",
+      },
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        email: "jordan@example.com",
+        department: "Growth",
+        status: "Away",
+        joined: "2023-06",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        email: "maya@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-01",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        email: "ryan@example.com",
+        department: "Product",
+        status: "Away",
+        joined: "2024-02",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        email: "priya@example.com",
+        department: "Growth",
+        status: "Active",
+        joined: "2024-04",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        email: "sam@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-05",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        email: "jess@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2024-06",
+      },
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} border paginated pageSize={5} theme={theme} />
+        <DataTable
+          columns={columns}
+          data={data}
+          border
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
       </div>
     );
   },
@@ -1007,18 +2186,73 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "status", label: "Status", sortKey: "status" },
     ];
     const data = [
-      { name: "Jordan Lee", role: "PM", department: "Growth", joined: "2024-03", status: "Away" },
-      { name: "Alex Kim", role: "Engineer", department: "Platform", joined: "2024-01", status: "Active" },
-      { name: "Sara Chen", role: "Designer", department: "Product", joined: "2024-02", status: "Active" },
-      { name: "Maya Patel", role: "Engineer", department: "Platform", joined: "2023-11", status: "Active" },
-      { name: "Ryan Wu", role: "Designer", department: "Product", joined: "2024-05", status: "Away" },
-      { name: "Priya Shah", role: "PM", department: "Growth", joined: "2023-08", status: "Active" },
-      { name: "Sam Rivera", role: "Engineer", department: "Platform", joined: "2024-06", status: "Active" },
-      { name: "Jess Taylor", role: "Designer", department: "Product", joined: "2023-09", status: "Active" },
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        department: "Growth",
+        joined: "2024-03",
+        status: "Away",
+      },
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        department: "Platform",
+        joined: "2024-01",
+        status: "Active",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        department: "Product",
+        joined: "2024-02",
+        status: "Active",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        department: "Platform",
+        joined: "2023-11",
+        status: "Active",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        department: "Product",
+        joined: "2024-05",
+        status: "Away",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        department: "Growth",
+        joined: "2023-08",
+        status: "Active",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        department: "Platform",
+        joined: "2024-06",
+        status: "Active",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        department: "Product",
+        joined: "2023-09",
+        status: "Active",
+      },
     ];
     return (
       <div className="w-full p-6">
-        <DataTable columns={columns} data={data} sortable paginated pageSize={5} theme={theme} />
+        <DataTable
+          columns={columns}
+          data={data}
+          sortable
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
       </div>
     );
   },
@@ -1032,14 +2266,70 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "joined", label: "Joined" },
     ];
     const data = [
-      { name: "Alex Kim", role: "Engineer", email: "alex@example.com", department: "Platform", status: "Active", joined: "2023-01" },
-      { name: "Sara Chen", role: "Designer", email: "sara@example.com", department: "Product", status: "Active", joined: "2023-03" },
-      { name: "Jordan Lee", role: "PM", email: "jordan@example.com", department: "Growth", status: "Away", joined: "2023-06" },
-      { name: "Maya Patel", role: "Engineer", email: "maya@example.com", department: "Platform", status: "Active", joined: "2024-01" },
-      { name: "Ryan Wu", role: "Designer", email: "ryan@example.com", department: "Product", status: "Away", joined: "2024-02" },
-      { name: "Priya Shah", role: "PM", email: "priya@example.com", department: "Growth", status: "Active", joined: "2024-04" },
-      { name: "Sam Rivera", role: "Engineer", email: "sam@example.com", department: "Platform", status: "Active", joined: "2024-05" },
-      { name: "Jess Taylor", role: "Designer", email: "jess@example.com", department: "Product", status: "Active", joined: "2024-06" },
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        email: "alex@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2023-01",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        email: "sara@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2023-03",
+      },
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        email: "jordan@example.com",
+        department: "Growth",
+        status: "Away",
+        joined: "2023-06",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        email: "maya@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-01",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        email: "ryan@example.com",
+        department: "Product",
+        status: "Away",
+        joined: "2024-02",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        email: "priya@example.com",
+        department: "Growth",
+        status: "Active",
+        joined: "2024-04",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        email: "sam@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-05",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        email: "jess@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2024-06",
+      },
     ];
     return (
       <div className="w-full p-6">
@@ -1069,14 +2359,78 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "actions", label: "Actions" },
     ];
     const data = [
-      { id: "1", name: "Jordan Lee", role: "PM", department: "Growth", region: "Central", joined: "2023-06", actions: "Edit" },
-      { id: "2", name: "Alex Kim", role: "Engineer", department: "Platform", region: "West", joined: "2023-01", actions: "Edit" },
-      { id: "3", name: "Sara Chen", role: "Designer", department: "Product", region: "East", joined: "2023-03", actions: "Edit" },
-      { id: "4", name: "Maya Patel", role: "Engineer", department: "Platform", region: "West", joined: "2024-01", actions: "Edit" },
-      { id: "5", name: "Ryan Wu", role: "Designer", department: "Product", region: "East", joined: "2024-02", actions: "Edit" },
-      { id: "6", name: "Priya Shah", role: "PM", department: "Growth", region: "Central", joined: "2024-04", actions: "Edit" },
-      { id: "7", name: "Sam Rivera", role: "Engineer", department: "Platform", region: "West", joined: "2024-05", actions: "Edit" },
-      { id: "8", name: "Jess Taylor", role: "Designer", department: "Product", region: "East", joined: "2024-06", actions: "Edit" },
+      {
+        id: "1",
+        name: "Jordan Lee",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2023-06",
+        actions: "Edit",
+      },
+      {
+        id: "2",
+        name: "Alex Kim",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2023-01",
+        actions: "Edit",
+      },
+      {
+        id: "3",
+        name: "Sara Chen",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2023-03",
+        actions: "Edit",
+      },
+      {
+        id: "4",
+        name: "Maya Patel",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-01",
+        actions: "Edit",
+      },
+      {
+        id: "5",
+        name: "Ryan Wu",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-02",
+        actions: "Edit",
+      },
+      {
+        id: "6",
+        name: "Priya Shah",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2024-04",
+        actions: "Edit",
+      },
+      {
+        id: "7",
+        name: "Sam Rivera",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-05",
+        actions: "Edit",
+      },
+      {
+        id: "8",
+        name: "Jess Taylor",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-06",
+        actions: "Edit",
+      },
     ];
     return (
       <div className="w-full p-6">

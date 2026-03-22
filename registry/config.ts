@@ -275,6 +275,14 @@ export const registry: Registry = [
         ],
     },
     {
+        name: "pen-cursor",
+        dependencies: ["clsx", "tailwind-merge"],
+        files: [
+            { path: "pen-cursor.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "glow-hero-section",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
