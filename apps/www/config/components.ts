@@ -51,6 +51,89 @@ export type ComponentItem = {
 
 export const componentsList: ComponentItem[] = [
   {
+    slug: "animated-glowing-text-outline",
+    name: "Animated Glowing Text",
+    description: "Animated SVG drawing trace outline over shimmering text characters.",
+    installCmd: "npx uniqueui add animated-glowing-text-outline",
+    icon: Sparkles,
+    category: "Text",
+    props: [
+      {
+        name: "text",
+        type: "string",
+        default: '"Hello World"',
+        description: "The text content to be displayed.",
+      },
+      {
+        name: "fontSize",
+        type: "number | string",
+        default: "80",
+        description: "The font size of the text.",
+      },
+      {
+        name: "fontWeight",
+        type: "string | number",
+        default: "900",
+        description: "The CSS font-weight of the text.",
+      },
+      {
+        name: "textColor",
+        type: "string",
+        default: '"#080808"',
+        description: "Fill color of the text face.",
+      },
+      {
+        name: "outlineColor",
+        type: "string",
+        default: '"#333333"',
+        description: "The default color of the text stroke outline.",
+      },
+      {
+        name: "colors",
+        type: "string[]",
+        default: '["#ffaa40", "#9c40ff", "#ffaa40"]',
+        description: "Array of colors forming the animated gradient sweep.",
+      },
+      {
+        name: "outlineWidth",
+        type: "number | string",
+        default: '"2px"',
+        description: "Width of the stroke outline.",
+      },
+      {
+        name: "animationDuration",
+        type: "number",
+        default: "4",
+        description: "Duration of the stroke-drawing animation for a SINGLE character (in seconds).",
+      },
+      {
+        name: "staggerDelay",
+        type: "number",
+        default: "0.15",
+        description: "Delay between each character starting to draw (in seconds).",
+      },
+      {
+        name: "dashArray",
+        type: "number",
+        default: "1000",
+        description: "Length of the SVG stroke dash array. Tune this higher for longer paths.",
+      },
+    ],
+    usageCode: `import GlowingTextOutline from "@/components/ui/animated-glowing-text-outline";
+
+export default function Example() {
+  return (
+    <div className="flex justify-center p-10 bg-black rounded-xl">
+      <GlowingTextOutline 
+        text="Hello World" 
+        colors={["#06b6d4", "#3b82f6", "#06b6d4"]} 
+        animationDuration={5}
+      />
+    </div>
+  );
+}`,
+  },
+  {
     slug: "moving-border",
     name: "Moving Border",
     description:
