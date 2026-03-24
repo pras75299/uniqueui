@@ -1,8 +1,9 @@
 "use client";
 import React, { useId, useMemo } from "react";
 import { motion } from "motion/react";
+import { cn } from "@/lib/utils";
 
-export interface GlowingTextOutlineProps {
+export interface GlowingTextOutlineProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The text to display */
   text?: string;
   /** Font size in pixels or string (e.g., "4rem") */
@@ -33,6 +34,8 @@ const GlowingTextOutline = ({
   animationDuration = 2.5,
   staggerDelay = 0.2,
   dashArray = 1000,
+  className,
+  ...props
 }: GlowingTextOutlineProps) => {
   const uniqueId = useId().replace(/:/g, "");
   const gradientId = `glow-gradient-${uniqueId}`;
@@ -70,11 +73,15 @@ const GlowingTextOutline = ({
 
   return (
     <div
-      className="relative inline-flex items-center justify-center select-none"
+      className={cn(
+        "relative inline-flex items-center justify-center select-none",
+        className
+      )}
       style={{
         fontSize,
         fontWeight,
       }}
+      {...props}
     >
       {/* Invisible HTML text blocks out the exact width and height needed by the container */}
       <span className="opacity-0 pointer-events-none">{text}</span>
@@ -82,11 +89,15 @@ const GlowingTextOutline = ({
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none"
         style={{ overflow: "visible" }}
+        aria-hidden="true"
       >
         <defs>
           <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
             {colors.map((color, index) => {
-              const offset = `${(index / (colors.length - 1)) * 100}%`;
+              const offset =
+                colors.length <= 1
+                  ? "0%"
+                  : `${(index / (colors.length - 1)) * 100}%`;
               return <stop key={index} offset={offset} stopColor={color} />;
             })}
           </linearGradient>
