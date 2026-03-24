@@ -1,5 +1,5 @@
 "use client";
-import React, { useId } from "react";
+import React, { useId, useMemo } from "react";
 import { motion } from "motion/react";
 
 export interface GlowingTextOutlineProps {
@@ -9,8 +9,6 @@ export interface GlowingTextOutlineProps {
   fontSize?: number | string;
   /** Font weight */
   fontWeight?: string | number;
-  /** Fill color of the text face */
-  textColor?: string;
   /** The default color of the unlit base outline */
   outlineColor?: string;
   /** Array of colors forming the animated gradient sweep */
@@ -29,7 +27,6 @@ const GlowingTextOutline = ({
   text = "Hello World",
   fontSize = 80,
   fontWeight = 900,
-  textColor = "#080808",
   outlineColor = "#333333",
   colors = ["#ffaa40", "#9c40ff", "#ffaa40"],
   outlineWidth = 2,
@@ -40,9 +37,19 @@ const GlowingTextOutline = ({
   const uniqueId = useId().replace(/:/g, "");
   const gradientId = `glow-gradient-${uniqueId}`;
 
+  const maskId = `glow-mask-${uniqueId}`;
+
   const characters = text.split("");
   const totalCycleTime =
     animationDuration + characters.length * staggerDelay + 1.2; // 1.2s blank hold period at the end before looping
+
+  // We double the stroke width because the mask will erase the inner half of the stroke
+  const doubleOutlineWidth = useMemo(() => {
+    if (typeof outlineWidth === "number") {
+      return outlineWidth * 2;
+    }
+    return `calc(${outlineWidth} * 2)`;
+  }, [outlineWidth]);
 
   const getAnimationProps = (index: number) => {
     const pStart = (index * staggerDelay) / totalCycleTime;
@@ -83,6 +90,23 @@ const GlowingTextOutline = ({
               return <stop key={index} offset={offset} stopColor={color} />;
             })}
           </linearGradient>
+
+          {/* 
+            This mask erases the inner body of the text, leaving ONLY the outer extended stroke.
+            This prevents rendering ugly internal stroke geometry from self-intersecting font paths!
+          */}
+          <mask id={maskId}>
+            <rect x="0" y="0" width="100%" height="100%" fill="white" />
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill="black"
+            >
+              {text}
+            </text>
+          </mask>
         </defs>
 
         {/* 1. Base Outline Background 
@@ -95,7 +119,8 @@ const GlowingTextOutline = ({
           dominantBaseline="central"
           fill="transparent"
           stroke={outlineColor}
-          strokeWidth={outlineWidth}
+          strokeWidth={doubleOutlineWidth}
+          mask={`url(#${maskId})`}
         >
           {text}
         </text>
@@ -108,7 +133,8 @@ const GlowingTextOutline = ({
           dominantBaseline="central"
           fill="transparent"
           stroke={`url(#${gradientId})`}
-          strokeWidth={outlineWidth}
+          strokeWidth={doubleOutlineWidth}
+          mask={`url(#${maskId})`}
         >
           {characters.map((char, index) => {
             const { strokeDashoffset, times } = getAnimationProps(index);
@@ -131,18 +157,6 @@ const GlowingTextOutline = ({
           })}
         </text>
 
-        {/* 3. Foreground Solid Text (Top Layer)
-            Sits on top and covers the inner portions of the strokes!
-        */}
-        <text
-          x="50%"
-          y="50%"
-          textAnchor="middle"
-          dominantBaseline="central"
-          fill={textColor}
-        >
-          {text}
-        </text>
       </svg>
     </div>
   );

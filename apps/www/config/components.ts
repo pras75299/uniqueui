@@ -126,7 +126,7 @@ export default function Example() {
     <div className="flex justify-center p-10 bg-black rounded-xl">
       <GlowingTextOutline 
         text="Hello World" 
-        colors={["#06b6d4", "#3b82f6", "#06b6d4"]} 
+        colors={["#ffaa40", "#9c40ff", "#ffaa40"]}
         animationDuration={5}
       />
     </div>

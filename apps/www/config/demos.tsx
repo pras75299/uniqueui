@@ -357,11 +357,11 @@ function NestedCommentsDemo({ theme = "dark" }: DemoThemeProps) {
 
 export const componentDemos: Record<string, DemoComponent> = {
   "animated-glowing-text-outline": ({ theme = "dark" }) => (
-    <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-[#080808] gap-16 border border-neutral-800 rounded-xl overflow-hidden">
+    <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-background gap-16 border border-border rounded-xl overflow-hidden relative">
       <GlowingTextOutline 
         text="Hello World" 
         fontSize={80} 
-        colors={["#06b6d4", "#3b82f6", "#06b6d4"]} 
+        colors={["#ffaa40", "#9c40ff", "#ffaa40"]} 
         animationDuration={5}
       />
       
