@@ -122,6 +122,14 @@ export const registry: Registry = [
     },
     // ─── Phase 2 — Core Library ───
     {
+        name: "animated-glowing-text-outline",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "animated-glowing-text-outline.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "gradient-text-reveal",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [

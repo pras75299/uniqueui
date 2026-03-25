@@ -43,6 +43,7 @@ import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { LimelightNav } from "@/components/ui/limelight-nav";
 import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
 import { DataTable } from "@/components/ui/data-table";
+import GlowingTextOutline from "@/components/ui/animated-glowing-text-outline";
 import { useRef, useState } from "react";
 import {
   Ghost,
@@ -355,6 +356,17 @@ function NestedCommentsDemo({ theme = "dark" }: DemoThemeProps) {
 }
 
 export const componentDemos: Record<string, DemoComponent> = {
+  "animated-glowing-text-outline": ({ theme = "dark" }) => (
+    <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-background gap-16 border border-border rounded-xl overflow-hidden relative">
+      <GlowingTextOutline 
+        text="Hello World" 
+        fontSize={80} 
+        colors={["#ffaa40", "#9c40ff", "#ffaa40"]} 
+        animationDuration={5}
+      />
+      
+    </div>
+  ),
   "moving-border": ({ theme = "dark" }) => (
     <div className="flex flex-wrap gap-6 items-center justify-center p-10">
       <Button
