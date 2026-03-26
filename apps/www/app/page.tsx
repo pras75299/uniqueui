@@ -24,7 +24,6 @@ import {
   type CardData,
 } from "@/components/ui/morphing-card-stack";
 import { PenCursor } from "@/components/ui/pen-cursor";
-
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const playgroundCardRef = useRef<HTMLDivElement>(null);
