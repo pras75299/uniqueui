@@ -3281,22 +3281,26 @@ export default function Example() {
       {
         name: "onSubmitPassword",
         type: "(password: string) => Promise<boolean>",
-        description: "Called on password login submit before advancing to OTP.",
+        description:
+          "Called on password login submit. Return false to stay on this step and show an error; any other return (including void) advances to OTP on success.",
       },
       {
         name: "onCreatePassword",
         type: "(password: string) => Promise<boolean>",
-        description: "Called when saving a new password before advancing to OTP.",
+        description:
+          "Called when saving a new password. Return false to stay on this step and show an error; otherwise advance to OTP.",
       },
       {
         name: "onSubmitOTP",
         type: "(otp: string) => Promise<boolean>",
-        description: "Called when the user submits a six-digit code.",
+        description:
+          "Called when the user submits a six-digit code. Return false to show an invalid-code message without leaving the step.",
       },
       {
         name: "onResendOTP",
         type: "() => Promise<boolean>",
-        description: "Optional handler when the user taps resend code.",
+        description:
+          "Optional resend handler. Return false to keep the current timer and code; on throw or false, resend count is not incremented.",
       },
     ],
     usageCode: `"use client";
