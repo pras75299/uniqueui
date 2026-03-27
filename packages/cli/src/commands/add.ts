@@ -6,7 +6,8 @@ import fs from "fs-extra";
 import chalk from "chalk";
 import os from "os";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
+import { assertSafeNpmDependencies } from "../npm-dependency-name";
 
 // Type definition for Registry (matching what we built)
 type RegistryItem = {
@@ -15,6 +16,31 @@ type RegistryItem = {
     files: Array<{ path: string; type: string; content: string }>;
     tailwindConfig?: Record<string, any>;
 };
+
+/** Local file path (./...) or official registry hosts only. */
+function isTrustedRegistryUrl(url: string): boolean {
+    if (url.startsWith(".")) return true;
+    try {
+        const u = new URL(url);
+        if (u.hostname === "uniqueui-platform.vercel.app") return true;
+        if (u.hostname === "raw.githubusercontent.com" && u.pathname.includes("pras75299/uniqueui")) {
+            return true;
+        }
+        return false;
+    } catch {
+        return false;
+    }
+}
+
+function warnIfUntrustedRegistry(url: string) {
+    if (process.env.UNIQUEUI_SKIP_REGISTRY_WARN) return;
+    if (isTrustedRegistryUrl(url)) return;
+    console.warn(
+        chalk.yellow(
+            "Warning: custom registry URL — only use sources you trust. The registry controls package installs and files written to your project. See SECURITY.md in the UniqueUI repository.",
+        ),
+    );
+}
 
 export async function add(componentName: string, options: { url: string }) {
     console.log(`Fetching ${componentName} from ${options.url}...`);
@@ -112,20 +138,34 @@ export async function add(componentName: string, options: { url: string }) {
         process.exit(1);
     }
 
+    warnIfUntrustedRegistry(options.url);
+
     const item = registry.find((c) => c.name === componentName);
     if (!item) {
         console.error(chalk.red(`Component ${componentName} not found.`));
         process.exit(1);
     }
 
-    // 3. Install dependencies
+    // 3. Install dependencies (validated names + no shell — avoids injection from a malicious registry)
     if (item.dependencies.length) {
+        const depCheck = assertSafeNpmDependencies(item.dependencies);
+        if (!depCheck.ok) {
+            console.error(
+                chalk.red(
+                    `Refusing to install: invalid dependency name(s) from registry: ${depCheck.invalid.join(", ")}`,
+                ),
+            );
+            process.exit(1);
+        }
         console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
         try {
-            // Detect package manager - simplified
             const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
-            const cmd = pm === "npm" ? "install" : "add"; // yarn add, pnpm add
-            execSync(`${pm} ${cmd} ${item.dependencies.join(" ")}`, { stdio: "inherit" });
+            const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
+            const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
+            if (result.error) throw result.error;
+            if (result.status !== 0 && result.status !== null) {
+                throw new Error(`package manager exited with code ${result.status}`);
+            }
         } catch (e) {
             console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
         }
@@ -137,12 +177,18 @@ export async function add(componentName: string, options: { url: string }) {
         await updateTailwindConfig(config.tailwind.config, item.tailwindConfig);
     }
 
+    const allowedRegistryFile = (name: string) => /\.(tsx?|jsx?|mjs|cjs)$/i.test(name);
+
     // 5. Write Files
     for (const file of item.files) {
         if (file.type === "registry:ui") {
             const targetDir = path.resolve(config.paths.components || "components/ui");
             await fs.ensureDir(targetDir);
             const fileName = path.basename(file.path);
+            if (!allowedRegistryFile(fileName)) {
+                console.error(chalk.red(`Refusing to write disallowed file name from registry: ${fileName}`));
+                process.exit(1);
+            }
             const targetPath = path.join(targetDir, fileName);
             await fs.writeFile(targetPath, file.content);
             console.log(chalk.green(`Created ${fileName}`));
@@ -150,6 +196,10 @@ export async function add(componentName: string, options: { url: string }) {
             const targetDir = path.resolve(config.paths.lib || "utils");
             await fs.ensureDir(targetDir);
             const fileName = path.basename(file.path);
+            if (!allowedRegistryFile(fileName)) {
+                console.error(chalk.red(`Refusing to write disallowed util file name from registry: ${fileName}`));
+                process.exit(1);
+            }
             const targetPath = path.join(targetDir, fileName);
 
             // Only create util if it doesn't exist

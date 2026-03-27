@@ -28,6 +28,7 @@ UniqueUI is a collection of **copy-paste animated components** built with React,
 - [How It Works](#how-it-works)
 - [Customization](#customization)
 - [Configuration Reference](#configuration-reference)
+- [Security](#security)
 - [Troubleshooting](#troubleshooting)
 - [Links](#links)
 
@@ -645,6 +646,19 @@ Components are plain `.tsx` files — add variants, dark mode, responsive styles
 | `componentsDir` | `string` | `components/ui` | Directory where component files are installed |
 | `typescript` | `boolean` | `true` | Use `.tsx` file extension for components |
 | `tailwindConfig` | `string` | `tailwind.config.ts` | Path to your Tailwind config for auto-merging animations |
+
+---
+
+## Security
+
+**Registry trust:** `uniqueui add` downloads a registry and then installs npm packages and writes files into your project. Using `--url` with an **untrusted** host is equivalent to trusting arbitrary remote code.
+
+- Prefer the **default** registry URL or a **local** `./registry.json` you control.
+- The CLI prints a **warning** when `--url` is not a known official host; set `UNIQUEUI_SKIP_REGISTRY_WARN=1` only in CI after you have verified the URL.
+- Dependency names are **validated** before `npm`/`pnpm`/`yarn` runs, and installs use **no shell** to limit injection from tampered registry data.
+- Only `.ts`, `.tsx`, `.js`, `.jsx`, `.mjs`, and `.cjs` filenames from the registry are written.
+
+See the repository root [**SECURITY.md**](https://github.com/pras75299/uniqueui/blob/main/SECURITY.md) for reporting vulnerabilities and more detail.
 
 ---
 

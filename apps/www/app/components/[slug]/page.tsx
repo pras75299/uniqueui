@@ -5,6 +5,7 @@ import { Terminal } from "lucide-react";
 import ClientCopyButton from "./client-copy-button";
 import BentoVariantSwitcher from "./bento-variant-switcher";
 import { codeToHtml } from "shiki";
+import { escapeHtml } from "@/lib/escape-html";
 
 // Generate static params for all components
 export function generateStaticParams() {
@@ -26,9 +27,11 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
   // ── Shared highlight helper ────────────────────────────────────────────────
   async function highlight(code: string): Promise<string> {
     try {
+      // usageCode is repo-trusted; this path is normal.
       return await codeToHtml(code, { lang: "tsx", theme: "vitesse-dark" });
     } catch {
-      return `<pre><code>${code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>`;
+      // Full escape on failure — avoids breaking out of <pre><code> if Shiki errors.
+      return `<pre><code>${escapeHtml(code)}</code></pre>`;
     }
   }
 
