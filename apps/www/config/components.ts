@@ -3280,25 +3280,25 @@ export default function Example() {
       },
       {
         name: "onSubmitPassword",
-        type: "(password: string) => Promise<boolean>",
+        type: "(password: string) => Promise<boolean | void>",
         description:
           "Called on password login submit. Return false to stay on this step and show an error; any other return (including void) advances to OTP on success.",
       },
       {
         name: "onCreatePassword",
-        type: "(password: string) => Promise<boolean>",
+        type: "(password: string) => Promise<boolean | void>",
         description:
           "Called when saving a new password. Return false to stay on this step and show an error; otherwise advance to OTP.",
       },
       {
         name: "onSubmitOTP",
-        type: "(otp: string) => Promise<boolean>",
+        type: "(otp: string) => Promise<boolean | void>",
         description:
           "Called when the user submits a six-digit code. Return false to show an invalid-code message without leaving the step.",
       },
       {
         name: "onResendOTP",
-        type: "() => Promise<boolean>",
+        type: "() => Promise<boolean | void>",
         description:
           "Optional resend handler. Return false to keep the current timer and code; on throw or false, resend count is not incremented.",
       },
