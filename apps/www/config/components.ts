@@ -3302,6 +3302,36 @@ export default function Example() {
         description:
           "Optional resend handler. Return false to keep the current timer and code; on throw or false, resend count is not incremented.",
       },
+      {
+        name: "strings",
+        type: "MultiStepAuthStringsPartial",
+        description:
+          "Deep-partial overrides for all UI copy; defaults are exported as MULTI_STEP_AUTH_DEFAULT_STRINGS for reference and i18n.",
+      },
+      {
+        name: "otpResendCooldownSeconds",
+        type: "number",
+        default: "30",
+        description: "Countdown length before the resend action is available again.",
+      },
+      {
+        name: "otpMaxResends",
+        type: "number",
+        default: "3",
+        description: "Maximum resend taps before the UI locks resend.",
+      },
+      {
+        name: "demoEmailDelayMs",
+        type: "number",
+        default: "800",
+        description: "Artificial delay after email submit when onSubmitEmail is omitted (demo mode).",
+      },
+      {
+        name: "demoPasswordDelayMs",
+        type: "number",
+        default: "1000",
+        description: "Artificial delay after password/OTP demo submits when the matching handler is omitted.",
+      },
     ],
     usageCode: `"use client";
 
@@ -3311,6 +3341,10 @@ export default function Example() {
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
       <MultiStepAuthCard
+        strings={{
+          email: { titleSignIn: "Log in", continue: "Continue" },
+        }}
+        otpResendCooldownSeconds={45}
         onSubmitEmail={async (email) => {
           const res = await fetch("/api/auth/lookup", {
             method: "POST",
