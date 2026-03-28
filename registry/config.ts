@@ -325,4 +325,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "multi-step-auth-card",
+        dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            { path: "multi-step-auth-card.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

@@ -21,6 +21,7 @@ import {
   LayoutGrid,
   Table,
   Pen,
+  Shield,
 } from "lucide-react";
 
 export type ComponentVariant = {
@@ -3244,5 +3245,123 @@ export default function Example() {
 }`,
       },
     ],
+  },
+  {
+    slug: "multi-step-auth-card",
+    name: "Multi-Step Auth Card",
+    description:
+      "Animation-first enterprise auth flow: email discovery, first-time and returning user paths, password create/login, and OTP verification with spring transitions between steps.",
+    installCmd: "npx uniqueui add multi-step-auth-card",
+    icon: Shield,
+    category: "Navigation & Overlays",
+    props: [
+      {
+        name: "className",
+        type: "string",
+        description: "Additional Tailwind classes for the outer card container.",
+      },
+      {
+        name: "initialState",
+        type: "AuthState",
+        default: '"email"',
+        description:
+          'Starting step: "email" | "unregistered" | "first-time" | "create-password" | "password-login" | "otp".',
+      },
+      {
+        name: "onStateChange",
+        type: "(state: AuthState) => void",
+        description: "Called whenever the active auth step changes.",
+      },
+      {
+        name: "onSubmitEmail",
+        type: "(email: string) => Promise<{ exists: boolean; registered: boolean }>",
+        description:
+          "If provided, drives routing after email submit; otherwise demo heuristics apply (e.g. email containing \"new\" or \"err\").",
+      },
+      {
+        name: "onSubmitPassword",
+        type: "(password: string) => Promise<boolean | void>",
+        description:
+          "Called on password login submit. Return false to stay on this step and show an error; any other return (including void) advances to OTP on success.",
+      },
+      {
+        name: "onCreatePassword",
+        type: "(password: string) => Promise<boolean | void>",
+        description:
+          "Called when saving a new password. Return false to stay on this step and show an error; otherwise advance to OTP.",
+      },
+      {
+        name: "onSubmitOTP",
+        type: "(otp: string) => Promise<boolean | void>",
+        description:
+          "Called when the user submits a six-digit code. Return false to show an invalid-code message without leaving the step.",
+      },
+      {
+        name: "onResendOTP",
+        type: "() => Promise<boolean | void>",
+        description:
+          "Optional resend handler. Return false to keep the current timer and code; on throw or false, resend count is not incremented.",
+      },
+      {
+        name: "strings",
+        type: "MultiStepAuthStringsPartial",
+        description:
+          "Deep-partial overrides for all UI copy; defaults are exported as MULTI_STEP_AUTH_DEFAULT_STRINGS for reference and i18n.",
+      },
+      {
+        name: "otpResendCooldownSeconds",
+        type: "number",
+        default: "30",
+        description: "Countdown length before the resend action is available again.",
+      },
+      {
+        name: "otpMaxResends",
+        type: "number",
+        default: "3",
+        description: "Maximum resend taps before the UI locks resend.",
+      },
+      {
+        name: "demoEmailDelayMs",
+        type: "number",
+        default: "800",
+        description: "Artificial delay after email submit when onSubmitEmail is omitted (demo mode).",
+      },
+      {
+        name: "demoPasswordDelayMs",
+        type: "number",
+        default: "1000",
+        description: "Artificial delay after password/OTP demo submits when the matching handler is omitted.",
+      },
+      {
+        name: "requireTermsConsent",
+        type: "boolean",
+        default: "true",
+        description:
+          "When true, the initial email step shows a terms/privacy checkbox and blocks submit until it is checked. Set false to hide it.",
+      },
+    ],
+    usageCode: `"use client";
+
+import { MultiStepAuthCard } from "@/components/ui/multi-step-auth-card";
+
+export default function Example() {
+  return (
+    <div className="flex min-h-[400px] items-center justify-center p-8">
+      <MultiStepAuthCard
+        strings={{
+          email: { titleSignIn: "Log in", continue: "Continue" },
+        }}
+        otpResendCooldownSeconds={45}
+        onSubmitEmail={async (email) => {
+          const res = await fetch("/api/auth/lookup", {
+            method: "POST",
+            body: JSON.stringify({ email }),
+          }).then((r) => r.json());
+          return { exists: res.exists, registered: res.registered };
+        }}
+      />
+    </div>
+  );
+}`,
   },
 ];

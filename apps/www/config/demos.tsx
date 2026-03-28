@@ -42,6 +42,7 @@ import { PenCursor } from "@/components/ui/pen-cursor";
 import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { LimelightNav } from "@/components/ui/limelight-nav";
 import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
+import { MultiStepAuthCard } from "@/components/ui/multi-step-auth-card";
 import { DataTable } from "@/components/ui/data-table";
 import GlowingTextOutline from "@/components/ui/animated-glowing-text-outline";
 import { useRef, useState } from "react";
@@ -1663,6 +1664,18 @@ export const componentDemos: Record<string, DemoComponent> = {
           },
         ]}
       />
+    </div>
+  ),
+  "multi-step-auth-card": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex items-center justify-center p-10 min-h-[420px] w-full rounded-xl border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <MultiStepAuthCard />
     </div>
   ),
   "data-table/default": ({ theme = "dark" }) => {
