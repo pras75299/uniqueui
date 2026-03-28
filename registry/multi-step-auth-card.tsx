@@ -22,6 +22,8 @@ export const MULTI_STEP_AUTH_DEFAULT_STRINGS = {
     and: " and ",
     privacy: "Privacy Policy",
     emptyEmail: "Please enter your email.",
+    consentRequired:
+      "Please accept the Terms of Service and Privacy Policy to continue.",
     genericError: "Something went wrong. Please try again.",
     invalidLookup: "Something went wrong. Please try again.",
   },
@@ -113,6 +115,11 @@ export interface MultiStepAuthCardProps {
   demoEmailDelayMs?: number;
   /** Simulated delay after password submit when no API handler, ms. */
   demoPasswordDelayMs?: number;
+  /**
+   * When true (default), the initial email step shows a terms checkbox and blocks submit until checked.
+   * Set false to omit it (e.g. internal or B2B-only flows).
+   */
+  requireTermsConsent?: boolean;
 }
 
 const cardVariants = {
@@ -236,10 +243,12 @@ export function MultiStepAuthCard({
   otpMaxResends = 3,
   demoEmailDelayMs = 800,
   demoPasswordDelayMs = 1000,
+  requireTermsConsent = true,
 }: MultiStepAuthCardProps) {
   const str = useMemo(() => mergeAuthStrings(stringsProp), [stringsProp]);
   const [authState, setAuthState] = useState<AuthState>(initialState);
   const [email, setEmail] = useState("");
+  const [consentChecked, setConsentChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -253,16 +262,26 @@ export function MultiStepAuthCard({
 
   const updateState = (s: AuthState) => {
     setAuthState(s);
+    setConsentChecked(false);
     setErrorText("");
     setPasswordError("");
     setOtpErrorText("");
     onStateChange?.(s);
   };
 
+  const handleConsentChange = (checked: boolean) => {
+    setConsentChecked(checked);
+    if (checked && errorText === str.email.consentRequired) setErrorText("");
+  };
+
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
       setErrorText(str.email.emptyEmail);
+      return;
+    }
+    if (authState === "email" && requireTermsConsent && !consentChecked) {
+      setErrorText(str.email.consentRequired);
       return;
     }
     setIsLoading(true);
@@ -344,6 +363,15 @@ export function MultiStepAuthCard({
                 mode="sign-in"
                 emailId={`${formId}-email`}
                 consentId={`${formId}-consent`}
+                termsConsent={
+                  requireTermsConsent
+                    ? {
+                        checked: consentChecked,
+                        onChange: handleConsentChange,
+                        invalid: errorText === str.email.consentRequired,
+                      }
+                    : undefined
+                }
                 email={email}
                 setEmail={setEmail}
                 onSubmit={handleEmailSubmit}
@@ -358,7 +386,6 @@ export function MultiStepAuthCard({
                 str={str}
                 mode="unregistered"
                 emailId={`${formId}-email`}
-                consentId={`${formId}-consent`}
                 email={email}
                 setEmail={setEmail}
                 onSubmit={handleEmailSubmit}
@@ -377,7 +404,6 @@ export function MultiStepAuthCard({
                 str={str}
                 mode="first-time"
                 emailId={`${formId}-email`}
-                consentId={`${formId}-consent`}
                 email={email}
                 setEmail={setEmail}
                 onSubmit={(e) => {
@@ -464,7 +490,10 @@ interface EmailStepProps {
   str: MultiStepAuthStrings;
   mode: EmailMode;
   emailId: string;
-  consentId: string;
+  /** Used with `termsConsent` for the sign-in step checkbox id. */
+  consentId?: string;
+  /** Controlled terms checkbox; only the sign-in step passes this when `requireTermsConsent` is true. */
+  termsConsent?: { checked: boolean; onChange: (checked: boolean) => void; invalid?: boolean };
   email: string;
   setEmail: (v: string) => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -474,7 +503,7 @@ interface EmailStepProps {
   onRetry?: () => void;
 }
 
-function EmailStep({ str, mode, emailId, consentId, email, setEmail, onSubmit, isLoading, error, onBack, onRetry }: EmailStepProps) {
+function EmailStep({ str, mode, emailId, consentId, termsConsent, email, setEmail, onSubmit, isLoading, error, onBack, onRetry }: EmailStepProps) {
   const isUnregistered = mode === "unregistered";
   const isFirstTime = mode === "first-time";
   const title = isFirstTime ? str.email.titleFirstTime : str.email.titleSignIn;
@@ -512,9 +541,20 @@ function EmailStep({ str, mode, emailId, consentId, email, setEmail, onSubmit, i
             />
           </div>
         </div>
-        {!isUnregistered && !isFirstTime && (
+        {!isUnregistered && !isFirstTime && termsConsent && consentId && (
           <div className="flex items-start gap-2 pt-2">
-            <input type="checkbox" id={consentId} className="mt-1 w-4 h-4 rounded border-neutral-300" />
+            <input
+              type="checkbox"
+              id={consentId}
+              checked={termsConsent.checked}
+              onChange={(e) => termsConsent.onChange(e.target.checked)}
+              required
+              aria-invalid={termsConsent.invalid || undefined}
+              className={cn(
+                "mt-1 w-4 h-4 rounded border-neutral-300",
+                termsConsent.invalid && "border-red-400 ring-1 ring-red-400/30",
+              )}
+            />
             <label htmlFor={consentId} className="text-xs text-neutral-500 dark:text-neutral-400 leading-snug">
               {str.email.consentLead}
               <a href="#" className="underline hover:text-neutral-800 dark:hover:text-neutral-200">

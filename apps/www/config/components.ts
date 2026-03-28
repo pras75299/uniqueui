@@ -3332,6 +3332,13 @@ export default function Example() {
         default: "1000",
         description: "Artificial delay after password/OTP demo submits when the matching handler is omitted.",
       },
+      {
+        name: "requireTermsConsent",
+        type: "boolean",
+        default: "true",
+        description:
+          "When true, the initial email step shows a terms/privacy checkbox and blocks submit until it is checked. Set false to hide it.",
+      },
     ],
     usageCode: `"use client";
 
