@@ -17,6 +17,58 @@ type RegistryItem = {
     tailwindConfig?: Record<string, any>;
 };
 
+/** Reject malformed registry JSON before any property access (avoids throws from bad remote/local data). */
+function validateRegistryPayload(data: unknown): RegistryItem[] | null {
+    if (!Array.isArray(data)) {
+        return null;
+    }
+    const out: RegistryItem[] = [];
+    for (const entry of data) {
+        if (entry === null || typeof entry !== "object" || Array.isArray(entry)) {
+            return null;
+        }
+        const o = entry as Record<string, unknown>;
+        if (typeof o.name !== "string" || o.name.length === 0) {
+            return null;
+        }
+        let dependencies: string[] = [];
+        if (o.dependencies !== undefined) {
+            if (!Array.isArray(o.dependencies)) {
+                return null;
+            }
+            for (const d of o.dependencies) {
+                if (typeof d !== "string") {
+                    return null;
+                }
+            }
+            dependencies = o.dependencies;
+        }
+        if (!Array.isArray(o.files)) {
+            return null;
+        }
+        const files: RegistryItem["files"] = [];
+        for (const f of o.files) {
+            if (f === null || typeof f !== "object" || Array.isArray(f)) {
+                return null;
+            }
+            const fo = f as Record<string, unknown>;
+            if (typeof fo.path !== "string" || typeof fo.type !== "string" || typeof fo.content !== "string") {
+                return null;
+            }
+            files.push({ path: fo.path, type: fo.type, content: fo.content });
+        }
+        let tailwindConfig: Record<string, any> | undefined;
+        if (o.tailwindConfig !== undefined) {
+            if (o.tailwindConfig === null || typeof o.tailwindConfig !== "object" || Array.isArray(o.tailwindConfig)) {
+                return null;
+            }
+            tailwindConfig = o.tailwindConfig as Record<string, any>;
+        }
+        out.push({ name: o.name, dependencies, files, tailwindConfig });
+    }
+    return out;
+}
+
 /** Local file path (./...) or official registry hosts only. */
 function isTrustedRegistryUrl(url: string): boolean {
     if (url.startsWith(".")) return true;
@@ -97,15 +149,18 @@ export async function add(componentName: string, options: { url: string }) {
     }
 
     try {
+        let raw: unknown;
+        let shouldWriteCache = false;
+
         // For local testing, if url is a file path, read it
         if (options.url.startsWith(".")) {
-            registry = await fs.readJson(options.url);
+            raw = await fs.readJson(options.url);
         } else {
             // Try cache first
             const cached = await getCachedRegistry();
             if (cached) {
                 console.log(chalk.gray("Using cached component registry"));
-                registry = cached;
+                raw = cached;
             } else {
                 // Try primary URL first
                 let result = await fetchRegistryFromUrl(options.url);
@@ -129,9 +184,24 @@ export async function add(componentName: string, options: { url: string }) {
                         `  You can specify a custom URL with: uniqueui add <component> --url <url>`
                     );
                 }
-                registry = result;
-                await setCachedRegistry(registry);
+                raw = result;
+                shouldWriteCache = true;
             }
+        }
+
+        const validated = validateRegistryPayload(raw);
+        if (validated === null) {
+            console.error(
+                chalk.red(
+                    "Invalid registry.json: expected an array of components. Each item needs a non-empty string name, " +
+                        "a files array of { path, type, content }, and optional dependencies as an array of strings.",
+                ),
+            );
+            process.exit(1);
+        }
+        registry = validated;
+        if (shouldWriteCache) {
+            await setCachedRegistry(registry);
         }
     } catch (e) {
         console.error(chalk.red("Could not fetch registry.json"), e);
@@ -163,7 +233,10 @@ export async function add(componentName: string, options: { url: string }) {
             const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
             const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
             if (result.error) throw result.error;
-            if (result.status !== 0 && result.status !== null) {
+            if (result.signal) {
+                throw new Error(`package manager terminated by signal ${result.signal}`);
+            }
+            if (result.status !== 0) {
                 throw new Error(`package manager exited with code ${result.status}`);
             }
         } catch (e) {

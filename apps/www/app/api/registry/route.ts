@@ -21,12 +21,13 @@ function corsHeaders(request: Request): Record<string, string> {
     if (allowed.length === 1) {
         return { ...base, 'Access-Control-Allow-Origin': allowed[0]! };
     }
+    const variedBase = { ...base, Vary: 'Origin' };
     const origin = request.headers.get('Origin');
     if (origin && allowed.includes(origin)) {
-        return { ...base, 'Access-Control-Allow-Origin': origin, Vary: 'Origin' };
+        return { ...variedBase, 'Access-Control-Allow-Origin': origin };
     }
     // Non-browser clients (no Origin) still get JSON; browsers on a disallowed origin get no ACAO.
-    return base;
+    return variedBase;
 }
 
 export async function GET(request: Request) {
