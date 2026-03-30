@@ -6,7 +6,8 @@ import fs from "fs-extra";
 import chalk from "chalk";
 import os from "os";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
+import { assertSafeNpmDependencies } from "../npm-dependency-name";
 
 // Type definition for Registry (matching what we built)
 type RegistryItem = {
@@ -15,6 +16,83 @@ type RegistryItem = {
     files: Array<{ path: string; type: string; content: string }>;
     tailwindConfig?: Record<string, any>;
 };
+
+/** Reject malformed registry JSON before any property access (avoids throws from bad remote/local data). */
+function validateRegistryPayload(data: unknown): RegistryItem[] | null {
+    if (!Array.isArray(data)) {
+        return null;
+    }
+    const out: RegistryItem[] = [];
+    for (const entry of data) {
+        if (entry === null || typeof entry !== "object" || Array.isArray(entry)) {
+            return null;
+        }
+        const o = entry as Record<string, unknown>;
+        if (typeof o.name !== "string" || o.name.length === 0) {
+            return null;
+        }
+        let dependencies: string[] = [];
+        if (o.dependencies !== undefined) {
+            if (!Array.isArray(o.dependencies)) {
+                return null;
+            }
+            for (const d of o.dependencies) {
+                if (typeof d !== "string") {
+                    return null;
+                }
+            }
+            dependencies = o.dependencies;
+        }
+        if (!Array.isArray(o.files)) {
+            return null;
+        }
+        const files: RegistryItem["files"] = [];
+        for (const f of o.files) {
+            if (f === null || typeof f !== "object" || Array.isArray(f)) {
+                return null;
+            }
+            const fo = f as Record<string, unknown>;
+            if (typeof fo.path !== "string" || typeof fo.type !== "string" || typeof fo.content !== "string") {
+                return null;
+            }
+            files.push({ path: fo.path, type: fo.type, content: fo.content });
+        }
+        let tailwindConfig: Record<string, any> | undefined;
+        if (o.tailwindConfig !== undefined) {
+            if (o.tailwindConfig === null || typeof o.tailwindConfig !== "object" || Array.isArray(o.tailwindConfig)) {
+                return null;
+            }
+            tailwindConfig = o.tailwindConfig as Record<string, any>;
+        }
+        out.push({ name: o.name, dependencies, files, tailwindConfig });
+    }
+    return out;
+}
+
+/** Local file path (./...) or official registry hosts only. */
+function isTrustedRegistryUrl(url: string): boolean {
+    if (url.startsWith(".")) return true;
+    try {
+        const u = new URL(url);
+        if (u.hostname === "uniqueui-platform.vercel.app") return true;
+        if (u.hostname === "raw.githubusercontent.com" && u.pathname.includes("pras75299/uniqueui")) {
+            return true;
+        }
+        return false;
+    } catch {
+        return false;
+    }
+}
+
+function warnIfUntrustedRegistry(url: string) {
+    if (process.env.UNIQUEUI_SKIP_REGISTRY_WARN) return;
+    if (isTrustedRegistryUrl(url)) return;
+    console.warn(
+        chalk.yellow(
+            "Warning: custom registry URL — only use sources you trust. The registry controls package installs and files written to your project. See SECURITY.md in the UniqueUI repository.",
+        ),
+    );
+}
 
 export async function add(componentName: string, options: { url: string }) {
     console.log(`Fetching ${componentName} from ${options.url}...`);
@@ -71,15 +149,18 @@ export async function add(componentName: string, options: { url: string }) {
     }
 
     try {
+        let raw: unknown;
+        let shouldWriteCache = false;
+
         // For local testing, if url is a file path, read it
         if (options.url.startsWith(".")) {
-            registry = await fs.readJson(options.url);
+            raw = await fs.readJson(options.url);
         } else {
             // Try cache first
             const cached = await getCachedRegistry();
             if (cached) {
                 console.log(chalk.gray("Using cached component registry"));
-                registry = cached;
+                raw = cached;
             } else {
                 // Try primary URL first
                 let result = await fetchRegistryFromUrl(options.url);
@@ -103,14 +184,31 @@ export async function add(componentName: string, options: { url: string }) {
                         `  You can specify a custom URL with: uniqueui add <component> --url <url>`
                     );
                 }
-                registry = result;
-                await setCachedRegistry(registry);
+                raw = result;
+                shouldWriteCache = true;
             }
+        }
+
+        const validated = validateRegistryPayload(raw);
+        if (validated === null) {
+            console.error(
+                chalk.red(
+                    "Invalid registry.json: expected an array of components. Each item needs a non-empty string name, " +
+                        "a files array of { path, type, content }, and optional dependencies as an array of strings.",
+                ),
+            );
+            process.exit(1);
+        }
+        registry = validated;
+        if (shouldWriteCache) {
+            await setCachedRegistry(registry);
         }
     } catch (e) {
         console.error(chalk.red("Could not fetch registry.json"), e);
         process.exit(1);
     }
+
+    warnIfUntrustedRegistry(options.url);
 
     const item = registry.find((c) => c.name === componentName);
     if (!item) {
@@ -118,14 +216,29 @@ export async function add(componentName: string, options: { url: string }) {
         process.exit(1);
     }
 
-    // 3. Install dependencies
+    // 3. Install dependencies (validated names + no shell — avoids injection from a malicious registry)
     if (item.dependencies.length) {
+        const depCheck = assertSafeNpmDependencies(item.dependencies);
+        if (!depCheck.ok) {
+            console.error(
+                chalk.red(
+                    `Refusing to install: invalid dependency name(s) from registry: ${depCheck.invalid.join(", ")}`,
+                ),
+            );
+            process.exit(1);
+        }
         console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
         try {
-            // Detect package manager - simplified
             const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
-            const cmd = pm === "npm" ? "install" : "add"; // yarn add, pnpm add
-            execSync(`${pm} ${cmd} ${item.dependencies.join(" ")}`, { stdio: "inherit" });
+            const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
+            const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
+            if (result.error) throw result.error;
+            if (result.signal) {
+                throw new Error(`package manager terminated by signal ${result.signal}`);
+            }
+            if (result.status !== 0) {
+                throw new Error(`package manager exited with code ${result.status}`);
+            }
         } catch (e) {
             console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
         }
@@ -137,12 +250,18 @@ export async function add(componentName: string, options: { url: string }) {
         await updateTailwindConfig(config.tailwind.config, item.tailwindConfig);
     }
 
+    const allowedRegistryFile = (name: string) => /\.(tsx?|jsx?|mjs|cjs)$/i.test(name);
+
     // 5. Write Files
     for (const file of item.files) {
         if (file.type === "registry:ui") {
             const targetDir = path.resolve(config.paths.components || "components/ui");
             await fs.ensureDir(targetDir);
             const fileName = path.basename(file.path);
+            if (!allowedRegistryFile(fileName)) {
+                console.error(chalk.red(`Refusing to write disallowed file name from registry: ${fileName}`));
+                process.exit(1);
+            }
             const targetPath = path.join(targetDir, fileName);
             await fs.writeFile(targetPath, file.content);
             console.log(chalk.green(`Created ${fileName}`));
@@ -150,6 +269,10 @@ export async function add(componentName: string, options: { url: string }) {
             const targetDir = path.resolve(config.paths.lib || "utils");
             await fs.ensureDir(targetDir);
             const fileName = path.basename(file.path);
+            if (!allowedRegistryFile(fileName)) {
+                console.error(chalk.red(`Refusing to write disallowed util file name from registry: ${fileName}`));
+                process.exit(1);
+            }
             const targetPath = path.join(targetDir, fileName);
 
             // Only create util if it doesn't exist
