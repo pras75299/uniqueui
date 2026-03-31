@@ -50,8 +50,8 @@ export const AuroraBackground = ({
   theme = "dark",
   preset,
   colors,
-  speed = 60,
-  blur = 10,
+  speed = 1,
+  blur = 1,
   ...props
 }: AuroraBackgroundProps) => {
   const isDark = theme === "dark";
@@ -73,7 +73,8 @@ export const AuroraBackground = ({
   return (
     <div
       className={cn(
-        "relative flex flex-col h-[100vh] items-center justify-center bg-zinc-50 dark:bg-zinc-900 text-slate-950 transition-bg",
+        "relative flex flex-col h-[100vh] items-center justify-center transition-bg",
+        isDark ? "bg-zinc-900 text-white" : "bg-zinc-50 text-slate-950",
         className
       )}
       {...props}
@@ -90,7 +91,7 @@ export const AuroraBackground = ({
             backgroundImage,
             backgroundSize: "300%, 200%",
             backgroundPosition: "50% 50%, 50% 50%",
-            filter: `blur(${blur}px) ${isDark ? "" : "invert(1)"}`,
+            filter: `blur(${10 * blur}px)${isDark ? "" : " invert(1)"}`,
           }}
         >
           {/* Animated overlapping element recreating internal 'after' pseudo class */}
@@ -101,7 +102,7 @@ export const AuroraBackground = ({
                backgroundSize: "200%, 100%",
                backgroundAttachment: "fixed",
                mixBlendMode: "difference",
-               animationDuration: `${speed}s`,
+               animationDuration: `${60 / Math.max(speed, 0.01)}s`,
              }}
           />
         </div>

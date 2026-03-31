@@ -39,3 +39,9 @@
 .animate-aurora {
   animation: aurora 60s linear infinite;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-aurora {
+    animation: none;
+  }
+}

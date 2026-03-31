@@ -441,7 +441,7 @@ export default function Example() {
     slug: "aurora-background",
     name: "Aurora Background",
     description:
-      "Vertical light pillars drift right-to-left at staggered speeds with soft blur and screen blending; opacity pulses for a cinematic hero. Preset `stitch` uses UniqueUI Stitch showcase tokens (`primary_container`, `secondary_container`, `tertiary_container`, `background`). Preset `cinematic` uses muted teal, plum, and copper.",
+      "A fully customizable, smooth aurora light background mimicking the northern lights. Configurable via exact hex props alongside automatic integration with the current light or dark mode theme. Accessibility: Respects prefers-reduced-motion (drifting pauses smoothly).",
     installCmd: "npx uniqueui add aurora-background",
     icon: Sparkles,
     category: "Backgrounds",
@@ -488,11 +488,7 @@ export default function Example() {
         default: "1",
         description: "Blur strength multiplier for the pillar layer.",
       },
-      {
-        name: "Accessibility",
-        type: "—",
-        description: "Respects prefers-reduced-motion (pillars hold a steady position).",
-      },
+
     ],
     variants: [
       {
@@ -3393,6 +3389,18 @@ export default function Example() {
         default: "true",
         description:
           "When true, the initial email step shows a terms/privacy checkbox and blocks submit until it is checked. Set false to hide it.",
+      },
+      {
+        name: "termsUrl",
+        type: "string",
+        default: '"#"',
+        description: "URL for the 'Terms of Service' consent link.",
+      },
+      {
+        name: "privacyUrl",
+        type: "string",
+        default: '"#"',
+        description: "URL for the 'Privacy Policy' consent link.",
       },
     ],
     usageCode: `"use client";
