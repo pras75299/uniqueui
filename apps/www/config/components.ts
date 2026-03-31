@@ -441,7 +441,7 @@ export default function Example() {
     slug: "aurora-background",
     name: "Aurora Background",
     description:
-      "Flowing aurora borealis gradient animation using layered blurred blobs.",
+      "Vertical light pillars drift right-to-left at staggered speeds with soft blur and screen blending; opacity pulses for a cinematic hero. Preset `stitch` uses UniqueUI Stitch showcase tokens (`primary_container`, `secondary_container`, `tertiary_container`, `background`). Preset `cinematic` uses muted teal, plum, and copper.",
     installCmd: "npx uniqueui add aurora-background",
     icon: Sparkles,
     category: "Backgrounds",
@@ -450,35 +450,90 @@ export default function Example() {
         name: "children",
         type: "React.ReactNode",
         description:
-          "Content elements layered above the animated aurora gradient background.",
+          "Content layered above the aurora; keep contrast high on the charcoal base.",
       },
       {
         name: "className",
         type: "string",
-        description:
-          "Additional CSS configuration applied to the background container.",
+        description: "Classes on the outer container (height, rounding, layout).",
       },
       {
         name: "showRadialGradient",
         type: "boolean",
+        default: "true",
+        description: "Radial vignette so the hero center stays readable.",
+      },
+      {
+        name: "theme",
+        type: '"light" | "dark"',
+        default: '"dark"',
+        description: "Dark uses screen blend; light uses multiply and a softer base.",
+      },
+      {
+        name: "preset",
+        type: '"cinematic" | "stitch"',
+        default: '"cinematic"',
         description:
-          "Apply a radial vignette mask to focus attention towards the center.",
+          "Color story: cinematic (reference-style pillars) or stitch (MCP showcase DS).",
+      },
+      {
+        name: "speed",
+        type: "number",
+        default: "1",
+        description: "Drift speed multiplier; higher = faster horizontal travel.",
+      },
+      {
+        name: "blur",
+        type: "number",
+        default: "1",
+        description: "Blur strength multiplier for the pillar layer.",
+      },
+      {
+        name: "Accessibility",
+        type: "—",
+        description: "Respects prefers-reduced-motion (pillars hold a steady position).",
       },
     ],
-    usageCode: `import { AuroraBackground } from "@/components/ui/aurora-background";
+    variants: [
+      {
+        id: "cinematic",
+        label: "Cinematic",
+        demoKey: "aurora-background/cinematic",
+        usageCode: `import { AuroraBackground } from "@/components/ui/aurora-background";
 
 export default function Example() {
   return (
     <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative text-white">
-      <AuroraBackground className="min-h-0 h-full rounded-xl">
-        <div className="text-center z-10 w-full">
-          <h3 className="text-3xl font-bold mb-2 tracking-tight">Aurora Background</h3>
-          <p className="text-neutral-400">Beautiful animated gradients</p>
+      <AuroraBackground preset="cinematic" speed={0.95} className="min-h-0 h-full rounded-xl">
+        <div className="text-center z-10 w-full px-4">
+          <h3 className="text-2xl font-bold mb-2 tracking-tight">Background lights</h3>
+          <p className="text-neutral-400 text-sm">Vertical pillars, slow drift</p>
         </div>
       </AuroraBackground>
     </div>
   );
 }`,
+      },
+      {
+        id: "stitch",
+        label: "Stitch DS",
+        demoKey: "aurora-background/stitch",
+        usageCode: `import { AuroraBackground } from "@/components/ui/aurora-background";
+
+export default function Example() {
+  return (
+    <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative text-white">
+      <AuroraBackground preset="stitch" blur={1.05} className="min-h-0 h-full rounded-xl">
+        <div className="text-center z-10 w-full px-4">
+          <h3 className="text-2xl font-bold mb-2 tracking-tight">Stitch showcase</h3>
+          <p className="text-neutral-400 text-sm">Container tokens in motion</p>
+        </div>
+      </AuroraBackground>
+    </div>
+  );
+}`,
+      },
+    ],
   },
   {
     slug: "animated-tabs",

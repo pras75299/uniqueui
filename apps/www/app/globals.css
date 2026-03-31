@@ -21,9 +21,21 @@
   70% { opacity: 1; }
   100% { transform: rotate(215deg) translateX(-600px); opacity: 0; }
 }
-
 .animate-meteor { animation: meteor linear infinite; }
+
 @keyframes marquee-scroll {
   from { transform: translateX(0); }
   to { transform: translateX(var(--marquee-distance)); }
+}
+
+@keyframes aurora {
+  from {
+    background-position: 50% 50%, 50% 50%;
+  }
+  to {
+    background-position: 350% 50%, 350% 50%;
+  }
+}
+.animate-aurora {
+  animation: aurora 60s linear infinite;
 }
