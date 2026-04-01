@@ -7,7 +7,17 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
-import { ArrowLeft, Menu, X, BookOpen, Layers, LayoutTemplate } from "lucide-react";
+import {
+  ArrowLeft,
+  Menu,
+  X,
+  BookOpen,
+  Layers,
+  LayoutTemplate,
+  Rocket,
+  Download,
+  Zap,
+} from "lucide-react";
 import { useState } from "react";
 
 const SECTION_NAV = [
@@ -16,19 +26,18 @@ const SECTION_NAV = [
   { label: "Templates", href: "/templates", icon: LayoutTemplate },
 ];
 
-export default function ComponentsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const GETTING_STARTED = [
+  { label: "Introduction", href: "/docs", icon: BookOpen },
+  { label: "Installation", href: "/docs#installation", icon: Download },
+  { label: "Quick Start", href: "/docs#quickstart", icon: Zap },
+  { label: "CLI Reference", href: "/docs#cli", icon: Rocket },
+];
+
+export default function DocsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === "dark";
-
-  const activeSection = SECTION_NAV.find((s) =>
-    pathname.startsWith(s.href)
-  )?.href ?? "/components";
 
   return (
     <motion.div
@@ -51,10 +60,7 @@ export default function ComponentsLayout({
           <ThemeToggle />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={cn(
-              "p-2",
-              isDark ? "text-neutral-400 hover:text-white" : "text-neutral-600 hover:text-neutral-900"
-            )}
+            className={cn("p-2", isDark ? "text-neutral-400 hover:text-white" : "text-neutral-600 hover:text-neutral-900")}
           >
             {isMobileMenuOpen ? <X /> : <Menu />}
           </button>
@@ -83,13 +89,7 @@ export default function ComponentsLayout({
               Back to Home
             </Link>
             <div className="flex items-center justify-between">
-              <Link
-                href="/components"
-                className={cn(
-                  "text-xl font-bold tracking-tight",
-                  isDark ? "text-white" : "text-neutral-900"
-                )}
-              >
+              <Link href="/docs" className={cn("text-xl font-bold tracking-tight", isDark ? "text-white" : "text-neutral-900")}>
                 UniqueUI
               </Link>
               <ThemeToggle />
@@ -97,14 +97,9 @@ export default function ComponentsLayout({
           </div>
 
           {/* ── Section nav ── */}
-          <div
-            className={cn(
-              "flex flex-col gap-1 mb-6 pb-6 border-b",
-              isDark ? "border-neutral-800" : "border-neutral-100"
-            )}
-          >
+          <div className={cn("flex flex-col gap-1 mb-6 pb-6 border-b", isDark ? "border-neutral-800" : "border-neutral-100")}>
             {SECTION_NAV.map(({ label, href, icon: Icon }) => {
-              const isActive = activeSection === href;
+              const isActive = pathname.startsWith(href);
               return (
                 <Link
                   key={href}
@@ -112,16 +107,12 @@ export default function ComponentsLayout({
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
                     "relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                    isActive
-                      ? "text-white"
-                      : isDark
-                      ? "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
-                      : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+                    isActive ? "text-white" : isDark ? "text-neutral-400 hover:text-white hover:bg-neutral-800/50" : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
                   )}
                 >
                   {isActive && (
                     <motion.span
-                      layoutId="activeSectionPill"
+                      layoutId="docsActiveSectionPill"
                       className="absolute inset-0 rounded-lg bg-purple-600"
                       transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
                     />
@@ -133,8 +124,37 @@ export default function ComponentsLayout({
             })}
           </div>
 
-          {/* ── Component list (grouped by category) ── */}
+          {/* ── Getting Started ── */}
+          <div className="space-y-0.5 mb-6">
+            <h4 className={cn("text-[10px] font-semibold uppercase tracking-widest px-3 mb-2", isDark ? "text-neutral-500" : "text-neutral-400")}>
+              Getting Started
+            </h4>
+            {GETTING_STARTED.map(({ label, href, icon: Icon }) => {
+              const isActive = pathname === "/docs" && href === "/docs";
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center gap-2.5 px-3 py-1.5 rounded-md text-sm transition-colors",
+                    isActive
+                      ? isDark ? "bg-neutral-800 text-white font-medium" : "bg-neutral-100 text-neutral-900 font-medium"
+                      : isDark ? "text-neutral-400 hover:text-white hover:bg-neutral-900/50" : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100"
+                  )}
+                >
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* ── Component docs (grouped by category) ── */}
           <div className="space-y-5 flex-1">
+            <h4 className={cn("text-[10px] font-semibold uppercase tracking-widest px-3", isDark ? "text-neutral-500" : "text-neutral-400")}>
+              Component Docs
+            </h4>
             {Array.from(
               componentsList.reduce((acc, component) => {
                 const category = component.category ?? "Components";
@@ -144,30 +164,21 @@ export default function ComponentsLayout({
               }, new Map<string, typeof componentsList[number][]>())
             ).map(([category, items]) => (
               <div key={category} className="space-y-0.5">
-                <h4
-                  className={cn(
-                    "text-[10px] font-semibold uppercase tracking-widest px-3 mb-2",
-                    isDark ? "text-neutral-500" : "text-neutral-400"
-                  )}
-                >
+                <h5 className={cn("text-[10px] font-semibold uppercase tracking-widest px-3 mb-1.5", isDark ? "text-neutral-600" : "text-neutral-400")}>
                   {category}
-                </h4>
+                </h5>
                 {items.map((component) => {
-                  const isActive = pathname === `/components/${component.slug}`;
+                  const isActive = pathname === `/docs/${component.slug}`;
                   return (
                     <Link
                       key={component.slug}
-                      href={`/components/${component.slug}`}
+                      href={`/docs/${component.slug}`}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={cn(
                         "flex items-center gap-2.5 px-3 py-1.5 rounded-md text-sm transition-colors",
                         isActive
-                          ? isDark
-                            ? "bg-neutral-800 text-white font-medium"
-                            : "bg-neutral-100 text-neutral-900 font-medium"
-                          : isDark
-                          ? "text-neutral-400 hover:text-white hover:bg-neutral-900/50"
-                          : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100"
+                          ? isDark ? "bg-neutral-800 text-white font-medium" : "bg-neutral-100 text-neutral-900 font-medium"
+                          : isDark ? "text-neutral-400 hover:text-white hover:bg-neutral-900/50" : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100"
                       )}
                     >
                       <component.icon className="w-3.5 h-3.5 shrink-0" />
