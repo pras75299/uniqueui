@@ -1332,14 +1332,19 @@ export default function Example() {
 
 export default function Example() {
   return (
-    <div className="p-10 w-full text-white">
-      <DotGridBackground className="rounded-xl h-[300px] flex items-center justify-center w-full">
-        <div className="text-center z-10 w-full relative">
-          <h3 className="text-2xl font-bold mb-2">Interactive Dots</h3>
-          <p className="text-neutral-400">Move your cursor around</p>
-        </div>
-      </DotGridBackground>
-    </div>
+    <DotGridBackground className="w-full h-[340px] flex items-center justify-center rounded-xl">
+      <div className="text-center relative z-10 select-none px-6">
+        <p className="text-xs font-mono tracking-[0.25em] uppercase mb-4 text-neutral-500">
+          Move your cursor
+        </p>
+        <h3 className="text-4xl font-bold tracking-tight text-white">
+          Ripple Field
+        </h3>
+        <p className="mt-3 text-sm text-neutral-500">
+          Each movement fires a shockwave through the grid
+        </p>
+      </div>
+    </DotGridBackground>
   );
 }`,
   },
