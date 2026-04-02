@@ -58,7 +58,7 @@ export default function TemplatesLayout({ children }: { children: React.ReactNod
           {/* Center: section nav */}
           <nav className="flex items-center gap-1">
             {NAV.map(({ label, href, icon: Icon }) => {
-              const isActive = pathname.startsWith(href);
+              const isActive = pathname === href || pathname.startsWith(href + "/");
               return (
                 <Link
                   key={href}
