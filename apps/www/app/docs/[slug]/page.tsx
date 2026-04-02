@@ -5,7 +5,7 @@ import { Terminal, ExternalLink, BookOpen } from "lucide-react";
 import { codeToHtml } from "shiki";
 import { escapeHtml } from "@/lib/escape-html";
 import Link from "next/link";
-import ClientCopyButton from "@/app/components/[slug]/client-copy-button";
+import ClientCopyButton from "@/components/client-copy-button";
 
 export function generateStaticParams() {
   return componentsList.map((c) => ({ slug: c.slug }));
@@ -21,6 +21,21 @@ async function highlight(code: string): Promise<string> {
   }
 }
 
+function CodeBlock({ html, rawCode }: { html: string; rawCode: string }) {
+  return (
+    <div className="relative group rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800 bg-neutral-950">
+      <div
+        className="p-4 overflow-x-auto text-sm [&>pre]:!bg-transparent [&>pre]:!p-0"
+        style={{ backgroundColor: "#0a0a0a" }}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <ClientCopyButton text={rawCode} />
+      </div>
+    </div>
+  );
+}
+
 export default async function DocSlugPage(props: {
   params: Promise<{ slug: string }>;
 }) {
@@ -31,33 +46,53 @@ export default async function DocSlugPage(props: {
 
   const docData = docsScenarios[slug] ?? null;
 
-  // Pre-highlight install command usage code
   let highlightedUsage = "";
   if (component.usageCode) {
     highlightedUsage = await highlight(component.usageCode);
   }
 
-  // Pre-highlight scenario codes
-  const highlightedScenarios: { title: string; description: string; html: string }[] = [];
-  if (docData?.scenarios) {
+  const highlightedScenarios: {
+    title: string;
+    description: string;
+    html: string;
+    rawCode: string;
+  }[] = [];
+
+  if (docData?.scenarios && docData.scenarios.length > 0) {
     for (const scenario of docData.scenarios) {
       const html = await highlight(scenario.code);
-      highlightedScenarios.push({ title: scenario.title, description: scenario.description, html });
+      highlightedScenarios.push({
+        title: scenario.title,
+        description: scenario.description,
+        html,
+        rawCode: scenario.code,
+      });
     }
   }
 
+  const currentIdx = componentsList.findIndex((c) => c.slug === slug);
+  const nextComponent = componentsList[currentIdx + 1] ?? null;
+  const prevComponent = componentsList[currentIdx - 1] ?? null;
+
   return (
     <div className="space-y-12">
+      {/* ── Breadcrumb ── */}
+      <div className="flex items-center gap-2 text-sm text-neutral-500">
+        <Link href="/docs" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+          Docs
+        </Link>
+        <span>/</span>
+        {component.category && (
+          <>
+            <span className="text-neutral-400 dark:text-neutral-600">{component.category}</span>
+            <span>/</span>
+          </>
+        )}
+        <span className="text-neutral-700 dark:text-neutral-300">{component.name}</span>
+      </div>
+
       {/* ── Header ── */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-500">
-          <Link href="/docs" className="hover:text-purple-500 transition-colors">
-            Docs
-          </Link>
-          <span>/</span>
-          <span className="text-neutral-400 dark:text-neutral-400">{component.name}</span>
-        </div>
-
         <h1 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white lg:text-4xl">
           {component.name}
         </h1>
@@ -65,16 +100,16 @@ export default async function DocSlugPage(props: {
           {docData?.overview ?? component.description}
         </p>
 
-        <div className="flex flex-wrap gap-3 pt-2">
+        <div className="flex flex-wrap gap-3 pt-1">
           <Link
             href={`/components/${component.slug}`}
-            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-purple-600 dark:hover:text-purple-400 hover:border-purple-300 dark:hover:border-purple-500/30 transition-colors"
           >
             <ExternalLink className="w-3 h-3" />
-            View live demo
+            Live demo &amp; playground
           </Link>
           {component.category && (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-neutral-500 dark:text-neutral-500">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-neutral-500">
               <BookOpen className="w-3 h-3" />
               {component.category}
             </span>
@@ -84,9 +119,7 @@ export default async function DocSlugPage(props: {
 
       {/* ── Install ── */}
       <section className="space-y-3">
-        <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
-          Installation
-        </h2>
+        <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Installation</h2>
         <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300">
             <Terminal className="w-4 h-4 text-neutral-400 dark:text-neutral-500 shrink-0" />
@@ -97,32 +130,19 @@ export default async function DocSlugPage(props: {
       </section>
 
       {/* ── Basic Usage ── */}
-      {component.usageCode && (
+      {component.usageCode && highlightedUsage && (
         <section className="space-y-3">
-          <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
-            Basic usage
-          </h2>
-          <div className="relative group rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800">
-            <div
-              className="p-4 overflow-x-auto text-sm font-mono [&>pre]:!bg-transparent [&>pre]:!p-0"
-              style={{ backgroundColor: "#0a0a0a" }}
-              dangerouslySetInnerHTML={{ __html: highlightedUsage }}
-            />
-            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <ClientCopyButton text={component.usageCode} />
-            </div>
-          </div>
+          <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Basic usage</h2>
+          <CodeBlock html={highlightedUsage} rawCode={component.usageCode} />
         </section>
       )}
 
-      {/* ── Scenarios ── */}
-      {highlightedScenarios.length > 0 && (
+      {/* ── Usage Scenarios ── */}
+      {highlightedScenarios.length > 0 ? (
         <section className="space-y-8 pt-4 border-t border-neutral-200 dark:border-neutral-800">
           <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
-              Usage scenarios
-            </h2>
-            <p className="text-sm text-neutral-500 dark:text-neutral-500">
+            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Usage scenarios</h2>
+            <p className="text-sm text-neutral-500">
               Real-world patterns for integrating this component into your project.
             </p>
           </div>
@@ -131,37 +151,25 @@ export default async function DocSlugPage(props: {
             {highlightedScenarios.map((scenario, idx) => (
               <div key={idx} className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <span className="flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold bg-purple-500/10 border border-purple-500/20 text-purple-400 dark:text-purple-400 shrink-0">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold bg-purple-100 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 text-purple-600 dark:text-purple-400 shrink-0">
                     {idx + 1}
                   </span>
                   <h3 className="text-base font-semibold text-neutral-900 dark:text-white">
                     {scenario.title}
                   </h3>
                 </div>
-                <p className="text-sm text-neutral-500 dark:text-neutral-500 leading-relaxed pl-9">
+                <p className="text-sm text-neutral-500 leading-relaxed pl-9">
                   {scenario.description}
                 </p>
-                <div className="relative group rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800">
-                  <div
-                    className="p-4 overflow-x-auto text-sm font-mono [&>pre]:!bg-transparent [&>pre]:!p-0"
-                    style={{ backgroundColor: "#0a0a0a" }}
-                    dangerouslySetInnerHTML={{ __html: scenario.html }}
-                  />
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ClientCopyButton text={docsScenarios[slug]!.scenarios[idx].code} />
-                  </div>
-                </div>
+                <CodeBlock html={scenario.html} rawCode={scenario.rawCode} />
               </div>
             ))}
           </div>
         </section>
-      )}
-
-      {/* ── No custom docs fallback ── */}
-      {!docData && (
+      ) : (
         <section className="pt-4 border-t border-neutral-200 dark:border-neutral-800">
-          <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 p-6 text-center space-y-3">
-            <p className="text-sm text-neutral-500 dark:text-neutral-500">
+          <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 p-6 text-center space-y-3">
+            <p className="text-sm text-neutral-500">
               Detailed usage scenarios for this component are coming soon.
             </p>
             <Link
@@ -169,7 +177,7 @@ export default async function DocSlugPage(props: {
               className="inline-flex items-center gap-1.5 text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
             >
               <ExternalLink className="w-3.5 h-3.5" />
-              View interactive demo & props
+              View interactive demo &amp; props
             </Link>
           </div>
         </section>
@@ -182,7 +190,7 @@ export default async function DocSlugPage(props: {
           <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-neutral-950">
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="text-xs uppercase bg-neutral-100 dark:bg-neutral-900 text-neutral-500 dark:text-neutral-500 border-b border-neutral-200 dark:border-neutral-800">
+                <thead className="text-xs uppercase bg-neutral-50 dark:bg-neutral-900 text-neutral-500 border-b border-neutral-200 dark:border-neutral-800">
                   <tr>
                     <th className="px-4 py-3 font-medium">Prop</th>
                     <th className="px-4 py-3 font-medium">Type</th>
@@ -190,26 +198,24 @@ export default async function DocSlugPage(props: {
                     <th className="px-4 py-3 font-medium">Description</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
+                <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
                   {component.props.map((prop, idx) => (
                     <tr key={idx} className="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors">
-                      <td className="px-4 py-3 border-r border-neutral-200 dark:border-neutral-800/50">
-                        <code className="text-purple-600 dark:text-purple-400 bg-purple-400/10 px-1.5 py-0.5 rounded text-xs">
+                      <td className="px-4 py-3 border-r border-neutral-100 dark:border-neutral-800/50">
+                        <code className="text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-400/10 px-1.5 py-0.5 rounded text-xs">
                           {prop.name}
                         </code>
                       </td>
-                      <td className="px-4 py-3 border-r border-neutral-200 dark:border-neutral-800/50">
-                        <code className="text-blue-600 dark:text-blue-400/80 bg-blue-400/10 px-1.5 py-0.5 rounded text-xs break-all">
+                      <td className="px-4 py-3 border-r border-neutral-100 dark:border-neutral-800/50">
+                        <code className="text-blue-600 dark:text-blue-400/80 bg-blue-50 dark:bg-blue-400/10 px-1.5 py-0.5 rounded text-xs break-all">
                           {prop.type}
                         </code>
                       </td>
-                      <td className="px-4 py-3 border-r border-neutral-200 dark:border-neutral-800/50 hidden sm:table-cell">
+                      <td className="px-4 py-3 border-r border-neutral-100 dark:border-neutral-800/50 hidden sm:table-cell">
                         {prop.default ? (
-                          <code className="text-neutral-500 dark:text-neutral-500 text-xs">
-                            {prop.default}
-                          </code>
+                          <code className="text-neutral-500 text-xs">{prop.default}</code>
                         ) : (
-                          <span className="text-neutral-400 dark:text-neutral-600 text-xs">—</span>
+                          <span className="text-neutral-300 dark:text-neutral-700 text-xs">—</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400 text-sm">
@@ -224,22 +230,28 @@ export default async function DocSlugPage(props: {
         </section>
       )}
 
-      {/* ── Next component ── */}
-      <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex justify-end">
-        {(() => {
-          const idx = componentsList.findIndex((c) => c.slug === slug);
-          const next = componentsList[idx + 1];
-          if (!next) return null;
-          return (
-            <Link
-              href={`/docs/${next.slug}`}
-              className="group flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-500 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-            >
-              Next: {next.name}
-              <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-            </Link>
-          );
-        })()}
+      {/* ── Prev / Next navigation ── */}
+      <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-4">
+        {prevComponent ? (
+          <Link
+            href={`/docs/${prevComponent.slug}`}
+            className="group flex items-center gap-2 text-sm text-neutral-500 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+          >
+            <span className="group-hover:-translate-x-0.5 transition-transform">←</span>
+            {prevComponent.name}
+          </Link>
+        ) : (
+          <div />
+        )}
+        {nextComponent && (
+          <Link
+            href={`/docs/${nextComponent.slug}`}
+            className="group flex items-center gap-2 text-sm text-neutral-500 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+          >
+            {nextComponent.name}
+            <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+          </Link>
+        )}
       </div>
     </div>
   );
