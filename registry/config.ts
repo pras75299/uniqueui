@@ -333,4 +333,53 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    // ─── Phase 4 — Hero & Text Effects  ───
+    {
+        name: "shiny-text",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "shiny-text.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "blur-reveal",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "blur-reveal.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "count-up",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "count-up.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "border-beam",
+        dependencies: ["clsx", "tailwind-merge"],
+        files: [
+            { path: "border-beam.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "ripple",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "ripple.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "word-rotate",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "word-rotate.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

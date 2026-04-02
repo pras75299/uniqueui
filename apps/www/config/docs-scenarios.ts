@@ -1078,4 +1078,285 @@ export default function AchievementCard() {
       },
     ],
   },
+  "shiny-text": {
+    slug: "shiny-text",
+    overview:
+      "ShinyText adds a moving shimmer highlight that sweeps across your text using a CSS background-clip animation. Ideal for hero taglines, badge labels, or any copy that needs a premium metallic feel.",
+    scenarios: [
+      {
+        title: "Hero tagline highlight",
+        description: "Draw attention to a key phrase in your hero section with a continuous shimmer sweep.",
+        code: `import { ShinyText } from "@/components/ui/shiny-text";
+
+export default function HeroTagline() {
+  return (
+    <h1 className="text-5xl font-bold text-white">
+      Build beautiful UIs{" "}
+      <ShinyText text="effortlessly" speed={2.5} className="text-purple-400" />
+    </h1>
+  );
+}`,
+      },
+      {
+        title: "Premium badge label",
+        description: "Use a smaller shimmer span inside a pill badge to signal a paid or featured tier.",
+        code: `import { ShinyText } from "@/components/ui/shiny-text";
+
+export default function PremiumBadge() {
+  return (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-xs font-semibold">
+      ✦ <ShinyText text="PRO" speed={4} className="text-yellow-400" />
+    </span>
+  );
+}`,
+      },
+      {
+        title: "CTA button text",
+        description: "Give a call-to-action button a shimmering label to make it pop on dark landing pages.",
+        code: `import { ShinyText } from "@/components/ui/shiny-text";
+
+export default function ShinyButton() {
+  return (
+    <button className="px-6 py-3 rounded-xl bg-neutral-800 border border-neutral-700 hover:border-purple-500 transition-colors">
+      <ShinyText text="Get started for free →" speed={3} className="text-white" />
+    </button>
+  );
+}`,
+      },
+    ],
+  },
+  "blur-reveal": {
+    slug: "blur-reveal",
+    overview:
+      "BlurReveal staggers a blur-fade-in animation across each character or word as the element enters the viewport. It creates an elegant reveal effect perfect for hero text and section headings.",
+    scenarios: [
+      {
+        title: "Hero heading entrance",
+        description: "Animate your primary headline character-by-character as the page loads.",
+        code: `import { BlurReveal } from "@/components/ui/blur-reveal";
+
+export default function HeroHeading() {
+  return (
+    <h1 className="text-6xl font-bold text-white">
+      <BlurReveal text="Ship faster." animateBy="characters" duration={0.5} />
+    </h1>
+  );
+}`,
+      },
+      {
+        title: "Section subtitle word reveal",
+        description: "Reveal a section subtitle word-by-word for a slightly slower, more dramatic effect.",
+        code: `import { BlurReveal } from "@/components/ui/blur-reveal";
+
+export default function SectionSubtitle() {
+  return (
+    <p className="text-xl text-neutral-400 max-w-xl">
+      <BlurReveal
+        text="Beautifully crafted components that make your UI stand out."
+        animateBy="words"
+        delay={0.1}
+        duration={0.7}
+      />
+    </p>
+  );
+}`,
+      },
+    ],
+  },
+  "count-up": {
+    slug: "count-up",
+    overview:
+      "CountUp animates a number from a starting value to a target value as it enters the viewport. It supports decimals, prefixes, suffixes, and thousands separators — perfect for stats and metrics sections.",
+    scenarios: [
+      {
+        title: "Stats row",
+        description: "Display key product metrics that animate in when the user scrolls to them.",
+        code: `import { CountUp } from "@/components/ui/count-up";
+
+const stats = [
+  { label: "Components", value: 60, suffix: "+" },
+  { label: "GitHub Stars", value: 4.2, suffix: "k", decimals: 1 },
+  { label: "Downloads", value: 120, suffix: "k+" },
+];
+
+export default function StatsRow() {
+  return (
+    <div className="grid grid-cols-3 gap-8 text-center">
+      {stats.map(({ label, value, suffix, decimals }) => (
+        <div key={label}>
+          <p className="text-4xl font-bold text-white">
+            <CountUp to={value} suffix={suffix} decimals={decimals} />
+          </p>
+          <p className="text-sm text-neutral-400 mt-1">{label}</p>
+        </div>
+      ))}
+    </div>
+  );
+}`,
+      },
+      {
+        title: "Revenue counter with currency prefix",
+        description: "Show an animated revenue or savings figure with a dollar sign prefix.",
+        code: `import { CountUp } from "@/components/ui/count-up";
+
+export default function RevenueCounter() {
+  return (
+    <div className="text-center space-y-1">
+      <p className="text-5xl font-extrabold text-emerald-400">
+        <CountUp from={0} to={1250000} prefix="$" separator="," duration={2.5} />
+      </p>
+      <p className="text-sm text-neutral-400">Total revenue generated</p>
+    </div>
+  );
+}`,
+      },
+    ],
+  },
+  "border-beam": {
+    slug: "border-beam",
+    overview:
+      "BorderBeam traces an animated glowing orb around the perimeter of any container using requestAnimationFrame. Wrap any card, input, or panel to give it a dynamic, premium border highlight.",
+    scenarios: [
+      {
+        title: "Glowing feature card",
+        description: "Wrap a feature card so a colorful beam traces its border continuously.",
+        code: `import { BorderBeam } from "@/components/ui/border-beam";
+
+export default function FeatureCard() {
+  return (
+    <BorderBeam colorFrom="#a855f7" colorTo="#06b6d4" duration={4}>
+      <div className="p-6 rounded-2xl bg-neutral-900 space-y-2">
+        <h3 className="text-lg font-semibold text-white">Motion-powered</h3>
+        <p className="text-sm text-neutral-400">
+          Every animation uses spring physics for natural, fluid movement.
+        </p>
+      </div>
+    </BorderBeam>
+  );
+}`,
+      },
+      {
+        title: "Highlighted input field",
+        description: "Give a search or email input an animated border beam to draw focus.",
+        code: `import { BorderBeam } from "@/components/ui/border-beam";
+
+export default function BeamInput() {
+  return (
+    <BorderBeam colorFrom="#f59e0b" colorTo="#ef4444" borderWidth={2} duration={3}>
+      <input
+        type="email"
+        placeholder="Enter your email"
+        className="w-full px-4 py-3 rounded-xl bg-neutral-800 text-white outline-none text-sm"
+      />
+    </BorderBeam>
+  );
+}`,
+      },
+    ],
+  },
+  "ripple": {
+    slug: "ripple",
+    overview:
+      "Ripple renders concentric animated rings that pulse outward from a center point. Use it as a background for icons, avatars, or buttons to convey activity, presence, or emphasis.",
+    scenarios: [
+      {
+        title: "Live presence indicator",
+        description: "Show a pulsing ripple behind an avatar to indicate a user is online or broadcasting.",
+        code: `import { Ripple } from "@/components/ui/ripple";
+
+export default function LivePresence() {
+  return (
+    <div className="relative flex items-center justify-center w-24 h-24">
+      <Ripple mainCircleSize={48} numCircles={5} color="#22c55e" duration={2.5} />
+      <img
+        src="/avatar.png"
+        alt="User"
+        className="relative z-10 w-12 h-12 rounded-full border-2 border-green-500"
+      />
+    </div>
+  );
+}`,
+      },
+      {
+        title: "CTA focus ring",
+        description: "Add a ripple effect behind a primary CTA button to make it visually magnetic.",
+        code: `import { Ripple } from "@/components/ui/ripple";
+
+export default function RippleCTA() {
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      <Ripple mainCircleSize={64} numCircles={4} color="#a855f7" duration={3} />
+      <button className="relative z-10 px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold text-sm">
+        Get Started
+      </button>
+    </div>
+  );
+}`,
+      },
+    ],
+  },
+  "word-rotate": {
+    slug: "word-rotate",
+    overview:
+      "WordRotate cycles through an array of words with configurable entrance and exit animations — slide, flip, or fade. Drop it inline within headings to convey multiple ideas without extra layout space.",
+    scenarios: [
+      {
+        title: "Hero headline value rotator",
+        description: "Cycle through your product's core benefits inline inside a headline.",
+        code: `import { WordRotate } from "@/components/ui/word-rotate";
+
+export default function HeroHeadline() {
+  return (
+    <h1 className="text-5xl font-bold text-white">
+      The{" "}
+      <WordRotate
+        words={["fastest", "cleanest", "smartest"]}
+        animation="slide-up"
+        className="text-purple-400"
+      />
+      {" "}way to ship UI
+    </h1>
+  );
+}`,
+      },
+      {
+        title: "Feature list rotator with flip",
+        description: "Use the flip animation for a more dramatic 3-D card-turning effect.",
+        code: `import { WordRotate } from "@/components/ui/word-rotate";
+
+export default function FlipRotator() {
+  return (
+    <p className="text-2xl font-semibold text-white">
+      Built for{" "}
+      <WordRotate
+        words={["designers", "developers", "startups", "agencies"]}
+        animation="flip"
+        interval={2000}
+        className="text-emerald-400"
+      />
+    </p>
+  );
+}`,
+      },
+      {
+        title: "Subtle fade rotator in body copy",
+        description: "Use the fade animation for a soft, unobtrusive rotation inside a paragraph.",
+        code: `import { WordRotate } from "@/components/ui/word-rotate";
+
+export default function FadeRotator() {
+  return (
+    <p className="text-base text-neutral-400">
+      Perfect for{" "}
+      <WordRotate
+        words={["landing pages", "SaaS apps", "portfolios", "dashboards"]}
+        animation="fade"
+        interval={3000}
+        className="text-white font-medium"
+      />
+    </p>
+  );
+}`,
+      },
+    ],
+  },
 };
