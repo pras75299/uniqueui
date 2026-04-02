@@ -676,4 +676,406 @@ export default function SectionHeader({ title, subtitle }: { title: string; subt
       },
     ],
   },
+
+  "infinite-marquee": {
+    slug: "infinite-marquee",
+    overview:
+      "InfiniteMarquee continuously scrolls a row of items horizontally, looping seamlessly. It's commonly used for logo strips, testimonial tickers, and feature highlights.",
+    scenarios: [
+      {
+        title: "Client logo strip",
+        description: "Showcase trusted brand logos below the hero section to build social proof.",
+        code: `import { InfiniteMarquee } from "@/components/ui/infinite-marquee";
+
+const logos = ["Vercel", "Stripe", "Linear", "Notion", "Figma", "GitHub"];
+
+export default function LogoStrip() {
+  return (
+    <div className="py-12 border-y border-neutral-800">
+      <InfiniteMarquee speed={30} gap={64}>
+        {logos.map((name) => (
+          <span key={name} className="text-lg font-semibold text-neutral-500 shrink-0">
+            {name}
+          </span>
+        ))}
+      </InfiniteMarquee>
+    </div>
+  );
+}`,
+      },
+      {
+        title: "Bidirectional feature ticker",
+        description:
+          "Two rows scrolling in opposite directions create depth and visual interest for a features section.",
+        code: `import { InfiniteMarquee } from "@/components/ui/infinite-marquee";
+
+const row1 = ["Motion.dev springs", "Copy-paste DX", "Dark mode", "TypeScript-first"];
+const row2 = ["Zero config", "Tailwind CSS v4", "Single-file", "Accessible"];
+
+export default function FeatureTicker() {
+  return (
+    <div className="space-y-3 py-10 overflow-hidden">
+      <InfiniteMarquee speed={25} direction="left">
+        {row1.map((f) => (
+          <span key={f} className="px-4 py-1.5 rounded-full border border-neutral-700 text-sm text-neutral-300 shrink-0">
+            {f}
+          </span>
+        ))}
+      </InfiniteMarquee>
+      <InfiniteMarquee speed={25} direction="right">
+        {row2.map((f) => (
+          <span key={f} className="px-4 py-1.5 rounded-full border border-purple-500/30 text-sm text-purple-300 shrink-0">
+            {f}
+          </span>
+        ))}
+      </InfiniteMarquee>
+    </div>
+  );
+}`,
+      },
+    ],
+  },
+
+  "magnetic-button": {
+    slug: "magnetic-button",
+    overview:
+      "MagneticButton adds a physics-based cursor attraction effect to any button or interactive element. As the cursor approaches, the element gently pulls toward it, creating a satisfying tactile feel.",
+    scenarios: [
+      {
+        title: "Primary CTA button",
+        description: "Apply the magnetic effect to your hero CTA to make it irresistible to click.",
+        code: `import { MagneticButton } from "@/components/ui/magnetic-button";
+
+export default function HeroCTA() {
+  return (
+    <div className="flex justify-center py-20">
+      <MagneticButton>
+        <button className="px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-neutral-100 transition-colors">
+          Get started free →
+        </button>
+      </MagneticButton>
+    </div>
+  );
+}`,
+      },
+      {
+        title: "Icon navigation links",
+        description: "Magnetic icons in a header or dock feel playful and high-quality.",
+        code: `import { MagneticButton } from "@/components/ui/magnetic-button";
+import { Github, Twitter, Mail } from "lucide-react";
+
+const socialLinks = [
+  { icon: Github, href: "https://github.com", label: "GitHub" },
+  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+  { icon: Mail, href: "mailto:hi@example.com", label: "Email" },
+];
+
+export default function SocialNav() {
+  return (
+    <div className="flex items-center gap-2">
+      {socialLinks.map(({ icon: Icon, href, label }) => (
+        <MagneticButton key={label} strength={0.4}>
+          <a
+            href={href}
+            aria-label={label}
+            className="p-2.5 rounded-xl border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors"
+          >
+            <Icon className="w-5 h-5" />
+          </a>
+        </MagneticButton>
+      ))}
+    </div>
+  );
+}`,
+      },
+      {
+        title: "Reduced-strength subtle hover",
+        description: "Lower the strength for elements that should feel premium but not distracting.",
+        code: `import { MagneticButton } from "@/components/ui/magnetic-button";
+
+export default function SubtleCard() {
+  return (
+    <MagneticButton strength={0.25} className="block">
+      <div className="p-6 rounded-2xl border border-neutral-800 bg-neutral-900 cursor-pointer hover:border-neutral-700 transition-colors">
+        <h3 className="text-white font-semibold mb-2">UniqueUI Pro</h3>
+        <p className="text-neutral-400 text-sm">Access all templates and premium components.</p>
+      </div>
+    </MagneticButton>
+  );
+}`,
+      },
+    ],
+  },
+
+  "gradient-text-reveal": {
+    slug: "gradient-text-reveal",
+    overview:
+      "GradientTextReveal animates a gradient sweep across text as it enters the viewport — a dramatic way to introduce headlines or key phrases on scroll.",
+    scenarios: [
+      {
+        title: "Section headline reveal",
+        description: "Fire the reveal when the section scrolls into view for a cinematic entrance.",
+        code: `import { GradientTextReveal } from "@/components/ui/gradient-text-reveal";
+
+export default function SectionHeadline() {
+  return (
+    <div className="py-24 text-center">
+      <GradientTextReveal
+        text="Design that moves people."
+        className="text-5xl font-bold"
+        gradient="from-white via-purple-300 to-white"
+      />
+    </div>
+  );
+}`,
+      },
+      {
+        title: "Pull quote in a blog post",
+        description: "Highlight a key quote mid-article with a gradient sweep to re-engage readers.",
+        code: `import { GradientTextReveal } from "@/components/ui/gradient-text-reveal";
+
+export default function PullQuote() {
+  return (
+    <blockquote className="my-12 px-8 border-l-2 border-purple-500">
+      <GradientTextReveal
+        text="The best design is invisible — until it moves."
+        className="text-2xl font-medium italic"
+        gradient="from-neutral-300 via-purple-400 to-neutral-300"
+        duration={1.4}
+      />
+    </blockquote>
+  );
+}`,
+      },
+    ],
+  },
+
+  "notification-stack": {
+    slug: "notification-stack",
+    overview:
+      "NotificationStack renders a stacked pile of toast-style cards that animate in and collapse when dismissed. Great for live activity feeds, system alerts, or social notifications.",
+    scenarios: [
+      {
+        title: "Live activity feed",
+        description: "Push real-time events (new users, payments, deployments) into the stack.",
+        code: `import { NotificationStack } from "@/components/ui/notification-stack";
+import { useState } from "react";
+
+const events = [
+  { id: 1, title: "New signup", body: "prashant@example.com just joined." },
+  { id: 2, title: "Payment received", body: "$49 from Stripe · Order #1042" },
+  { id: 3, title: "Deploy success", body: "main → production in 34s" },
+];
+
+export default function ActivityFeed() {
+  const [notifications, setNotifications] = useState(events);
+
+  return (
+    <NotificationStack
+      notifications={notifications}
+      onDismiss={(id) => setNotifications((n) => n.filter((x) => x.id !== id))}
+    />
+  );
+}`,
+      },
+      {
+        title: "Form validation errors",
+        description: "Surface validation errors as dismissible stacked notices instead of inline messages.",
+        code: `import { NotificationStack } from "@/components/ui/notification-stack";
+
+const errors = [
+  { id: 1, title: "Email required", body: "Please enter a valid email address." },
+  { id: 2, title: "Password too short", body: "Password must be at least 8 characters." },
+];
+
+export default function FormErrors() {
+  return (
+    <div className="fixed bottom-6 right-6 z-50 w-80">
+      <NotificationStack notifications={errors} variant="error" />
+    </div>
+  );
+}`,
+      },
+    ],
+  },
+
+  "moving-border": {
+    slug: "moving-border",
+    overview:
+      "MovingBorder traces an animated SVG path around a button or card, creating the appearance of a glowing line orbiting the element. The path speed and glow intensity are fully configurable.",
+    scenarios: [
+      {
+        title: "Highlighted CTA button",
+        description: "Draw immediate attention to a primary action with an orbiting glow border.",
+        code: `import { MovingBorder } from "@/components/ui/moving-border";
+
+export default function GlowCTA() {
+  return (
+    <MovingBorder duration={3000} borderRadius="9999px">
+      <button className="px-8 py-3 font-semibold text-white bg-neutral-950 rounded-full">
+        Start building for free
+      </button>
+    </MovingBorder>
+  );
+}`,
+      },
+      {
+        title: "Featured pricing card",
+        description: "Indicate the recommended pricing tier with a subtle moving border that stands out from static cards.",
+        code: `import { MovingBorder } from "@/components/ui/moving-border";
+
+export default function FeaturedPricingCard() {
+  return (
+    <MovingBorder duration={4000} borderRadius="1rem" borderClassName="bg-[radial-gradient(var(--tw-gradient-stops))] from-purple-500 via-transparent to-transparent">
+      <div className="p-8 bg-neutral-950 rounded-2xl min-w-[280px] space-y-4">
+        <span className="text-xs font-bold uppercase tracking-widest text-purple-400">
+          Most popular
+        </span>
+        <p className="text-4xl font-bold text-white">
+          $29<span className="text-lg text-neutral-400">/mo</span>
+        </p>
+        <button className="w-full py-3 bg-purple-600 text-white rounded-xl font-medium">
+          Get started
+        </button>
+      </div>
+    </MovingBorder>
+  );
+}`,
+      },
+    ],
+  },
+
+  "glow-hero-section": {
+    slug: "glow-hero-section",
+    overview:
+      "GlowHeroSection is a full-width hero component with a customizable radial glow effect behind the content. It combines a gradient background, centered text hierarchy, and optional CTA buttons into one production-ready section.",
+    scenarios: [
+      {
+        title: "SaaS product landing hero",
+        description: "The most common pattern — headline, subheadline, and two CTA buttons over a dark glowing background.",
+        code: `import { GlowHeroSection } from "@/components/ui/glow-hero-section";
+import Link from "next/link";
+
+export default function LandingHero() {
+  return (
+    <GlowHeroSection
+      badge="Now in public beta"
+      title="Ship cinematic UI in minutes"
+      subtitle="Copy-paste animated React components powered by motion.dev and Tailwind CSS."
+      glowColor="purple"
+    >
+      <div className="flex gap-4 justify-center mt-8">
+        <Link href="/components" className="px-7 py-3.5 bg-white text-black rounded-full font-semibold">
+          Browse components
+        </Link>
+        <a href="https://github.com/pras75299/uniqueui" className="px-7 py-3.5 border border-neutral-700 text-white rounded-full">
+          Star on GitHub
+        </a>
+      </div>
+    </GlowHeroSection>
+  );
+}`,
+      },
+      {
+        title: "Open-source project hero",
+        description: "Show contributor count and GitHub stars as social proof badges inside the glow hero.",
+        code: `import { GlowHeroSection } from "@/components/ui/glow-hero-section";
+import { Star, Users } from "lucide-react";
+
+export default function OpenSourceHero() {
+  return (
+    <GlowHeroSection
+      title="Built in the open."
+      subtitle="Every component is MIT-licensed and community-maintained."
+      glowColor="blue"
+    >
+      <div className="flex gap-4 justify-center mt-6">
+        <span className="flex items-center gap-1.5 text-sm border border-neutral-700 rounded-full px-4 py-1.5 text-neutral-300">
+          <Star className="w-4 h-4 text-yellow-400" /> 2.4k stars
+        </span>
+        <span className="flex items-center gap-1.5 text-sm border border-neutral-700 rounded-full px-4 py-1.5 text-neutral-300">
+          <Users className="w-4 h-4 text-blue-400" /> 120 contributors
+        </span>
+      </div>
+    </GlowHeroSection>
+  );
+}`,
+      },
+    ],
+  },
+
+  "confetti-burst": {
+    slug: "confetti-burst",
+    overview:
+      "ConfettiBurst fires a particle explosion from a point on screen — perfect for celebrating milestones like a completed form, a successful payment, or an unlocked achievement.",
+    scenarios: [
+      {
+        title: "Success after form submission",
+        description: "Trigger a confetti burst when the user completes a sign-up or checkout form.",
+        code: `import { ConfettiBurst } from "@/components/ui/confetti-burst";
+import { useState } from "react";
+
+export default function SignupForm() {
+  const [submitted, setSubmitted] = useState(false);
+  const [triggerConfetti, setTriggerConfetti] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTriggerConfetti(true);
+    setTimeout(() => setTriggerConfetti(false), 100);
+  };
+
+  return (
+    <div className="relative">
+      {submitted ? (
+        <div className="text-center text-white py-8">
+          <p className="text-2xl font-bold">You're in! 🎉</p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input type="email" placeholder="Your email" className="w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-white" />
+          <button type="submit" className="w-full py-3 bg-purple-600 text-white rounded-xl font-semibold">
+            Join waitlist
+          </button>
+        </form>
+      )}
+      <ConfettiBurst trigger={triggerConfetti} origin={{ x: 0.5, y: 0.5 }} />
+    </div>
+  );
+}`,
+      },
+      {
+        title: "Achievement unlock",
+        description: "Celebrate when a user reaches a milestone inside a dashboard or onboarding flow.",
+        code: `import { ConfettiBurst } from "@/components/ui/confetti-burst";
+import { useState } from "react";
+import { Trophy } from "lucide-react";
+
+export default function AchievementCard() {
+  const [unlocked, setUnlocked] = useState(false);
+  const [burst, setBurst] = useState(false);
+
+  const unlock = () => {
+    setUnlocked(true);
+    setBurst(true);
+    setTimeout(() => setBurst(false), 100);
+  };
+
+  return (
+    <div className="relative p-6 rounded-2xl border border-neutral-800 bg-neutral-900 text-center space-y-4">
+      <Trophy className={\`w-10 h-10 mx-auto transition-colors \${unlocked ? "text-yellow-400" : "text-neutral-600"}\`} />
+      <p className="text-white font-semibold">First component added</p>
+      {!unlocked && (
+        <button onClick={unlock} className="px-5 py-2 bg-purple-600 text-white rounded-xl text-sm font-medium">
+          Claim reward
+        </button>
+      )}
+      <ConfettiBurst trigger={burst} particleCount={80} />
+    </div>
+  );
+}`,
+      },
+    ],
+  },
 };
