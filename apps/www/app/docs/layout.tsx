@@ -18,7 +18,7 @@ import {
   Download,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const SECTION_NAV = [
   { label: "Components", href: "/components", icon: Layers },
@@ -36,8 +36,59 @@ const GETTING_STARTED = [
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hash, setHash] = useState("");
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const activeItemRef = useRef<HTMLAnchorElement | null>(null);
+
+  // Scroll active component doc link into view when pathname changes
+  useEffect(() => {
+    if (activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  }, [pathname]);
+
+  // Track hash for Getting Started active states
+  useEffect(() => {
+    if (pathname !== "/docs") {
+      setHash("");
+      return;
+    }
+
+    setHash(window.location.hash);
+
+    // Keep in sync when user clicks a hash link
+    const onHashChange = () => setHash(window.location.hash);
+    window.addEventListener("hashchange", onHashChange);
+
+    // Scroll-spy: update active item as user scrolls through sections
+    const SECTION_IDS = ["installation", "quickstart", "cli"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setHash(`#${entry.target.id}`);
+          }
+        }
+        // If nothing is intersecting we are above all sections → Introduction
+        const anyIntersecting = entries.some((e) => e.isIntersecting);
+        if (!anyIntersecting && entries[0]?.boundingClientRect.top > 0) {
+          setHash("");
+        }
+      },
+      { rootMargin: "-20% 0px -75% 0px", threshold: 0 }
+    );
+
+    for (const id of SECTION_IDS) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    }
+
+    return () => {
+      window.removeEventListener("hashchange", onHashChange);
+      observer.disconnect();
+    };
+  }, [pathname]);
 
   return (
     <motion.div
@@ -66,6 +117,14 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           </button>
         </div>
       </div>
+
+      {/* ── Mobile backdrop ── */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
 
       {/* ── Sidebar ── */}
       <aside
@@ -99,7 +158,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           {/* ── Section nav ── */}
           <div className={cn("flex flex-col gap-1 mb-6 pb-6 border-b", isDark ? "border-neutral-800" : "border-neutral-100")}>
             {SECTION_NAV.map(({ label, href, icon: Icon }) => {
-              const isActive = pathname.startsWith(href);
+              const isActive = pathname === href || pathname.startsWith(href + "/");
               return (
                 <Link
                   key={href}
@@ -130,7 +189,9 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
               Getting Started
             </h4>
             {GETTING_STARTED.map(({ label, href, icon: Icon }) => {
-              const isActive = pathname === "/docs" && href === "/docs";
+              const isActive =
+                pathname === "/docs" &&
+                (href === "/docs" ? hash === "" : href === `/docs${hash}`);
               return (
                 <Link
                   key={href}
@@ -173,6 +234,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                     <Link
                       key={component.slug}
                       href={`/docs/${component.slug}`}
+                      ref={isActive ? activeItemRef : null}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={cn(
                         "flex items-center gap-2.5 px-3 py-1.5 rounded-md text-sm transition-colors",
