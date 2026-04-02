@@ -75,7 +75,10 @@ function isTrustedRegistryUrl(url: string): boolean {
     try {
         const u = new URL(url);
         if (u.hostname === "uniqueui-platform.vercel.app") return true;
-        if (u.hostname === "raw.githubusercontent.com" && u.pathname.includes("pras75299/uniqueui")) {
+        if (
+            u.hostname === "raw.githubusercontent.com" &&
+            (u.pathname === "/pras75299/uniqueui" || u.pathname.startsWith("/pras75299/uniqueui/"))
+        ) {
             return true;
         }
         return false;
