@@ -78,6 +78,7 @@ export default function ComponentsLayout({
                   <Link
                     key={href}
                     href={href}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
                       isActive
@@ -201,6 +202,7 @@ export default function ComponentsLayout({
                   key={href}
                   href={href}
                   onClick={() => setIsMobileMenuOpen(false)}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                     isActive
@@ -251,6 +253,7 @@ export default function ComponentsLayout({
                       href={`/components/${component.slug}`}
                       ref={isActive ? activeItemRef : null}
                       onClick={() => setIsMobileMenuOpen(false)}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
                         "flex items-center gap-2.5 px-3 py-1.5 rounded-md text-sm transition-colors",
                         isActive
