@@ -978,35 +978,37 @@ export const componentDemos: Record<string, DemoComponent> = {
     </div>
   ),
   "dot-grid-background": ({ theme = "dark" }) => (
-    <div
-      className={cn(
-        "p-10 w-full",
-        theme === "dark" ? "text-white" : "text-neutral-900",
-      )}
+    <DotGridBackground
+      theme={theme}
+      className="w-full h-[340px] flex items-center justify-center rounded-xl"
     >
-      <DotGridBackground
-        theme={theme}
-        className="rounded-xl h-[300px] flex items-center justify-center w-full"
-      >
-        <div className="text-center z-10 w-full relative">
-          <h3
-            className={cn(
-              "text-2xl font-bold mb-2",
-              theme === "dark" ? "text-white" : "text-neutral-900",
-            )}
-          >
-            Interactive Dots
-          </h3>
-          <p
-            className={
-              theme === "dark" ? "text-neutral-400" : "text-neutral-600"
-            }
-          >
-            Move your cursor around
-          </p>
-        </div>
-      </DotGridBackground>
-    </div>
+      <div className="text-center relative z-10 select-none px-6">
+        <p
+          className={cn(
+            "text-xs font-mono tracking-[0.25em] uppercase mb-4",
+            theme === "dark" ? "text-neutral-500" : "text-neutral-400",
+          )}
+        >
+          Move your cursor
+        </p>
+        <h3
+          className={cn(
+            "text-4xl font-bold tracking-tight",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Ripple Field
+        </h3>
+        <p
+          className={cn(
+            "mt-3 text-sm",
+            theme === "dark" ? "text-neutral-500" : "text-neutral-400",
+          )}
+        >
+          Each movement fires a shockwave through the grid
+        </p>
+      </div>
+    </DotGridBackground>
   ),
   "floating-dock": ({ theme = "dark" }) => (
     <div
