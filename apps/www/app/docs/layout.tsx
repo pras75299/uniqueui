@@ -72,7 +72,14 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           }
         }
         if (intersectingRef.current.size === 0) {
-          setHash("");
+          const firstEl = document.getElementById(SECTION_IDS[0]);
+          const lastEl = document.getElementById(SECTION_IDS[SECTION_IDS.length - 1]);
+          
+          if (firstEl && firstEl.getBoundingClientRect().top > 0) {
+            setHash("");
+          } else if (lastEl && lastEl.getBoundingClientRect().bottom < window.innerHeight) {
+            setHash(`#${SECTION_IDS[SECTION_IDS.length - 1]}`);
+          }
         } else {
           // Prefer the first section in document order when multiple are visible
           const active = SECTION_IDS.find((id) => intersectingRef.current.has(id));
@@ -113,6 +120,10 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <button
+            type="button"
+            aria-label={isMobileMenuOpen ? "Close docs navigation" : "Open docs navigation"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="docs-sidebar"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className={cn("p-2", isDark ? "text-neutral-400 hover:text-white" : "text-neutral-600 hover:text-neutral-900")}
           >
@@ -131,6 +142,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 
       {/* ── Sidebar ── */}
       <aside
+        id="docs-sidebar"
         className={cn(
           "fixed top-0 left-0 z-40 h-screen w-64 border-r transition-transform duration-300 ease-in-out lg:translate-x-0 pt-20 lg:pt-0",
           isDark ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
@@ -167,6 +179,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                   key={href}
                   href={href}
                   onClick={() => setIsMobileMenuOpen(false)}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                     isActive ? "text-white" : isDark ? "text-neutral-400 hover:text-white hover:bg-neutral-800/50" : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
@@ -200,6 +213,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                   key={href}
                   href={href}
                   onClick={() => setIsMobileMenuOpen(false)}
+                  aria-current={isActive ? (href.includes("#") ? "location" : "page") : undefined}
                   className={cn(
                     "flex items-center gap-2.5 px-3 py-1.5 rounded-md text-sm transition-colors",
                     isActive
@@ -239,6 +253,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                       href={`/docs/${component.slug}`}
                       ref={isActive ? activeItemRef : null}
                       onClick={() => setIsMobileMenuOpen(false)}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
                         "flex items-center gap-2.5 px-3 py-1.5 rounded-md text-sm transition-colors",
                         isActive
