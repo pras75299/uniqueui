@@ -144,7 +144,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
       <motion.aside
         id="docs-sidebar"
         className={cn(
-          "fixed top-0 left-0 z-40 h-screen w-64 border-r pt-20 lg:pt-0 lg:!transform-none",
+          "fixed top-0 left-0 z-40 h-screen w-64 border-r pt-20 lg:pt-0 lg:!transform-none lg:!opacity-100",
           isDark ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
           isMobileMenuOpen
             ? "visible pointer-events-auto"
