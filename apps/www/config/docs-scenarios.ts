@@ -511,11 +511,11 @@ export default function AppNav() {
         description:
           "A share toolbar that floats alongside article content for quick social sharing.",
         code: `import { FloatingDock } from "@/components/ui/floating-dock";
-import { Twitter, Linkedin, Link2, Bookmark } from "lucide-react";
+import { X, Globe, Link2, Bookmark } from "lucide-react";
 
 const shareItems = [
-  { title: "Share on X", icon: <Twitter className="w-5 h-5" />, href: "#" },
-  { title: "Share on LinkedIn", icon: <Linkedin className="w-5 h-5" />, href: "#" },
+  { title: "Share on X", icon: <X className="w-5 h-5" />, href: "#" },
+  { title: "Share on LinkedIn", icon: <Globe className="w-5 h-5" />, href: "#" },
   { title: "Copy link", icon: <Link2 className="w-5 h-5" />, href: "#" },
   { title: "Bookmark", icon: <Bookmark className="w-5 h-5" />, href: "#" },
 ];
@@ -565,24 +565,24 @@ export default function EditorToolbar() {
         title: "Product feature overview",
         description:
           "Showcase multiple features in a single glanceable grid without overwhelming the user.",
-        code: `import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
+        code: `import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { Zap, Shield, Code } from "lucide-react";
 
 export default function FeatureGrid() {
   return (
     <BentoGrid>
-      <BentoGridItem
+      <BentoCard
         title="Blazing fast"
         description="Server-side rendered with zero layout shift."
         icon={<Zap className="w-6 h-6" />}
         className="col-span-2"
       />
-      <BentoGridItem
+      <BentoCard
         title="Type-safe"
         description="Full TypeScript support out of the box."
         icon={<Code className="w-6 h-6" />}
       />
-      <BentoGridItem
+      <BentoCard
         title="Secure by default"
         description="No external requests. Your data stays local."
         icon={<Shield className="w-6 h-6" />}
@@ -595,22 +595,19 @@ export default function FeatureGrid() {
         title: "Personal portfolio grid",
         description:
           "Display projects, skills, and social links in an editorial bento layout.",
-        code: `import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
+        code: `import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 
 export default function PortfolioGrid() {
   return (
     <BentoGrid className="max-w-4xl mx-auto">
-      <BentoGridItem
+      <BentoCard
         title="UniqueUI"
         description="An open-source animated component library."
         className="col-span-2 row-span-2"
-        header={
-          <div className="h-40 rounded-xl bg-gradient-to-br from-purple-900 to-black" />
-        }
       />
-      <BentoGridItem title="React" description="5 years" />
-      <BentoGridItem title="Next.js" description="3 years" />
-      <BentoGridItem
+      <BentoCard title="React" description="5 years" />
+      <BentoCard title="Next.js" description="3 years" />
+      <BentoCard
         title="Open to work"
         description="Based in India · Remote-friendly"
         className="col-span-2"
@@ -762,11 +759,11 @@ export default function HeroCTA() {
         title: "Icon navigation links",
         description: "Magnetic icons in a header or dock feel playful and high-quality.",
         code: `import { MagneticButton } from "@/components/ui/magnetic-button";
-import { Github, Twitter, Mail } from "lucide-react";
+import { Code, X, Mail } from "lucide-react";
 
 const socialLinks = [
-  { icon: Github, href: "https://github.com", label: "GitHub" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+  { icon: Code, href: "https://github.com", label: "GitHub" },
+  { icon: X, href: "https://twitter.com", label: "Twitter" },
   { icon: Mail, href: "mailto:hi@example.com", label: "Email" },
 ];
 
@@ -953,7 +950,7 @@ export default function FeaturedPricingCard() {
       {
         title: "SaaS product landing hero",
         description: "The most common pattern — headline, subheadline, and two CTA buttons over a dark glowing background.",
-        code: `import { GlowHeroSection } from "@/components/ui/glow-hero-section";
+        code: `import GlowHeroSection from "@/components/ui/glow-hero-section";
 import Link from "next/link";
 
 export default function LandingHero() {
@@ -979,7 +976,7 @@ export default function LandingHero() {
       {
         title: "Open-source project hero",
         description: "Show contributor count and GitHub stars as social proof badges inside the glow hero.",
-        code: `import { GlowHeroSection } from "@/components/ui/glow-hero-section";
+        code: `import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { Star, Users } from "lucide-react";
 
 export default function OpenSourceHero() {

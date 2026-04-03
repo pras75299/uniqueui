@@ -1507,19 +1507,19 @@ export const componentDemos: Record<string, DemoComponent> = {
       items={[
         <img
           key="1"
-          src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b?q=80&w=800&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1681935396624-006f4acdc530?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Landscape 1"
           className="object-cover w-full h-full"
         />,
         <img
           key="2"
-          src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538?q=80&w=800&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1775059956734-78ffd2075cec?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Landscape 2"
           className="object-cover w-full h-full"
         />,
         <img
           key="3"
-          src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b?q=80&w=800&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1722152246589-23370458081f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Landscape 3"
           className="object-cover w-full h-full"
         />,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { motion, useScroll, useTransform, useSpring, HTMLMotionProps } from "motion/react";
 
@@ -21,12 +21,13 @@ export function HorizontalScrollGallery({
   ...props
 }: HorizontalScrollGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  // Store the computed max scroll offset in a ref to avoid re-renders
+  const maxOffset = useRef(0);
 
-  // Track the scroll progress of the large container (e.g. 300vh)
+  // Track the scroll progress of the large container (300vh)
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    // Start tracking when the top of the container hits the top of the viewport
-    // Stop tracking when the bottom of the container hits the bottom of the viewport
     offset: ["start start", "end end"],
   });
 
@@ -37,26 +38,37 @@ export function HorizontalScrollGallery({
     mass: 0.1,
   });
 
-  // Calculate translation range based on direction
-  // We use matching string templates so Framer Motion can interpolate the numbers
-  // from 0% to -100% offset by the viewport width so it stops exactly cleanly!
-  const x = useTransform(
-    smoothProgress,
-    [0, 1],
-    direction === "left" 
-      ? ["calc(0% + 0vw)", "calc(-100% + 100vw)"] 
-      : ["calc(-100% + 100vw)", "calc(0% + 0vw)"]
-  );
+  // Measure the track width after mount and on resize so we translate by exact pixels.
+  // This avoids the calc(−100% + 100vw) approach which breaks when items don't fill
+  // the viewport and also avoids the MotionValue<string> type incompatibility.
+  useEffect(() => {
+    const measure = () => {
+      if (!trackRef.current) return;
+      const trackWidth = trackRef.current.scrollWidth;
+      const viewportWidth = window.innerWidth;
+      maxOffset.current = Math.max(0, trackWidth - viewportWidth);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  // Derive a pixel-based x translation from the spring progress
+  const x = useTransform(smoothProgress, (value) => {
+    const offset = maxOffset.current;
+    return direction === "left" ? -value * offset : -(1 - value) * offset;
+  });
 
   return (
     <motion.div
+      {...props}
       ref={containerRef}
       className={cn("relative h-[300vh] w-full", className)}
-      {...props}
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center">
         <motion.div
-          style={{ x } as any}
+          ref={trackRef}
+          style={{ x }}
           className="flex h-full w-max items-center px-4"
         >
           {items.map((item, index) => (
