@@ -15,7 +15,7 @@ export default function ClientCopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="p-2 -mr-2 text-neutral-500 hover:text-white transition-colors"
+      className="p-2 -mr-2 text-neutral-500 hover:text-white transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/70"
       aria-label="Copy code"
     >
       {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}

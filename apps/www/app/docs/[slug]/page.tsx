@@ -30,7 +30,7 @@ function CodeBlock({ html, rawCode }: { html: string; rawCode: string }) {
         style={{ backgroundColor: "#0a0a0a" }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
-      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-2 right-2 opacity-100 sm:opacity-0 focus-within:opacity-100 group-hover:opacity-100 transition-opacity">
         <ClientCopyButton text={rawCode} />
       </div>
     </div>
