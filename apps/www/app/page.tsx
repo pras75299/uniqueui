@@ -131,7 +131,7 @@ export default function Home() {
               : "bg-linear-to-t from-white via-purple-100/40",
           )}
         >
-          <div className="pointer-events-auto flex items-center gap-6 p-8 lg:p-0">
+          <div className="pointer-events-auto flex items-center gap-5 p-8 lg:p-0">
             <ThemeToggle className="shrink-0" />
             <Link
               href="/components"
@@ -143,6 +143,28 @@ export default function Home() {
               )}
             >
               Components
+            </Link>
+            <Link
+              href="/docs"
+              className={cn(
+                "transition-colors",
+                isDark
+                  ? "text-neutral-400 hover:text-white"
+                  : "text-neutral-600 hover:text-neutral-900",
+              )}
+            >
+              Docs
+            </Link>
+            <Link
+              href="/templates"
+              className={cn(
+                "transition-colors",
+                isDark
+                  ? "text-neutral-400 hover:text-white"
+                  : "text-neutral-600 hover:text-neutral-900",
+              )}
+            >
+              Templates
             </Link>
             <a
               className={cn(
@@ -604,7 +626,25 @@ export default function Home() {
                 isDark ? "hover:text-white" : "hover:text-neutral-900",
               )}
             >
-              Documentation
+              Components
+            </Link>
+            <Link
+              href="/docs"
+              className={cn(
+                "transition-colors",
+                isDark ? "hover:text-white" : "hover:text-neutral-900",
+              )}
+            >
+              Docs
+            </Link>
+            <Link
+              href="/templates"
+              className={cn(
+                "transition-colors",
+                isDark ? "hover:text-white" : "hover:text-neutral-900",
+              )}
+            >
+              Templates
             </Link>
             <a
               href="https://github.com/pras75299/uniqueui"

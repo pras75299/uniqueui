@@ -45,6 +45,12 @@ import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
 import { MultiStepAuthCard } from "@/components/ui/multi-step-auth-card";
 import { DataTable } from "@/components/ui/data-table";
 import GlowingTextOutline from "@/components/ui/animated-glowing-text-outline";
+import { ShinyText } from "@/components/ui/shiny-text";
+import { BlurReveal } from "@/components/ui/blur-reveal";
+import { CountUp } from "@/components/ui/count-up";
+import { BorderBeam } from "@/components/ui/border-beam";
+import { Ripple } from "@/components/ui/ripple";
+import { WordRotate } from "@/components/ui/word-rotate";
 import { useRef, useState } from "react";
 import {
   Ghost,
@@ -1501,19 +1507,19 @@ export const componentDemos: Record<string, DemoComponent> = {
       items={[
         <img
           key="1"
-          src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b?q=80&w=800&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1681935396624-006f4acdc530?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Landscape 1"
           className="object-cover w-full h-full"
         />,
         <img
           key="2"
-          src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538?q=80&w=800&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1775059956734-78ffd2075cec?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Landscape 2"
           className="object-cover w-full h-full"
         />,
         <img
           key="3"
-          src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b?q=80&w=800&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1722152246589-23370458081f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Landscape 3"
           className="object-cover w-full h-full"
         />,
@@ -2518,4 +2524,278 @@ export const componentDemos: Record<string, DemoComponent> = {
       </div>
     );
   },
+
+  // ─── Phase 4 — Hero & Text Effects ───────────────────────────────────────
+
+  "shiny-text": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-8 p-10 text-center",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <ShinyText
+        text="The future of UI is here."
+        speed={3}
+        shimmerWidth={40}
+        theme={theme}
+        className="text-4xl font-black tracking-tight"
+      />
+      <ShinyText
+        text="Ship faster. Look better."
+        speed={4}
+        shimmerWidth={50}
+        theme={theme}
+        className="text-2xl font-semibold"
+      />
+      <ShinyText
+        text="Designed for builders who care."
+        speed={5}
+        shimmerWidth={35}
+        theme={theme}
+        className="text-lg font-medium"
+      />
+    </div>
+  ),
+
+  "blur-reveal": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-8 p-10 text-center",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <BlurReveal
+        text="Build stunning interfaces."
+        animateBy="characters"
+        delay={0}
+        theme={theme}
+        className="text-3xl font-black tracking-tight"
+      />
+      <BlurReveal
+        text="Animated components that make users stop and stare."
+        animateBy="words"
+        delay={0.2}
+        theme={theme}
+        className={cn(
+          "text-base max-w-sm leading-relaxed",
+          theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+        )}
+      />
+    </div>
+  ),
+
+  "count-up": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-center gap-12 p-10",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      {[
+        { to: 12400, suffix: "+", label: "GitHub Stars", prefix: "" },
+        { to: 99.9, suffix: "%", label: "Uptime SLA", prefix: "", decimals: 1 },
+        { to: 68, suffix: " components", label: "Ready to use", prefix: "" },
+        { to: 4200, suffix: "+", label: "Developers", prefix: "" },
+      ].map(({ to, suffix, label, prefix, decimals }) => (
+        <div key={label} className="text-center space-y-1">
+          <p
+            className={cn(
+              "text-4xl font-black",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            <CountUp
+              to={to}
+              suffix={suffix}
+              prefix={prefix}
+              decimals={decimals ?? 0}
+              duration={2.2}
+              theme={theme}
+            />
+          </p>
+          <p
+            className={cn(
+              "text-sm",
+              theme === "dark" ? "text-neutral-500" : "text-neutral-500",
+            )}
+          >
+            {label}
+          </p>
+        </div>
+      ))}
+    </div>
+  ),
+
+  "border-beam": ({ theme = "dark" }) => (
+    <div className="flex flex-wrap items-center justify-center gap-6 p-10">
+      <BorderBeam
+        colorFrom="#a855f7"
+        colorTo="#ec4899"
+        duration={5}
+        size={180}
+        theme={theme}
+        className="w-64"
+      >
+        <div
+          className={cn(
+            "p-6 rounded-[10px]",
+            theme === "dark" ? "bg-neutral-950" : "bg-white",
+          )}
+        >
+          <div className="w-8 h-8 rounded-lg bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mb-3">
+            <Sparkles className="w-4 h-4 text-purple-400" />
+          </div>
+          <h3
+            className={cn(
+              "text-sm font-semibold mb-1",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Animated border
+          </h3>
+          <p
+            className={cn(
+              "text-xs",
+              theme === "dark" ? "text-neutral-500" : "text-neutral-500",
+            )}
+          >
+            A comet orbits continuously.
+          </p>
+        </div>
+      </BorderBeam>
+
+      <BorderBeam
+        colorFrom="#06b6d4"
+        colorTo="#3b82f6"
+        duration={7}
+        size={150}
+        theme={theme}
+        className="w-64"
+      >
+        <div
+          className={cn(
+            "p-6 rounded-[10px]",
+            theme === "dark" ? "bg-neutral-950" : "bg-white",
+          )}
+        >
+          <div className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mb-3">
+            <Zap className="w-4 h-4 text-cyan-400" />
+          </div>
+          <h3
+            className={cn(
+              "text-sm font-semibold mb-1",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Custom colours
+          </h3>
+          <p
+            className={cn(
+              "text-xs",
+              theme === "dark" ? "text-neutral-500" : "text-neutral-500",
+            )}
+          >
+            Any gradient, any speed.
+          </p>
+        </div>
+      </BorderBeam>
+    </div>
+  ),
+
+  "ripple": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "relative h-[380px] w-full flex items-center justify-center overflow-hidden rounded-xl",
+        theme === "dark" ? "bg-neutral-950" : "bg-neutral-50",
+      )}
+    >
+      <Ripple
+        mainCircleSize={80}
+        mainCircleOpacity={0.2}
+        numCircles={8}
+        duration={3}
+        theme={theme}
+      />
+      <div className="relative z-10 text-center space-y-3 pointer-events-none px-6">
+        <div
+          className={cn(
+            "inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border",
+            theme === "dark"
+              ? "bg-purple-500/10 border-purple-500/30 text-purple-300"
+              : "bg-purple-50 border-purple-200 text-purple-700",
+          )}
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-purple-500 animate-pulse" />
+          Hero background
+        </div>
+        <h2
+          className={cn(
+            "text-3xl font-black tracking-tight",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Your headline here
+        </h2>
+        <p
+          className={cn(
+            "text-sm max-w-xs mx-auto",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
+          Drop Ripple behind any hero section for instant depth.
+        </p>
+      </div>
+    </div>
+  ),
+
+  "word-rotate": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-10 p-10 text-center",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <h2
+        className={cn(
+          "text-3xl font-black tracking-tight",
+          theme === "dark" ? "text-white" : "text-neutral-900",
+        )}
+      >
+        Build interfaces that are{" "}
+        <WordRotate
+          words={["faster", "smarter", "bolder", "yours"]}
+          animation="slide-up"
+          interval={2000}
+          theme={theme}
+          className="text-purple-400"
+        />
+      </h2>
+
+      <div className="flex flex-wrap justify-center gap-6 text-sm">
+        {(["slide-up", "slide-down", "flip", "fade"] as const).map((anim) => (
+          <div key={anim} className="text-center space-y-1">
+            <p
+              className={cn(
+                "text-xs font-mono mb-2",
+                theme === "dark" ? "text-neutral-500" : "text-neutral-400",
+              )}
+            >
+              {anim}
+            </p>
+            <WordRotate
+              words={["React", "Motion", "Tailwind"]}
+              animation={anim}
+              interval={1800}
+              theme={theme}
+              className={cn(
+                "text-lg font-semibold",
+                theme === "dark" ? "text-neutral-200" : "text-neutral-800",
+              )}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
 };

@@ -22,6 +22,11 @@ import {
   Table,
   Pen,
   Shield,
+  Wand2,
+  Hash,
+  ScanLine,
+  RefreshCw,
+  Waves,
 } from "lucide-react";
 
 export type ComponentVariant = {
@@ -30,6 +35,9 @@ export type ComponentVariant = {
   usageCode: string;
   /** Key used to look up this variant's demo in componentDemos */
   demoKey: string;
+  /** Set true for components that manage their own internal scroll (e.g. data-table).
+   *  Prevents the preview wrapper's overflow:hidden from clipping the content. */
+  overflowVisible?: boolean;
 };
 
 export type ComponentItem = {
@@ -2312,9 +2320,9 @@ export default function Example() {
 
 export default function Example() {
   const images = [
-    <img key="1" src="https://images.unsplash.com/photo-1682687982501-1e58f8108c6b" alt="Landscape 1" className="object-cover w-full h-full" />,
-    <img key="2" src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538" alt="Landscape 2" className="object-cover w-full h-full" />,
-    <img key="3" src="https://images.unsplash.com/photo-1682687981922-7b55dbb3086b" alt="Landscape 3" className="object-cover w-full h-full" />,
+    <img key="1" src="https://images.unsplash.com/photo-1681935396624-006f4acdc530?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Landscape 1" className="object-cover w-full h-full" />,
+    <img key="2" src="https://images.unsplash.com/photo-1775059956734-78ffd2075cec?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Landscape 2" className="object-cover w-full h-full" />,
+    <img key="3" src="https://images.unsplash.com/photo-1722152246589-23370458081f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Landscape 3" className="object-cover w-full h-full" />,
     <div key="4" className="w-full h-full bg-neutral-900 flex items-center justify-center p-8 text-center text-white">
       <h3 className="text-4xl font-bold">End of Gallery</h3>
     </div>
@@ -2900,6 +2908,7 @@ export default function Example() {
         id: "default",
         label: "Default",
         demoKey: "data-table/default",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -2933,6 +2942,7 @@ export default function Example() {
         id: "freeze-left",
         label: "Freeze left",
         demoKey: "data-table/freeze-left",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -2977,6 +2987,7 @@ export default function Example() {
         id: "freeze-right",
         label: "Freeze right",
         demoKey: "data-table/freeze-right",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3021,6 +3032,7 @@ export default function Example() {
         id: "freeze-both",
         label: "Freeze both",
         demoKey: "data-table/freeze-both",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3066,6 +3078,7 @@ export default function Example() {
         id: "bordered",
         label: "Bordered",
         demoKey: "data-table/bordered",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3099,6 +3112,7 @@ export default function Example() {
         id: "sortable",
         label: "Sortable",
         demoKey: "data-table/sortable",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3131,6 +3145,7 @@ export default function Example() {
         id: "custom-colors",
         label: "Custom colors",
         demoKey: "data-table/custom-colors",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3175,6 +3190,7 @@ export default function Example() {
         id: "full",
         label: "Full options",
         demoKey: "data-table/full",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3424,6 +3440,212 @@ export default function Example() {
         }}
       />
     </div>
+  );
+}`,
+  },
+  // ─── Phase 4 — Hero & Text Effects ───────────────────────────────────────
+  {
+    slug: "shiny-text",
+    name: "Shiny Text",
+    description:
+      "A shimmering highlight that continuously sweeps across text — perfect for hero taglines and call-to-action copy.",
+    installCmd: "npx uniqueui add shiny-text",
+    icon: Wand2,
+    category: "Text",
+    props: [
+      { name: "text", type: "string", description: "The text content to render." },
+      { name: "speed", type: "number", default: "3", description: "Duration of one shimmer pass in seconds." },
+      { name: "shimmerWidth", type: "number", default: "40", description: "Width of the bright band as a percentage." },
+      { name: "className", type: "string", description: "Extra Tailwind classes (font size, weight, colour, etc.)." },
+      { name: "theme", type: '"light" | "dark"', default: '"dark"', description: "Controls the shimmer palette." },
+    ],
+    usageCode: `"use client";
+import { ShinyText } from "@/components/ui/shiny-text";
+
+export default function Hero() {
+  return (
+    <h1 className="text-5xl font-black">
+      <ShinyText
+        text="Build something brilliant."
+        speed={3}
+        shimmerWidth={45}
+        className="text-5xl font-black"
+      />
+    </h1>
+  );
+}`,
+  },
+  {
+    slug: "blur-reveal",
+    name: "Blur Reveal",
+    description:
+      "Characters or words materialise from a soft blur — the cinematic text entrance used in top SaaS hero sections.",
+    installCmd: "npx uniqueui add blur-reveal",
+    icon: ScanLine,
+    category: "Text",
+    props: [
+      { name: "text", type: "string", description: "The text to animate." },
+      { name: "animateBy", type: '"characters" | "words"', default: '"characters"', description: "Whether to stagger individual characters or whole words." },
+      { name: "delay", type: "number", default: "0", description: "Extra delay before the animation starts (seconds)." },
+      { name: "duration", type: "number", default: "0.6", description: "Spring duration per item." },
+      { name: "once", type: "boolean", default: "true", description: "Only animate on first scroll-enter." },
+      { name: "className", type: "string", description: "Extra Tailwind classes." },
+      { name: "theme", type: '"light" | "dark"', default: '"dark"', description: "Theme context." },
+    ],
+    usageCode: `"use client";
+import { BlurReveal } from "@/components/ui/blur-reveal";
+
+export default function Hero() {
+  return (
+    <h1 className="text-4xl font-bold text-white">
+      <BlurReveal
+        text="The future of UI is here."
+        animateBy="words"
+        delay={0.1}
+        className="text-4xl font-bold text-white"
+      />
+    </h1>
+  );
+}`,
+  },
+  {
+    slug: "count-up",
+    name: "Count Up",
+    description:
+      "An animated number that counts from a starting value to a target when scrolled into view — essential for metrics and stats sections.",
+    installCmd: "npx uniqueui add count-up",
+    icon: Hash,
+    category: "Text",
+    props: [
+      { name: "to", type: "number", description: "Target (end) value." },
+      { name: "from", type: "number", default: "0", description: "Starting value." },
+      { name: "duration", type: "number", default: "2", description: "Animation duration in seconds." },
+      { name: "decimals", type: "number", default: "0", description: "Number of decimal places." },
+      { name: "prefix", type: "string", default: '""', description: 'Prepended string, e.g. "$".' },
+      { name: "suffix", type: "string", default: '""', description: 'Appended string, e.g. "k+".' },
+      { name: "separator", type: "string", default: '","', description: "Thousands separator. Pass empty string to disable." },
+      { name: "once", type: "boolean", default: "true", description: "Only animate on first scroll-enter." },
+      { name: "className", type: "string", description: "Extra Tailwind classes." },
+      { name: "theme", type: '"light" | "dark"', default: '"dark"', description: "Theme context." },
+    ],
+    usageCode: `"use client";
+import { CountUp } from "@/components/ui/count-up";
+
+export default function Stats() {
+  return (
+    <div className="flex gap-12">
+      <div className="text-center">
+        <p className="text-5xl font-black text-white">
+          <CountUp to={12400} suffix="+" duration={2.5} />
+        </p>
+        <p className="text-neutral-400 mt-1">Stars on GitHub</p>
+      </div>
+      <div className="text-center">
+        <p className="text-5xl font-black text-white">
+          <CountUp to={99.9} decimals={1} suffix="%" duration={2} />
+        </p>
+        <p className="text-neutral-400 mt-1">Uptime SLA</p>
+      </div>
+    </div>
+  );
+}`,
+  },
+  {
+    slug: "border-beam",
+    name: "Border Beam",
+    description:
+      "A glowing comet that continuously orbits the border of a container — instantly upgrades cards, code blocks, and feature sections.",
+    installCmd: "npx uniqueui add border-beam",
+    icon: Flame,
+    category: "Effects & Animations",
+    props: [
+      { name: "children", type: "React.ReactNode", description: "Content inside the bordered container." },
+      { name: "duration", type: "number", default: "5", description: "Seconds for one full orbit." },
+      { name: "colorFrom", type: "string", default: '"#a855f7"', description: "Comet head colour." },
+      { name: "colorTo", type: "string", default: '"#ec4899"', description: "Comet tail colour." },
+      { name: "size", type: "number", default: "160", description: "Diameter of the glowing orb in px." },
+      { name: "borderWidth", type: "number", default: "1.5", description: "Width of the container border in px." },
+      { name: "className", type: "string", description: "Extra Tailwind classes on the container." },
+      { name: "theme", type: '"light" | "dark"', default: '"dark"', description: "Controls border colour." },
+    ],
+    usageCode: `"use client";
+import { BorderBeam } from "@/components/ui/border-beam";
+
+export default function FeatureCard() {
+  return (
+    <BorderBeam
+      colorFrom="#a855f7"
+      colorTo="#ec4899"
+      duration={5}
+      className="rounded-xl p-6 bg-neutral-900"
+    >
+      <h3 className="text-xl font-bold text-white">Spotlight Feature</h3>
+      <p className="text-neutral-400 mt-2">
+        Drop BorderBeam around any card to make it shine.
+      </p>
+    </BorderBeam>
+  );
+}`,
+  },
+  {
+    slug: "ripple",
+    name: "Ripple",
+    description:
+      "Concentric pulsing circles that radiate outward — a hero background effect that gives depth and energy to landing pages.",
+    installCmd: "npx uniqueui add ripple",
+    icon: Waves,
+    category: "Backgrounds",
+    props: [
+      { name: "mainCircleSize", type: "number", default: "120", description: "Diameter of the innermost ring in px." },
+      { name: "mainCircleOpacity", type: "number", default: "0.24", description: "Opacity of the innermost ring." },
+      { name: "numCircles", type: "number", default: "7", description: "Total number of rings." },
+      { name: "color", type: "string", description: "Override ring colour (defaults to purple tones per theme)." },
+      { name: "duration", type: "number", default: "3.5", description: "Duration of one pulse cycle in seconds." },
+      { name: "className", type: "string", description: "Extra Tailwind classes on the wrapper." },
+      { name: "theme", type: '"light" | "dark"', default: '"dark"', description: "Controls default ring colour." },
+    ],
+    usageCode: `"use client";
+import { Ripple } from "@/components/ui/ripple";
+
+export default function Hero() {
+  return (
+    <section className="relative h-[500px] flex items-center justify-center overflow-hidden bg-neutral-950">
+      <Ripple mainCircleSize={100} numCircles={8} />
+      <div className="relative z-10 text-center">
+        <h1 className="text-5xl font-black text-white">Your headline here</h1>
+      </div>
+    </section>
+  );
+}`,
+  },
+  {
+    slug: "word-rotate",
+    name: "Word Rotate",
+    description:
+      "A list of words that cycle with slide, flip, or fade transitions — the signature hero-headline effect used across modern SaaS sites.",
+    installCmd: "npx uniqueui add word-rotate",
+    icon: RefreshCw,
+    category: "Text",
+    props: [
+      { name: "words", type: "string[]", description: "Array of words to cycle through." },
+      { name: "interval", type: "number", default: "2500", description: "How long each word is shown in ms." },
+      { name: "animation", type: '"slide-up" | "slide-down" | "flip" | "fade"', default: '"slide-up"', description: "Transition style between words." },
+      { name: "className", type: "string", description: "Extra Tailwind classes (font size, colour, etc.)." },
+      { name: "theme", type: '"light" | "dark"', default: '"dark"', description: "Theme context." },
+    ],
+    usageCode: `"use client";
+import { WordRotate } from "@/components/ui/word-rotate";
+
+export default function Hero() {
+  return (
+    <h1 className="text-5xl font-black text-white">
+      Build interfaces that are{" "}
+      <WordRotate
+        words={["faster", "smarter", "bolder", "yours"]}
+        animation="slide-up"
+        className="text-purple-400"
+      />
+    </h1>
   );
 }`,
   },

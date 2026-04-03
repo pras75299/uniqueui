@@ -6,9 +6,9 @@ import { componentDemos } from "@/config/demos";
 import type { ComponentVariant } from "@/config/components";
 import { useTheme } from "@/contexts/theme-context";
 import { cn } from "@/lib/utils";
+import ClientCopyButton from "@/components/client-copy-button";
 
 interface BentoVariantSwitcherProps {
-  slug?: string;
   variants: ComponentVariant[];
   /** Pre-highlighted HTML per variant id, produced by shiki on the server */
   highlightedCodes: Record<string, string>;
@@ -17,7 +17,6 @@ interface BentoVariantSwitcherProps {
 }
 
 export default function BentoVariantSwitcher({
-  slug,
   variants,
   highlightedCodes,
   rawCodes,
@@ -64,9 +63,9 @@ export default function BentoVariantSwitcher({
         <div
           className={cn(
             "relative rounded-xl border min-h-[320px]",
-            // DataTable already manages its own horizontal scrolling internally.
-            // Using `overflow-x-auto` here can clip the pagination footer vertically.
-            slug === "data-table" ? "overflow-y-visible" : "overflow-hidden",
+            // Components with overflowVisible manage their own internal scrolling
+            // and would be clipped by overflow:hidden on this wrapper.
+            activeVariant?.overflowVisible ? "overflow-y-visible" : "overflow-hidden",
             isDark
               ? "border-neutral-800 bg-neutral-950"
               : "border-neutral-200 bg-neutral-50",
@@ -103,33 +102,11 @@ export default function BentoVariantSwitcher({
             />
           </AnimatePresence>
 
-          {/* Copy button */}
           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-            <CopyButton theme={theme} text={rawCodes[activeId] ?? ""} />
+            <ClientCopyButton text={rawCodes[activeId] ?? ""} />
           </div>
         </div>
       </section>
     </div>
-  );
-}
-
-// ─── Inline copy button (avoids needing to import client-copy-button) ─────────
-function CopyButton({ text, theme = "dark" }: { text: string; theme?: "light" | "dark" }) {
-  const [copied, setCopied] = useState(false);
-  const isDark = theme === "dark";
-
-  const copy = async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <button
-      onClick={copy}
-      className={cn("flex items-center gap-1 rounded-md border px-2 py-1 text-xs transition-colors", isDark ? "border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-white hover:border-neutral-500" : "border-neutral-600 bg-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-500")}
-    >
-      {copied ? "Copied!" : "Copy"}
-    </button>
   );
 }

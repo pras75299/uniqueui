@@ -75,7 +75,10 @@ function isTrustedRegistryUrl(url: string): boolean {
     try {
         const u = new URL(url);
         if (u.hostname === "uniqueui-platform.vercel.app") return true;
-        if (u.hostname === "raw.githubusercontent.com" && u.pathname.includes("pras75299/uniqueui")) {
+        if (
+            u.hostname === "raw.githubusercontent.com" &&
+            (u.pathname === "/pras75299/uniqueui" || u.pathname.startsWith("/pras75299/uniqueui/"))
+        ) {
             return true;
         }
         return false;
@@ -94,8 +97,57 @@ function warnIfUntrustedRegistry(url: string) {
     );
 }
 
+const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
+
+const CACHE_DIR = path.join(os.homedir(), ".uniqueui");
+const CACHE_FILE = path.join(CACHE_DIR, "registry-cache.json");
+const CACHE_TTL = 3600 * 1000; // 1 hour
+
+type CachedRegistry = {
+    sourceUrl: string;
+    data: RegistryItem[];
+};
+
+async function getCachedRegistry(sourceUrl: string): Promise<RegistryItem[] | null> {
+    try {
+        if (!fs.existsSync(CACHE_FILE)) return null;
+        const stat = await fs.stat(CACHE_FILE);
+        if (Date.now() - stat.mtimeMs > CACHE_TTL) return null;
+        const cached = (await fs.readJson(CACHE_FILE)) as CachedRegistry;
+        if (cached?.sourceUrl !== sourceUrl || !Array.isArray(cached?.data)) return null;
+        return cached.data;
+    } catch {
+        return null;
+    }
+}
+
+async function setCachedRegistry(sourceUrl: string, data: RegistryItem[]) {
+    try {
+        await fs.ensureDir(CACHE_DIR);
+        await fs.writeJson(CACHE_FILE, { sourceUrl, data } satisfies CachedRegistry);
+    } catch {
+        // ignore cache write errors
+    }
+}
+
+async function fetchRegistryFromUrl(baseUrl: string): Promise<RegistryItem[] | null> {
+    try {
+        const normalized = baseUrl.replace(/\/+$/, "");
+        const isDirectEndpoint =
+            normalized.endsWith(".json") || normalized.endsWith("/api/registry");
+        const registryUrl = isDirectEndpoint ? normalized : `${normalized}/registry.json`;
+        const res = await fetch(registryUrl);
+        if (!res.ok) return null;
+        return await res.json() as RegistryItem[];
+    } catch (error) {
+        console.error(chalk.yellow(`\nWarning: Failed to fetch from ${baseUrl}:`), error);
+        return null;
+    }
+}
+
 export async function add(componentName: string, options: { url: string }) {
     console.log(`Fetching ${componentName} from ${options.url}...`);
+    warnIfUntrustedRegistry(options.url);
 
     // 1. Load config
     let config;
@@ -108,45 +160,6 @@ export async function add(componentName: string, options: { url: string }) {
 
     // 2. Fetch registry
     let registry: RegistryItem[];
-    const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
-
-    const CACHE_DIR = path.join(os.homedir(), ".uniqueui");
-    const CACHE_FILE = path.join(CACHE_DIR, "registry-cache.json");
-    const CACHE_TTL = 3600 * 1000; // 1 hour
-
-    async function getCachedRegistry(): Promise<RegistryItem[] | null> {
-        // Disabled cache during local development to ensure fresh registry
-        return null;
-        try {
-            if (!fs.existsSync(CACHE_FILE)) return null;
-            const stat = await fs.stat(CACHE_FILE);
-            if (Date.now() - stat.mtimeMs > CACHE_TTL) return null;
-            return await fs.readJson(CACHE_FILE);
-        } catch {
-            return null;
-        }
-    }
-
-    async function setCachedRegistry(data: RegistryItem[]) {
-        try {
-            await fs.ensureDir(CACHE_DIR);
-            await fs.writeJson(CACHE_FILE, data);
-        } catch {
-            // ignore cache write errors
-        }
-    }
-
-    async function fetchRegistryFromUrl(baseUrl: string): Promise<RegistryItem[] | null> {
-        try {
-            const registryUrl = baseUrl.endsWith('.json') ? baseUrl : `${baseUrl}/registry.json`;
-            const res = await fetch(registryUrl);
-            if (!res.ok) return null;
-            return await res.json() as RegistryItem[];
-        } catch (error) {
-            console.error(chalk.yellow(`\nWarning: Failed to fetch from ${baseUrl}:`), error);
-            return null;
-        }
-    }
 
     try {
         let raw: unknown;
@@ -157,7 +170,7 @@ export async function add(componentName: string, options: { url: string }) {
             raw = await fs.readJson(options.url);
         } else {
             // Try cache first
-            const cached = await getCachedRegistry();
+            const cached = await getCachedRegistry(options.url);
             if (cached) {
                 console.log(chalk.gray("Using cached component registry"));
                 raw = cached;
@@ -201,14 +214,12 @@ export async function add(componentName: string, options: { url: string }) {
         }
         registry = validated;
         if (shouldWriteCache) {
-            await setCachedRegistry(registry);
+            await setCachedRegistry(options.url, registry);
         }
     } catch (e) {
         console.error(chalk.red("Could not fetch registry.json"), e);
         process.exit(1);
     }
-
-    warnIfUntrustedRegistry(options.url);
 
     const item = registry.find((c) => c.name === componentName);
     if (!item) {
