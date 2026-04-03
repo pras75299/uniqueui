@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Terminal } from "lucide-react";
 import ClientCopyButton from "./client-copy-button";
 import BentoVariantSwitcher from "./bento-variant-switcher";
+import PropsTable from "@/components/props-table";
 import { codeToHtml } from "shiki";
 import { escapeHtml } from "@/lib/escape-html";
 
@@ -72,7 +73,6 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
 
         {/* Synced variant switcher — handles both Preview and Usage in one block */}
         <BentoVariantSwitcher
-          slug={component.slug}
           variants={component.variants}
           highlightedCodes={highlightedCodes}
           rawCodes={rawCodes}
@@ -82,36 +82,7 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
         {component.props && component.props.length > 0 && (
           <section className="space-y-4 pt-8 border-t border-neutral-200 dark:border-neutral-800">
             <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Props</h2>
-            <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-neutral-950">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                  <thead className="text-xs uppercase bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
-                    <tr>
-                      <th scope="col" className="px-4 py-3 font-medium">Prop</th>
-                      <th scope="col" className="px-4 py-3 font-medium">Type</th>
-                      <th scope="col" className="px-4 py-3 font-medium">Description</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
-                    {component.props.map((prop, idx) => (
-                      <tr key={idx} className="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors">
-                        <td className="px-4 py-3 border-r border-neutral-200 dark:border-neutral-800/50">
-                          <code className="text-purple-600 dark:text-purple-400 bg-purple-400/10 px-1.5 py-0.5 rounded text-xs">
-                            {prop.name}
-                          </code>
-                        </td>
-                        <td className="px-4 py-3 text-neutral-700 dark:text-neutral-300 border-r border-neutral-200 dark:border-neutral-800/50">
-                          <code className="text-blue-600 dark:text-blue-400/80 bg-blue-400/10 px-1.5 py-0.5 rounded text-xs break-all">
-                            {prop.type}
-                          </code>
-                        </td>
-                        <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{prop.description}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <PropsTable props={component.props} />
           </section>
         )}
       </div>

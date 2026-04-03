@@ -7,14 +7,9 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
-import { ArrowLeft, Menu, X, BookOpen, Layers, LayoutTemplate } from "lucide-react";
+import { SECTION_NAV } from "@/config/navigation";
+import { ArrowLeft, Menu, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-
-const SECTION_NAV = [
-  { label: "Components", href: "/components", icon: Layers },
-  { label: "Docs", href: "/docs", icon: BookOpen },
-  { label: "Templates", href: "/templates", icon: LayoutTemplate },
-];
 
 export default function ComponentsLayout({
   children,

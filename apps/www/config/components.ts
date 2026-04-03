@@ -35,6 +35,9 @@ export type ComponentVariant = {
   usageCode: string;
   /** Key used to look up this variant's demo in componentDemos */
   demoKey: string;
+  /** Set true for components that manage their own internal scroll (e.g. data-table).
+   *  Prevents the preview wrapper's overflow:hidden from clipping the content. */
+  overflowVisible?: boolean;
 };
 
 export type ComponentItem = {
@@ -2905,6 +2908,7 @@ export default function Example() {
         id: "default",
         label: "Default",
         demoKey: "data-table/default",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -2938,6 +2942,7 @@ export default function Example() {
         id: "freeze-left",
         label: "Freeze left",
         demoKey: "data-table/freeze-left",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -2982,6 +2987,7 @@ export default function Example() {
         id: "freeze-right",
         label: "Freeze right",
         demoKey: "data-table/freeze-right",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3026,6 +3032,7 @@ export default function Example() {
         id: "freeze-both",
         label: "Freeze both",
         demoKey: "data-table/freeze-both",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3071,6 +3078,7 @@ export default function Example() {
         id: "bordered",
         label: "Bordered",
         demoKey: "data-table/bordered",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3104,6 +3112,7 @@ export default function Example() {
         id: "sortable",
         label: "Sortable",
         demoKey: "data-table/sortable",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3136,6 +3145,7 @@ export default function Example() {
         id: "custom-colors",
         label: "Custom colors",
         demoKey: "data-table/custom-colors",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [
@@ -3180,6 +3190,7 @@ export default function Example() {
         id: "full",
         label: "Full options",
         demoKey: "data-table/full",
+        overflowVisible: true,
         usageCode: `import { DataTable } from "@/components/ui/data-table";
 
 const columns = [

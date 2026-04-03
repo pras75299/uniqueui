@@ -7,24 +7,17 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
+import { SECTION_NAV } from "@/config/navigation";
 import {
   ArrowLeft,
   Menu,
   X,
   BookOpen,
-  Layers,
-  LayoutTemplate,
   Rocket,
   Download,
   Zap,
 } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
-
-const SECTION_NAV = [
-  { label: "Components", href: "/components", icon: Layers },
-  { label: "Docs", href: "/docs", icon: BookOpen },
-  { label: "Templates", href: "/templates", icon: LayoutTemplate },
-];
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const GETTING_STARTED = [
   { label: "Introduction", href: "/docs", icon: BookOpen },
@@ -40,6 +33,9 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const activeItemRef = useRef<HTMLAnchorElement | null>(null);
+  // Tracks which section IDs are currently intersecting the viewport trigger zone.
+  // Using a ref avoids re-creating the observer on every set update.
+  const intersectingRef = useRef<Set<string>>(new Set());
 
   // Scroll active component doc link into view when pathname changes
   useEffect(() => {
@@ -61,19 +57,26 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
     const onHashChange = () => setHash(window.location.hash);
     window.addEventListener("hashchange", onHashChange);
 
-    // Scroll-spy: update active item as user scrolls through sections
+    // Scroll-spy: update active item as user scrolls through sections.
+    // The observer callback only receives CHANGED entries, not all observed ones,
+    // so we maintain a Set of currently-visible IDs to reliably detect "above all sections".
     const SECTION_IDS = ["installation", "quickstart", "cli"];
+    intersectingRef.current.clear();
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setHash(`#${entry.target.id}`);
+            intersectingRef.current.add(entry.target.id);
+          } else {
+            intersectingRef.current.delete(entry.target.id);
           }
         }
-        // If nothing is intersecting we are above all sections → Introduction
-        const anyIntersecting = entries.some((e) => e.isIntersecting);
-        if (!anyIntersecting && entries[0]?.boundingClientRect.top > 0) {
+        if (intersectingRef.current.size === 0) {
           setHash("");
+        } else {
+          // Prefer the first section in document order when multiple are visible
+          const active = SECTION_IDS.find((id) => intersectingRef.current.has(id));
+          if (active) setHash(`#${active}`);
         }
       },
       { rootMargin: "-20% 0px -75% 0px", threshold: 0 }

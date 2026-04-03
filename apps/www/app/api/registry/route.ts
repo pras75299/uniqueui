@@ -55,6 +55,7 @@ export async function GET(request: Request) {
             { status: 404 }
         );
     } catch (error) {
+        console.error('[registry API]', error);
         return NextResponse.json(
             { error: 'Failed to load registry' },
             { status: 500 }
