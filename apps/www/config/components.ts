@@ -3596,28 +3596,50 @@ export default function FeatureCard() {
     slug: "ripple",
     name: "Ripple",
     description:
-      "Concentric pulsing circles that radiate outward — a hero background effect that gives depth and energy to landing pages.",
+      "Luminous orbs that drift slowly across the viewport — a liquid nebula hero background with warm, organic colour blooms.",
     installCmd: "npx uniqueui add ripple",
     icon: Waves,
     category: "Backgrounds",
     props: [
-      { name: "mainCircleSize", type: "number", default: "120", description: "Diameter of the innermost ring in px." },
-      { name: "mainCircleOpacity", type: "number", default: "0.24", description: "Opacity of the innermost ring." },
-      { name: "numCircles", type: "number", default: "7", description: "Total number of rings." },
-      { name: "color", type: "string", description: "Override ring colour (defaults to purple tones per theme)." },
-      { name: "duration", type: "number", default: "3.5", description: "Duration of one pulse cycle in seconds." },
-      { name: "className", type: "string", description: "Extra Tailwind classes on the wrapper." },
-      { name: "theme", type: '"light" | "dark"', default: '"dark"', description: "Controls default ring colour." },
+      { name: "mainCircleSize", type: "number", default: "120", description: "Controls orb diameter — each orb renders at mainCircleSize × 4.5 px." },
+      { name: "mainCircleOpacity", type: "number", default: "0.6", description: "Peak opacity for every orb (0–1). Individual orbs shimmer around this value." },
+      { name: "numCircles", type: "number", default: "7", description: "Number of orbs to render. Capped at 8." },
+      { name: "color", type: "string", description: "Pin all orbs to one colour (hex or rgba). Omit to use the built-in warm palette." },
+      { name: "duration", type: "number", default: "9", description: "Base drift-cycle length in seconds. Each orb is staggered so they never move in sync." },
+      { name: "className", type: "string", description: "Extra classes on the wrapper div." },
     ],
     usageCode: `"use client";
 import { Ripple } from "@/components/ui/ripple";
 
 export default function Hero() {
   return (
-    <section className="relative h-[500px] flex items-center justify-center overflow-hidden bg-neutral-950">
-      <Ripple mainCircleSize={100} numCircles={8} />
-      <div className="relative z-10 text-center">
-        <h1 className="text-5xl font-black text-white">Your headline here</h1>
+    <section className="relative h-[500px] w-full flex items-center justify-center overflow-hidden bg-[#0c0608]">
+      {/* Animated nebula background */}
+      <Ripple mainCircleSize={90} mainCircleOpacity={0.55} numCircles={7} duration={10} />
+
+      {/* Radial vignette so centre text stays readable */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 55% 60% at 50% 50%, transparent 0%, rgba(12,6,8,0.75) 60%, rgba(12,6,8,0.97) 100%)",
+        }}
+      />
+
+      {/* Hero content sits above the orbs */}
+      <div className="relative z-10 flex flex-col items-center gap-4 px-6 text-center max-w-sm">
+        <p className="text-[10px] uppercase tracking-[0.35em] text-rose-300/70">
+          Maison de Parfum
+        </p>
+        <h1 className="text-6xl font-light italic text-white" style={{ fontFamily: "Georgia, serif" }}>
+          Aurore.
+        </h1>
+        <p className="text-xs leading-relaxed tracking-wide text-stone-400">
+          A scent composed at the edge of dawn — rose, oud, and amber woven into silence.
+        </p>
+        <button className="mt-1 border border-rose-300/30 px-7 py-2.5 text-xs tracking-[0.18em] uppercase text-rose-200/80 transition-colors hover:border-rose-300/70 hover:text-rose-100">
+          Discover the collection
+        </button>
       </div>
     </section>
   );
