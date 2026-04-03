@@ -2734,7 +2734,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
+            transition={{ type: "spring", stiffness: 60, damping: 20, delay: 0.1 }}
             className={cn(
               "text-[10px] uppercase tracking-[0.35em]",
               isDark ? "text-rose-300/70" : "text-rose-500/70",
@@ -2746,7 +2746,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           <motion.h2
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ type: "spring", stiffness: 80, damping: 22, delay: 0.28 }}
             className={cn(
               "text-[3.4rem] leading-[1] font-light",
               isDark ? "text-white" : "text-stone-900",
@@ -2759,7 +2759,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.46 }}
+            transition={{ type: "spring", stiffness: 90, damping: 24, delay: 0.46 }}
             className={cn(
               "text-xs leading-relaxed tracking-wide",
               isDark ? "text-stone-400" : "text-stone-500",
@@ -2771,7 +2771,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           <motion.button
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.62 }}
+            transition={{ type: "spring", stiffness: 100, damping: 26, delay: 0.62 }}
             className={cn(
               "mt-1 px-7 py-2.5 text-xs tracking-[0.18em] uppercase transition-all duration-300",
               isDark
