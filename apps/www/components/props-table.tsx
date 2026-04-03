@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 type Prop = {
   name: string;
   type: string;
@@ -12,22 +14,24 @@ type Prop = {
 export default function PropsTable({
   props,
   showDefault = false,
+  className,
 }: {
   props: Prop[];
   showDefault?: boolean;
+  className?: string;
 }) {
   return (
-    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-neutral-950">
+    <div className={cn("rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-neutral-950", className)}>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
           <thead className="text-xs uppercase bg-neutral-50 dark:bg-neutral-900 text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
             <tr>
-              <th className="px-4 py-3 font-medium">Prop</th>
-              <th className="px-4 py-3 font-medium">Type</th>
+              <th scope="col" className="px-4 py-3 font-medium">Prop</th>
+              <th scope="col" className="px-4 py-3 font-medium">Type</th>
               {showDefault && (
-                <th className="px-4 py-3 font-medium hidden sm:table-cell">Default</th>
+                <th scope="col" className="px-4 py-3 font-medium hidden sm:table-cell">Default</th>
               )}
-              <th className="px-4 py-3 font-medium">Description</th>
+              <th scope="col" className="px-4 py-3 font-medium">Description</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
