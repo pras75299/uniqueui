@@ -51,6 +51,7 @@ import { CountUp } from "@/components/ui/count-up";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Ripple } from "@/components/ui/ripple";
 import { WordRotate } from "@/components/ui/word-rotate";
+import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
   Ghost,
@@ -2705,51 +2706,85 @@ export const componentDemos: Record<string, DemoComponent> = {
     </div>
   ),
 
-  "ripple": ({ theme = "dark" }) => (
-    <div
-      className={cn(
-        "relative h-[380px] w-full flex items-center justify-center overflow-hidden rounded-xl",
-        theme === "dark" ? "bg-neutral-950" : "bg-neutral-50",
-      )}
-    >
-      <Ripple
-        mainCircleSize={80}
-        mainCircleOpacity={0.2}
-        numCircles={8}
-        duration={3}
-        theme={theme}
-      />
-      <div className="relative z-10 text-center space-y-3 pointer-events-none px-6">
+  "ripple": ({ theme = "dark" }) => {
+    const isDark = theme === "dark";
+    return (
+      <div
+        className="relative w-full h-[460px] flex items-center justify-center overflow-hidden"
+        style={{ background: isDark ? "#0c0608" : "#fdf8f5" }}
+      >
+        <Ripple
+          mainCircleSize={90}
+          mainCircleOpacity={isDark ? 0.55 : 0.45}
+          numCircles={7}
+          duration={10}
+        />
+
+        {/* Vignette so text stays readable over animated orbs */}
         <div
-          className={cn(
-            "inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border",
-            theme === "dark"
-              ? "bg-purple-500/10 border-purple-500/30 text-purple-300"
-              : "bg-purple-50 border-purple-200 text-purple-700",
-          )}
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-purple-500 animate-pulse" />
-          Hero background
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: isDark
+              ? "radial-gradient(ellipse 55% 60% at 50% 50%, rgba(12,6,8,0) 0%, rgba(12,6,8,0.72) 60%, rgba(12,6,8,0.96) 100%)"
+              : "radial-gradient(ellipse 55% 60% at 50% 50%, rgba(253,248,245,0) 0%, rgba(253,248,245,0.72) 60%, rgba(253,248,245,0.96) 100%)",
+          }}
+        />
+
+        <div className="relative z-10 flex flex-col items-center gap-4 px-6 text-center max-w-xs">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2, delay: 0.1, ease: "easeOut" }}
+            className={cn(
+              "text-[10px] uppercase tracking-[0.35em]",
+              isDark ? "text-rose-300/70" : "text-rose-500/70",
+            )}
+          >
+            Maison de Parfum
+          </motion.p>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className={cn(
+              "text-[3.4rem] leading-[1] font-light",
+              isDark ? "text-white" : "text-stone-900",
+            )}
+            style={{ fontFamily: '"Cormorant Garamond", "Garamond", "Georgia", serif', fontStyle: "italic" }}
+          >
+            Aurore.
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.46 }}
+            className={cn(
+              "text-xs leading-relaxed tracking-wide",
+              isDark ? "text-stone-400" : "text-stone-500",
+            )}
+          >
+            A scent composed at the edge of dawn — rose, oud, and liquid amber woven into silence.
+          </motion.p>
+
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.62 }}
+            className={cn(
+              "mt-1 px-7 py-2.5 text-xs tracking-[0.18em] uppercase transition-all duration-300",
+              isDark
+                ? "border border-rose-300/30 text-rose-200/80 hover:border-rose-300/70 hover:text-rose-100"
+                : "border border-rose-400/40 text-rose-700/80 hover:border-rose-500/70 hover:text-rose-800",
+            )}
+          >
+            Discover the collection
+          </motion.button>
         </div>
-        <h2
-          className={cn(
-            "text-3xl font-black tracking-tight",
-            theme === "dark" ? "text-white" : "text-neutral-900",
-          )}
-        >
-          Your headline here
-        </h2>
-        <p
-          className={cn(
-            "text-sm max-w-xs mx-auto",
-            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
-          )}
-        >
-          Drop Ripple behind any hero section for instant depth.
-        </p>
       </div>
-    </div>
-  ),
+    );
+  },
 
   "word-rotate": ({ theme = "dark" }) => (
     <div
