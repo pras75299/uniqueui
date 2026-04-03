@@ -113,7 +113,7 @@ export default function Hero() {
       </section>
 
       {/* ── Installation ── */}
-      <section id="installation" className="animate-fade-in-up animate-delay-150 space-y-6">
+      <section id="installation" className="scroll-mt-20 animate-fade-in-up animate-delay-150 space-y-6">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg border bg-white border-neutral-200 text-purple-600 dark:bg-neutral-900 dark:border-neutral-800 dark:text-purple-400">
             <Download className="w-5 h-5" />
@@ -154,7 +154,7 @@ export default function Hero() {
       </section>
 
       {/* ── Quick Start ── */}
-      <section id="quickstart" className="animate-fade-in-up animate-delay-200 space-y-6">
+      <section id="quickstart" className="scroll-mt-20 animate-fade-in-up animate-delay-200 space-y-6">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg border bg-white border-neutral-200 text-purple-600 dark:bg-neutral-900 dark:border-neutral-800 dark:text-purple-400">
             <Zap className="w-5 h-5" />
@@ -189,7 +189,7 @@ export default function Hero() {
       </section>
 
       {/* ── CLI Reference ── */}
-      <section id="cli" className="animate-fade-in-up animate-delay-250 space-y-6">
+      <section id="cli" className="scroll-mt-20 animate-fade-in-up animate-delay-250 space-y-6">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg border bg-white border-neutral-200 text-purple-600 dark:bg-neutral-900 dark:border-neutral-800 dark:text-purple-400">
             <Terminal className="w-5 h-5" />

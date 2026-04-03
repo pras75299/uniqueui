@@ -141,15 +141,21 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
       )}
 
       {/* ── Sidebar ── */}
-      <aside
+      <motion.aside
         id="docs-sidebar"
         className={cn(
-          "fixed top-0 left-0 z-40 h-screen w-64 border-r transition-transform duration-300 ease-in-out lg:translate-x-0 pt-20 lg:pt-0",
+          "fixed top-0 left-0 z-40 h-screen w-64 border-r pt-20 lg:pt-0 lg:!transform-none",
           isDark ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
           isMobileMenuOpen
-            ? "translate-x-0 visible pointer-events-auto"
-            : "-translate-x-full invisible pointer-events-none lg:visible lg:pointer-events-auto"
+            ? "visible pointer-events-auto"
+            : "pointer-events-none lg:visible lg:pointer-events-auto"
         )}
+        initial={false}
+        animate={{
+          x: isMobileMenuOpen ? 0 : -256,
+          opacity: isMobileMenuOpen ? 1 : 0,
+        }}
+        transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
       >
         <div className="h-full flex flex-col overflow-y-auto px-4 py-6">
           {/* Logo + back */}
@@ -272,7 +278,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
             ))}
           </div>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* ── Main Content ── */}
       <main className="flex-1 w-full lg:pl-64 pt-20 lg:pt-0 min-h-screen">
