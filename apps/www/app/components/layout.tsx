@@ -158,7 +158,9 @@ export default function ComponentsLayout({
         className={cn(
           "fixed top-0 left-0 z-40 h-screen w-64 border-r transition-transform duration-300 ease-in-out lg:translate-x-0 pt-20 lg:pt-0",
           isDark ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          isMobileMenuOpen
+            ? "translate-x-0 visible pointer-events-auto"
+            : "-translate-x-full invisible pointer-events-none lg:visible lg:pointer-events-auto"
         )}
       >
         <div className="h-full flex flex-col overflow-y-auto px-4 py-6">
