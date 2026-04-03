@@ -47,11 +47,14 @@ export function DotGridBackground({
   const ripplesRef    = useRef<Ripple[]>([]);
   const dotsRef       = useRef<Dot[]>([]);
   const rafRef        = useRef(0);
+  const lastNowRef    = useRef<number | null>(null);
 
   const buildDots = useCallback((w: number, h: number) => {
+    // Guard against non-finite or non-positive gap to prevent infinite loop
+    const step = Number.isFinite(gap) && gap > 0 ? gap : 28;
     const dots: Dot[] = [];
-    for (let x = gap; x < w; x += gap) {
-      for (let y = gap; y < h; y += gap) {
+    for (let x = step; x < w; x += step) {
+      for (let y = step; y < h; y += step) {
         dots.push({
           x,
           y,
@@ -97,12 +100,37 @@ export function DotGridBackground({
     let baseR = isDark ? 255 : 15;
     let baseG = isDark ? 255 : 15;
     let baseB = isDark ? 255 : 20;
+
     if (dotColor) {
-      const m = dotColor.match(/[\d.]+/g);
-      if (m && m.length >= 3) {
-        baseR = parseInt(m[0]);
-        baseG = parseInt(m[1]);
-        baseB = parseInt(m[2]);
+      // Robust color probe: use the browser's CSS engine to resolve any valid color string
+      let resolved = false;
+      if (typeof window !== "undefined") {
+        try {
+          const probe = document.createElement("div");
+          probe.style.color = dotColor;
+          // color must be set for getComputedStyle to return a value
+          document.body.appendChild(probe);
+          const computed = getComputedStyle(probe).color; // returns "rgb(r, g, b)" or ""
+          document.body.removeChild(probe);
+          const m = computed.match(/[\d.]+/g);
+          if (m && m.length >= 3) {
+            baseR = parseInt(m[0]);
+            baseG = parseInt(m[1]);
+            baseB = parseInt(m[2]);
+            resolved = true;
+          }
+        } catch {
+          // fall through to legacy path
+        }
+      }
+      // Legacy numeric-extraction fallback (e.g., SSR or probe failure)
+      if (!resolved) {
+        const m = dotColor.match(/[\d.]+/g);
+        if (m && m.length >= 3) {
+          baseR = parseInt(m[0]);
+          baseG = parseInt(m[1]);
+          baseB = parseInt(m[2]);
+        }
       }
     }
 
@@ -125,9 +153,16 @@ export function DotGridBackground({
       const height = canvas.height / dpr;
 
       if (width === 0 || height === 0) {
+        lastNowRef.current = now;
         rafRef.current = requestAnimationFrame(frame);
         return;
       }
+
+      // Time-based delta so animations run at the same real-world speed
+      // regardless of the device's frame rate.
+      const lastNow = lastNowRef.current ?? now;
+      const dtMs = now - lastNow;
+      const normalizedDelta = dtMs / (1000 / 60); // 1.0 at 60 fps
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
@@ -152,8 +187,9 @@ export function DotGridBackground({
       }
 
       for (const dot of dotsRef.current) {
-        dot.phase += dot.speed;
-        dot.glow  *= GLOW_DECAY;
+        // Time-based updates: scale by normalizedDelta so speed is frame-rate independent
+        dot.phase += dot.speed * normalizedDelta;
+        dot.glow  *= Math.pow(GLOW_DECAY, normalizedDelta);
 
         const dx     = dot.x - mx;
         const dy     = dot.y - my;
@@ -173,7 +209,7 @@ export function DotGridBackground({
           const rdx   = dot.x - r.x;
           const rdy   = dot.y - r.y;
           const d     = Math.sqrt(rdx * rdx + rdy * rdy);
-          const age   = now - r.birth;
+          const age   = now - r.birth; // real-time age — unchanged
           const front = (age / 1000) * RIPPLE_SPEED;
           const diff  = Math.abs(d - front);
 
@@ -200,9 +236,11 @@ export function DotGridBackground({
       }
 
       ctx.restore(); // also resets globalAlpha to 1
+      lastNowRef.current = now;
       rafRef.current = requestAnimationFrame(frame);
     };
 
+    lastNowRef.current = null;
     rafRef.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafRef.current);
   }, [theme, dotSize, hoverRadius, hoverScale, dotColor]);

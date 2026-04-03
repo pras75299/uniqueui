@@ -980,7 +980,7 @@ export const componentDemos: Record<string, DemoComponent> = {
   "dot-grid-background": ({ theme = "dark" }) => (
     <DotGridBackground
       theme={theme}
-      className="w-full h-[340px] flex items-center justify-center"
+      className="w-full h-[340px] flex items-center justify-center rounded-xl"
     >
       <div className="text-center relative z-10 select-none px-6">
         <p
