@@ -120,6 +120,10 @@ export interface MultiStepAuthCardProps {
    * Set false to omit it (e.g. internal or B2B-only flows).
    */
   requireTermsConsent?: boolean;
+  /** URL for the Terms of Service consent link (default "#"). */
+  termsUrl?: string;
+  /** URL for the Privacy Policy consent link (default "#"). */
+  privacyUrl?: string;
 }
 
 const cardVariants = {
@@ -130,6 +134,8 @@ const cardVariants = {
 
 const errorAlertClass =
   "bg-red-50 dark:bg-red-500/10 border border-red-300 dark:border-red-500/30 text-red-600 dark:text-red-400 text-sm px-3 py-2 rounded-lg flex items-center gap-2 overflow-hidden";
+
+const consentLinkClass = "underline hover:text-neutral-800 dark:hover:text-neutral-200";
 
 function AuthErrorAlert({ message }: { message: string }) {
   return (
@@ -244,6 +250,8 @@ export function MultiStepAuthCard({
   demoEmailDelayMs = 800,
   demoPasswordDelayMs = 1000,
   requireTermsConsent = true,
+  termsUrl = "#",
+  privacyUrl = "#",
 }: MultiStepAuthCardProps) {
   const str = useMemo(() => mergeAuthStrings(stringsProp), [stringsProp]);
   const [authState, setAuthState] = useState<AuthState>(initialState);
@@ -378,6 +386,8 @@ export function MultiStepAuthCard({
                 onSubmit={handleEmailSubmit}
                 isLoading={isLoading}
                 error={errorText}
+                termsUrl={termsUrl}
+                privacyUrl={privacyUrl}
               />
             </motion.div>
           )}
@@ -502,9 +512,11 @@ interface EmailStepProps {
   error?: string;
   onBack?: () => void;
   onRetry?: () => void;
+  termsUrl?: string;
+  privacyUrl?: string;
 }
 
-function EmailStep({ str, mode, emailId, consentId, termsConsent, email, setEmail, onSubmit, isLoading, error, onBack, onRetry }: EmailStepProps) {
+function EmailStep({ str, mode, emailId, consentId, termsConsent, email, setEmail, onSubmit, isLoading, error, onBack, onRetry, termsUrl = "#", privacyUrl = "#" }: EmailStepProps) {
   const isUnregistered = mode === "unregistered";
   const isFirstTime = mode === "first-time";
   const title = isFirstTime ? str.email.titleFirstTime : str.email.titleSignIn;
@@ -517,8 +529,8 @@ function EmailStep({ str, mode, emailId, consentId, termsConsent, email, setEmai
         <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1.5">{subtitle}</p>
       </div>
       <AuthErrorAlert message={error ?? ""} />
-      <div className="space-y-5">
-        <div className="space-y-2">
+      <div className="space-y-6">
+        <div className="space-y-3">
           <label htmlFor={emailId} className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
             {str.email.fieldLabel}
           </label>
@@ -543,7 +555,7 @@ function EmailStep({ str, mode, emailId, consentId, termsConsent, email, setEmai
           </div>
         </div>
         {!isUnregistered && !isFirstTime && termsConsent && consentId && (
-          <div className="flex items-start gap-2 pt-2">
+          <div className="flex items-start gap-3">
             <input
               type="checkbox"
               id={consentId}
@@ -552,17 +564,17 @@ function EmailStep({ str, mode, emailId, consentId, termsConsent, email, setEmai
               required
               aria-invalid={termsConsent.invalid || undefined}
               className={cn(
-                "mt-1 w-4 h-4 rounded border-neutral-300",
+                "w-4 h-4 shrink-0 rounded border-neutral-300",
                 termsConsent.invalid && "border-red-400 ring-1 ring-red-400/30",
               )}
             />
             <label htmlFor={consentId} className="text-xs text-neutral-500 dark:text-neutral-400 leading-snug">
               {str.email.consentLead}
-              <a href="#" className="underline hover:text-neutral-800 dark:hover:text-neutral-200">
+              <a href={termsUrl} className={consentLinkClass}>
                 {str.email.terms}
               </a>
               {str.email.and}
-              <a href="#" className="underline hover:text-neutral-800 dark:hover:text-neutral-200">
+              <a href={privacyUrl} className={consentLinkClass}>
                 {str.email.privacy}
               </a>
             </label>
@@ -635,7 +647,7 @@ function CreatePasswordStep({ str, fieldIds, onBack, onSubmit, isLoading, error,
       <StepHeader onBack={onBack} title={str.createPassword.title} />
       <AuthErrorAlert message={error ?? ""} />
       <div className="space-y-4">
-        <div className="space-y-2">
+        <div className="space-y-3">
           <label htmlFor={fieldIds.password} className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
             {str.createPassword.newPasswordLabel}
           </label>
@@ -669,7 +681,7 @@ function CreatePasswordStep({ str, fieldIds, onBack, onSubmit, isLoading, error,
             </div>
           ))}
         </div>
-        <div className="space-y-2">
+        <div className="space-y-3">
           <label htmlFor={fieldIds.confirm} className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
             {str.createPassword.confirmLabel}
           </label>
@@ -746,7 +758,7 @@ function PasswordLoginStep({ str, passwordId, email, onBack, onSubmit, isLoading
       />
       <AuthErrorAlert message={error ?? ""} />
       <div className="space-y-4">
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex justify-between items-center">
             <label htmlFor={passwordId} className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
               {str.passwordLogin.fieldLabel}
