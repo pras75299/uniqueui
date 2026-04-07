@@ -242,14 +242,21 @@ export default function Pricing() {
                   <p style={{ color: "#64748B", fontSize: "0.875rem", marginBottom: "1.5rem", lineHeight: 1.6 }}>
                     {plan.desc}
                   </p>
-                  <a
-                    className="btn-outline"
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    style={{ width: "100%", justifyContent: "center", marginBottom: "1.5rem" }}
-                  >
-                    {plan.cta}
-                  </a>
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    <MovingBorderButton
+                      as="a"
+                      href="#"
+                      onClick={(e: React.MouseEvent) => e.preventDefault()}
+                      borderRadius="0.75rem"
+                      duration={2800}
+                      containerClassName="block h-11 w-full cursor-pointer"
+                      borderClassName="bg-[radial-gradient(#22D3EE_40%,transparent_60%)] opacity-60"
+                      className="bg-[#090F26] border-[rgba(34,211,238,0.18)] text-white font-semibold text-sm tracking-wide"
+                      theme="dark"
+                    >
+                      {plan.cta}
+                    </MovingBorderButton>
+                  </div>
                   <FeatureList features={plan.features} />
                 </div>
               )}
