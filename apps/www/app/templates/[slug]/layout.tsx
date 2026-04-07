@@ -48,7 +48,7 @@ export default function TemplatePreviewLayout({
         {template?.status === "available" ? (
           <a
             href={`/api/templates/${slug}/download`}
-            download={`${slug}.tsx`}
+            download={`${slug}-template.zip`}
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white text-neutral-900 text-xs font-bold hover:bg-neutral-100 active:scale-95 transition-all"
           >
             <Download className="w-3.5 h-3.5" />

@@ -328,7 +328,7 @@ export default function TemplatesPage() {
                         </Link>
                         <a
                           href={`/api/templates/${template.id}/download`}
-                          download={`${template.id}.tsx`}
+                          download={`${template.id}-template.zip`}
                           className={cn(
                             "flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium border transition-colors",
                             isDark

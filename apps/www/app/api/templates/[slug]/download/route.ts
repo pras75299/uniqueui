@@ -16,7 +16,7 @@ function makePackageJson(id: string, _name: string) {
         dev: "next dev",
         build: "next build",
         start: "next start",
-        lint: "next lint",
+        lint: "eslint .",
         "ui:add": "npx uniqueui add",
       },
       dependencies: {
@@ -33,8 +33,9 @@ function makePackageJson(id: string, _name: string) {
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "@eslint/js": "^9",
         eslint: "^9",
-        "eslint-config-next": "16.1.1",
+        "typescript-eslint": "^8",
         tailwindcss: "^4",
         typescript: "^5",
         "uniqueui-cli": "^1.0.0",
@@ -111,6 +112,21 @@ const COMPONENTS_JSON = JSON.stringify(
   null,
   2
 );
+
+const ESLINT_CONFIG = `import js from "@eslint/js";
+import tseslint from "typescript-eslint";
+
+export default tseslint.config(
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    },
+  }
+);
+`;
 
 const GLOBALS_CSS = `@import "tailwindcss";
 
@@ -264,6 +280,18 @@ const GLOBALS_CSS = `@import "tailwindcss";
 .iso-d     { animation: iso-float-c 4.2s ease-in-out infinite 0.9s; }
 .glow-pulse { animation: pulse-glow 3s ease-in-out infinite; }
 
+@media (prefers-reduced-motion: reduce) {
+  .badge-dot-ping,
+  .iso-main,
+  .iso-a,
+  .iso-b,
+  .iso-c,
+  .iso-d,
+  .glow-pulse {
+    animation: none;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-grid        { grid-template-columns: 1fr !important; }
   .stats-grid       { grid-template-columns: 1fr 1fr !important; }
@@ -274,13 +302,12 @@ const GLOBALS_CSS = `@import "tailwindcss";
 
 function makeRootLayout(templateName: string) {
   return `import type { Metadata } from "next";
-import { Syne, DM_Sans } from "next/font/google";
+import { Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-syne",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
 });
 
 const dmSans = DM_Sans({
@@ -300,7 +327,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={\`\${syne.variable} \${dmSans.variable}\`}>
+    <html lang="en" className={\`\${inter.variable} \${dmSans.variable}\`}>
       <body>{children}</body>
     </html>
   );
@@ -407,7 +434,8 @@ export async function GET(
     }
     collectFiles(folderPath);
   } else if (existsSync(singleFilePath)) {
-    templateFiles[`${slug}.tsx`] = readFileSync(singleFilePath, "utf-8");
+    // Write single-file template as index.tsx so the folder import resolves correctly
+    templateFiles["index.tsx"] = readFileSync(singleFilePath, "utf-8");
   } else {
     return NextResponse.json({ error: "Template source not found" }, { status: 404 });
   }
@@ -431,6 +459,7 @@ export async function GET(
   root.file("next.config.ts", NEXT_CONFIG);
   root.file("tsconfig.json", TSCONFIG);
   root.file("postcss.config.mjs", POSTCSS_CONFIG);
+  root.file("eslint.config.mjs", ESLINT_CONFIG);
   root.file("README.md", README(template.name, slug));
   root.file("components.json", COMPONENTS_JSON);
 
@@ -462,7 +491,7 @@ export async function GET(
     compressionOptions: { level: 6 },
   });
 
-  return new NextResponse(zipBuffer.buffer as ArrayBuffer, {
+  return new NextResponse(new Uint8Array(zipBuffer), {
     status: 200,
     headers: {
       "Content-Type": "application/zip",
