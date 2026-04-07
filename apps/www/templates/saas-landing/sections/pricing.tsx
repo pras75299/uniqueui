@@ -108,15 +108,19 @@ export default function Pricing() {
               Simple, transparent pricing
             </h2>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <div className="toggle-pill">
-                <span
+              <div className="toggle-pill" role="group" aria-label="Billing interval">
+                <button
+                  type="button"
                   className={`toggle-option${!annual ? " active" : ""}`}
+                  aria-pressed={!annual}
                   onClick={() => setAnnual(false)}
                 >
                   Monthly
-                </span>
-                <span
+                </button>
+                <button
+                  type="button"
                   className={`toggle-option${annual ? " active" : ""}`}
+                  aria-pressed={annual}
                   onClick={() => setAnnual(true)}
                 >
                   Annual
@@ -132,7 +136,7 @@ export default function Pricing() {
                   >
                     Save 20%
                   </span>
-                </span>
+                </button>
               </div>
             </div>
           </div>

@@ -63,14 +63,14 @@ export default function Footer() {
               >
                 {col.links.map((l) => (
                   <li key={l}>
-                    <a
-                      className="nav-link"
-                      href="#"
-                      onClick={(e) => e.preventDefault()}
+                    <button
+                      type="button"
+                      className="nav-link text-left bg-transparent border-none p-0 cursor-pointer"
+                      aria-disabled="true"
                       style={{ fontSize: "0.85rem" }}
                     >
                       {l}
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -94,7 +94,8 @@ export default function Footer() {
             <a
               href="https://uniqueui.com"
               style={{ color: "#22D3EE", textDecoration: "none" }}
-              onClick={(e) => e.preventDefault()}
+              target="_blank"
+              rel="noreferrer"
             >
               UniqueUI
             </a>

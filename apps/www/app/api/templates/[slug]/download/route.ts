@@ -230,6 +230,9 @@ const GLOBALS_CSS = `@import "tailwindcss";
   border-radius: 999px;
   transition: background 0.18s, color 0.18s;
   color: #64748B;
+  background: transparent;
+  border: none;
+  font-family: inherit;
 }
 .toggle-option.active {
   background: rgba(34, 211, 238, 0.15);
