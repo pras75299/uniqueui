@@ -57,9 +57,9 @@ export default function Nav() {
             onClick={(e: React.MouseEvent) => e.preventDefault()}
             borderRadius="0.75rem"
             duration={2800}
-            containerClassName="h-9 w-36 cursor-pointer"
+            containerClassName="h-11 w-40 cursor-pointer"
             borderClassName="bg-[radial-gradient(#F97316_40%,transparent_60%)] opacity-90"
-            className="bg-[#090F26] border-[rgba(249,115,22,0.22)] text-white font-semibold text-xs tracking-wide"
+            className="bg-[#090F26] border-[rgba(249,115,22,0.22)] text-white font-semibold text-sm tracking-wide"
             theme="dark"
           >
             Start free trial
