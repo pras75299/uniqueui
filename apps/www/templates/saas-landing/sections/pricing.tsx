@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button as MovingBorderButton } from "@/components/ui/moving-border";
+import { cn } from "@/lib/utils";
 
 type Plan = {
   name: string;
@@ -88,12 +89,12 @@ function FeatureList({ features }: { features: string[] }) {
   );
 }
 
-export default function Pricing() {
+export default function Pricing({ className }: { className?: string }) {
   const [annual, setAnnual] = useState(true);
   const plans = getPlans(annual);
 
   return (
-    <section style={{ padding: "6rem 1.5rem" }}>
+    <section className={cn("px-6 py-24", className)}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <ScrollReveal animation="fade-up">
           <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
@@ -142,10 +143,7 @@ export default function Pricing() {
           </div>
         </ScrollReveal>
 
-        <div
-          className="pricing-grid"
-          style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1.25rem", alignItems: "start" }}
-        >
+        <div className="pricing-grid grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
           {plans.map((plan, i) => (
             <ScrollReveal key={plan.name} animation="fade-up" delay={i * 0.1}>
               {plan.highlight ? (
@@ -200,9 +198,7 @@ export default function Pricing() {
                     </p>
                     <div style={{ marginBottom: "1.5rem" }}>
                       <MovingBorderButton
-                        as="a"
-                        href="#"
-                        onClick={(e: React.MouseEvent) => e.preventDefault()}
+                        type="button"
                         borderRadius="0.75rem"
                         duration={2200}
                         containerClassName="block h-11 w-full cursor-pointer"
@@ -248,9 +244,7 @@ export default function Pricing() {
                   </p>
                   <div style={{ marginBottom: "1.5rem" }}>
                     <MovingBorderButton
-                      as="a"
-                      href="#"
-                      onClick={(e: React.MouseEvent) => e.preventDefault()}
+                      type="button"
                       borderRadius="0.75rem"
                       duration={2800}
                       containerClassName="block h-11 w-full cursor-pointer"
