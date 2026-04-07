@@ -71,7 +71,7 @@ export default function Cta() {
               >
                 Get started — it&apos;s free
               </MovingBorderButton>
-              <a className="btn-outline" href="#" onClick={(e) => e.preventDefault()}>
+              <a className="btn-outline h-11" href="#" onClick={(e) => e.preventDefault()}>
                 Talk to sales
               </a>
             </div>
