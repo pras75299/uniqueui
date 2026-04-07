@@ -122,7 +122,7 @@ const GLOBALS_CSS = `@import "tailwindcss";
 
 /* ── SaaS Landing Template shared styles ─────────────────────────────────── */
 
-.fs-syne { font-family: var(--font-syne, 'Syne', system-ui, sans-serif); }
+.fs-syne { font-family: var(--font-sans, 'Inter', system-ui, sans-serif); }
 
 .grad-text {
   background: linear-gradient(135deg, #67E8F9 0%, #22D3EE 50%, #818CF8 100%);
@@ -135,7 +135,8 @@ const GLOBALS_CSS = `@import "tailwindcss";
   background: transparent;
   color: #94A3B8;
   font-weight: 500;
-  padding: 0.75rem 1.75rem;
+  height: 2.75rem;
+  padding: 0 1.75rem;
   border-radius: 0.75rem;
   display: inline-flex;
   align-items: center;
@@ -145,6 +146,7 @@ const GLOBALS_CSS = `@import "tailwindcss";
   border: 1px solid rgba(34, 211, 238, 0.2);
   font-size: 0.95rem;
   text-decoration: none;
+  box-sizing: border-box;
 }
 .btn-outline:hover { color: #22D3EE; border-color: rgba(34, 211, 238, 0.5); }
 
