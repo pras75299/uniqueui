@@ -19,6 +19,13 @@ export default function TemplatesLayout({ children }: { children: React.ReactNod
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
+  // On /templates/[slug] the template has its own nav — hide this layout's header
+  const isPreviewRoute = pathname !== "/templates" && pathname.startsWith("/templates/");
+
+  if (isPreviewRoute) {
+    return <>{children}</>;
+  }
+
   return (
     <motion.div
       className="min-h-screen"
