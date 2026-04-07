@@ -64,7 +64,7 @@ export default function Cta() {
                 onClick={(e: React.MouseEvent) => e.preventDefault()}
                 borderRadius="0.75rem"
                 duration={2200}
-                containerClassName="h-12 w-[220px] cursor-pointer"
+                containerClassName="h-11 w-[220px] cursor-pointer"
                 borderClassName="bg-[radial-gradient(#F97316_40%,transparent_60%)] opacity-90"
                 className="bg-[#090F26] border-[rgba(249,115,22,0.28)] text-white font-semibold text-sm tracking-wide"
                 theme="dark"

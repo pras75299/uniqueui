@@ -55,7 +55,7 @@ export default function Nav() {
             as="a"
             href="#"
             onClick={(e: React.MouseEvent) => e.preventDefault()}
-            borderRadius="0.65rem"
+            borderRadius="0.75rem"
             duration={2800}
             containerClassName="h-9 w-36 cursor-pointer"
             borderClassName="bg-[radial-gradient(#F97316_40%,transparent_60%)] opacity-90"

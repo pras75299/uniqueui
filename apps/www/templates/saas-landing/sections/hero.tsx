@@ -118,7 +118,7 @@ export default function Hero() {
                 onClick={(e: React.MouseEvent) => e.preventDefault()}
                 borderRadius="0.75rem"
                 duration={2500}
-                containerClassName="h-12 w-[230px] cursor-pointer"
+              containerClassName="h-11 w-[230px] cursor-pointer"
                 borderClassName="bg-[radial-gradient(#F97316_40%,transparent_60%)] opacity-90"
                 className="bg-[#090F26] border-[rgba(249,115,22,0.25)] text-white font-semibold text-sm tracking-wide gap-2"
                 theme="dark"
@@ -138,12 +138,14 @@ export default function Hero() {
                   fontSize: "0.92rem",
                   fontWeight: 500,
                   textDecoration: "none",
-                  padding: "0.65rem 1.4rem 0.65rem 0.9rem",
+                  height: "2.75rem",
+                  padding: "0 1.4rem 0 0.9rem",
                   borderRadius: "0.75rem",
                   border: "1px solid rgba(34,211,238,0.18)",
                   background: "rgba(34,211,238,0.03)",
                   cursor: "pointer",
                   transition: "color 0.18s, border-color 0.18s, background 0.18s",
+                  boxSizing: "border-box",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = "#22D3EE";
