@@ -208,6 +208,18 @@
 .iso-d     { animation: iso-float-c 4.2s ease-in-out infinite 0.9s; }
 .glow-pulse { animation: pulse-glow 3s ease-in-out infinite; }
 
+@media (prefers-reduced-motion: reduce) {
+  .badge-dot-ping,
+  .iso-main,
+  .iso-a,
+  .iso-b,
+  .iso-c,
+  .iso-d,
+  .glow-pulse {
+    animation: none;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-grid        { grid-template-columns: 1fr !important; }
   .stats-grid       { grid-template-columns: 1fr 1fr !important; }
