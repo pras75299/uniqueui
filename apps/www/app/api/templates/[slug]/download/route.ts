@@ -305,19 +305,7 @@ const GLOBALS_CSS = `@import "tailwindcss";
 
 function makeRootLayout(templateName: string) {
   return `import type { Metadata } from "next";
-import { Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
 
 export const metadata: Metadata = {
   title: "${templateName}",
@@ -330,7 +318,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={\`\${inter.variable} \${dmSans.variable}\`}>
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
@@ -458,7 +446,7 @@ export async function GET(
   const root = zip.folder(`${slug}-template`)!;
 
   // Config files
-  root.file("package.json", makePackageJson(slug, template.name));
+  root.file("package.json", makePackageJson(slug));
   root.file("next.config.ts", NEXT_CONFIG);
   root.file("tsconfig.json", TSCONFIG);
   root.file("postcss.config.mjs", POSTCSS_CONFIG);
