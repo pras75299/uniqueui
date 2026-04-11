@@ -4,12 +4,14 @@ import { fileURLToPath } from 'url';
 
 export default defineConfig({
     plugins: [react()],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./', import.meta.url)),
+        },
+    },
     test: {
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./tests/setup.ts'],
-        alias: {
-            '@': fileURLToPath(new URL('./', import.meta.url))
-        }
     },
 });

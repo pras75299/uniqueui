@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import {
   motion,
   AnimatePresence,
-  useMotionValue,
   useSpring,
 } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -69,7 +69,14 @@ function Avatar({
       style={{ width: size, height: size }}
     >
       {avatar ? (
-        <img src={avatar} alt={author} className="w-full h-full object-cover" />
+        <Image
+          src={avatar}
+          alt={author}
+          fill
+          sizes={`${size}px`}
+          className="object-cover"
+          unoptimized
+        />
       ) : (
         <div
           className={cn("w-full h-full flex items-center justify-center bg-gradient-to-br", color)}
@@ -88,7 +95,6 @@ function Avatar({
 function LikeButton({
   count,
   onLike,
-  accentColor,
   theme = "dark",
 }: {
   count: number;
@@ -157,7 +163,6 @@ function LikeButton({
 function ReplyBox({
   onSubmit,
   onCancel,
-  accentColor,
 }: {
   onSubmit: (text: string) => void;
   onCancel: () => void;
@@ -223,20 +228,6 @@ function ReplyBox({
   );
 }
 
-// ─── Connector Line ───────────────────────────────────────────────────────────
-
-function ConnectorLine({ height }: { height: number }) {
-  return (
-    <motion.div
-      initial={{ scaleY: 0 }}
-      animate={{ scaleY: 1 }}
-      transition={{ duration: 0.3, ease: "easeOut", delay: 0.1 }}
-      style={{ transformOrigin: "top", height }}
-      className="absolute left-0 top-0 w-px bg-gradient-to-b from-white/20 via-white/10 to-transparent"
-    />
-  );
-}
-
 // ─── Single Comment ───────────────────────────────────────────────────────────
 
 function CommentNode({
@@ -246,7 +237,6 @@ function CommentNode({
   accentColor,
   onReply,
   onLike,
-  isLast,
   theme = "dark",
 }: {
   comment: Comment;
@@ -255,7 +245,6 @@ function CommentNode({
   accentColor: string;
   onReply?: (id: string, content: string) => void;
   onLike?: (id: string) => void;
-  isLast: boolean;
   theme?: "light" | "dark";
 }) {
   const isDark = theme === "dark";

@@ -44,7 +44,6 @@ export function RadialMenu({
   className,
   triggerClassName,
   itemClassName,
-  theme = "dark",
 }: RadialMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);

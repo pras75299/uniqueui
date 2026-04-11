@@ -6,7 +6,7 @@ import { TEMPLATES } from "@/config/templates";
 
 // ── Static file content generators ───────────────────────────────────────────
 
-function makePackageJson(id: string, _name: string) {
+function makePackageJson(id: string) {
   return JSON.stringify(
     {
       name: `${id}-template`,

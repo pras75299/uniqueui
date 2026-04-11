@@ -28,13 +28,14 @@ export function GradientTextReveal({
   as: Tag = "p",
   theme = "dark",
 }: GradientTextRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  void theme;
+  const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once, amount: 0.3 });
   const words = text.split(" ");
 
   return (
     <Tag
-      ref={ref as any}
+      ref={ref as React.Ref<HTMLElement>}
       className={cn("flex flex-wrap gap-x-2 gap-y-1", className)}
     >
       {words.map((word, i) => (

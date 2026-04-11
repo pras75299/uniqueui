@@ -77,17 +77,13 @@ export function NotificationStack({
   position = "top-right",
   maxVisible = 5,
   theme = "dark",
+  notifications,
+  onRemove,
 }: NotificationStackProps & {
   notifications: Notification[];
   onRemove: (id: string) => void;
 }) {
-  // Cast to get the extra props
-  const props = arguments[0] as NotificationStackProps & {
-    notifications: Notification[];
-    onRemove: (id: string) => void;
-  };
-
-  const visible = props.notifications.slice(-maxVisible);
+  const visible = notifications.slice(-maxVisible);
   const isBottom = position.startsWith("bottom");
 
   return (
@@ -104,7 +100,7 @@ export function NotificationStack({
           <NotificationItem
             key={notification.id}
             notification={notification}
-            onRemove={props.onRemove}
+            onRemove={onRemove}
             position={position}
             theme={theme}
           />
@@ -126,7 +122,6 @@ function NotificationItem({
   theme?: "light" | "dark";
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
-  const [progress, setProgress] = useState(100);
   const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -134,7 +129,6 @@ function NotificationItem({
 
     timeoutRef.current = window.setTimeout(() => {
       onRemove(id);
-      setProgress(0);
     }, duration);
 
     return () => {

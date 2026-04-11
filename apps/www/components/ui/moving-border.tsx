@@ -76,8 +76,7 @@ export const MovingBorder = ({
   duration?: number;
   rx?: string;
   ry?: string;
-  [key: string]: any;
-}) => {
+} & React.SVGProps<SVGSVGElement>) => {
   const safeDuration = duration > 0 ? duration : 2000;
   const pathRef = useRef<SVGRectElement | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
@@ -152,5 +151,4 @@ export const MovingBorder = ({
     </>
   );
 };
-
 

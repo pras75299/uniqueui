@@ -38,7 +38,7 @@ export function BorderBeam({
     const beam = beamRef.current;
     if (!container || !beam) return;
 
-    const animate = (timestamp: number) => {
+    const animate = () => {
       const { width: w, height: h } = container.getBoundingClientRect();
       const perimeter = 2 * (w + h);
       const speed = perimeter / (duration * 1000); // px per ms

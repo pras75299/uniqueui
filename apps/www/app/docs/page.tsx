@@ -11,7 +11,6 @@ import {
   Package,
   FileCode,
   Palette,
-  Rocket,
 } from "lucide-react";
 
 async function hl(code: string, lang = "bash"): Promise<string> {

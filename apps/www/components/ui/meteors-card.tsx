@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
 
 export interface MeteorsCardProps {
   children: React.ReactNode;
@@ -39,20 +39,18 @@ interface MeteorData {
   tailWidth: number;
 }
 
-function Meteors({ count, color }: { count: number; color: string }) {
-  const [meteors, setMeteors] = useState<MeteorData[]>([]);
+function createMeteorData(count: number): MeteorData[] {
+  return Array.from({ length: count }).map(() => ({
+    left: `${Math.random() * 100}%`,
+    delay: `${Math.random() * 5}s`,
+    duration: `${Math.random() * 3 + 2}s`,
+    size: Math.random() * 1.5 + 0.5,
+    tailWidth: Math.random() * 80 + 40,
+  }));
+}
 
-  useEffect(() => {
-    setMeteors(
-      Array.from({ length: count }).map(() => ({
-        left: `${Math.random() * 100}%`,
-        delay: `${Math.random() * 5}s`,
-        duration: `${Math.random() * 3 + 2}s`,
-        size: Math.random() * 1.5 + 0.5,
-        tailWidth: Math.random() * 80 + 40,
-      }))
-    );
-  }, [count]);
+function Meteors({ count, color }: { count: number; color: string }) {
+  const meteors = useMemo(() => createMeteorData(count), [count]);
 
   return (
     <>

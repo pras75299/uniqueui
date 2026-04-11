@@ -4,3 +4,12 @@
 NPM_PUBLISH_GUIDE.md
 /temp-test
 /e2e-components-test
+/docs/repo-ui-audit.local.md
+.venv
+.env
+.mempalace
+mempalace.yaml
+.mempalace.json
+.mempalace.db
+.mempalace.db-wal
+entities.json

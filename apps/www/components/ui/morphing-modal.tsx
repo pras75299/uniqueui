@@ -135,7 +135,6 @@ export function MorphingModalTrigger({
   className,
   layoutId,
   onClick,
-  theme = "dark",
 }: MorphingModalTriggerProps) {
   return (
     <motion.div

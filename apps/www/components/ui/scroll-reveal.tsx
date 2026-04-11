@@ -84,7 +84,6 @@ export function ScrollRevealGroup({
   staggerDelay = 0.1,
   threshold = 0.1,
   once = true,
-  theme = "dark",
 }: ScrollRevealGroupProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once, amount: threshold });

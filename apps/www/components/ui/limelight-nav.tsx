@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, cloneElement, ReactElement, useId } from "react";
+import React, { useState, cloneElement, ReactElement, useId } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -64,18 +64,14 @@ export const LimelightNav = ({
   theme = "dark",
   ...props
 }: LimelightNavProps) => {
-  const [activeIndex, setActiveIndex] = useState(() => {
+  const [selectedIndex, setSelectedIndex] = useState(() => {
     if (items.length === 0) return -1;
     return Math.min(Math.max(0, defaultActiveIndex), items.length - 1);
   });
-
-  useEffect(() => {
-    if (items.length > 0 && activeIndex >= items.length) {
-      setActiveIndex(items.length - 1);
-    } else if (items.length === 0 && activeIndex !== -1) {
-      setActiveIndex(-1);
-    }
-  }, [items.length, activeIndex]);
+  const activeIndex =
+    items.length === 0
+      ? -1
+      : Math.min(Math.max(selectedIndex, 0), items.length - 1);
 
   const componentId = useId();
 
@@ -84,7 +80,7 @@ export const LimelightNav = ({
   }
 
   const handleItemClick = (index: number, itemOnClick?: () => void) => {
-    setActiveIndex(index);
+    setSelectedIndex(index);
     onTabChange?.(index);
     itemOnClick?.();
   };

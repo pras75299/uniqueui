@@ -17,7 +17,7 @@ import {
   Download,
   Zap,
 } from "lucide-react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const GETTING_STARTED = [
   { label: "Introduction", href: "/docs", icon: BookOpen },
@@ -29,7 +29,9 @@ const GETTING_STARTED = [
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [hash, setHash] = useState("");
+  const [hash, setHash] = useState(() =>
+    typeof window === "undefined" ? "" : window.location.hash
+  );
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const activeItemRef = useRef<HTMLAnchorElement | null>(null);
@@ -47,11 +49,12 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   // Track hash for Getting Started active states
   useEffect(() => {
     if (pathname !== "/docs") {
-      setHash("");
       return;
     }
 
-    setHash(window.location.hash);
+    const frame = window.requestAnimationFrame(() => {
+      setHash(window.location.hash);
+    });
 
     // Keep in sync when user clicks a hash link
     const onHashChange = () => setHash(window.location.hash);
@@ -95,6 +98,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
     }
 
     return () => {
+      window.cancelAnimationFrame(frame);
       window.removeEventListener("hashchange", onHashChange);
       observer.disconnect();
     };
@@ -213,9 +217,10 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
               Getting Started
             </h4>
             {GETTING_STARTED.map(({ label, href, icon: Icon }) => {
+              const currentHash = pathname === "/docs" ? hash : "";
               const isActive =
                 pathname === "/docs" &&
-                (href === "/docs" ? hash === "" : href === `/docs${hash}`);
+                (href === "/docs" ? currentHash === "" : href === `/docs${currentHash}`);
               return (
                 <Link
                   key={href}
