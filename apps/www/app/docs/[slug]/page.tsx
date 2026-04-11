@@ -1,4 +1,5 @@
 import { componentsList } from "@/config/components";
+import { getInstallCommand } from "@/config/component-registry";
 import { docsScenarios } from "@/config/docs-scenarios";
 import { notFound } from "next/navigation";
 import { Terminal, ExternalLink, BookOpen } from "lucide-react";
@@ -42,6 +43,7 @@ export default async function DocSlugPage(props: {
 }) {
   const { slug } = await props.params;
   const component = componentsList.find((c) => c.slug === slug);
+  const installCommand = getInstallCommand(slug);
 
   if (!component) notFound();
 
@@ -124,9 +126,9 @@ export default async function DocSlugPage(props: {
         <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300">
             <Terminal className="w-4 h-4 text-neutral-400 dark:text-neutral-500 shrink-0" />
-            <span>{component.installCmd}</span>
+            <span>{installCommand}</span>
           </div>
-          <ClientCopyButton text={component.installCmd} />
+          <ClientCopyButton text={installCommand} />
         </div>
       </section>
 

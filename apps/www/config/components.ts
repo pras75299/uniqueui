@@ -44,7 +44,6 @@ export type ComponentItem = {
   slug: string;
   name: string;
   description: string;
-  installCmd: string;
   icon: ElementType; // Lucide icon
   category?: string;
   props?: {
@@ -63,7 +62,6 @@ export const componentsList: ComponentItem[] = [
     slug: "animated-glowing-text-outline",
     name: "Animated Glowing Text",
     description: "Animated SVG drawing trace outline over shimmering text characters.",
-    installCmd: "npx uniqueui add animated-glowing-text-outline",
     icon: Sparkles,
     category: "Text",
     props: [
@@ -147,7 +145,6 @@ export default function Example() {
     name: "Moving Border",
     description:
       "SVG-path-tracing animated border that orbits a button or card.",
-    installCmd: "npx uniqueui add moving-border",
     icon: Sparkles,
     category: "Effects & Animations",
     props: [
@@ -223,7 +220,6 @@ export default function Example() {
     name: "Typewriter Text",
     description:
       "Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop.",
-    installCmd: "npx uniqueui add typewriter-text",
     icon: Terminal,
     category: "Text",
     props: [
@@ -312,7 +308,6 @@ export default function Example() {
     name: "3D Tilt Card",
     description:
       "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
-    installCmd: "npx uniqueui add 3d-tilt-card",
     icon: Layers,
     category: "Cards",
     props: [
@@ -398,7 +393,6 @@ export default function Example() {
     name: "Spotlight Card",
     description:
       "Card with a radial spotlight that follows the mouse cursor across its surface.",
-    installCmd: "npx uniqueui add spotlight-card",
     icon: MousePointer,
     category: "Cards",
     props: [
@@ -450,7 +444,6 @@ export default function Example() {
     name: "Aurora Background",
     description:
       "A fully customizable, smooth aurora light background mimicking the northern lights. Configurable via exact hex props alongside automatic integration with the current light or dark mode theme. Accessibility: Respects prefers-reduced-motion (drifting pauses smoothly).",
-    installCmd: "npx uniqueui add aurora-background",
     icon: Sparkles,
     category: "Backgrounds",
     props: [
@@ -544,7 +537,6 @@ export default function Example() {
     name: "Animated Tabs",
     description:
       "Tab bar with a sliding pill that morphs between active tabs using layout animation.",
-    installCmd: "npx uniqueui add animated-tabs",
     icon: Layers,
     category: "Navigation & Overlays",
     props: [
@@ -642,7 +634,6 @@ export default function Example() {
     name: "Magnetic Button",
     description:
       "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
-    installCmd: "npx uniqueui add magnetic-button",
     icon: MousePointer,
     category: "Effects & Animations",
     props: [
@@ -701,7 +692,6 @@ export default function Example() {
     name: "Infinite Marquee",
     description:
       "Seamless infinite-scrolling ticker with pause-on-hover and variable speed.",
-    installCmd: "npx uniqueui add infinite-marquee",
     icon: ScrollText,
     category: "Effects & Animations",
     props: [
@@ -784,7 +774,6 @@ export default function Example() {
     name: "Scroll Reveal",
     description:
       "Elements animate into view when they enter the viewport, with 6 animation presets.",
-    installCmd: "npx uniqueui add scroll-reveal",
     icon: ScrollText,
     category: "Effects & Animations",
     props: [
@@ -855,7 +844,6 @@ export default function Example() {
     name: "Skeleton Shimmer",
     description:
       "Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade.",
-    installCmd: "npx uniqueui add skeleton-shimmer",
     icon: Loader2,
     category: "Effects & Animations",
     props: [
@@ -915,7 +903,6 @@ export default function Example() {
     name: "Morphing Modal",
     description:
       "Modal that expands from the trigger element with spring physics and backdrop blur.",
-    installCmd: "npx uniqueui add morphing-modal",
     icon: Maximize2,
     category: "Navigation & Overlays",
     props: [
@@ -999,7 +986,6 @@ export default function Example() {
     name: "Gradient Text Reveal",
     description:
       "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
-    installCmd: "npx uniqueui add gradient-text-reveal",
     icon: Palette,
     category: "Text",
     props: [
@@ -1076,7 +1062,6 @@ export default function Example() {
     name: "Scramble Text",
     description:
       "Matrix-style text scramble effect that resolves characters left-to-right.",
-    installCmd: "npx uniqueui add scramble-text",
     icon: Type,
     category: "Text",
     props: [
@@ -1142,7 +1127,6 @@ export default function Example() {
     name: "Meteors Card",
     description:
       "Card with animated meteor/shooting star particles falling through the background.",
-    installCmd: "npx uniqueui add meteors-card",
     icon: Flame,
     category: "Cards",
     props: [
@@ -1194,7 +1178,6 @@ export default function Example() {
     name: "Flip Card",
     description:
       "3D card flip with spring physics, supporting hover or click triggers.",
-    installCmd: "npx uniqueui add flip-card",
     icon: RotateCw,
     category: "Cards",
     props: [
@@ -1285,7 +1268,6 @@ export default function Example() {
     name: "Dot Grid Background",
     description:
       "Interactive dot-grid pattern with a glowing cursor-following effect.",
-    installCmd: "npx uniqueui add dot-grid-background",
     icon: Grid3x3,
     category: "Backgrounds",
     props: [
@@ -1356,7 +1338,6 @@ export default function Example() {
     name: "Floating Dock",
     description:
       "macOS-style dock with magnetic scaling, spring physics, and tooltips.",
-    installCmd: "npx uniqueui add floating-dock",
     icon: Anchor,
     category: "Navigation & Overlays",
     props: [
@@ -1439,7 +1420,6 @@ export default function Example() {
     name: "Confetti Burst",
     description:
       "Click-triggered confetti particle explosion with customizable colors and physics.",
-    installCmd: "npx uniqueui add confetti-burst",
     icon: PartyPopper,
     category: "Effects & Animations",
     props: [
@@ -1499,7 +1479,6 @@ export default function Example() {
     name: "Drawer Slide",
     description:
       "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
-    installCmd: "npx uniqueui add drawer-slide",
     icon: PanelRight,
     category: "Navigation & Overlays",
     props: [
@@ -1593,7 +1572,6 @@ export default function Example() {
     name: "Notification Stack",
     description:
       "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
-    installCmd: "npx uniqueui add notification-stack",
     icon: Bell,
     category: "Navigation & Overlays",
     props: [
@@ -1650,7 +1628,6 @@ export default function Example() {
     name: "Animated Timeline",
     description:
       "Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps.",
-    installCmd: "npx uniqueui add animated-timeline",
     icon: Clock,
     category: "Effects & Animations",
     props: [
@@ -1769,7 +1746,6 @@ export default function Example() {
     name: "Nested Comments",
     description:
       "Threaded comment section with infinite nesting, animated expand/collapse, inline reply composer, and spring-physics like button.",
-    installCmd: "npx uniqueui add nested-comments",
     icon: MessageSquare,
     category: "Social & Interaction",
     props: [
@@ -1869,7 +1845,6 @@ export default function Example() {
     name: "Hover Reveal Card",
     description:
       "Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations.",
-    installCmd: "npx uniqueui add hover-reveal-card",
     icon: Layers,
     category: "Cards",
     props: [
@@ -1964,7 +1939,6 @@ export default function Example() {
     name: "Bento Grid",
     description:
       "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
-    installCmd: "npx uniqueui add bento-grid",
     icon: LayoutGrid,
     category: "Cards",
     props: [
@@ -2250,7 +2224,6 @@ export default function Example() {
     name: "Particle Field",
     description:
       "Canvas-based floating particles with mouse-repulsion physics and responsive connecting lines.",
-    installCmd: "npx uniqueui add particle-field",
     icon: Sparkles,
     category: "Backgrounds",
     props: [
@@ -2300,7 +2273,6 @@ export default function Example() {
     name: "Horizontal Scroll Gallery",
     description:
       "Converts vertical scroll into horizontal movement with momentum physics for immersive galleries.",
-    installCmd: "npx uniqueui add horizontal-scroll-gallery",
     icon: Layers,
     category: "Effects & Animations",
     props: [
@@ -2342,7 +2314,6 @@ export default function Example() {
     name: "Radial Menu",
     description:
       "Circular flyout menu that bursts items outward from a center trigger with staggered spring animation.",
-    installCmd: "npx uniqueui add radial-menu",
     icon: Palette,
     category: "Navigation & Overlays",
     props: [
@@ -2398,7 +2369,6 @@ export default function Example() {
     name: "Cursor Trail",
     description:
       "Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail.",
-    installCmd: "npx uniqueui add cursor-trail",
     icon: LayoutGrid,
     category: "Cursor Effects",
     props: [
@@ -2445,11 +2415,97 @@ export default function Example() {
 }`,
   },
   {
+    slug: "interactive-cursor",
+    name: "Interactive Cursor",
+    description:
+      "Spring-smoothed cursor overlay with magnetic hover states, click ripples, optional particles, and support for full-page or container-scoped interactions.",
+    icon: MousePointer,
+    category: "Cursor Effects",
+    props: [
+      {
+        name: "color",
+        type: "string",
+        description: "Primary color for the cursor dot.",
+      },
+      {
+        name: "clickColor",
+        type: "string",
+        description: "Ripple and particle color used on click.",
+      },
+      {
+        name: "glow",
+        type: "boolean",
+        description: "Enables the trailing glow around the cursor.",
+      },
+      {
+        name: "trailColor",
+        type: "string",
+        description: "Color of the outer ring and trailing glow.",
+      },
+      {
+        name: "particleEffect",
+        type: "boolean",
+        description: "Whether click interactions emit particles.",
+      },
+      {
+        name: "magneticPull",
+        type: "boolean",
+        description: "Snaps the cursor toward interactive elements such as buttons and links.",
+      },
+      {
+        name: "hideSystemCursor",
+        type: "boolean",
+        description: "Hides the native cursor while the component is mounted.",
+      },
+      {
+        name: "containerRef",
+        type: "RefObject<HTMLElement | null>",
+        description:
+          "Optional ref limiting the interaction area to a specific container instead of the full window.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description: "Additional classes applied to the fixed overlay root.",
+      },
+    ],
+    usageCode: `import { useRef } from "react";
+import { InteractiveCursor } from "@/components/ui/interactive-cursor";
+
+export default function Example() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative h-[400px] w-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950"
+    >
+      <div className="relative z-10 flex h-full items-center justify-center">
+        <button
+          type="button"
+          data-magnetic="true"
+          className="rounded-full bg-white px-6 py-3 font-semibold text-black"
+        >
+          Hover me
+        </button>
+      </div>
+
+      <InteractiveCursor
+        containerRef={containerRef}
+        hideSystemCursor={false}
+        color="#a855f7"
+        clickColor="#b280ff"
+        trailColor="rgba(168, 85, 247, 0.35)"
+      />
+    </div>
+  );
+}`,
+  },
+  {
     slug: "pen-cursor",
     name: "Pen Cursor",
     description:
       "Physics-driven ribbon trail rendered on canvas — a chain of linked points follows the mouse with spring-damping inertia, width scales with speed, and colors interpolate head-to-tail. Inspired by obsidianassembly.com.",
-    installCmd: "npx uniqueui add pen-cursor",
     icon: Pen,
     category: "Cursor Effects",
     props: [
@@ -2546,7 +2602,6 @@ export default function Example() {
     name: "Glow Hero Section",
     description:
       "Physics-driven hero section with an interactive aqueous mesh canvas, spring-based motion text entrance, and fully configurable badge, heading, description, colors, and dimensions.",
-    installCmd: "npx uniqueui add glow-hero-section",
     icon: Sparkles,
     category: "Backgrounds",
     props: [
@@ -2690,7 +2745,6 @@ export default function Example() {
     name: "Limelight Nav",
     description:
       "Adaptive fluid navigation bar with a limelight spotlight and spring-animated tabs.",
-    installCmd: "npx uniqueui add limelight-nav",
     icon: Layers,
     category: "Navigation & Overlays",
     props: [
@@ -2774,7 +2828,6 @@ export default function Example() {
     name: "Data Table",
     description:
       "Configurable data table with optional column freeze (left/right), customizable header and body colors and backgrounds, optional borders, and optional sortable columns.",
-    installCmd: "npx uniqueui add data-table",
     icon: Table,
     category: "Data & Layout",
     props: [
@@ -3251,7 +3304,6 @@ export default function Example() {
     name: "Morphing Card Stack",
     description:
       "An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using Framer Motion springs.",
-    installCmd: "npx uniqueui add morphing-card-stack",
     icon: Layers,
     category: "Cards",
     props: [
@@ -3323,7 +3375,6 @@ export default function Example() {
     name: "Multi-Step Auth Card",
     description:
       "Animation-first enterprise auth flow: email discovery, first-time and returning user paths, password create/login, and OTP verification with spring transitions between steps.",
-    installCmd: "npx uniqueui add multi-step-auth-card",
     icon: Shield,
     category: "Navigation & Overlays",
     props: [
@@ -3454,7 +3505,6 @@ export default function Example() {
     name: "Shiny Text",
     description:
       "A shimmering highlight that continuously sweeps across text — perfect for hero taglines and call-to-action copy.",
-    installCmd: "npx uniqueui add shiny-text",
     icon: Wand2,
     category: "Text",
     props: [
@@ -3485,7 +3535,6 @@ export default function Hero() {
     name: "Blur Reveal",
     description:
       "Characters or words materialise from a soft blur — the cinematic text entrance used in top SaaS hero sections.",
-    installCmd: "npx uniqueui add blur-reveal",
     icon: ScanLine,
     category: "Text",
     props: [
@@ -3518,7 +3567,6 @@ export default function Hero() {
     name: "Count Up",
     description:
       "An animated number that counts from a starting value to a target when scrolled into view — essential for metrics and stats sections.",
-    installCmd: "npx uniqueui add count-up",
     icon: Hash,
     category: "Text",
     props: [
@@ -3560,7 +3608,6 @@ export default function Stats() {
     name: "Border Beam",
     description:
       "A glowing comet that continuously orbits the border of a container — instantly upgrades cards, code blocks, and feature sections.",
-    installCmd: "npx uniqueui add border-beam",
     icon: Flame,
     category: "Effects & Animations",
     props: [
@@ -3597,7 +3644,6 @@ export default function FeatureCard() {
     name: "Ripple",
     description:
       "Luminous orbs that drift slowly across the viewport — a liquid nebula hero background with warm, organic colour blooms.",
-    installCmd: "npx uniqueui add ripple",
     icon: Waves,
     category: "Backgrounds",
     props: [
@@ -3650,7 +3696,6 @@ export default function Hero() {
     name: "Word Rotate",
     description:
       "A list of words that cycle with slide, flip, or fade transitions — the signature hero-headline effect used across modern SaaS sites.",
-    installCmd: "npx uniqueui add word-rotate",
     icon: RefreshCw,
     category: "Text",
     props: [

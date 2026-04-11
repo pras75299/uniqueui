@@ -1,4 +1,5 @@
 import { componentsList } from "@/config/components";
+import { getInstallCommand } from "@/config/component-registry";
 import ComponentPreview from "@/components/component-preview";
 import { notFound } from "next/navigation";
 import { Terminal } from "lucide-react";
@@ -20,6 +21,7 @@ export const dynamicParams = true;
 export default async function ComponentPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
   const component = componentsList.find((c) => c.slug === params.slug);
+  const installCommand = params.slug ? getInstallCommand(params.slug) : "";
 
   if (!component) {
     notFound();
@@ -66,9 +68,9 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
         <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300">
             <Terminal className="w-4 h-4 text-neutral-500" />
-            <span>{component.installCmd}</span>
+            <span>{installCommand}</span>
           </div>
-          <ClientCopyButton text={component.installCmd} />
+          <ClientCopyButton text={installCommand} />
         </div>
 
         {/* Synced variant switcher — handles both Preview and Usage in one block */}
@@ -111,9 +113,9 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
       <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300">
             <Terminal className="w-4 h-4 text-neutral-500" />
-            <span>{component.installCmd}</span>
+            <span>{installCommand}</span>
         </div>
-        <ClientCopyButton text={component.installCmd} />
+        <ClientCopyButton text={installCommand} />
       </div>
 
       {/* Preview */}
