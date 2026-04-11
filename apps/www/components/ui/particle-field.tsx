@@ -11,14 +11,35 @@ type Particle = {
   vx: number;
   vy: number;
   density: number;
+  color: [number, number, number];
 };
+
+function parseHexColor(color: string): [number, number, number] {
+  let hex = color.trim().replace(/^#/, "");
+  if (hex.length === 3) {
+    hex = hex
+      .split("")
+      .map((char) => char + char)
+      .join("");
+  }
+
+  if (!/^[0-9a-fA-F]{6}$/.test(hex)) {
+    return [255, 255, 255];
+  }
+
+  const bigint = parseInt(hex, 16);
+  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+}
 
 function createParticle(
   canvasWidth: number,
   canvasHeight: number,
   particleSize: { min: number; max: number },
-  speed: number
+  speed: number,
+  colors: Array<[number, number, number]>
 ): Particle {
+  const color = colors[Math.floor(Math.random() * colors.length)] ?? [255, 255, 255];
+
   return {
     x: Math.random() * canvasWidth,
     y: Math.random() * canvasHeight,
@@ -28,16 +49,16 @@ function createParticle(
     vx: (Math.random() - 0.5) * speed,
     vy: (Math.random() - 0.5) * speed,
     density: Math.random() * 30 + 10,
+    color,
   };
 }
 
 function drawParticle(
   ctx: CanvasRenderingContext2D,
   particle: Particle,
-  particleColorRgb: string,
   particleSize: { min: number; max: number }
 ) {
-  ctx.fillStyle = `rgba(${particleColorRgb}, ${
+  ctx.fillStyle = `rgba(${particle.color.join(", ")}, ${
     particle.size / particleSize.max
   })`;
   ctx.beginPath();
@@ -82,11 +103,10 @@ function updateParticlePosition(
 export interface ParticleFieldProps
   extends Omit<HTMLMotionProps<"div">, "onAnimationStart" | "onDragStart" | "onDragEnd" | "onDrag"> {
   particleCount?: number;
-  particleColor?: string;
+  particleColor?: string | string[];
   interactionRadius?: number;
   particleSize?: { min: number; max: number };
   speed?: number;
-  theme?: "light" | "dark";
 }
 
 export function ParticleField({
@@ -96,27 +116,16 @@ export function ParticleField({
   interactionRadius = 150,
   particleSize = { min: 1, max: 3 },
   speed = 1,
-  theme = "dark",
   ...props
 }: ParticleFieldProps) {
-  void theme;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const minParticleSize = particleSize.min;
   const maxParticleSize = particleSize.max;
 
-  // Parse color to rgba for dynamic opacity
-  const particleColorRgb = useMemo(() => {
-    // Very basic hex to rgb parser
-    let hex = particleColor.replace(/^#/, "");
-    if (hex.length === 3) {
-      hex = hex.split("").map((char) => char + char).join("");
-    }
-    const bigint = parseInt(hex, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `${r}, ${g}, ${b}`;
+  const particleColors = useMemo(() => {
+    const colors = Array.isArray(particleColor) ? particleColor : [particleColor];
+    return colors.map(parseHexColor);
   }, [particleColor]);
 
   useEffect(() => {
@@ -161,7 +170,8 @@ export function ParticleField({
             rect.width,
             rect.height,
             { min: minParticleSize, max: maxParticleSize },
-            speed
+            speed,
+            particleColors
           )
         );
       }
@@ -180,8 +190,13 @@ export function ParticleField({
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < 100) {
+              const lineColor: [number, number, number] = [
+                Math.round((particles[i].color[0] + particles[j].color[0]) / 2),
+                Math.round((particles[i].color[1] + particles[j].color[1]) / 2),
+                Math.round((particles[i].color[2] + particles[j].color[2]) / 2),
+              ];
               ctx.beginPath();
-              ctx.strokeStyle = `rgba(${particleColorRgb}, ${1 - distance / 100})`;
+              ctx.strokeStyle = `rgba(${lineColor.join(", ")}, ${1 - distance / 100})`;
               ctx.lineWidth = 0.5;
               ctx.moveTo(particles[i].x, particles[i].y);
               ctx.lineTo(particles[j].x, particles[j].y);
@@ -202,7 +217,6 @@ export function ParticleField({
         drawParticle(
           ctx,
           particle,
-          particleColorRgb,
           { min: minParticleSize, max: maxParticleSize }
         );
       });
@@ -240,7 +254,7 @@ export function ParticleField({
       canvas.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [particleCount, interactionRadius, speed, particleColorRgb, minParticleSize, maxParticleSize]);
+  }, [particleCount, interactionRadius, speed, particleColors, minParticleSize, maxParticleSize]);
 
   return (
     <motion.div

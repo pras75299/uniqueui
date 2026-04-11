@@ -68,12 +68,17 @@ export interface DataTableOwnProps {
   data: Record<string, React.ReactNode>[];
   freezeColumns?: "none" | "left" | "right" | "both";
   /**
-   * How many columns to freeze on the **left** when `freezeColumns` is `"left"` or `"both"`.
-   * When `freezeColumns` is `"right"` only, this controls how many columns freeze on the **right** (see `freezeRightCount` when using `"both"`).
+   * @deprecated Use `freezeLeftCount` and/or `freezeRightCount` instead.
+   * Legacy fallback count when side-specific freeze counts are not provided.
    */
   freezeCount?: number;
   /**
-   * When `freezeColumns` is `"both"`, how many columns to freeze on the **right**.
+   * How many columns to freeze on the **left** when `freezeColumns` is `"left"` or `"both"`.
+   * Ignored when `freezeColumns` is `"right"` or `"none"`.
+   */
+  freezeLeftCount?: number;
+  /**
+   * How many columns to freeze on the **right** when `freezeColumns` is `"right"` or `"both"`.
    * Ignored when `freezeColumns` is `"left"` or `"none"`.
    */
   freezeRightCount?: number;
@@ -118,6 +123,7 @@ export function DataTable({
   data,
   freezeColumns = "none",
   freezeCount = 1,
+  freezeLeftCount: freezeLeftCountProp,
   freezeRightCount: freezeRightCountProp,
   paginated = false,
   pageSize = PAGE_SIZE_FALLBACK,
@@ -231,9 +237,9 @@ export function DataTable({
   const n = columns.length;
   const isLeftFreeze = freezeColumns === "left" || freezeColumns === "both";
   const isRightFreeze = freezeColumns === "right" || freezeColumns === "both";
-  const rightCount =
-    freezeColumns === "both" ? (freezeRightCountProp ?? 1) : freezeCount;
-  const leftFreezeCount = isLeftFreeze ? Math.min(freezeCount, n) : 0;
+  const leftCount = freezeLeftCountProp ?? freezeCount;
+  const rightCount = freezeRightCountProp ?? freezeCount;
+  const leftFreezeCount = isLeftFreeze ? Math.min(leftCount, n) : 0;
   let rightFreezeCount = isRightFreeze ? Math.min(rightCount, n) : 0;
   if (freezeColumns === "both" && leftFreezeCount + rightFreezeCount > n) {
     rightFreezeCount = Math.max(0, n - leftFreezeCount);

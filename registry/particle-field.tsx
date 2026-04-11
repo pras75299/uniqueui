@@ -7,11 +7,37 @@ import { motion, HTMLMotionProps } from "motion/react";
 export interface ParticleFieldProps
   extends Omit<HTMLMotionProps<"div">, "onAnimationStart" | "onDragStart" | "onDragEnd" | "onDrag"> {
   particleCount?: number;
-  particleColor?: string;
+  particleColor?: string | string[];
   interactionRadius?: number;
   particleSize?: { min: number; max: number };
   speed?: number;
-  theme?: "light" | "dark";
+}
+
+type Particle = {
+  x: number;
+  y: number;
+  size: number;
+  vx: number;
+  vy: number;
+  density: number;
+  color: [number, number, number];
+};
+
+function parseHexColor(color: string): [number, number, number] {
+  let hex = color.trim().replace(/^#/, "");
+  if (hex.length === 3) {
+    hex = hex
+      .split("")
+      .map((char) => char + char)
+      .join("");
+  }
+
+  if (!/^[0-9a-fA-F]{6}$/.test(hex)) {
+    return [255, 255, 255];
+  }
+
+  const bigint = parseInt(hex, 16);
+  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 }
 
 export function ParticleField({
@@ -21,24 +47,14 @@ export function ParticleField({
   interactionRadius = 150,
   particleSize = { min: 1, max: 3 },
   speed = 1,
-  theme = "dark",
   ...props
 }: ParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Parse color to rgba for dynamic opacity
-  const particleColorRgb = useMemo(() => {
-    // Very basic hex to rgb parser
-    let hex = particleColor.replace(/^#/, "");
-    if (hex.length === 3) {
-      hex = hex.split("").map((char) => char + char).join("");
-    }
-    const bigint = parseInt(hex, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `${r}, ${g}, ${b}`;
+  const particleColors = useMemo(() => {
+    const colors = Array.isArray(particleColor) ? particleColor : [particleColor];
+    return colors.map(parseHexColor);
   }, [particleColor]);
 
   useEffect(() => {
@@ -70,8 +86,12 @@ export function ParticleField({
       vx: number;
       vy: number;
       density: number;
+      color: [number, number, number];
 
       constructor(canvasWidth: number, canvasHeight: number) {
+        const color =
+          particleColors[Math.floor(Math.random() * particleColors.length)] ??
+          [255, 255, 255];
         this.x = Math.random() * canvasWidth;
         this.y = Math.random() * canvasHeight;
         this.baseX = this.x;
@@ -82,10 +102,11 @@ export function ParticleField({
         this.vx = (Math.random() - 0.5) * speed;
         this.vy = (Math.random() - 0.5) * speed;
         this.density = Math.random() * 30 + 10;
+        this.color = color;
       }
 
       draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = `rgba(${particleColorRgb}, ${
+        ctx.fillStyle = `rgba(${this.color.join(", ")}, ${
           this.size / particleSize.max
         })`;
         ctx.beginPath();
@@ -161,8 +182,13 @@ export function ParticleField({
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < 100) {
+              const lineColor: [number, number, number] = [
+                Math.round((particles[i].color[0] + particles[j].color[0]) / 2),
+                Math.round((particles[i].color[1] + particles[j].color[1]) / 2),
+                Math.round((particles[i].color[2] + particles[j].color[2]) / 2),
+              ];
               ctx.beginPath();
-              ctx.strokeStyle = `rgba(${particleColorRgb}, ${1 - distance / 100})`;
+              ctx.strokeStyle = `rgba(${lineColor.join(", ")}, ${1 - distance / 100})`;
               ctx.lineWidth = 0.5;
               ctx.moveTo(particles[i].x, particles[i].y);
               ctx.lineTo(particles[j].x, particles[j].y);
@@ -210,7 +236,7 @@ export function ParticleField({
       canvas.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [particleCount, particleSize.max, particleSize.min, interactionRadius, speed, particleColorRgb]);
+  }, [particleCount, particleSize.max, particleSize.min, interactionRadius, speed, particleColors]);
 
   return (
     <motion.div

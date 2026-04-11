@@ -14,7 +14,6 @@ export interface GradientTextRevealProps {
   duration?: number;
   once?: boolean;
   as?: "h1" | "h2" | "h3" | "h4" | "p" | "span";
-  theme?: "light" | "dark";
 }
 
 export function GradientTextReveal({
@@ -26,9 +25,7 @@ export function GradientTextReveal({
   duration = 0.5,
   once = true,
   as: Tag = "p",
-  theme = "dark",
 }: GradientTextRevealProps) {
-  void theme;
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once, amount: 0.3 });
   const words = text.split(" ");
