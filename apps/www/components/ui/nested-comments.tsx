@@ -99,7 +99,6 @@ function LikeButton({
 }: {
   count: number;
   onLike?: () => void;
-  accentColor: string;
   theme?: "light" | "dark";
 }) {
   const [liked, setLiked] = useState(false);
@@ -118,7 +117,9 @@ function LikeButton({
 
   return (
     <button
+      type="button"
       onClick={handleLike}
+      aria-label={liked ? `Liked comment, total likes ${displayCount}` : `Like comment, ${displayCount} likes`}
       className={cn(
         "flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full transition-all duration-200",
         liked
@@ -166,7 +167,6 @@ function ReplyBox({
 }: {
   onSubmit: (text: string) => void;
   onCancel: () => void;
-  accentColor: string;
 }) {
   const [text, setText] = useState("");
   const ref = useRef<HTMLTextAreaElement>(null);
@@ -204,15 +204,18 @@ function ReplyBox({
         <span className="text-xs text-neutral-600">⌘+Enter to submit</span>
         <div className="flex gap-2">
           <button
+            type="button"
             onClick={onCancel}
             className="px-3 py-1 text-xs rounded-lg text-neutral-500 hover:text-neutral-300 hover:bg-white/5 transition-colors"
           >
             Cancel
           </button>
           <motion.button
+            type="button"
             whileTap={{ scale: 0.95 }}
             onClick={() => text.trim() && onSubmit(text.trim())}
             disabled={!text.trim()}
+            aria-label="Submit reply"
             className={cn(
               "px-3 py-1 text-xs rounded-lg font-medium transition-all duration-200",
               text.trim()
@@ -316,14 +319,16 @@ function CommentNode({
             <LikeButton
               count={comment.likes}
               onLike={() => onLike?.(comment.id)}
-              accentColor={accentColor}
               theme={theme}
             />
 
             {canReply && (
               <motion.button
+                type="button"
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setReplying((v) => !v)}
+                aria-expanded={replying}
+                aria-label={replying ? "Cancel reply" : `Reply to ${comment.author}`}
                 className={cn("flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full transition-all duration-200", isDark ? "text-neutral-500 hover:text-neutral-300 hover:bg-white/5" : "text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100")}
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
@@ -335,8 +340,11 @@ function CommentNode({
 
             {hasReplies && (
               <motion.button
+                type="button"
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setCollapsed((v) => !v)}
+                aria-expanded={!collapsed}
+                aria-label={collapsed ? `Expand replies for ${comment.author}` : `Collapse replies for ${comment.author}`}
                 className={cn("flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full transition-all duration-200", isDark ? "text-neutral-500 hover:text-neutral-300 hover:bg-white/5" : "text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100")}
               >
                 <motion.svg
@@ -363,7 +371,6 @@ function CommentNode({
               <ReplyBox
                 onSubmit={handleReply}
                 onCancel={() => setReplying(false)}
-                accentColor={accentColor}
               />
             )}
           </AnimatePresence>
@@ -380,7 +387,7 @@ function CommentNode({
             transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
             className="ml-[18px] pl-5 border-l border-white/10 overflow-hidden"
           >
-            {localReplies.map((reply, i) => (
+            {localReplies.map((reply) => (
               <CommentNode
                 key={reply.id}
                 comment={reply}
@@ -389,7 +396,6 @@ function CommentNode({
                 accentColor={accentColor}
                 onReply={onReply}
                 onLike={onLike}
-                isLast={i === localReplies.length - 1}
                 theme={theme}
               />
             ))}
@@ -435,7 +441,7 @@ export function NestedComments({
   };
 
   return (
-    <div className={cn("w-full max-w-2xl mx-auto", className)}>
+    <section className={cn("w-full max-w-2xl mx-auto", className)} aria-label="Comments">
       {/* Header */}
       <div className="flex items-center gap-2 mb-5">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={cn("w-5 h-5", isDark ? "text-neutral-400" : "text-neutral-500")}>
@@ -449,6 +455,7 @@ export function NestedComments({
       {/* New comment composer */}
       <div className={cn("mb-6 rounded-xl border overflow-hidden", isDark ? "border-white/10 bg-white/[0.03]" : "border-neutral-200 bg-neutral-50")}>
         <textarea
+          aria-label="Write a new comment"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           onKeyDown={(e) => {
@@ -461,10 +468,12 @@ export function NestedComments({
         <div className="flex items-center justify-between px-4 pb-3">
           <span className={cn("text-xs", isDark ? "text-neutral-600" : "text-neutral-500")}>{newComment.length > 0 ? `${newComment.length} chars` : "⌘+Enter to post"}</span>
           <motion.button
+            type="button"
             whileTap={{ scale: 0.95 }}
             animate={posting ? { scale: [1, 0.97, 1] } : {}}
             onClick={handlePost}
             disabled={!newComment.trim() || posting}
+            aria-label="Post comment"
             className={cn(
               "px-4 py-1.5 text-xs rounded-lg font-semibold transition-all duration-200",
               newComment.trim() && !posting
@@ -478,9 +487,9 @@ export function NestedComments({
       </div>
 
       {/* Comment list */}
-      <motion.div layout className="space-y-1">
+      <motion.div layout className="space-y-1" role="list">
         <AnimatePresence initial={false}>
-          {localComments.map((comment, i) => (
+          {localComments.map((comment) => (
             <CommentNode
               key={comment.id}
               comment={comment}
@@ -489,7 +498,6 @@ export function NestedComments({
               accentColor={accentColor}
               onReply={onReply}
               onLike={onLike}
-              isLast={i === localComments.length - 1}
               theme={theme}
             />
           ))}
@@ -505,6 +513,6 @@ export function NestedComments({
           </motion.div>
         )}
       </motion.div>
-    </div>
+    </section>
   );
 }

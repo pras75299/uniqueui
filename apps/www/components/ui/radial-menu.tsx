@@ -10,6 +10,7 @@ export interface RadialMenuItem {
   icon: React.ReactNode;
   onClick?: () => void;
   color?: string;
+  ariaLabel?: string;
 }
 
 export interface RadialMenuProps {
@@ -31,6 +32,7 @@ export interface RadialMenuProps {
   triggerClassName?: string;
   /** Classes applied to individual menu item buttons */
   itemClassName?: string;
+  triggerAriaLabel?: string;
   theme?: "light" | "dark";
 }
 
@@ -44,6 +46,7 @@ export function RadialMenu({
   className,
   triggerClassName,
   itemClassName,
+  triggerAriaLabel = "Toggle radial menu",
 }: RadialMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -107,6 +110,7 @@ export function RadialMenu({
             return (
               <motion.button
                 key={item.id}
+                type="button"
                 initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
                 animate={{
                   opacity: 1,
@@ -140,29 +144,34 @@ export function RadialMenu({
                   setIsOpen(false);
                 }}
                 title={item.label}
+                aria-label={item.ariaLabel ?? item.label}
                 className={cn(
                   "absolute flex h-12 w-12 items-center justify-center rounded-full shadow-lg border border-neutral-200 bg-white text-neutral-700 hover:text-neutral-900 hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-neutral-700 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:ring-offset-2 dark:focus:ring-offset-neutral-950 z-0",
                   itemClassName
                 )}
                 style={item.color ? { color: item.color } : undefined}
               >
-                {item.icon}
+                <span aria-hidden="true">{item.icon}</span>
               </motion.button>
             );
           })}
       </AnimatePresence>
 
       <motion.button
+        type="button"
         animate={{ rotate: isOpen ? 45 : 0 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-label={triggerAriaLabel}
         className={cn(
           "relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-neutral-900 text-white shadow-xl hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 dark:focus:ring-neutral-600 dark:focus:ring-offset-neutral-950 transition-colors",
           triggerClassName
         )}
       >
-        {triggerIcon || DefaultTrigger}
+        <span aria-hidden="true">{triggerIcon || DefaultTrigger}</span>
       </motion.button>
     </div>
   );

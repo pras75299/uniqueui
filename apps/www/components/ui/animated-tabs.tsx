@@ -28,6 +28,7 @@ export function AnimatedTabs({
 }: AnimatedTabsProps) {
   const [activeTab, setActiveTab] = useState(tabs[0]?.id);
   const isDark = theme === "dark";
+  const contentId = activeTab ? `animated-tab-panel-${activeTab}` : undefined;
 
   const handleTabClick = (id: string) => {
     setActiveTab(id);
@@ -36,10 +37,18 @@ export function AnimatedTabs({
 
   return (
     <div className={cn("w-full", className)}>
-      <div className={cn("relative flex items-center gap-1 rounded-lg p-1 border", isDark ? "bg-neutral-900/50 border-neutral-800" : "bg-neutral-100 border-neutral-200")}>
+      <div
+        role="tablist"
+        className={cn("relative flex items-center gap-1 rounded-lg p-1 border", isDark ? "bg-neutral-900/50 border-neutral-800" : "bg-neutral-100 border-neutral-200")}
+      >
         {tabs.map((tab) => (
           <button
             key={tab.id}
+            type="button"
+            role="tab"
+            id={`animated-tab-${tab.id}`}
+            aria-selected={activeTab === tab.id}
+            aria-controls={`animated-tab-panel-${tab.id}`}
             onClick={() => handleTabClick(tab.id)}
             className={cn(
               "relative z-10 flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200",
@@ -69,6 +78,9 @@ export function AnimatedTabs({
         tab.content && activeTab === tab.id ? (
           <motion.div
             key={tab.id}
+            role="tabpanel"
+            id={contentId}
+            aria-labelledby={`animated-tab-${tab.id}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}

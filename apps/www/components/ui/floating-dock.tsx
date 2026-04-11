@@ -130,6 +130,7 @@ function DockItem({
           target="_blank"
           rel="noopener noreferrer"
           className="group relative"
+          aria-label={label}
         >
           <motion.div
             ref={ref}
@@ -139,16 +140,16 @@ function DockItem({
               theme === "dark" ? "bg-neutral-800 border-neutral-700 text-neutral-300 hover:text-white" : "bg-neutral-100 border-neutral-300 text-neutral-700 hover:text-neutral-900"
             )}
           >
-            {icon}
+            <span aria-hidden="true">{icon}</span>
           </motion.div>
-          <div className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div aria-hidden="true" className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <div className={cn("whitespace-nowrap rounded-md border px-2 py-1 text-xs shadow-lg", theme === "dark" ? "bg-neutral-800 border-neutral-700 text-neutral-200" : "bg-neutral-800 border-neutral-600 text-neutral-200")}>
               {label}
             </div>
           </div>
         </a>
       ) : (
-        <button type="button" onClick={onClick} className="group relative">
+        <button type="button" onClick={onClick} className="group relative" aria-label={label}>
           <motion.div
             ref={ref}
             style={{ width: size, height: size, y }}
@@ -157,9 +158,9 @@ function DockItem({
               theme === "dark" ? "bg-neutral-800 border-neutral-700 text-neutral-300 hover:text-white" : "bg-neutral-100 border-neutral-300 text-neutral-700 hover:text-neutral-900"
             )}
           >
-            {icon}
+            <span aria-hidden="true">{icon}</span>
           </motion.div>
-          <div className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div aria-hidden="true" className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <div className={cn("whitespace-nowrap rounded-md border px-2 py-1 text-xs shadow-lg", theme === "dark" ? "bg-neutral-800 border-neutral-700 text-neutral-200" : "bg-neutral-800 border-neutral-600 text-neutral-200")}>
               {label}
             </div>

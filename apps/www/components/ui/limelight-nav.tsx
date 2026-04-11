@@ -27,7 +27,7 @@ const DefaultBellIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export type NavItem = {
   id: string | number;
   icon: ReactElement;
-  label?: string;
+  label: string;
   ariaLabel?: string;
   onClick?: () => void;
 };
@@ -97,12 +97,6 @@ export const LimelightNav = ({
       {items.map(({ id, icon, label, ariaLabel, onClick }, index) => {
         const isActive = activeIndex === index;
 
-        if (!label && !ariaLabel) {
-          console.warn(
-            `LimelightNav: Item with id "${id}" is missing both 'label' and 'ariaLabel'. An accessible name is required for screen readers.`
-          );
-        }
-
         return (
           <button
             key={id}
@@ -155,6 +149,7 @@ export const LimelightNav = ({
               }}
             >
               {cloneElement(icon, {
+                "aria-hidden": true,
                 className: cn(
                   "w-6 h-6",
                   (icon.props as React.HTMLAttributes<HTMLElement>).className,
