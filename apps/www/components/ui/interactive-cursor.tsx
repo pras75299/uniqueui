@@ -107,7 +107,7 @@ export function InteractiveCursor({
 
   const [clicked, setClicked] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [ripples, setRipples] = useState<Ripple[]>([]);
   const [scopeElement, setScopeElement] = useState<HTMLElement | null>(null);
@@ -286,7 +286,7 @@ export function InteractiveCursor({
         releaseGlobalCursorHide();
       }
     };
-  }, [cursorX, cursorY, glow, magneticPull, particleEffect, hideSystemCursor, magneticHeight, magneticWidth, containerRef]);
+  }, [cursorX, cursorY, glow, magneticPull, particleEffect, hideSystemCursor, magneticHeight, magneticWidth, scopeElement]);
 
   const overlay = (
     <div

@@ -124,51 +124,114 @@ function NotificationDemo({ theme = "dark" }: DemoThemeProps) {
 
 function InteractiveCursorDemo({ theme = "dark" }: DemoThemeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isDark = theme === "dark";
   return (
     <div
       ref={containerRef}
       className={cn(
-        "h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border relative",
-        theme === "dark"
+        "relative h-[440px] w-full flex items-center justify-center overflow-hidden rounded-xl border",
+        isDark
           ? "bg-neutral-950 border-neutral-800"
-          : "bg-neutral-100 border-neutral-200",
+          : "bg-neutral-50 border-neutral-200",
       )}
     >
-      <div className="text-center relative z-10 select-none">
+      {/* Ambient center glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: isDark
+            ? "radial-gradient(ellipse 60% 50% at 50% 55%, rgba(168,85,247,0.08) 0%, transparent 80%)"
+            : "radial-gradient(ellipse 60% 50% at 50% 55%, rgba(124,58,237,0.06) 0%, transparent 80%)",
+        }}
+      />
+
+      <div className="relative z-10 flex flex-col items-center gap-5 text-center px-8 select-none">
+        {/* Eyebrow label */}
+        <span
+          className={cn(
+            "text-[11px] font-mono tracking-[0.2em] uppercase pointer-events-none",
+            isDark ? "text-purple-400/70" : "text-purple-600/70",
+          )}
+        >
+          Spring Physics · Magnetic Snap · Click Particles
+        </span>
+
+        {/* Heading */}
         <h3
           className={cn(
-            "text-3xl font-bold bg-clip-text text-transparent mb-4 pointer-events-none",
-            theme === "dark"
-              ? "bg-gradient-to-br from-white to-neutral-500"
-              : "bg-gradient-to-br from-neutral-900 to-neutral-600",
+            "text-4xl font-bold tracking-tight pointer-events-none",
+            isDark
+              ? "bg-gradient-to-b from-white to-neutral-400 bg-clip-text text-transparent"
+              : "bg-gradient-to-b from-neutral-900 to-neutral-500 bg-clip-text text-transparent",
           )}
         >
           Interactive Cursor
         </h3>
+
+        {/* Description */}
         <p
           className={cn(
-            "pointer-events-none",
-            theme === "dark" ? "text-neutral-400" : "text-neutral-600"
+            "max-w-xs text-sm leading-relaxed pointer-events-none",
+            isDark ? "text-neutral-500" : "text-neutral-500",
           )}
         >
-          Move your mouse inside this block to see the trailing springs and magnetics.
+          Move inside this card. Hover buttons to see magnetic pull. Click anywhere for burst particles.
         </p>
-        <button 
+
+        {/* Button row — each one is a magnetic target */}
+        <div className="flex items-center gap-3 mt-1">
+          <button
+            className={cn(
+              "px-5 py-2.5 rounded-full text-sm font-semibold transition-colors",
+              isDark
+                ? "bg-purple-600 hover:bg-purple-500 text-white"
+                : "bg-purple-600 hover:bg-purple-700 text-white",
+            )}
+          >
+            Primary
+          </button>
+          <button
+            className={cn(
+              "px-5 py-2.5 rounded-full text-sm font-semibold border transition-colors",
+              isDark
+                ? "border-neutral-700 text-neutral-300 hover:border-purple-500 hover:text-purple-300"
+                : "border-neutral-300 text-neutral-600 hover:border-purple-400 hover:text-purple-700",
+            )}
+          >
+            Secondary
+          </button>
+          <button
+            className={cn(
+              "px-5 py-2.5 rounded-full text-sm font-semibold transition-colors",
+              isDark
+                ? "text-neutral-500 hover:text-neutral-200"
+                : "text-neutral-400 hover:text-neutral-800",
+            )}
+          >
+            Ghost
+          </button>
+        </div>
+
+        {/* Hint */}
+        <p
           className={cn(
-            "mt-6 px-6 py-3 rounded-full font-semibold transition-colors pointer-events-auto",
-            theme === "dark" ? "bg-white text-black" : "bg-neutral-900 text-white"
+            "text-[11px] pointer-events-none mt-1",
+            isDark ? "text-neutral-700" : "text-neutral-400",
           )}
-          data-magnetic="true"
         >
-          Hover over me
-        </button>
+          Pass <code className={isDark ? "text-neutral-500" : "text-neutral-500"}>hideSystemCursor</code> to fully replace the native cursor
+        </p>
       </div>
+
       <InteractiveCursor
         containerRef={containerRef}
         hideSystemCursor={false}
-        color={theme === "dark" ? "#a855f7" : "#7c3aed"}
-        clickColor={theme === "dark" ? "#b280ff" : "#8b5cf6"}
-        trailColor={theme === "dark" ? "rgba(168, 85, 247, 0.4)" : "rgba(124, 58, 237, 0.3)"}
+        color={isDark ? "#a855f7" : "#7c3aed"}
+        clickColor={isDark ? "#c084fc" : "#8b5cf6"}
+        trailColor={isDark ? "rgba(168, 85, 247, 0.35)" : "rgba(124, 58, 237, 0.25)"}
+        glow={true}
+        particleEffect={true}
+        magneticPull={true}
       />
     </div>
   );
