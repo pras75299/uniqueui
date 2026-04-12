@@ -267,6 +267,14 @@ export const registry: Registry = [
         ],
     },
     {
+        name: "interactive-cursor",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "interactive-cursor.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "radial-menu",
         dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
         files: [

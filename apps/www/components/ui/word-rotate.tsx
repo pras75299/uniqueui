@@ -47,7 +47,6 @@ export function WordRotate({
   className,
   interval = 2500,
   animation = "slide-up",
-  theme = "dark",
 }: WordRotateProps) {
   const [index, setIndex] = useState(0);
 

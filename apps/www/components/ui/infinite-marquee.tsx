@@ -20,7 +20,6 @@ export function InfiniteMarquee({
   direction = "left",
   pauseOnHover = true,
   gap = 16,
-  theme = "dark",
 }: InfiniteMarqueeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);

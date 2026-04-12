@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, cloneElement, ReactElement, useId } from "react";
+import React, { useState, cloneElement, ReactElement, useId } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +27,7 @@ const DefaultBellIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export type NavItem = {
   id: string | number;
   icon: ReactElement;
-  label?: string;
+  label: string;
   ariaLabel?: string;
   onClick?: () => void;
 };
@@ -64,18 +64,14 @@ export const LimelightNav = ({
   theme = "dark",
   ...props
 }: LimelightNavProps) => {
-  const [activeIndex, setActiveIndex] = useState(() => {
+  const [selectedIndex, setSelectedIndex] = useState(() => {
     if (items.length === 0) return -1;
     return Math.min(Math.max(0, defaultActiveIndex), items.length - 1);
   });
-
-  useEffect(() => {
-    if (items.length > 0 && activeIndex >= items.length) {
-      setActiveIndex(items.length - 1);
-    } else if (items.length === 0 && activeIndex !== -1) {
-      setActiveIndex(-1);
-    }
-  }, [items.length, activeIndex]);
+  const activeIndex =
+    items.length === 0
+      ? -1
+      : Math.min(Math.max(selectedIndex, 0), items.length - 1);
 
   const componentId = useId();
 
@@ -84,7 +80,7 @@ export const LimelightNav = ({
   }
 
   const handleItemClick = (index: number, itemOnClick?: () => void) => {
-    setActiveIndex(index);
+    setSelectedIndex(index);
     onTabChange?.(index);
     itemOnClick?.();
   };
@@ -100,12 +96,6 @@ export const LimelightNav = ({
     >
       {items.map(({ id, icon, label, ariaLabel, onClick }, index) => {
         const isActive = activeIndex === index;
-
-        if (!label && !ariaLabel) {
-          console.warn(
-            `LimelightNav: Item with id "${id}" is missing both 'label' and 'ariaLabel'. An accessible name is required for screen readers.`
-          );
-        }
 
         return (
           <button
@@ -159,6 +149,7 @@ export const LimelightNav = ({
               }}
             >
               {cloneElement(icon, {
+                "aria-hidden": true,
                 className: cn(
                   "w-6 h-6",
                   (icon.props as React.HTMLAttributes<HTMLElement>).className,

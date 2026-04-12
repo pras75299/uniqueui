@@ -77,21 +77,19 @@ export function NotificationStack({
   position = "top-right",
   maxVisible = 5,
   theme = "dark",
+  notifications,
+  onRemove,
 }: NotificationStackProps & {
   notifications: Notification[];
   onRemove: (id: string) => void;
 }) {
-  // Cast to get the extra props
-  const props = arguments[0] as NotificationStackProps & {
-    notifications: Notification[];
-    onRemove: (id: string) => void;
-  };
-
-  const visible = props.notifications.slice(-maxVisible);
+  const visible = notifications.slice(-maxVisible);
   const isBottom = position.startsWith("bottom");
 
   return (
     <div
+      aria-live="polite"
+      aria-atomic="false"
       className={cn(
         "fixed z-[100] flex flex-col gap-2 w-[380px] max-w-[calc(100vw-2rem)]",
         positionStyles[position],
@@ -104,7 +102,7 @@ export function NotificationStack({
           <NotificationItem
             key={notification.id}
             notification={notification}
-            onRemove={props.onRemove}
+            onRemove={onRemove}
             position={position}
             theme={theme}
           />
@@ -126,7 +124,6 @@ function NotificationItem({
   theme?: "light" | "dark";
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
-  const [progress, setProgress] = useState(100);
   const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -134,7 +131,6 @@ function NotificationItem({
 
     timeoutRef.current = window.setTimeout(() => {
       onRemove(id);
-      setProgress(0);
     }, duration);
 
     return () => {
@@ -148,6 +144,7 @@ function NotificationItem({
 
   return (
     <motion.div
+      role="status"
       layout
       initial={{
         opacity: 0,
@@ -186,7 +183,9 @@ function NotificationItem({
           )}
         </div>
         <button
+          type="button"
           onClick={() => onRemove(id)}
+          aria-label={`Dismiss ${title} notification`}
           className={cn("flex-shrink-0 transition-colors text-sm", theme === "dark" ? "text-neutral-500 hover:text-white" : "text-neutral-600 hover:text-neutral-900")}
         >
           ✕

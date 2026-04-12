@@ -16,7 +16,7 @@
    ├── components/iso-hero.tsx    Animated isometric SVG illustration
    └── components/iso-icon.tsx    Isometric cube icon for BentoCards
 
-   Fonts:   Syne (display) · DM Sans (body) — loaded via next/font/google in layout.tsx
+   Fonts:   Syne (display) · DM Sans (body) — resolved via CSS font variables in layout/globals
    Palette: Deep navy (#060A1F) · Electric cyan (#22D3EE) · Orange accent (#F97316)
    ───────────────────────────────────────────────────────────────────────────── */
 

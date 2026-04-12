@@ -14,30 +14,29 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 const STORAGE_KEY = "uniqueui-theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === "undefined") {
+      return "dark";
+    }
     try {
       const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
       if (stored === "light" || stored === "dark") {
-        setThemeState(stored);
+        return stored;
       }
     } catch {
       // ignore
     }
-  }, []);
+    return "dark";
+  });
 
   useEffect(() => {
-    if (!mounted) return;
     document.documentElement.dataset.theme = theme;
     try {
       localStorage.setItem(STORAGE_KEY, theme);
     } catch {
       // ignore
     }
-  }, [theme, mounted]);
+  }, [theme]);
 
   const setTheme = (t: Theme) => setThemeState(t);
 

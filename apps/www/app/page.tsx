@@ -24,6 +24,8 @@ import {
   type CardData,
 } from "@/components/ui/morphing-card-stack";
 import { PenCursor } from "@/components/ui/pen-cursor";
+import { InteractiveCursor } from "@/components/ui/interactive-cursor";
+
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const playgroundCardRef = useRef<HTMLDivElement>(null);
@@ -101,6 +103,14 @@ export default function Home() {
             ? "[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20"
             : "[background:radial-gradient(120%_160%_at_0%_0%,#e0f2fe_0%,#eef2ff_35%,#fdf2ff_70%,#f5f3ff_100%)] opacity-70",
         )}
+      />
+
+      {/* Interactive Global Cursor Demo */}
+      <InteractiveCursor 
+        hideSystemCursor={false} // keeping default true can be annoying for docs
+        clickColor={isDark ? "#b280ff" : "#8b5cf6"}
+        color={isDark ? "#a855f7" : "#7c3aed"}
+        trailColor={isDark ? "rgba(168, 85, 247, 0.4)" : "rgba(124, 58, 237, 0.3)"}
       />
 
       {/* Header */}

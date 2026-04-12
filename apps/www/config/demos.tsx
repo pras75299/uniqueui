@@ -8,7 +8,7 @@ import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedTabs } from "@/components/ui/animated-tabs";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { InfiniteMarquee, MarqueeItem } from "@/components/ui/infinite-marquee";
-import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
+import { ScrollRevealGroup } from "@/components/ui/scroll-reveal";
 import {
   SkeletonShimmer,
   SkeletonCard,
@@ -38,7 +38,9 @@ import { ParticleField } from "@/components/ui/particle-field";
 import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-gallery";
 import { RadialMenu } from "@/components/ui/radial-menu";
 import { CursorTrail } from "@/components/ui/cursor-trail";
+import Image from "next/image";
 import { PenCursor } from "@/components/ui/pen-cursor";
+import { InteractiveCursor } from "@/components/ui/interactive-cursor";
 import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { LimelightNav } from "@/components/ui/limelight-nav";
 import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
@@ -115,6 +117,56 @@ function NotificationDemo({ theme = "dark" }: DemoThemeProps) {
         theme={theme}
         notifications={notifications}
         onRemove={removeNotification}
+      />
+    </div>
+  );
+}
+
+function InteractiveCursorDemo({ theme = "dark" }: DemoThemeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      ref={containerRef}
+      className={cn(
+        "h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border relative",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <div className="text-center relative z-10 select-none pointer-events-none">
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent mb-4",
+            theme === "dark"
+              ? "bg-gradient-to-br from-white to-neutral-500"
+              : "bg-gradient-to-br from-neutral-900 to-neutral-600",
+          )}
+        >
+          Interactive Cursor
+        </h3>
+        <p
+          className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}
+        >
+          Move your mouse inside this block to see the trailing springs and magnetics.
+        </p>
+        <button 
+          className={cn(
+            "mt-6 px-6 py-3 rounded-full font-semibold transition-colors pointer-events-auto",
+            theme === "dark" ? "bg-white text-black" : "bg-neutral-900 text-white"
+          )}
+          data-magnetic="true"
+        >
+          Hover over me
+        </button>
+      </div>
+      <InteractiveCursor
+        containerRef={containerRef}
+        className="absolute inset-0"
+        hideSystemCursor={false}
+        color={theme === "dark" ? "#a855f7" : "#7c3aed"}
+        clickColor={theme === "dark" ? "#b280ff" : "#8b5cf6"}
+        trailColor={theme === "dark" ? "rgba(168, 85, 247, 0.4)" : "rgba(124, 58, 237, 0.3)"}
       />
     </div>
   );
@@ -364,7 +416,7 @@ function NestedCommentsDemo({ theme = "dark" }: DemoThemeProps) {
 }
 
 export const componentDemos: Record<string, DemoComponent> = {
-  "animated-glowing-text-outline": ({ theme = "dark" }) => (
+  "animated-glowing-text-outline": () => (
     <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-background gap-16 border border-border rounded-xl overflow-hidden relative">
       <GlowingTextOutline 
         text="Hello World" 
@@ -1508,23 +1560,32 @@ export const componentDemos: Record<string, DemoComponent> = {
     <HorizontalScrollGallery
       theme={theme}
       items={[
-        <img
+        <Image
           key="1"
           src="https://images.unsplash.com/photo-1681935396624-006f4acdc530?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Landscape 1"
+          width={1200}
+          height={900}
           className="object-cover w-full h-full"
+          unoptimized
         />,
-        <img
+        <Image
           key="2"
           src="https://images.unsplash.com/photo-1775059956734-78ffd2075cec?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Landscape 2"
+          width={1200}
+          height={900}
           className="object-cover w-full h-full"
+          unoptimized
         />,
-        <img
+        <Image
           key="3"
           src="https://images.unsplash.com/photo-1722152246589-23370458081f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Landscape 3"
+          width={1200}
+          height={900}
           className="object-cover w-full h-full"
+          unoptimized
         />,
         <div
           key="4"
@@ -1600,6 +1661,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       />
     </div>
   ),
+  "interactive-cursor": ({ theme = "dark" }) => <InteractiveCursorDemo theme={theme} />,
   "pen-cursor": ({ theme = "dark" }) => <PenCursorDemo theme={theme} />,
   "glow-hero-section/default": ({ theme = "dark" }) => (
     <GlowHeroSection theme={theme} height="h-[520px]" />
