@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -33,7 +34,9 @@ function releaseGlobalCursorHide() {
 
   const next = Math.max(0, Number(existing.dataset.refCount ?? "1") - 1);
   if (next === 0) {
-    document.body.style.cursor = existing.dataset.previousBodyCursor ?? "";
+    if (document.body.style.cursor === "none") {
+      document.body.style.cursor = existing.dataset.previousBodyCursor ?? "";
+    }
     existing.remove();
     return;
   }
@@ -86,8 +89,6 @@ export function InteractiveCursor({
   containerRef,
   className,
 }: InteractiveCursorProps) {
-  const isContainerScoped = Boolean(containerRef);
-
   // Motion values for actual mouse position
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -109,10 +110,31 @@ export function InteractiveCursor({
   const [isVisible, setIsVisible] = useState(true);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [ripples, setRipples] = useState<Ripple[]>([]);
+  const [scopeElement, setScopeElement] = useState<HTMLElement | null>(null);
+
+  useLayoutEffect(() => {
+    const nextScopeElement = containerRef?.current ?? null;
+    setScopeElement((current) =>
+      current === nextScopeElement ? current : nextScopeElement
+    );
+  });
+
+  useEffect(() => {
+    if (!scopeElement) return;
+
+    const computedPosition = window.getComputedStyle(scopeElement).position;
+    if (computedPosition !== "static") return;
+
+    const previousPosition = scopeElement.style.position;
+    scopeElement.style.position = "relative";
+
+    return () => {
+      scopeElement.style.position = previousPosition;
+    };
+  }, [scopeElement]);
 
   useEffect(() => {
     let _id = 0;
-    const scopeElement = containerRef?.current;
 
     const getPos = (e: MouseEvent) => {
       let x = e.clientX;
@@ -266,11 +288,11 @@ export function InteractiveCursor({
     };
   }, [cursorX, cursorY, glow, magneticPull, particleEffect, hideSystemCursor, magneticHeight, magneticWidth, containerRef]);
 
-  return (
+  const overlay = (
     <div
       className={cn(
         "pointer-events-none inset-0 z-[99999]",
-        isContainerScoped ? "absolute" : "fixed",
+        scopeElement ? "absolute" : "fixed",
         className
       )}
     >
@@ -349,4 +371,10 @@ export function InteractiveCursor({
       </AnimatePresence>
     </div>
   );
+
+  if (scopeElement) {
+    return createPortal(overlay, scopeElement);
+  }
+
+  return overlay;
 }
