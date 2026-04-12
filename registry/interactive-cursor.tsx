@@ -19,34 +19,6 @@ export interface InteractiveCursorProps {
   magneticPull?: boolean;
   /** Globally hides system cursor */
   hideSystemCursor?: boolean;
-  /** Fluid simulation resolution for velocity fields. */
-  simResolution?: number;
-  /** Resolution of the color/dye texture. */
-  dyeResolution?: number;
-  /** Resolution used for certain capture operations (rarely changed). */
-  captureResolution?: number;
-  /** Rate at which color/density dissipates over time. */
-  densityDissipation?: number;
-  /** Rate at which velocity dissipates over time. */
-  velocityDissipation?: number;
-  /** Base pressure for the fluid simulation. */
-  pressure?: number;
-  /** Number of Jacobi iterations used for the pressure solver. */
-  pressureIterations?: number;
-  /** Amount of vorticity/curl to apply for swirling effects. */
-  curl?: number;
-  /** Radius of the 'splat' effect when user interacts. */
-  splatRadius?: number;
-  /** Force of the fluid 'splat' on each interaction. */
-  splatForce?: number;
-  /** Toggles simple lighting/shading on the fluid. */
-  shading?: boolean;
-  /** Frequency at which pointer colors are re-randomized. */
-  colorUpdateSpeed?: number;
-  /** Base background color for the fluid. Not always used if TRANSPARENT is true. */
-  backColor?: { r: number; g: number; b: number };
-  /** Determines if the canvas background should be rendered with alpha. */
-  transparent?: boolean;
   /** Optional ref to constrain the cursor to a specific element */
   containerRef?: React.RefObject<HTMLElement | null>;
   className?: string;
@@ -74,20 +46,6 @@ export function InteractiveCursor({
   particleEffect = true,
   magneticPull = true,
   hideSystemCursor = false,
-  simResolution = 128,
-  dyeResolution = 1440,
-  captureResolution = 512,
-  densityDissipation = 3.5,
-  velocityDissipation = 2,
-  pressure = 0.1,
-  pressureIterations = 20,
-  curl = 3,
-  splatRadius = 0.2,
-  splatForce = 6000,
-  shading = true,
-  colorUpdateSpeed = 10,
-  backColor = { r: 0.5, g: 0, b: 0 },
-  transparent = true,
   containerRef,
   className,
 }: InteractiveCursorProps) {
@@ -117,13 +75,11 @@ export function InteractiveCursor({
     let _id = 0;
 
     const getPos = (e: MouseEvent) => {
-      let x = e.clientX;
-      let y = e.clientY;
+      const x = e.clientX;
+      const y = e.clientY;
       let isInside = true;
       if (containerRef?.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        x = e.clientX - rect.left;
-        y = e.clientY - rect.top;
         if (
           e.clientX < rect.left ||
           e.clientX > rect.right ||
@@ -154,14 +110,8 @@ export function InteractiveCursor({
         if (interactiveElement) {
           foundHover = true;
           const rect = interactiveElement.getBoundingClientRect();
-          let centerX = rect.left + rect.width / 2;
-          let centerY = rect.top + rect.height / 2;
-          
-          if (containerRef?.current) {
-            const containerRect = containerRef.current.getBoundingClientRect();
-            centerX -= containerRect.left;
-            centerY -= containerRect.top;
-          }
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
           
           // Snap strictly toward the center
           targetX = centerX;

@@ -874,7 +874,6 @@ export const componentDemos: Record<string, DemoComponent> = {
       )}
     >
       <GradientTextReveal
-        theme={theme}
         text="Build stunning interfaces with UniqueUI"
         as="h3"
         className={cn(
@@ -883,7 +882,6 @@ export const componentDemos: Record<string, DemoComponent> = {
         )}
       />
       <GradientTextReveal
-        theme={theme}
         text="Beautiful animated components for modern web apps"
         gradientFrom="#6366f1"
         gradientTo="#06b6d4"
@@ -1525,7 +1523,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       </BentoGrid>
     </div>
   ),
-  "particle-field": ({ theme = "dark" }) => (
+  "particle-field/single": ({ theme = "dark" }) => (
     <div
       className={cn(
         "rounded-xl overflow-hidden border h-[400px] w-full relative",
@@ -1549,9 +1547,38 @@ export const componentDemos: Record<string, DemoComponent> = {
         </h3>
       </div>
       <ParticleField
-        theme={theme}
         particleCount={120}
         particleColor="#a855f7"
+        speed={0.5}
+      />
+    </div>
+  ),
+  "particle-field/multi": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark"
+          ? "border-neutral-800 bg-neutral-950"
+          : "border-neutral-200 bg-neutral-800",
+      )}
+    >
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent text-center",
+            theme === "dark"
+              ? "bg-gradient-to-b from-white to-neutral-500"
+              : "bg-gradient-to-b from-neutral-100 to-neutral-400",
+          )}
+        >
+          Interactive
+          <br />
+          Particle Field
+        </h3>
+      </div>
+      <ParticleField
+        particleCount={120}
+        particleColor={["#a855f7", "#06b6d4", "#f472b6"]}
         speed={0.5}
       />
     </div>
@@ -1981,7 +2008,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           columns={columns}
           data={data}
           freezeColumns="left"
-          freezeCount={2}
+          freezeLeftCount={2}
           paginated
           pageSize={5}
           theme={theme}
@@ -2097,7 +2124,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           columns={columns}
           data={data}
           freezeColumns="right"
-          freezeCount={1}
+          freezeRightCount={1}
           paginated
           pageSize={5}
           theme={theme}
@@ -2213,7 +2240,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           columns={columns}
           data={data}
           freezeColumns="both"
-          freezeCount={2}
+          freezeLeftCount={2}
           freezeRightCount={1}
           paginated
           pageSize={5}
@@ -2571,7 +2598,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           columns={columns}
           data={data}
           freezeColumns="left"
-          freezeCount={1}
+          freezeLeftCount={1}
           headerTextColor="text-neutral-100"
           bodyTextColor="text-neutral-300"
           headerBackground="bg-neutral-800"

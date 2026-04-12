@@ -2234,9 +2234,9 @@ export default function Example() {
       },
       {
         name: "particleColor",
-        type: "string",
+        type: "string | string[]",
         description:
-          "The hex color code for the particles and connecting lines.",
+          "One hex color or an array of hex colors for particles and connecting lines.",
       },
       {
         name: "speed",
@@ -2261,12 +2261,60 @@ export default function Example() {
       </div>
       <ParticleField 
         particleCount={120}
+        particleColor={["#a855f7", "#06b6d4", "#f472b6"]}
+        speed={0.5}
+      />
+    </div>
+  );
+}`,
+    variants: [
+      {
+        id: "single",
+        label: "Single Color",
+        demoKey: "particle-field/single",
+        usageCode: `import { ParticleField } from "@/components/ui/particle-field";
+
+export default function Example() {
+  return (
+    <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950">
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
+          Hover Around
+        </h3>
+      </div>
+      <ParticleField
+        particleCount={120}
         particleColor="#a855f7"
         speed={0.5}
       />
     </div>
   );
 }`,
+      },
+      {
+        id: "multi",
+        label: "Multi Color",
+        demoKey: "particle-field/multi",
+        usageCode: `import { ParticleField } from "@/components/ui/particle-field";
+
+export default function Example() {
+  return (
+    <div className="rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950">
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500">
+          Hover Around
+        </h3>
+      </div>
+      <ParticleField
+        particleCount={120}
+        particleColor={["#a855f7", "#06b6d4", "#f472b6"]}
+        speed={0.5}
+      />
+    </div>
+  );
+}`,
+      },
+    ],
   },
   {
     slug: "horizontal-scroll-gallery",
@@ -2854,14 +2902,21 @@ export default function Example() {
         type: "number",
         default: "1",
         description:
-          'With freezeColumns "left" or "both": columns frozen on the left. With freezeColumns "right" only: columns frozen on the right (freezeRightCount is not used).',
+          "Legacy fallback count used only when freezeLeftCount or freezeRightCount are not provided.",
+      },
+      {
+        name: "freezeLeftCount",
+        type: "number",
+        default: "1",
+        description:
+          'How many columns to freeze on the left when freezeColumns is "left" or "both".',
       },
       {
         name: "freezeRightCount",
         type: "number",
         default: "1",
         description:
-          'With freezeColumns "both": columns frozen on the right (left side uses freezeCount). Ignored when freezeColumns is "none", "left", or "right".',
+          'How many columns to freeze on the right when freezeColumns is "right" or "both".',
       },
       {
         name: "paginated",
@@ -3028,11 +3083,11 @@ const data = [
 export default function Example() {
   return (
     <div className="w-full p-6">
-      <DataTable
-        columns={columns}
-        data={data}
-        freezeColumns="left"
-        freezeCount={2}
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="left"
+          freezeLeftCount={2}
         paginated
         pageSize={5}
         theme="dark"
@@ -3073,11 +3128,11 @@ const data = [
 export default function Example() {
   return (
     <div className="w-full p-6">
-      <DataTable
-        columns={columns}
-        data={data}
-        freezeColumns="right"
-        freezeCount={1}
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="right"
+          freezeRightCount={1}
         paginated
         pageSize={5}
         theme="dark"
@@ -3118,12 +3173,12 @@ const data = [
 export default function Example() {
   return (
     <div className="w-full p-6">
-      <DataTable
-        columns={columns}
-        data={data}
-        freezeColumns="both"
-        freezeCount={2}
-        freezeRightCount={1}
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="both"
+          freezeLeftCount={2}
+          freezeRightCount={1}
         paginated
         pageSize={5}
         theme="dark"
@@ -3274,11 +3329,11 @@ const data = [
 export default function Example() {
   return (
     <div className="w-full p-6">
-      <DataTable
-        columns={columns}
-        data={data}
-        freezeColumns="left"
-        freezeCount={1}
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="left"
+          freezeLeftCount={1}
         headerTextColor="text-neutral-100"
         bodyTextColor="text-neutral-300"
         headerBackground="bg-neutral-800"

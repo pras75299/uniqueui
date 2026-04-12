@@ -7,11 +7,87 @@ import { motion, HTMLMotionProps } from "motion/react";
 export interface ParticleFieldProps
   extends Omit<HTMLMotionProps<"div">, "onAnimationStart" | "onDragStart" | "onDragEnd" | "onDrag"> {
   particleCount?: number;
-  particleColor?: string;
+  particleColor?: string | string[];
   interactionRadius?: number;
   particleSize?: { min: number; max: number };
   speed?: number;
-  theme?: "light" | "dark";
+}
+
+type Particle = {
+  x: number;
+  y: number;
+  size: number;
+  vx: number;
+  vy: number;
+  density: number;
+  color: [number, number, number];
+};
+
+let colorParserContext: CanvasRenderingContext2D | null = null;
+
+function getColorParserContext() {
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  if (!colorParserContext) {
+    colorParserContext = document.createElement("canvas").getContext("2d");
+  }
+
+  return colorParserContext;
+}
+
+function parseResolvedColor(color: string): [number, number, number] | null {
+  const ctx = getColorParserContext();
+  if (!ctx) {
+    return null;
+  }
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = color;
+
+  const normalizedColor = ctx.fillStyle;
+  if (normalizedColor.startsWith("#")) {
+    let hex = normalizedColor.slice(1);
+    if (hex.length === 3) {
+      hex = hex
+        .split("")
+        .map((char) => char + char)
+        .join("");
+    }
+
+    if (/^[0-9a-fA-F]{6}$/.test(hex)) {
+      const value = Number.parseInt(hex, 16);
+      return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+    }
+  }
+
+  const rgbMatch = normalizedColor.match(/[\d.]+/g);
+
+  if (!rgbMatch || rgbMatch.length < 3) {
+    return null;
+  }
+
+  return [
+    Math.round(Number.parseFloat(rgbMatch[0])),
+    Math.round(Number.parseFloat(rgbMatch[1])),
+    Math.round(Number.parseFloat(rgbMatch[2])),
+  ];
+}
+
+function resolveCssVariable(color: string, element: HTMLElement): string {
+  const varMatch = color.trim().match(/^var\(\s*(--[\w-]+)\s*(?:,\s*(.+))?\)$/);
+  if (!varMatch) return color;
+
+  const [, variableName, fallback] = varMatch;
+  const resolved = getComputedStyle(element).getPropertyValue(variableName).trim();
+  if (resolved) return resolved;
+  return fallback?.trim() || color;
+}
+
+function parseColor(color: string, element: HTMLElement): [number, number, number] {
+  const resolvedColor = resolveCssVariable(color, element);
+  return parseResolvedColor(resolvedColor) ?? [255, 255, 255];
 }
 
 export function ParticleField({
@@ -21,25 +97,15 @@ export function ParticleField({
   interactionRadius = 150,
   particleSize = { min: 1, max: 3 },
   speed = 1,
-  theme = "dark",
   ...props
 }: ParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Parse color to rgba for dynamic opacity
-  const particleColorRgb = useMemo(() => {
-    // Very basic hex to rgb parser
-    let hex = particleColor.replace(/^#/, "");
-    if (hex.length === 3) {
-      hex = hex.split("").map((char) => char + char).join("");
-    }
-    const bigint = parseInt(hex, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `${r}, ${g}, ${b}`;
-  }, [particleColor]);
+  const particleColorValues = useMemo(
+    () => (Array.isArray(particleColor) ? particleColor : [particleColor]),
+    [particleColor]
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -53,7 +119,9 @@ export function ParticleField({
     let animationFrameId: number;
     let rect = container.getBoundingClientRect();
     let dpr = window.devicePixelRatio || 1;
-    let canvasRect = canvas.getBoundingClientRect();
+    const particleColors = particleColorValues.map((color) =>
+      parseColor(color, container)
+    );
     
     // Mouse state
     const mouse = {
@@ -70,8 +138,12 @@ export function ParticleField({
       vx: number;
       vy: number;
       density: number;
+      color: [number, number, number];
 
       constructor(canvasWidth: number, canvasHeight: number) {
+        const color =
+          particleColors[Math.floor(Math.random() * particleColors.length)] ??
+          [255, 255, 255];
         this.x = Math.random() * canvasWidth;
         this.y = Math.random() * canvasHeight;
         this.baseX = this.x;
@@ -82,10 +154,11 @@ export function ParticleField({
         this.vx = (Math.random() - 0.5) * speed;
         this.vy = (Math.random() - 0.5) * speed;
         this.density = Math.random() * 30 + 10;
+        this.color = color;
       }
 
       draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = `rgba(${particleColorRgb}, ${
+        ctx.fillStyle = `rgba(${this.color.join(", ")}, ${
           this.size / particleSize.max
         })`;
         ctx.beginPath();
@@ -138,10 +211,6 @@ export function ParticleField({
 
       canvas.style.width = `${rect.width}px`;
       canvas.style.height = `${rect.height}px`;
-
-      // Cache canvas rect for pointer coordinate calculations
-      canvasRect = canvas.getBoundingClientRect();
-
       particles = [];
       for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle(rect.width, rect.height));
@@ -161,8 +230,13 @@ export function ParticleField({
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < 100) {
+              const lineColor: [number, number, number] = [
+                Math.round((particles[i].color[0] + particles[j].color[0]) / 2),
+                Math.round((particles[i].color[1] + particles[j].color[1]) / 2),
+                Math.round((particles[i].color[2] + particles[j].color[2]) / 2),
+              ];
               ctx.beginPath();
-              ctx.strokeStyle = `rgba(${particleColorRgb}, ${1 - distance / 100})`;
+              ctx.strokeStyle = `rgba(${lineColor.join(", ")}, ${1 - distance / 100})`;
               ctx.lineWidth = 0.5;
               ctx.moveTo(particles[i].x, particles[i].y);
               ctx.lineTo(particles[j].x, particles[j].y);
@@ -185,9 +259,8 @@ export function ParticleField({
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Use cached canvas rect to avoid layout reads on every pointer move
-      mouse.x = e.clientX - canvasRect.left;
-      mouse.y = e.clientY - canvasRect.top;
+      mouse.x = e.offsetX;
+      mouse.y = e.offsetY;
     };
     
     const handleMouseLeave = () => {
@@ -210,7 +283,7 @@ export function ParticleField({
       canvas.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [particleCount, particleSize.max, particleSize.min, interactionRadius, speed, particleColorRgb]);
+  }, [particleCount, particleSize.max, particleSize.min, interactionRadius, speed, particleColorValues]);
 
   return (
     <motion.div
