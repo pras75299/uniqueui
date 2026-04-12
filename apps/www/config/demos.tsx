@@ -134,10 +134,10 @@ function InteractiveCursorDemo({ theme = "dark" }: DemoThemeProps) {
           : "bg-neutral-100 border-neutral-200",
       )}
     >
-      <div className="text-center relative z-10 select-none pointer-events-none">
+      <div className="text-center relative z-10 select-none">
         <h3
           className={cn(
-            "text-3xl font-bold bg-clip-text text-transparent mb-4",
+            "text-3xl font-bold bg-clip-text text-transparent mb-4 pointer-events-none",
             theme === "dark"
               ? "bg-gradient-to-br from-white to-neutral-500"
               : "bg-gradient-to-br from-neutral-900 to-neutral-600",
@@ -146,7 +146,10 @@ function InteractiveCursorDemo({ theme = "dark" }: DemoThemeProps) {
           Interactive Cursor
         </h3>
         <p
-          className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}
+          className={cn(
+            "pointer-events-none",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600"
+          )}
         >
           Move your mouse inside this block to see the trailing springs and magnetics.
         </p>
@@ -162,7 +165,6 @@ function InteractiveCursorDemo({ theme = "dark" }: DemoThemeProps) {
       </div>
       <InteractiveCursor
         containerRef={containerRef}
-        className="absolute inset-0"
         hideSystemCursor={false}
         color={theme === "dark" ? "#a855f7" : "#7c3aed"}
         clickColor={theme === "dark" ? "#b280ff" : "#8b5cf6"}

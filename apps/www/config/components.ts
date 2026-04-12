@@ -2514,7 +2514,7 @@ export default function Example() {
       {
         name: "className",
         type: "string",
-        description: "Additional classes applied to the fixed overlay root.",
+        description: "Additional classes applied to the overlay root.",
       },
     ],
     usageCode: `import { useRef } from "react";
@@ -2540,7 +2540,6 @@ export default function Example() {
 
       <InteractiveCursor
         containerRef={containerRef}
-        hideSystemCursor={false}
         color="#a855f7"
         clickColor="#b280ff"
         trailColor="rgba(168, 85, 247, 0.35)"

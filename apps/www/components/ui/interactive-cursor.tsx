@@ -86,6 +86,8 @@ export function InteractiveCursor({
   containerRef,
   className,
 }: InteractiveCursorProps) {
+  const isContainerScoped = Boolean(containerRef);
+
   // Motion values for actual mouse position
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -110,13 +112,16 @@ export function InteractiveCursor({
 
   useEffect(() => {
     let _id = 0;
+    const scopeElement = containerRef?.current;
 
     const getPos = (e: MouseEvent) => {
-      const x = e.clientX;
-      const y = e.clientY;
+      let x = e.clientX;
+      let y = e.clientY;
       let isInside = true;
-      if (containerRef?.current) {
-        const rect = containerRef.current.getBoundingClientRect();
+      if (scopeElement) {
+        const rect = scopeElement.getBoundingClientRect();
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
         if (
           e.clientX < rect.left ||
           e.clientX > rect.right ||
@@ -144,11 +149,17 @@ export function InteractiveCursor({
         const target = e.target as HTMLElement;
         const interactiveElement = target.closest('button, a, input, [data-magnetic="true"]');
 
-        if (interactiveElement) {
+        if (interactiveElement && (!scopeElement || scopeElement.contains(interactiveElement))) {
           foundHover = true;
           const rect = interactiveElement.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
+          let centerX = rect.left + rect.width / 2;
+          let centerY = rect.top + rect.height / 2;
+
+          if (scopeElement) {
+            const containerRect = scopeElement.getBoundingClientRect();
+            centerX -= containerRect.left;
+            centerY -= containerRect.top;
+          }
           
           // Snap strictly toward the center
           targetX = centerX;
@@ -166,6 +177,14 @@ export function InteractiveCursor({
       setIsHovering(foundHover);
       cursorX.set(targetX);
       cursorY.set(targetY);
+    };
+
+    const leaveListener = () => {
+      if (!scopeElement) return;
+      setIsVisible(false);
+      setIsHovering(false);
+      magneticWidth.set(glow ? 36 : 14);
+      magneticHeight.set(glow ? 36 : 14);
     };
 
     const mousedownListener = (e: MouseEvent) => {
@@ -217,8 +236,14 @@ export function InteractiveCursor({
       setClicked(false);
     };
 
-    window.addEventListener("mousemove", moveListener);
-    window.addEventListener("mousedown", mousedownListener);
+    if (scopeElement) {
+      scopeElement.addEventListener("mousemove", moveListener);
+      scopeElement.addEventListener("mousedown", mousedownListener);
+      scopeElement.addEventListener("mouseleave", leaveListener);
+    } else {
+      window.addEventListener("mousemove", moveListener);
+      window.addEventListener("mousedown", mousedownListener);
+    }
     window.addEventListener("mouseup", mouseupListener);
 
     if (hideSystemCursor) {
@@ -226,8 +251,14 @@ export function InteractiveCursor({
     }
 
     return () => {
-      window.removeEventListener("mousemove", moveListener);
-      window.removeEventListener("mousedown", mousedownListener);
+      if (scopeElement) {
+        scopeElement.removeEventListener("mousemove", moveListener);
+        scopeElement.removeEventListener("mousedown", mousedownListener);
+        scopeElement.removeEventListener("mouseleave", leaveListener);
+      } else {
+        window.removeEventListener("mousemove", moveListener);
+        window.removeEventListener("mousedown", mousedownListener);
+      }
       window.removeEventListener("mouseup", mouseupListener);
       if (hideSystemCursor) {
         releaseGlobalCursorHide();
@@ -236,7 +267,13 @@ export function InteractiveCursor({
   }, [cursorX, cursorY, glow, magneticPull, particleEffect, hideSystemCursor, magneticHeight, magneticWidth, containerRef]);
 
   return (
-    <div className={cn("pointer-events-none fixed inset-0 z-[99999]", className)}>
+    <div
+      className={cn(
+        "pointer-events-none inset-0 z-[99999]",
+        isContainerScoped ? "absolute" : "fixed",
+        className
+      )}
+    >
       {/* Outer Glow / Trail */}
       <motion.div
         className={cn(
