@@ -19,7 +19,9 @@ function acquireGlobalCursorHide() {
   const style = document.createElement("style");
   style.id = INTERACTIVE_CURSOR_STYLE_ID;
   style.dataset.refCount = "1";
-  style.innerHTML = `* { cursor: none !important; }`;
+  style.dataset.previousBodyCursor = document.body.style.cursor;
+  style.textContent = `* { cursor: none !important; }`;
+  document.body.style.cursor = "none";
   document.head.appendChild(style);
 }
 
@@ -31,6 +33,7 @@ function releaseGlobalCursorHide() {
 
   const next = Math.max(0, Number(existing.dataset.refCount ?? "1") - 1);
   if (next === 0) {
+    document.body.style.cursor = existing.dataset.previousBodyCursor ?? "";
     existing.remove();
     return;
   }
@@ -219,7 +222,6 @@ export function InteractiveCursor({
     window.addEventListener("mouseup", mouseupListener);
 
     if (hideSystemCursor) {
-      document.body.style.cursor = "none";
       acquireGlobalCursorHide();
     }
 
@@ -228,7 +230,6 @@ export function InteractiveCursor({
       window.removeEventListener("mousedown", mousedownListener);
       window.removeEventListener("mouseup", mouseupListener);
       if (hideSystemCursor) {
-        document.body.style.cursor = "";
         releaseGlobalCursorHide();
       }
     };
