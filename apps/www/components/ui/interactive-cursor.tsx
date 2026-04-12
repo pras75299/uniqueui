@@ -4,6 +4,40 @@ import React, { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
+const INTERACTIVE_CURSOR_STYLE_ID = "interactive-cursor-css";
+
+function acquireGlobalCursorHide() {
+  const existing = document.getElementById(
+    INTERACTIVE_CURSOR_STYLE_ID
+  ) as HTMLStyleElement | null;
+  if (existing) {
+    const count = Number(existing.dataset.refCount ?? "0") + 1;
+    existing.dataset.refCount = String(count);
+    return;
+  }
+
+  const style = document.createElement("style");
+  style.id = INTERACTIVE_CURSOR_STYLE_ID;
+  style.dataset.refCount = "1";
+  style.innerHTML = `* { cursor: none !important; }`;
+  document.head.appendChild(style);
+}
+
+function releaseGlobalCursorHide() {
+  const existing = document.getElementById(
+    INTERACTIVE_CURSOR_STYLE_ID
+  ) as HTMLStyleElement | null;
+  if (!existing) return;
+
+  const next = Math.max(0, Number(existing.dataset.refCount ?? "1") - 1);
+  if (next === 0) {
+    existing.remove();
+    return;
+  }
+
+  existing.dataset.refCount = String(next);
+}
+
 export interface InteractiveCursorProps {
   /** The primary color of the cursor dot */
   color?: string;
@@ -186,10 +220,7 @@ export function InteractiveCursor({
 
     if (hideSystemCursor) {
       document.body.style.cursor = "none";
-      const style = document.createElement("style");
-      style.id = "interactive-cursor-css";
-      style.innerHTML = `* { cursor: none !important; }`;
-      document.head.appendChild(style);
+      acquireGlobalCursorHide();
     }
 
     return () => {
@@ -198,8 +229,7 @@ export function InteractiveCursor({
       window.removeEventListener("mouseup", mouseupListener);
       if (hideSystemCursor) {
         document.body.style.cursor = "";
-        const injected = document.getElementById("interactive-cursor-css");
-        if (injected) injected.remove();
+        releaseGlobalCursorHide();
       }
     };
   }, [cursorX, cursorY, glow, magneticPull, particleEffect, hideSystemCursor, magneticHeight, magneticWidth, containerRef]);
