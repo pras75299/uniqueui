@@ -75,13 +75,11 @@ export function InteractiveCursor({
     let _id = 0;
 
     const getPos = (e: MouseEvent) => {
-      let x = e.clientX;
-      let y = e.clientY;
+      const x = e.clientX;
+      const y = e.clientY;
       let isInside = true;
       if (containerRef?.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        x = e.clientX - rect.left;
-        y = e.clientY - rect.top;
         if (
           e.clientX < rect.left ||
           e.clientX > rect.right ||
@@ -112,14 +110,8 @@ export function InteractiveCursor({
         if (interactiveElement) {
           foundHover = true;
           const rect = interactiveElement.getBoundingClientRect();
-          let centerX = rect.left + rect.width / 2;
-          let centerY = rect.top + rect.height / 2;
-          
-          if (containerRef?.current) {
-            const containerRect = containerRef.current.getBoundingClientRect();
-            centerX -= containerRect.left;
-            centerY -= containerRect.top;
-          }
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
           
           // Snap strictly toward the center
           targetX = centerX;

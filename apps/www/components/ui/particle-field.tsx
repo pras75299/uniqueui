@@ -14,21 +14,71 @@ type Particle = {
   color: [number, number, number];
 };
 
-function parseHexColor(color: string): [number, number, number] {
-  let hex = color.trim().replace(/^#/, "");
-  if (hex.length === 3) {
-    hex = hex
-      .split("")
-      .map((char) => char + char)
-      .join("");
+let colorParserContext: CanvasRenderingContext2D | null = null;
+
+function getColorParserContext() {
+  if (typeof document === "undefined") {
+    return null;
   }
 
-  if (!/^[0-9a-fA-F]{6}$/.test(hex)) {
-    return [255, 255, 255];
+  if (!colorParserContext) {
+    colorParserContext = document.createElement("canvas").getContext("2d");
   }
 
-  const bigint = parseInt(hex, 16);
-  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+  return colorParserContext;
+}
+
+function parseResolvedColor(color: string): [number, number, number] | null {
+  const ctx = getColorParserContext();
+  if (!ctx) {
+    return null;
+  }
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = color;
+
+  const normalizedColor = ctx.fillStyle;
+  if (normalizedColor.startsWith("#")) {
+    let hex = normalizedColor.slice(1);
+    if (hex.length === 3) {
+      hex = hex
+        .split("")
+        .map((char) => char + char)
+        .join("");
+    }
+
+    if (/^[0-9a-fA-F]{6}$/.test(hex)) {
+      const value = Number.parseInt(hex, 16);
+      return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+    }
+  }
+
+  const rgbMatch = normalizedColor.match(/[\d.]+/g);
+
+  if (!rgbMatch || rgbMatch.length < 3) {
+    return null;
+  }
+
+  return [
+    Math.round(Number.parseFloat(rgbMatch[0])),
+    Math.round(Number.parseFloat(rgbMatch[1])),
+    Math.round(Number.parseFloat(rgbMatch[2])),
+  ];
+}
+
+function resolveCssVariable(color: string, element: HTMLElement): string {
+  const varMatch = color.trim().match(/^var\(\s*(--[\w-]+)\s*(?:,\s*(.+))?\)$/);
+  if (!varMatch) return color;
+
+  const [, variableName, fallback] = varMatch;
+  const resolved = getComputedStyle(element).getPropertyValue(variableName).trim();
+  if (resolved) return resolved;
+  return fallback?.trim() || color;
+}
+
+function parseColor(color: string, element: HTMLElement): [number, number, number] {
+  const resolvedColor = resolveCssVariable(color, element);
+  return parseResolvedColor(resolvedColor) ?? [255, 255, 255];
 }
 
 function createParticle(
@@ -123,10 +173,10 @@ export function ParticleField({
   const minParticleSize = particleSize.min;
   const maxParticleSize = particleSize.max;
 
-  const particleColors = useMemo(() => {
-    const colors = Array.isArray(particleColor) ? particleColor : [particleColor];
-    return colors.map(parseHexColor);
-  }, [particleColor]);
+  const particleColorValues = useMemo(
+    () => (Array.isArray(particleColor) ? particleColor : [particleColor]),
+    [particleColor]
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -140,7 +190,9 @@ export function ParticleField({
     let animationFrameId: number;
     let rect = container.getBoundingClientRect();
     let dpr = window.devicePixelRatio || 1;
-    let canvasRect = canvas.getBoundingClientRect();
+    const particleColors = particleColorValues.map((color) =>
+      parseColor(color, container)
+    );
     
     // Mouse state
     const mouse = {
@@ -159,10 +211,6 @@ export function ParticleField({
 
       canvas.style.width = `${rect.width}px`;
       canvas.style.height = `${rect.height}px`;
-
-      // Cache canvas rect for pointer coordinate calculations
-      canvasRect = canvas.getBoundingClientRect();
-
       particles = [];
       for (let i = 0; i < particleCount; i++) {
         particles.push(
@@ -229,9 +277,8 @@ export function ParticleField({
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Use cached canvas rect to avoid layout reads on every pointer move
-      mouse.x = e.clientX - canvasRect.left;
-      mouse.y = e.clientY - canvasRect.top;
+      mouse.x = e.offsetX;
+      mouse.y = e.offsetY;
     };
     
     const handleMouseLeave = () => {
@@ -254,7 +301,7 @@ export function ParticleField({
       canvas.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [particleCount, interactionRadius, speed, particleColors, minParticleSize, maxParticleSize]);
+  }, [particleCount, interactionRadius, speed, particleColorValues, minParticleSize, maxParticleSize]);
 
   return (
     <motion.div

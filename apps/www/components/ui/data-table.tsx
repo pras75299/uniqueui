@@ -23,6 +23,12 @@ function normalizePageSize(input: unknown, fallback: number): number {
   return n;
 }
 
+function normalizeFreezeCount(input: unknown): number {
+  const n = Math.floor(Number(input));
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return n;
+}
+
 function defaultGetRowKey(
   row: Record<string, React.ReactNode>,
   index: number
@@ -237,8 +243,8 @@ export function DataTable({
   const n = columns.length;
   const isLeftFreeze = freezeColumns === "left" || freezeColumns === "both";
   const isRightFreeze = freezeColumns === "right" || freezeColumns === "both";
-  const leftCount = freezeLeftCountProp ?? freezeCount;
-  const rightCount = freezeRightCountProp ?? freezeCount;
+  const leftCount = normalizeFreezeCount(freezeLeftCountProp ?? freezeCount);
+  const rightCount = normalizeFreezeCount(freezeRightCountProp ?? freezeCount);
   const leftFreezeCount = isLeftFreeze ? Math.min(leftCount, n) : 0;
   let rightFreezeCount = isRightFreeze ? Math.min(rightCount, n) : 0;
   if (freezeColumns === "both" && leftFreezeCount + rightFreezeCount > n) {
