@@ -2,7 +2,7 @@
 
 import { componentsList } from "@/config/components";
 import Link from "next/link";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { ArrowRight, Search, Layers } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 import { cn } from "@/lib/utils";
@@ -194,36 +194,31 @@ export default function ComponentsIndex() {
       </motion.div>
 
       {/* ── Results count ── */}
-      <AnimatePresence mode="wait">
-        <motion.p
-          key={`${search}-${activeCategory}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className={cn("text-sm", isDark ? "text-neutral-600" : "text-neutral-400")}
-        >
-          {filtered.length === componentsList.length
-            ? `All ${componentsList.length} components`
-            : `${filtered.length} of ${componentsList.length} components`}
-        </motion.p>
-      </AnimatePresence>
+      <motion.p
+        key={`${search}-${activeCategory}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+        className={cn("text-sm", isDark ? "text-neutral-600" : "text-neutral-400")}
+      >
+        {filtered.length === componentsList.length
+          ? `All ${componentsList.length} components`
+          : `${filtered.length} of ${componentsList.length} components`}
+      </motion.p>
 
       {/* ── Grid ── */}
       {filtered.length > 0 ? (
         <motion.div
+          key={activeCategory + search}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
-          <AnimatePresence mode="popLayout">
-            {filtered.map((component) => (
+          {filtered.map((component) => (
               <motion.div
                 key={component.slug}
-                layout
                 variants={cardVariants}
-                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.18 } }}
               >
                 <Link href={`/components/${component.slug}`} className="block h-full">
                   <div
@@ -291,7 +286,6 @@ export default function ComponentsIndex() {
                 </Link>
               </motion.div>
             ))}
-          </AnimatePresence>
         </motion.div>
       ) : (
         /* ── Empty state ── */
