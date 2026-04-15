@@ -6,13 +6,8 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
-import { ArrowLeft, BookOpen, Layers, LayoutTemplate } from "lucide-react";
-
-const NAV = [
-  { label: "Components", href: "/components", icon: Layers },
-  { label: "Docs", href: "/docs", icon: BookOpen },
-  { label: "Templates", href: "/templates", icon: LayoutTemplate },
-];
+import { SECTION_NAV } from "@/config/navigation";
+import { ArrowLeft } from "lucide-react";
 
 export default function TemplatesLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -33,7 +28,6 @@ export default function TemplatesLayout({ children }: { children: React.ReactNod
       animate={{ backgroundColor: isDark ? "#0a0a0a" : "#fafafa" }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      {/* ── Top Nav ── */}
       <header
         className={cn(
           "sticky top-0 z-50 border-b backdrop-blur-md",
@@ -41,7 +35,6 @@ export default function TemplatesLayout({ children }: { children: React.ReactNod
         )}
       >
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between gap-6">
-          {/* Left: back + logo */}
           <div className="flex items-center gap-4">
             <Link
               href="/"
@@ -62,9 +55,8 @@ export default function TemplatesLayout({ children }: { children: React.ReactNod
             </Link>
           </div>
 
-          {/* Center: section nav */}
           <nav className="flex items-center gap-1">
-            {NAV.map(({ label, href, icon: Icon }) => {
+            {SECTION_NAV.map(({ label, href, icon: Icon }) => {
               const isActive = pathname === href || pathname.startsWith(href + "/");
               return (
                 <Link
@@ -93,12 +85,10 @@ export default function TemplatesLayout({ children }: { children: React.ReactNod
             })}
           </nav>
 
-          {/* Right */}
           <ThemeToggle />
         </div>
       </header>
 
-      {/* ── Page content ── */}
       <main>{children}</main>
     </motion.div>
   );

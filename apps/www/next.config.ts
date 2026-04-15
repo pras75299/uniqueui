@@ -32,6 +32,15 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname, "../.."),
   },
   compress: true,
+  async redirects() {
+    return [
+      {
+        source: "/docs/:slug",
+        destination: "/components/:slug",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
