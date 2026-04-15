@@ -24,11 +24,6 @@ export default function ComponentsLayout({
 
   const isOverview = pathname === "/components";
 
-  const activeSection =
-    SECTION_NAV.find(
-      (s) => pathname === s.href || pathname.startsWith(s.href + "/"),
-    )?.href ?? "/components";
-
   // Scroll active component link into view when pathname changes
   useEffect(() => {
     if (activeItemRef.current) {
