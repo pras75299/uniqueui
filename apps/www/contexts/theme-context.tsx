@@ -39,7 +39,8 @@ function subscribe(onStoreChange: () => void) {
       const s = localStorage.getItem(STORAGE_KEY) as Theme | null;
       if (s === "light" || s === "dark") {
         themeCache = s;
-        onStoreChange();
+        document.documentElement.dataset.theme = s;
+        emit();
       }
     } catch {
       // ignore

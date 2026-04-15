@@ -116,7 +116,15 @@ export default function ComponentsLayout({
           {/* Mobile sidebar toggle — only on detail pages */}
           {!isOverview && (
             <button
+              type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={
+                isMobileMenuOpen
+                  ? "Close components menu"
+                  : "Open components menu"
+              }
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="components-sidebar"
               className={cn(
                 "lg:hidden p-2",
                 isDark
@@ -175,6 +183,7 @@ export default function ComponentsLayout({
 
         {/* ── Sidebar (component list only) ── */}
         <aside
+          id="components-sidebar"
           className={cn(
             "fixed top-14 left-0 z-40 h-[calc(100vh-3.5rem)] w-64 border-r transition-transform duration-300 ease-in-out lg:translate-x-0",
             isDark

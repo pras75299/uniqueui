@@ -196,6 +196,8 @@ export default function ComponentsIndex() {
       {/* ── Results count ── */}
       <motion.p
         key={`${search}-${activeCategory}`}
+        role="status"
+        aria-live="polite"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.2 }}
