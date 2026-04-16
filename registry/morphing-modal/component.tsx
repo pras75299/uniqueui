@@ -11,6 +11,7 @@ export interface MorphingModalProps {
   overlayClassName?: string;
   layoutId?: string;
   theme?: "light" | "dark";
+  ariaLabel?: string;
 }
 
 export function MorphingModal({
@@ -21,6 +22,7 @@ export function MorphingModal({
   overlayClassName,
   layoutId,
   theme = "dark",
+  ariaLabel,
 }: MorphingModalProps) {
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -60,6 +62,9 @@ export function MorphingModal({
           {/* Modal */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label={ariaLabel}
               layoutId={layoutId}
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -135,10 +140,11 @@ export function MorphingModalTrigger({
   className,
   layoutId,
   onClick,
-  theme = "dark",
+  _theme = "dark",
 }: MorphingModalTriggerProps) {
   return (
-    <motion.div
+    <motion.button
+      type="button"
       layoutId={layoutId}
       onClick={onClick}
       className={cn("cursor-pointer", className)}
@@ -147,6 +153,6 @@ export function MorphingModalTrigger({
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
       {children}
-    </motion.div>
+    </motion.button>
   );
 }

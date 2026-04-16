@@ -27,7 +27,7 @@ const DefaultBellIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export type NavItem = {
   id: string | number;
   icon: ReactElement;
-  label: string;
+  label?: string;
   ariaLabel?: string;
   onClick?: () => void;
 };
@@ -64,14 +64,13 @@ export const LimelightNav = ({
   theme = "dark",
   ...props
 }: LimelightNavProps) => {
-  const [selectedIndex, setSelectedIndex] = useState(() => {
+  const [activeIndex, setActiveIndex] = useState(() => {
     if (items.length === 0) return -1;
     return Math.min(Math.max(0, defaultActiveIndex), items.length - 1);
   });
-  const activeIndex =
-    items.length === 0
-      ? -1
-      : Math.min(Math.max(selectedIndex, 0), items.length - 1);
+
+  // Clamp activeIndex to valid range during render — avoids setState-in-effect anti-pattern
+  const safeActiveIndex = items.length === 0 ? -1 : Math.min(activeIndex, items.length - 1);
 
   const componentId = useId();
 
@@ -80,7 +79,7 @@ export const LimelightNav = ({
   }
 
   const handleItemClick = (index: number, itemOnClick?: () => void) => {
-    setSelectedIndex(index);
+    setActiveIndex(index);
     onTabChange?.(index);
     itemOnClick?.();
   };
@@ -95,7 +94,13 @@ export const LimelightNav = ({
       {...props}
     >
       {items.map(({ id, icon, label, ariaLabel, onClick }, index) => {
-        const isActive = activeIndex === index;
+        const isActive = safeActiveIndex === index;
+
+        if (!label && !ariaLabel) {
+          console.warn(
+            `LimelightNav: Item with id "${id}" is missing both 'label' and 'ariaLabel'. An accessible name is required for screen readers.`
+          );
+        }
 
         return (
           <button
@@ -149,7 +154,6 @@ export const LimelightNav = ({
               }}
             >
               {cloneElement(icon, {
-                "aria-hidden": true,
                 className: cn(
                   "w-6 h-6",
                   (icon.props as React.HTMLAttributes<HTMLElement>).className,

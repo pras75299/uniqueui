@@ -4,15 +4,15 @@ import React, { useRef, useEffect, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "motion/react";
 
-type Particle = {
-  x: number;
-  y: number;
-  size: number;
-  vx: number;
-  vy: number;
-  density: number;
-  color: [number, number, number];
-};
+export interface ParticleFieldProps
+  extends Omit<HTMLMotionProps<"div">, "onAnimationStart" | "onDragStart" | "onDragEnd" | "onDrag"> {
+  particleCount?: number;
+  particleColor?: string | string[];
+  interactionRadius?: number;
+  particleSize?: { min: number; max: number };
+  speed?: number;
+}
+
 
 let colorParserContext: CanvasRenderingContext2D | null = null;
 
@@ -81,84 +81,6 @@ function parseColor(color: string, element: HTMLElement): [number, number, numbe
   return parseResolvedColor(resolvedColor) ?? [255, 255, 255];
 }
 
-function createParticle(
-  canvasWidth: number,
-  canvasHeight: number,
-  particleSize: { min: number; max: number },
-  speed: number,
-  colors: Array<[number, number, number]>
-): Particle {
-  const color = colors[Math.floor(Math.random() * colors.length)] ?? [255, 255, 255];
-
-  return {
-    x: Math.random() * canvasWidth,
-    y: Math.random() * canvasHeight,
-    size:
-      Math.random() * (particleSize.max - particleSize.min) +
-      particleSize.min,
-    vx: (Math.random() - 0.5) * speed,
-    vy: (Math.random() - 0.5) * speed,
-    density: Math.random() * 30 + 10,
-    color,
-  };
-}
-
-function drawParticle(
-  ctx: CanvasRenderingContext2D,
-  particle: Particle,
-  particleSize: { min: number; max: number }
-) {
-  ctx.fillStyle = `rgba(${particle.color.join(", ")}, ${
-    particle.size / particleSize.max
-  })`;
-  ctx.beginPath();
-  ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-  ctx.closePath();
-  ctx.fill();
-}
-
-function updateParticlePosition(
-  particle: Particle,
-  canvasWidth: number,
-  canvasHeight: number,
-  mouse: { x: number; y: number },
-  interactionRadius: number
-) {
-  particle.x += particle.vx;
-  particle.y += particle.vy;
-
-  if (particle.x < 0 || particle.x > canvasWidth) particle.vx *= -1;
-  if (particle.y < 0 || particle.y > canvasHeight) particle.vy *= -1;
-
-  if (mouse.x === -1000 || mouse.y === -1000) {
-    return;
-  }
-
-  const dx = mouse.x - particle.x;
-  const dy = mouse.y - particle.y;
-  const distance = Math.sqrt(dx * dx + dy * dy);
-
-  if (distance === 0 || distance >= interactionRadius) {
-    return;
-  }
-
-  const forceDirectionX = dx / distance;
-  const forceDirectionY = dy / distance;
-  const force = (interactionRadius - distance) / interactionRadius;
-
-  particle.x += forceDirectionX * force * particle.density * -1;
-  particle.y += forceDirectionY * force * particle.density * -1;
-}
-
-export interface ParticleFieldProps
-  extends Omit<HTMLMotionProps<"div">, "onAnimationStart" | "onDragStart" | "onDragEnd" | "onDrag"> {
-  particleCount?: number;
-  particleColor?: string | string[];
-  interactionRadius?: number;
-  particleSize?: { min: number; max: number };
-  speed?: number;
-}
-
 export function ParticleField({
   className,
   particleCount = 100,
@@ -170,8 +92,6 @@ export function ParticleField({
 }: ParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const minParticleSize = particleSize.min;
-  const maxParticleSize = particleSize.max;
 
   const particleColorValues = useMemo(
     () => (Array.isArray(particleColor) ? particleColor : [particleColor]),
@@ -200,6 +120,78 @@ export function ParticleField({
       y: -1000,
     };
 
+    // eslint-disable-next-line react-hooks/unsupported-syntax
+    class Particle {
+      x: number;
+      y: number;
+      size: number;
+      baseX: number;
+      baseY: number;
+      vx: number;
+      vy: number;
+      density: number;
+      color: [number, number, number];
+
+      constructor(canvasWidth: number, canvasHeight: number) {
+        const color =
+          particleColors[Math.floor(Math.random() * particleColors.length)] ??
+          [255, 255, 255];
+        this.x = Math.random() * canvasWidth;
+        this.y = Math.random() * canvasHeight;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.size =
+          Math.random() * (particleSize.max - particleSize.min) +
+          particleSize.min;
+        this.vx = (Math.random() - 0.5) * speed;
+        this.vy = (Math.random() - 0.5) * speed;
+        this.density = Math.random() * 30 + 10;
+        this.color = color;
+      }
+
+      draw(ctx: CanvasRenderingContext2D) {
+        ctx.fillStyle = `rgba(${this.color.join(", ")}, ${
+          this.size / particleSize.max
+        })`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      update(canvasWidth: number, canvasHeight: number) {
+        // Natural drifting
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Bounce off walls
+        if (this.x < 0 || this.x > canvasWidth) this.vx *= -1;
+        if (this.y < 0 || this.y > canvasHeight) this.vy *= -1;
+
+        // Interactive mouse physics (Repulsion)
+        if (mouse.x !== -1000 && mouse.y !== -1000) {
+            const dx = mouse.x - this.x;
+            const dy = mouse.y - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < interactionRadius) {
+                const forceDirectionX = dx / distance;
+                const forceDirectionY = dy / distance;
+                
+                // Max distance, past that the force is 0
+                const force = (interactionRadius - distance) / interactionRadius;
+                
+                // Repulse direction
+                const directionX = (forceDirectionX * force * this.density) * -1;
+                const directionY = (forceDirectionY * force * this.density) * -1;
+                
+                this.x += directionX;
+                this.y += directionY;
+            }
+        }
+      }
+    }
+
     const setupCanvas = () => {
       rect = container.getBoundingClientRect();
       dpr = window.devicePixelRatio || 1;
@@ -213,15 +205,7 @@ export function ParticleField({
       canvas.style.height = `${rect.height}px`;
       particles = [];
       for (let i = 0; i < particleCount; i++) {
-        particles.push(
-          createParticle(
-            rect.width,
-            rect.height,
-            { min: minParticleSize, max: maxParticleSize },
-            speed,
-            particleColors
-          )
-        );
+        particles.push(new Particle(rect.width, rect.height));
       }
     };
 
@@ -255,18 +239,8 @@ export function ParticleField({
       }
 
       particles.forEach((particle) => {
-        updateParticlePosition(
-          particle,
-          rect.width,
-          rect.height,
-          mouse,
-          interactionRadius
-        );
-        drawParticle(
-          ctx,
-          particle,
-          { min: minParticleSize, max: maxParticleSize }
-        );
+        particle.update(rect.width, rect.height);
+        particle.draw(ctx);
       });
 
       animationFrameId = requestAnimationFrame(animate);
@@ -301,7 +275,7 @@ export function ParticleField({
       canvas.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [particleCount, interactionRadius, speed, particleColorValues, minParticleSize, maxParticleSize]);
+  }, [particleCount, particleSize.max, particleSize.min, interactionRadius, speed, particleColorValues]);
 
   return (
     <motion.div

@@ -53,13 +53,13 @@ export function AnimatedTimeline({
   const resolvedLineColor = theme === "light" ? "rgba(0,0,0,0.08)" : lineColor;
 
   if (resolvedVariant === "horizontal") {
-    return <HorizontalTimeline items={items} className={className} lineColor={resolvedLineColor} theme={theme} />;
+    return <HorizontalTimeline items={items} className={className} lineColor={resolvedLineColor} />;
   }
   if (resolvedVariant === "cards") {
-    return <CardsTimeline items={items} className={className} lineColor={resolvedLineColor} theme={theme} />;
+    return <CardsTimeline items={items} className={className} lineColor={resolvedLineColor} />;
   }
   if (resolvedVariant === "steps") {
-    return <StepsTimeline items={items} className={className} theme={theme} />;
+    return <StepsTimeline items={items} className={className} />;
   }
 
   // ── Vertical (default) ───────────────────────────────────────────────────
@@ -71,7 +71,7 @@ export function AnimatedTimeline({
       />
       <div className="space-y-6">
         {items.map((item, index) => (
-          <TimelineNode key={item.id} item={item} index={index} theme={theme} />
+          <TimelineNode key={item.id} item={item} index={index} />
         ))}
       </div>
     </div>
@@ -80,11 +80,10 @@ export function AnimatedTimeline({
 
 // ─── Vertical node ───────────────────────────────────────────────────────────
 
-function TimelineNode({ item, index, theme = "dark" }: { item: TimelineItem; index: number; theme?: "light" | "dark" }) {
+function TimelineNode({ item, index }: { item: TimelineItem; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
   const color = item.color || "#a855f7";
-  const isDark = theme === "dark";
 
   return (
     <motion.div
@@ -110,7 +109,7 @@ function TimelineNode({ item, index, theme = "dark" }: { item: TimelineItem; ind
       >
         {item.icon
           ? <span className="text-[11px] leading-none">{item.icon}</span>
-          : <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: isDark ? "#fff" : "#1f2937", opacity: 0.9 }} />
+          : <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: "#fff", opacity: 0.9 }} />
         }
       </motion.div>
 
@@ -126,9 +125,9 @@ function TimelineNode({ item, index, theme = "dark" }: { item: TimelineItem; ind
       {/* Text */}
       <div className="flex-1 min-w-0 pb-1">
         {item.date && <span className="text-[11px] text-neutral-500 mb-0.5 block">{item.date}</span>}
-        <h4 className={cn("text-sm font-semibold leading-snug", isDark ? "text-white" : "text-neutral-900")}>{item.title}</h4>
+        <h4 className="text-sm font-semibold text-white leading-snug">{item.title}</h4>
         {item.description && (
-          <p className={cn("text-xs mt-1 leading-relaxed", isDark ? "text-neutral-400" : "text-neutral-600")}>{item.description}</p>
+          <p className="text-xs text-neutral-400 mt-1 leading-relaxed">{item.description}</p>
         )}
       </div>
     </motion.div>
@@ -138,7 +137,7 @@ function TimelineNode({ item, index, theme = "dark" }: { item: TimelineItem; ind
 // ─── Horizontal timeline ──────────────────────────────────────────────────────
 // Animation: connecting line grows left-to-right, dots pop in with spring
 
-function HorizontalTimeline({ items, className, lineColor, theme = "dark" }: {
+function HorizontalTimeline({ items, className, lineColor, _theme = "dark" }: {
   items: TimelineItem[]; className?: string; lineColor: string; theme?: "light" | "dark";
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -191,7 +190,7 @@ function HorizontalTimeline({ items, className, lineColor, theme = "dark" }: {
                 >
                   {item.icon
                     ? <span className="text-[11px] leading-none">{item.icon}</span>
-                    : <div className={cn("h-2.5 w-2.5 rounded-full", theme === "dark" ? "bg-white/90" : "bg-neutral-800/90")} />
+                    : <div className="h-2.5 w-2.5 rounded-full bg-white/90" />
                   }
                 </motion.div>
 
@@ -212,9 +211,9 @@ function HorizontalTimeline({ items, className, lineColor, theme = "dark" }: {
               {/* ── Text below dot ────────────────────────────────────────── */}
               <div className="text-center mt-4 px-1">
                 {item.date && <span className="text-[11px] text-neutral-500 mb-0.5 block">{item.date}</span>}
-                <h4 className={cn("text-sm font-semibold leading-snug", theme === "dark" ? "text-white" : "text-neutral-900")}>{item.title}</h4>
+                <h4 className="text-sm font-semibold text-white leading-snug">{item.title}</h4>
                 {item.description && (
-                  <p className={cn("text-xs mt-1 max-w-[170px]", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>{item.description}</p>
+                  <p className="text-xs text-neutral-400 mt-1 max-w-[170px]">{item.description}</p>
                 )}
               </div>
             </motion.div>
@@ -228,7 +227,7 @@ function HorizontalTimeline({ items, className, lineColor, theme = "dark" }: {
 // ─── Cards timeline ───────────────────────────────────────────────────────────
 // Animation: center vertical line, items alternate left/right and slide in
 
-function CardsTimeline({ items, className, lineColor, theme = "dark" }: {
+function CardsTimeline({ items, className, lineColor, _theme = "dark" }: {
   items: TimelineItem[]; className?: string; lineColor: string; theme?: "light" | "dark";
 }) {
   return (
@@ -241,7 +240,7 @@ function CardsTimeline({ items, className, lineColor, theme = "dark" }: {
           const isLeft = index % 2 === 0;
           const color = item.color || "#a855f7";
           return (
-            <CardsTimelineRow key={item.id} item={item} index={index} isLeft={isLeft} color={color} theme={theme} />
+            <CardsTimelineRow key={item.id} item={item} index={index} isLeft={isLeft} color={color} />
           );
         })}
       </div>
@@ -249,14 +248,11 @@ function CardsTimeline({ items, className, lineColor, theme = "dark" }: {
   );
 }
 
-function CardsTimelineRow({ item, index, isLeft, color, theme = "dark" }: {
-  item: TimelineItem; index: number; isLeft: boolean; color: string; theme?: "light" | "dark";
+function CardsTimelineRow({ item, index, isLeft, color }: {
+  item: TimelineItem; index: number; isLeft: boolean; color: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
-  const cardClass = theme === "dark"
-    ? "max-w-[220px] rounded-xl border border-neutral-800 bg-neutral-950 p-4"
-    : "max-w-[220px] rounded-xl border border-neutral-200 bg-neutral-50 p-4";
 
   return (
     <motion.div
@@ -270,10 +266,10 @@ function CardsTimelineRow({ item, index, isLeft, color, theme = "dark" }: {
             initial={{ opacity: 0, x: -32 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -32 }}
             transition={{ type: "spring", stiffness: 90, damping: 16, delay: index * 0.08 }}
-            className={cardClass}
+            className="max-w-[220px] rounded-xl border border-neutral-800 bg-neutral-950 p-4"
             style={{ borderColor: `${color}22` }}
           >
-            <CardContent item={item} color={color} isInView={isInView} index={index} theme={theme} />
+            <CardContent item={item} color={color} isInView={isInView} index={index} />
           </motion.div>
         ) : null}
       </div>
@@ -293,7 +289,7 @@ function CardsTimelineRow({ item, index, isLeft, color, theme = "dark" }: {
       >
         {item.icon
           ? <span className="text-[11px] leading-none">{item.icon}</span>
-          : <div className={cn("h-2.5 w-2.5 rounded-full", theme === "dark" ? "bg-white/90" : "bg-neutral-800/90")} />
+          : <div className="h-2.5 w-2.5 rounded-full bg-white/90" />
         }
       </motion.div>
 
@@ -304,10 +300,10 @@ function CardsTimelineRow({ item, index, isLeft, color, theme = "dark" }: {
             initial={{ opacity: 0, x: 32 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 32 }}
             transition={{ type: "spring", stiffness: 90, damping: 16, delay: index * 0.08 }}
-            className={cardClass}
+            className="max-w-[220px] rounded-xl border border-neutral-800 bg-neutral-950 p-4"
             style={{ borderColor: `${color}22` }}
           >
-            <CardContent item={item} color={color} isInView={isInView} index={index} theme={theme} />
+            <CardContent item={item} color={color} isInView={isInView} index={index} />
           </motion.div>
         ) : null}
       </div>
@@ -315,10 +311,9 @@ function CardsTimelineRow({ item, index, isLeft, color, theme = "dark" }: {
   );
 }
 
-function CardContent({ item, color, isInView, index, theme = "dark" }: {
-  item: TimelineItem; color: string; isInView: boolean; index: number; theme?: "light" | "dark";
+function CardContent({ item, color, isInView, index }: {
+  item: TimelineItem; color: string; isInView: boolean; index: number;
 }) {
-  const isDark = theme === "dark";
   return (
     <>
       {item.date && (
@@ -336,7 +331,7 @@ function CardContent({ item, color, isInView, index, theme = "dark" }: {
         initial={{ opacity: 0, y: 6 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
         transition={{ type: "spring", stiffness: 120, damping: 16, delay: index * 0.08 + 0.18 }}
-        className={cn("text-sm font-semibold", isDark ? "text-white" : "text-neutral-900")}
+        className="text-sm font-semibold text-white"
       >
         {item.title}
       </motion.h4>
@@ -345,7 +340,7 @@ function CardContent({ item, color, isInView, index, theme = "dark" }: {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 0.6 } : { opacity: 0 }}
           transition={{ delay: index * 0.08 + 0.25, duration: 0.4 }}
-          className={cn("text-xs mt-1 leading-relaxed", isDark ? "text-neutral-400" : "text-neutral-600")}
+          className="text-xs text-neutral-400 mt-1 leading-relaxed"
         >
           {item.description}
         </motion.p>
@@ -357,22 +352,21 @@ function CardContent({ item, color, isInView, index, theme = "dark" }: {
 // ─── Steps timeline ───────────────────────────────────────────────────────────
 // Animation: numbered circle fills radially, connector bar scales width, text blurs in
 
-function StepsTimeline({ items, className, theme = "dark" }: { items: TimelineItem[]; className?: string; theme?: "light" | "dark" }) {
+function StepsTimeline({ items, className, _theme = "dark" }: { items: TimelineItem[]; className?: string; theme?: "light" | "dark" }) {
   return (
     <div className={cn("space-y-0", className)}>
       {items.map((item, index) => (
-        <StepNode key={item.id} item={item} index={index} total={items.length} theme={theme} />
+        <StepNode key={item.id} item={item} index={index} total={items.length} />
       ))}
     </div>
   );
 }
 
-function StepNode({ item, index, total, theme = "dark" }: { item: TimelineItem; index: number; total: number; theme?: "light" | "dark" }) {
+function StepNode({ item, index, total }: { item: TimelineItem; index: number; total: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.4 });
   const color = item.color || "#a855f7";
   const isLast = index === total - 1;
-  const isDark = theme === "dark";
 
   return (
     <div ref={ref} className="flex gap-4">
@@ -424,9 +418,9 @@ function StepNode({ item, index, total, theme = "dark" }: { item: TimelineItem; 
             {item.date}
           </span>
         )}
-        <h4 className={cn("text-sm font-semibold", isDark ? "text-white" : "text-neutral-900")}>{item.title}</h4>
+        <h4 className="text-sm font-semibold text-white">{item.title}</h4>
         {item.description && (
-          <p className={cn("text-xs mt-1 leading-relaxed", isDark ? "text-neutral-400" : "text-neutral-600")}>{item.description}</p>
+          <p className="text-xs text-neutral-400 mt-1 leading-relaxed">{item.description}</p>
         )}
       </motion.div>
     </div>

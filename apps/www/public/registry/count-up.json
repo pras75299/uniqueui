@@ -1,0 +1,20 @@
+{
+  "name": "count-up",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "count-up/component.tsx",
+      "content": "\"use client\";\nimport { cn } from \"@/lib/utils\";\nimport { useInView } from \"motion/react\";\nimport { useRef, useState, useEffect } from \"react\";\n\nexport interface CountUpProps {\n  /** Starting value */\n  from?: number;\n  /** Ending value */\n  to: number;\n  /** Animation duration in seconds */\n  duration?: number;\n  /** Decimal places to display */\n  decimals?: number;\n  /** String prepended to the number (e.g. \"$\") */\n  prefix?: string;\n  /** String appended to the number (e.g. \"k+\") */\n  suffix?: string;\n  /** Thousands separator character. Pass \"\" to disable */\n  separator?: string;\n  className?: string;\n  /** Only animate once on first enter */\n  once?: boolean;\n  theme?: \"light\" | \"dark\";\n}\n\nexport function CountUp({\n  from = 0,\n  to,\n  duration = 2,\n  decimals = 0,\n  prefix = \"\",\n  suffix = \"\",\n  separator = \",\",\n  className,\n  once = true,\n  theme = \"dark\",\n}: CountUpProps) {\n  const ref = useRef<HTMLSpanElement>(null);\n  const isInView = useInView(ref, { once, amount: 0.5 });\n  const [value, setValue] = useState(from);\n\n  useEffect(() => {\n    if (!isInView) return;\n\n    let startTime: number | null = null;\n    let raf: number;\n\n    const step = (timestamp: number) => {\n      if (!startTime) startTime = timestamp;\n      const elapsed = timestamp - startTime;\n      const progress = Math.min(elapsed / (duration * 1000), 1);\n      // ease-out cubic\n      const eased = 1 - Math.pow(1 - progress, 3);\n      const current = from + (to - from) * eased;\n      setValue(current);\n      if (progress < 1) {\n        raf = requestAnimationFrame(step);\n      } else {\n        setValue(to);\n      }\n    };\n\n    raf = requestAnimationFrame(step);\n    return () => cancelAnimationFrame(raf);\n  }, [isInView, from, to, duration]);\n\n  const formatted = (() => {\n    const fixed = value.toFixed(decimals);\n    if (!separator) return fixed;\n    const [integer, decimal] = fixed.split(\".\");\n    const withSep = integer.replace(/\\B(?=(\\d{3})+(?!\\d))/g, separator);\n    return decimal !== undefined ? `${withSep}.${decimal}` : withSep;\n  })();\n\n  return (\n    <span ref={ref} className={cn(\"tabular-nums\", className)}>\n      {prefix}\n      {formatted}\n      {suffix}\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util"
+    }
+  ]
+}

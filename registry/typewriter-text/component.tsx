@@ -28,7 +28,7 @@ export function TypewriterText({
   delayBetweenWords = 1500,
   loop = true,
   cursor = true,
-  theme = "dark",
+  _theme = "dark",
 }: TypewriterTextProps) {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");

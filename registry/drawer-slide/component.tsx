@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useCallback } from "react";
-import { motion, AnimatePresence, useDragControls } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
 export type DrawerPosition = "left" | "right" | "top" | "bottom";
 
@@ -16,6 +16,7 @@ export interface DrawerSlideProps {
   height?: string;
   dragToClose?: boolean;
   theme?: "light" | "dark";
+  ariaLabel?: string;
 }
 
 const positionStyles: Record<
@@ -74,6 +75,7 @@ export function DrawerSlide({
   height = "400px",
   dragToClose = true,
   theme = "dark",
+  ariaLabel,
 }: DrawerSlideProps) {
   const config = positionStyles[position];
   const isHorizontal = position === "left" || position === "right";
@@ -115,6 +117,9 @@ export function DrawerSlide({
 
           {/* Drawer */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={ariaLabel}
             initial={config.initial}
             animate={config.animate}
             exit={config.exit}

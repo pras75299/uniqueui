@@ -88,8 +88,6 @@ export function NotificationStack({
 
   return (
     <div
-      aria-live="polite"
-      aria-atomic="false"
       className={cn(
         "fixed z-[100] flex flex-col gap-2 w-[380px] max-w-[calc(100vw-2rem)]",
         positionStyles[position],
@@ -124,6 +122,7 @@ function NotificationItem({
   theme?: "light" | "dark";
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
+  const [_progress, setProgress] = useState(100);
   const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -131,6 +130,7 @@ function NotificationItem({
 
     timeoutRef.current = window.setTimeout(() => {
       onRemove(id);
+      setProgress(0);
     }, duration);
 
     return () => {
@@ -144,7 +144,6 @@ function NotificationItem({
 
   return (
     <motion.div
-      role="status"
       layout
       initial={{
         opacity: 0,
@@ -167,6 +166,7 @@ function NotificationItem({
         stiffness: 400,
         damping: 30,
       }}
+      role="status"
       className={cn(
         "relative overflow-hidden rounded-lg border backdrop-blur-md p-4 shadow-2xl",
         typeStyles[type]
@@ -183,7 +183,6 @@ function NotificationItem({
           )}
         </div>
         <button
-          type="button"
           onClick={() => onRemove(id)}
           aria-label={`Dismiss ${title} notification`}
           className={cn("flex-shrink-0 transition-colors text-sm", theme === "dark" ? "text-neutral-500 hover:text-white" : "text-neutral-600 hover:text-neutral-900")}

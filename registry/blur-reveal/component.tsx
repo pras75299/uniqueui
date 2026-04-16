@@ -24,7 +24,7 @@ export function BlurReveal({
   duration = 0.6,
   animateBy = "characters",
   once = true,
-  theme = "dark",
+  _theme = "dark",
 }: BlurRevealProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once, amount: 0.3 });

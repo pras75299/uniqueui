@@ -10,17 +10,8 @@ export interface MorphingModalProps {
   className?: string;
   overlayClassName?: string;
   layoutId?: string;
-  ariaLabel?: string;
-  ariaLabelledBy?: string;
   theme?: "light" | "dark";
-}
-
-function getFocusableElements(container: HTMLElement): HTMLElement[] {
-  return Array.from(
-    container.querySelectorAll<HTMLElement>(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )
-  );
+  ariaLabel?: string;
 }
 
 export function MorphingModal({
@@ -30,14 +21,9 @@ export function MorphingModal({
   className,
   overlayClassName,
   layoutId,
-  ariaLabel,
-  ariaLabelledBy,
   theme = "dark",
+  ariaLabel,
 }: MorphingModalProps) {
-  const dialogRef = React.useRef<HTMLDivElement>(null);
-  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
-  const previousFocusRef = React.useRef<HTMLElement | null>(null);
-
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -47,51 +33,14 @@ export function MorphingModal({
 
   useEffect(() => {
     if (isOpen) {
-      previousFocusRef.current = document.activeElement as HTMLElement | null;
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
-      closeButtonRef.current?.focus();
     }
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
-      previousFocusRef.current?.focus();
     };
   }, [isOpen, handleEscape]);
-
-  useEffect(() => {
-    if (!isOpen || !dialogRef.current) {
-      return;
-    }
-
-    const dialog = dialogRef.current;
-    const handleTab = (event: KeyboardEvent) => {
-      if (event.key !== "Tab") {
-        return;
-      }
-
-      const focusable = getFocusableElements(dialog);
-      if (focusable.length === 0) {
-        event.preventDefault();
-        dialog.focus();
-        return;
-      }
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    dialog.addEventListener("keydown", handleTab);
-    return () => dialog.removeEventListener("keydown", handleTab);
-  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -113,16 +62,13 @@ export function MorphingModal({
           {/* Modal */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
-              layoutId={layoutId}
-              ref={dialogRef}
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
               role="dialog"
               aria-modal="true"
               aria-label={ariaLabel}
-              aria-labelledby={ariaLabelledBy}
-              tabIndex={-1}
+              layoutId={layoutId}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{
                 type: "spring",
                 stiffness: 350,
@@ -137,8 +83,6 @@ export function MorphingModal({
             >
               {/* Close button */}
               <motion.button
-                ref={closeButtonRef}
-                type="button"
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
@@ -196,6 +140,7 @@ export function MorphingModalTrigger({
   className,
   layoutId,
   onClick,
+  _theme = "dark",
 }: MorphingModalTriggerProps) {
   return (
     <motion.button

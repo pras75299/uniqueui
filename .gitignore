@@ -16,3 +16,4 @@ entities.json
 
 # Claude Code
 .claude/worktrees
+.worktrees/

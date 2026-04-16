@@ -13,15 +13,6 @@ export interface ParticleFieldProps
   speed?: number;
 }
 
-type Particle = {
-  x: number;
-  y: number;
-  size: number;
-  vx: number;
-  vy: number;
-  density: number;
-  color: [number, number, number];
-};
 
 let colorParserContext: CanvasRenderingContext2D | null = null;
 
@@ -129,6 +120,7 @@ export function ParticleField({
       y: -1000,
     };
 
+    // eslint-disable-next-line react-hooks/unsupported-syntax
     class Particle {
       x: number;
       y: number;

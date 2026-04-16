@@ -20,7 +20,7 @@ export function MagneticButton({
   magneticRadius = 150,
   onClick,
   disabled = false,
-  theme = "dark",
+  _theme = "dark",
 }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
   const [isHovering, setIsHovering] = useState(false);
@@ -65,10 +65,7 @@ export function MagneticButton({
       style={{ x, y }}
       whileTap={{ scale: 0.95 }}
       className={cn(
-        "relative inline-flex items-center justify-center rounded-xl px-8 py-3 text-sm font-medium shadow-lg transition-shadow duration-300",
-        theme === "dark"
-          ? "bg-gradient-to-b from-neutral-800 to-neutral-900 text-white"
-          : "bg-gradient-to-b from-neutral-200 to-neutral-300 text-neutral-900",
+        "relative inline-flex items-center justify-center rounded-xl bg-gradient-to-b from-neutral-800 to-neutral-900 px-8 py-3 text-sm font-medium text-white shadow-lg transition-shadow duration-300",
         isHovering && "shadow-xl shadow-purple-500/20",
         disabled && "opacity-50 cursor-not-allowed",
         className

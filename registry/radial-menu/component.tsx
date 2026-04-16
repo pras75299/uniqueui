@@ -32,6 +32,8 @@ export interface RadialMenuProps {
   /** Classes applied to individual menu item buttons */
   itemClassName?: string;
   theme?: "light" | "dark";
+  /** Accessible label for the trigger button */
+  triggerAriaLabel?: string;
 }
 
 export function RadialMenu({
@@ -44,7 +46,8 @@ export function RadialMenu({
   className,
   triggerClassName,
   itemClassName,
-  theme = "dark",
+  _theme = "dark",
+  triggerAriaLabel,
 }: RadialMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -140,6 +143,7 @@ export function RadialMenu({
                   item.onClick?.();
                   setIsOpen(false);
                 }}
+                aria-label={item.label}
                 title={item.label}
                 className={cn(
                   "absolute flex h-12 w-12 items-center justify-center rounded-full shadow-lg border border-neutral-200 bg-white text-neutral-700 hover:text-neutral-900 hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-neutral-700 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-600 focus:ring-offset-2 dark:focus:ring-offset-neutral-950 z-0",
@@ -158,6 +162,8 @@ export function RadialMenu({
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-label={triggerAriaLabel}
         className={cn(
           "relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-neutral-900 text-white shadow-xl hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 dark:focus:ring-neutral-600 dark:focus:ring-offset-neutral-950 transition-colors",
           triggerClassName

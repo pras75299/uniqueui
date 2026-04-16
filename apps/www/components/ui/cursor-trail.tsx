@@ -23,6 +23,7 @@ export function CursorTrail({
   size = 12,
   decayDuration = 0.5,
   className,
+  _theme = "dark",
 }: CursorTrailProps) {
   const [positions, setPositions] = useState<{ id: number; x: number; y: number }[]>([]);
 

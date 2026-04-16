@@ -17,7 +17,7 @@ export function HorizontalScrollGallery({
   items,
   direction = "left",
   itemClassName,
-  theme = "dark",
+  _theme = "dark",
   ...props
 }: HorizontalScrollGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);

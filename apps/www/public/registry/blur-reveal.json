@@ -1,0 +1,20 @@
+{
+  "name": "blur-reveal",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "blur-reveal/component.tsx",
+      "content": "\"use client\";\nimport { cn } from \"@/lib/utils\";\nimport { motion, useInView } from \"motion/react\";\nimport { useRef } from \"react\";\n\nexport interface BlurRevealProps {\n  text: string;\n  className?: string;\n  /** Extra delay before the animation starts (seconds) */\n  delay?: number;\n  /** Spring duration for each item */\n  duration?: number;\n  /** Split and animate by individual characters or whole words */\n  animateBy?: \"characters\" | \"words\";\n  /** Only trigger once on first enter */\n  once?: boolean;\n  theme?: \"light\" | \"dark\";\n}\n\nexport function BlurReveal({\n  text,\n  className,\n  delay = 0,\n  duration = 0.6,\n  animateBy = \"characters\",\n  once = true,\n  theme = \"dark\",\n}: BlurRevealProps) {\n  const ref = useRef<HTMLSpanElement>(null);\n  const isInView = useInView(ref, { once, amount: 0.3 });\n\n  const items =\n    animateBy === \"characters\" ? text.split(\"\") : text.split(\" \");\n\n  const stagger = animateBy === \"characters\" ? 0.03 : 0.07;\n\n  return (\n    <span\n      ref={ref}\n      className={cn(\n        \"inline-flex flex-wrap\",\n        animateBy === \"words\" ? \"gap-[0.3em]\" : \"gap-[0.01em]\",\n        className\n      )}\n    >\n      {items.map((item, i) => (\n        <motion.span\n          key={i}\n          initial={{ opacity: 0, filter: \"blur(14px)\", y: 12 }}\n          animate={\n            isInView\n              ? { opacity: 1, filter: \"blur(0px)\", y: 0 }\n              : { opacity: 0, filter: \"blur(14px)\", y: 12 }\n          }\n          transition={{\n            delay: delay + i * stagger,\n            duration,\n            type: \"spring\",\n            stiffness: 80,\n            damping: 14,\n          }}\n          className=\"inline-block\"\n        >\n          {item === \" \" ? \"\\u00A0\" : item}\n        </motion.span>\n      ))}\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util"
+    }
+  ]
+}

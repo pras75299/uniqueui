@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
+import fs from "fs";
+import path from "path";
 import { describe, expect, it } from "vitest";
 import { componentsList } from "../config/components";
 import { componentDemos } from "../config/demos";
@@ -32,6 +34,17 @@ describe("Component metadata sync", () => {
       }
 
       expect(componentDemos[component.slug]).toBeDefined();
+    }
+  });
+
+  it("keeps docs ui component files mirrored from registry sources", () => {
+    for (const slug of registryComponentSlugs) {
+      const registryPath = path.resolve(process.cwd(), "../../registry", slug, "component.tsx");
+      const docsPath = path.resolve(process.cwd(), "components/ui", `${slug}.tsx`);
+
+      expect(fs.existsSync(registryPath), `missing registry source for ${slug}`).toBe(true);
+      expect(fs.existsSync(docsPath), `missing docs ui file for ${slug}`).toBe(true);
+      expect(fs.readFileSync(docsPath, "utf-8")).toBe(fs.readFileSync(registryPath, "utf-8"));
     }
   });
 });

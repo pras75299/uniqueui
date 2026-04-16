@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, cloneElement, ReactElement, useId } from "react";
+import React, { useState, cloneElement, ReactElement, useId } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -69,13 +69,8 @@ export const LimelightNav = ({
     return Math.min(Math.max(0, defaultActiveIndex), items.length - 1);
   });
 
-  useEffect(() => {
-    if (items.length > 0 && activeIndex >= items.length) {
-      setActiveIndex(items.length - 1);
-    } else if (items.length === 0 && activeIndex !== -1) {
-      setActiveIndex(-1);
-    }
-  }, [items.length, activeIndex]);
+  // Clamp activeIndex to valid range during render — avoids setState-in-effect anti-pattern
+  const safeActiveIndex = items.length === 0 ? -1 : Math.min(activeIndex, items.length - 1);
 
   const componentId = useId();
 
@@ -99,7 +94,7 @@ export const LimelightNav = ({
       {...props}
     >
       {items.map(({ id, icon, label, ariaLabel, onClick }, index) => {
-        const isActive = activeIndex === index;
+        const isActive = safeActiveIndex === index;
 
         if (!label && !ariaLabel) {
           console.warn(

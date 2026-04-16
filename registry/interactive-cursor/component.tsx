@@ -117,7 +117,7 @@ export function InteractiveCursor({
     setScopeElement((current) =>
       current === nextScopeElement ? current : nextScopeElement
     );
-  });
+  }, [containerRef]);
 
   useEffect(() => {
     if (!scopeElement) return;

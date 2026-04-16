@@ -24,6 +24,7 @@ export function ScrambleText({
   triggerOnView = true,
   once = true,
   characterSet = CHARS,
+  _theme = "dark",
 }: ScrambleTextProps) {
   const [displayText, setDisplayText] = useState(text);
   const [isScrambling, setIsScrambling] = useState(false);

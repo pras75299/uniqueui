@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
 import { SECTION_NAV } from "@/config/navigation";
 import { ArrowLeft, Menu, X } from "lucide-react";
+import { motion } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 
 export default function ComponentsLayout({

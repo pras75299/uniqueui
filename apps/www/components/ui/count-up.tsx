@@ -34,6 +34,7 @@ export function CountUp({
   separator = ",",
   className,
   once = true,
+  _theme = "dark",
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once, amount: 0.5 });

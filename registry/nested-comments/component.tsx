@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import {
   motion,
   AnimatePresence,
-  useMotionValue,
   useSpring,
 } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -69,7 +69,7 @@ function Avatar({
       style={{ width: size, height: size }}
     >
       {avatar ? (
-        <img src={avatar} alt={author} className="w-full h-full object-cover" />
+        <Image src={avatar} alt={author} fill className="object-cover" />
       ) : (
         <div
           className={cn("w-full h-full flex items-center justify-center bg-gradient-to-br", color)}
@@ -88,7 +88,7 @@ function Avatar({
 function LikeButton({
   count,
   onLike,
-  accentColor,
+  accentColor: _accentColor,
 }: {
   count: number;
   onLike?: () => void;
@@ -110,6 +110,7 @@ function LikeButton({
   return (
     <button
       onClick={handleLike}
+      aria-label={`Like comment, ${displayCount} likes`}
       className={cn(
         "flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full transition-all duration-200",
         liked
@@ -152,7 +153,7 @@ function LikeButton({
 function ReplyBox({
   onSubmit,
   onCancel,
-  accentColor,
+  accentColor: _accentColor,
 }: {
   onSubmit: (text: string) => void;
   onCancel: () => void;
@@ -220,7 +221,7 @@ function ReplyBox({
 
 // ─── Connector Line ───────────────────────────────────────────────────────────
 
-function ConnectorLine({ height }: { height: number }) {
+function _ConnectorLine({ height }: { height: number }) {
   return (
     <motion.div
       initial={{ scaleY: 0 }}
@@ -241,7 +242,7 @@ function CommentNode({
   accentColor,
   onReply,
   onLike,
-  isLast,
+  isLast: _isLast,
 }: {
   comment: Comment;
   depth: number;
@@ -326,6 +327,7 @@ function CommentNode({
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setReplying((v) => !v)}
+                aria-label={`Reply to ${comment.author}`}
                 className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full text-neutral-500 hover:text-neutral-300 hover:bg-white/5 transition-all duration-200"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
@@ -436,7 +438,7 @@ export function NestedComments({
   };
 
   return (
-    <div className={cn("w-full max-w-2xl mx-auto", className)}>
+    <div aria-label="Comments" className={cn("w-full max-w-2xl mx-auto", className)}>
       {/* Header */}
       <div className="flex items-center gap-2 mb-5">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={cn("w-5 h-5", isDark ? "text-neutral-400" : "text-neutral-500")}>
@@ -450,6 +452,7 @@ export function NestedComments({
       {/* New comment composer */}
       <div className={cn("mb-6 rounded-xl border overflow-hidden", isDark ? "border-white/10 bg-white/[0.03]" : "border-neutral-200 bg-neutral-50")}>
         <textarea
+          aria-label="Write a new comment"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           onKeyDown={(e) => {
@@ -473,7 +476,7 @@ export function NestedComments({
                 : isDark ? "text-neutral-600 bg-white/5 cursor-not-allowed" : "text-neutral-500 bg-neutral-200 cursor-not-allowed"
             )}
           >
-            {posting ? "Posting…" : "Post Comment"}
+            {posting ? "Posting…" : "Post comment"}
           </motion.button>
         </div>
       </div>

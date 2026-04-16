@@ -169,9 +169,9 @@ export function BentoCard({
 
             {/* Title + description */}
             <div className="mt-auto">
-              <h3 className={cn("text-sm font-semibold leading-snug", theme === "dark" ? "text-white" : "text-neutral-900")}>{title}</h3>
+              <h3 className="text-sm font-semibold text-white leading-snug">{title}</h3>
               {description && (
-                <p className={cn("mt-1 text-xs leading-relaxed line-clamp-3", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>
+                <p className="mt-1 text-xs text-neutral-400 leading-relaxed line-clamp-3">
                   {description}
                 </p>
               )}

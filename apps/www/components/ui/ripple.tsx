@@ -124,7 +124,7 @@ export function Ripple({
         const delay = -(i / count) * dur; // negative delay = already mid-cycle on mount
 
         // Build alpha variants via helper — supports hex, rgb/rgba, hsl/hsla
-        const colorMid   = toRgbaString(orbColor, 0.73);
+        const colorMid  = toRgbaString(orbColor, 0.73);
         const colorOuter = toRgbaString(orbColor, 0.27);
 
         return (
