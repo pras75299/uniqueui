@@ -1,0 +1,20 @@
+{
+  "name": "infinite-marquee",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "infinite-marquee.tsx",
+      "content": "\"use client\";\nimport React, { useEffect, useRef, useState } from \"react\";\nimport { motion } from \"motion/react\";\nimport { type ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nfunction cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\nexport interface InfiniteMarqueeProps {\n  children: React.ReactNode;\n  className?: string;\n  speed?: number;\n  direction?: \"left\" | \"right\";\n  pauseOnHover?: boolean;\n  gap?: number;\n}\n\nexport function InfiniteMarquee({\n  children,\n  className,\n  speed = 40,\n  direction = \"left\",\n  pauseOnHover = true,\n  gap = 16,\n}: InfiniteMarqueeProps) {\n  const containerRef = useRef<HTMLDivElement>(null);\n  const scrollRef = useRef<HTMLDivElement>(null);\n  const [contentWidth, setContentWidth] = useState(0);\n  const [isPaused, setIsPaused] = useState(false);\n\n  useEffect(() => {\n    if (scrollRef.current) {\n      setContentWidth(scrollRef.current.scrollWidth / 2);\n    }\n  }, [children]);\n\n  const duration = contentWidth / speed;\n\n  return (\n    <div\n      ref={containerRef}\n      className={cn(\"overflow-hidden\", className)}\n      onMouseEnter={() => pauseOnHover && setIsPaused(true)}\n      onMouseLeave={() => pauseOnHover && setIsPaused(false)}\n    >\n      <motion.div\n        ref={scrollRef}\n        className=\"flex w-max\"\n        style={{ gap: `${gap}px` }}\n        animate={{\n          x: direction === \"left\" ? [0, -contentWidth - gap] : [-contentWidth - gap, 0],\n        }}\n        transition={{\n          x: {\n            duration: duration || 20,\n            repeat: Infinity,\n            repeatType: \"loop\",\n            ease: \"linear\",\n          },\n        }}\n        {...(isPaused && {\n          style: { animationPlayState: \"paused\", gap: `${gap}px` },\n        })}\n      >\n        {/* Original content */}\n        <div className=\"flex shrink-0 items-center\" style={{ gap: `${gap}px` }}>\n          {children}\n        </div>\n        {/* Duplicated content for seamless loop */}\n        <div className=\"flex shrink-0 items-center\" style={{ gap: `${gap}px` }}>\n          {children}\n        </div>\n      </motion.div>\n    </div>\n  );\n}\n\nexport function MarqueeItem({\n  children,\n  className,\n}: {\n  children: React.ReactNode;\n  className?: string;\n}) {\n  return (\n    <div\n      className={cn(\n        \"flex shrink-0 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900/50 px-6 py-3\",\n        className\n      )}\n    >\n      {children}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util"
+    }
+  ]
+}

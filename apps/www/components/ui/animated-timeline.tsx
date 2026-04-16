@@ -1,7 +1,12 @@
 "use client";
 import React, { useRef } from "react";
 import { motion, useInView } from "motion/react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export interface TimelineItem {
   id: string;
@@ -37,6 +42,7 @@ export function AnimatedTimeline({
 
   return (
     <div className={cn("relative", className)}>
+      {/* Vertical line */}
       <div
         className="absolute left-5 top-0 bottom-0 w-px"
         style={{ backgroundColor: lineColor }}
@@ -74,6 +80,7 @@ function TimelineNode({
       }}
       className="relative flex items-start gap-4 pl-12"
     >
+      {/* Node dot */}
       <motion.div
         initial={{ scale: 0 }}
         animate={isInView ? { scale: 1 } : { scale: 0 }}
@@ -100,6 +107,7 @@ function TimelineNode({
         )}
       </motion.div>
 
+      {/* Pulse ring animation */}
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={
@@ -117,6 +125,7 @@ function TimelineNode({
         }}
       />
 
+      {/* Content */}
       <div className="flex-1 min-w-0 pb-2">
         {item.date && (
           <span className="text-xs text-neutral-500 mb-1 block">{item.date}</span>
@@ -146,6 +155,7 @@ function HorizontalTimeline({
 
   return (
     <div ref={ref} className={cn("relative", className)}>
+      {/* Horizontal line */}
       <div
         className="absolute top-5 left-0 right-0 h-px"
         style={{ backgroundColor: lineColor }}
@@ -169,6 +179,7 @@ function HorizontalTimeline({
             }}
             className="flex flex-col items-center min-w-[140px]"
           >
+            {/* Node */}
             <motion.div
               initial={{ scale: 0 }}
               animate={isInView ? { scale: 1 } : { scale: 0 }}
@@ -189,6 +200,7 @@ function HorizontalTimeline({
               />
             </motion.div>
 
+            {/* Content */}
             <div className="text-center">
               {item.date && (
                 <span className="text-xs text-neutral-500 mb-1 block">

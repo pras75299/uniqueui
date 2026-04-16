@@ -1,0 +1,20 @@
+{
+  "name": "dot-grid-background",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "dot-grid-background.tsx",
+      "content": "\"use client\";\nimport React, { useCallback, useRef } from \"react\";\nimport { motion, useMotionValue, useTransform } from \"motion/react\";\nimport { type ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nfunction cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\nexport interface DotGridBackgroundProps {\n  children?: React.ReactNode;\n  className?: string;\n  dotColor?: string;\n  dotSize?: number;\n  gap?: number;\n  hoverRadius?: number;\n  hoverScale?: number;\n}\n\nexport function DotGridBackground({\n  children,\n  className,\n  dotColor = \"rgba(255, 255, 255, 0.15)\",\n  dotSize = 2,\n  gap = 24,\n  hoverRadius = 120,\n  hoverScale = 3,\n}: DotGridBackgroundProps) {\n  const containerRef = useRef<HTMLDivElement>(null);\n  const mouseX = useMotionValue(-1000);\n  const mouseY = useMotionValue(-1000);\n\n  const handleMouseMove = useCallback(\n    (e: React.MouseEvent) => {\n      if (!containerRef.current) return;\n      const rect = containerRef.current.getBoundingClientRect();\n      mouseX.set(e.clientX - rect.left);\n      mouseY.set(e.clientY - rect.top);\n    },\n    [mouseX, mouseY]\n  );\n\n  const handleMouseLeave = useCallback(() => {\n    mouseX.set(-1000);\n    mouseY.set(-1000);\n  }, [mouseX, mouseY]);\n\n  return (\n    <div\n      ref={containerRef}\n      onMouseMove={handleMouseMove}\n      onMouseLeave={handleMouseLeave}\n      className={cn(\n        \"relative overflow-hidden bg-neutral-950\",\n        className\n      )}\n    >\n      {/* Static dot grid via CSS pattern */}\n      <div\n        className=\"absolute inset-0 opacity-100\"\n        style={{\n          backgroundImage: `radial-gradient(circle, ${dotColor} ${dotSize * 0.5}px, transparent ${dotSize * 0.5}px)`,\n          backgroundSize: `${gap}px ${gap}px`,\n        }}\n      />\n\n      {/* Animated glow following cursor */}\n      <motion.div\n        className=\"pointer-events-none absolute\"\n        style={{\n          x: useTransform(mouseX, (v) => v - hoverRadius),\n          y: useTransform(mouseY, (v) => v - hoverRadius),\n          width: hoverRadius * 2,\n          height: hoverRadius * 2,\n          background: `radial-gradient(circle, ${dotColor.replace(\n            /[\\d.]+\\)$/,\n            \"0.6)\"\n          )} 0%, transparent 70%)`,\n          filter: `blur(${dotSize * 2}px)`,\n        }}\n      />\n\n      {/* Animated dot highlight effect - CSS mask reveals bigger dots near cursor */}\n      <motion.div\n        className=\"pointer-events-none absolute inset-0\"\n        style={{\n          backgroundImage: `radial-gradient(circle, ${dotColor.replace(\n            /[\\d.]+\\)$/,\n            \"0.8)\"\n          )} ${dotSize * hoverScale * 0.5}px, transparent ${dotSize * hoverScale * 0.5}px)`,\n          backgroundSize: `${gap}px ${gap}px`,\n          maskImage: `radial-gradient(circle ${hoverRadius}px at var(--mx) var(--my), black 0%, transparent 100%)`,\n          WebkitMaskImage: `radial-gradient(circle ${hoverRadius}px at var(--mx) var(--my), black 0%, transparent 100%)`,\n        }}\n      />\n\n      <div className=\"relative z-10\">{children}</div>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util"
+    }
+  ]
+}

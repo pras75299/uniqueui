@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRef, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 
 export function Button({
   borderRadius = "1.75rem",
@@ -75,7 +75,7 @@ export const MovingBorder = ({
   ry?: string;
   [key: string]: unknown;
 }) => {
-  const pathRef = useRef<SVGRectElement>(null);
+  const pathRef = useRef<SVGRectElement | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
 
@@ -138,3 +138,5 @@ export const MovingBorder = ({
     </>
   );
 };
+
+

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { componentsList } from "@/config/components";
-import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Menu, X } from "lucide-react";
 import { useState } from "react";

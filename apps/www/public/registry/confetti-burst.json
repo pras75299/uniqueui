@@ -1,0 +1,19 @@
+{
+  "name": "confetti-burst",
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "confetti-burst.tsx",
+      "content": "\"use client\";\nimport React, { useCallback, useRef } from \"react\";\nimport { type ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nfunction cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\nexport interface ConfettiBurstProps {\n  children: React.ReactNode;\n  className?: string;\n  particleCount?: number;\n  colors?: string[];\n  spread?: number;\n  duration?: number;\n}\n\nexport function ConfettiBurst({\n  children,\n  className,\n  particleCount = 30,\n  colors = [\"#a855f7\", \"#ec4899\", \"#6366f1\", \"#f59e0b\", \"#10b981\", \"#3b82f6\"],\n  spread = 200,\n  duration = 1000,\n}: ConfettiBurstProps) {\n  const containerRef = useRef<HTMLDivElement>(null);\n\n  const burst = useCallback(\n    (e: React.MouseEvent) => {\n      if (!containerRef.current) return;\n\n      const rect = containerRef.current.getBoundingClientRect();\n      const originX = e.clientX - rect.left;\n      const originY = e.clientY - rect.top;\n\n      for (let i = 0; i < particleCount; i++) {\n        const particle = document.createElement(\"div\");\n        const color = colors[Math.floor(Math.random() * colors.length)];\n        const size = Math.random() * 8 + 4;\n        const isCircle = Math.random() > 0.5;\n        const angle = Math.random() * Math.PI * 2;\n        const velocity = Math.random() * spread + spread * 0.3;\n        const targetX = Math.cos(angle) * velocity;\n        const targetY = Math.sin(angle) * velocity - 100; // bias upward\n        const rotation = Math.random() * 720 - 360;\n\n        Object.assign(particle.style, {\n          position: \"absolute\",\n          left: `${originX}px`,\n          top: `${originY}px`,\n          width: `${size}px`,\n          height: `${isCircle ? size : size * 0.6}px`,\n          backgroundColor: color,\n          borderRadius: isCircle ? \"50%\" : \"2px\",\n          pointerEvents: \"none\",\n          zIndex: \"50\",\n          transform: \"translate(-50%, -50%)\",\n          transition: `all ${duration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,\n          opacity: \"1\",\n        });\n\n        containerRef.current.appendChild(particle);\n\n        // Trigger animation in next frame\n        requestAnimationFrame(() => {\n          Object.assign(particle.style, {\n            transform: `translate(calc(-50% + ${targetX}px), calc(-50% + ${targetY}px)) rotate(${rotation}deg)`,\n            opacity: \"0\",\n          });\n        });\n\n        // Cleanup\n        setTimeout(() => {\n          particle.remove();\n        }, duration + 100);\n      }\n    },\n    [particleCount, colors, spread, duration]\n  );\n\n  return (\n    <div\n      ref={containerRef}\n      className={cn(\"relative overflow-hidden\", className)}\n      onClick={burst}\n    >\n      {children}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util"
+    }
+  ]
+}

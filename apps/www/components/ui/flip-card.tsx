@@ -1,7 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export interface FlipCardProps {
   front: React.ReactNode;
@@ -44,6 +49,7 @@ export function FlipCard({
       style={{ perspective: `${perspective}px` }}
       {...handlers}
     >
+      {/* Front */}
       <motion.div
         className={cn(
           "w-full h-full rounded-xl border border-neutral-800 bg-neutral-950 p-6 backface-hidden",
@@ -58,6 +64,7 @@ export function FlipCard({
         {front}
       </motion.div>
 
+      {/* Back */}
       <motion.div
         className={cn(
           "absolute inset-0 w-full h-full rounded-xl border border-neutral-700 bg-neutral-900 p-6 backface-hidden",
@@ -65,6 +72,7 @@ export function FlipCard({
         )}
         style={{
           backfaceVisibility: "hidden",
+          [rotateAxis === "rotateY" ? "rotateY" : "rotateX"]: "180deg",
         }}
         initial={{ [rotateAxis]: -180 }}
         animate={{

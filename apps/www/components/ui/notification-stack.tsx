@@ -1,7 +1,12 @@
 "use client";
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export type NotificationType = "success" | "error" | "warning" | "info";
 
@@ -47,6 +52,7 @@ const positionStyles: Record<string, string> = {
   "bottom-left": "bottom-4 left-4",
 };
 
+// Hook for managing notifications
 export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
@@ -117,29 +123,27 @@ function NotificationItem({
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
   const [progress, setProgress] = useState(100);
-  const startTime = useRef<number>(0);
-  const onRemoveRef = useRef(onRemove);
-
-  useEffect(() => {
-    onRemoveRef.current = onRemove;
-  }, [onRemove]);
+  const startTime = useRef<number | null>(null);
 
   useEffect(() => {
     startTime.current = Date.now();
+  }, []);
+
+  useEffect(() => {
     if (duration <= 0) return;
 
     const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime.current;
+      const elapsed = Date.now() - (startTime.current ?? Date.now());
       const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
       setProgress(remaining);
       if (remaining <= 0) {
         clearInterval(interval);
-        onRemoveRef.current(id);
+        onRemove(id);
       }
     }, 50);
 
     return () => clearInterval(interval);
-  }, [id, duration]);
+  }, [id, duration, onRemove]);
 
   const isRight = position.includes("right");
 
@@ -190,6 +194,7 @@ function NotificationItem({
         </button>
       </div>
 
+      {/* Progress bar */}
       {duration > 0 && (
         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-neutral-800">
           <motion.div

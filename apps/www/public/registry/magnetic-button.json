@@ -1,0 +1,20 @@
+{
+  "name": "magnetic-button",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "magnetic-button.tsx",
+      "content": "\"use client\";\nimport React, { useRef, useState, useCallback } from \"react\";\nimport { motion, useMotionValue, useSpring } from \"motion/react\";\nimport { type ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nfunction cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\nexport interface MagneticButtonProps {\n  children: React.ReactNode;\n  className?: string;\n  magneticStrength?: number;\n  magneticRadius?: number;\n  onClick?: () => void;\n  disabled?: boolean;\n}\n\nexport function MagneticButton({\n  children,\n  className,\n  magneticStrength = 0.3,\n  magneticRadius = 150,\n  onClick,\n  disabled = false,\n}: MagneticButtonProps) {\n  const ref = useRef<HTMLButtonElement>(null);\n  const [isHovering, setIsHovering] = useState(false);\n\n  const springConfig = { stiffness: 200, damping: 15, mass: 0.5 };\n  const x = useSpring(useMotionValue(0), springConfig);\n  const y = useSpring(useMotionValue(0), springConfig);\n\n  const handleMouseMove = useCallback(\n    (e: React.MouseEvent) => {\n      if (!ref.current || disabled) return;\n      const rect = ref.current.getBoundingClientRect();\n      const centerX = rect.left + rect.width / 2;\n      const centerY = rect.top + rect.height / 2;\n\n      const distX = e.clientX - centerX;\n      const distY = e.clientY - centerY;\n      const distance = Math.sqrt(distX * distX + distY * distY);\n\n      if (distance < magneticRadius) {\n        x.set(distX * magneticStrength);\n        y.set(distY * magneticStrength);\n      }\n    },\n    [disabled, magneticRadius, magneticStrength, x, y]\n  );\n\n  const handleMouseLeave = useCallback(() => {\n    setIsHovering(false);\n    x.set(0);\n    y.set(0);\n  }, [x, y]);\n\n  return (\n    <motion.button\n      ref={ref}\n      onMouseMove={handleMouseMove}\n      onMouseEnter={() => setIsHovering(true)}\n      onMouseLeave={handleMouseLeave}\n      onClick={onClick}\n      disabled={disabled}\n      style={{ x, y }}\n      whileTap={{ scale: 0.95 }}\n      className={cn(\n        \"relative inline-flex items-center justify-center rounded-xl bg-gradient-to-b from-neutral-800 to-neutral-900 px-8 py-3 text-sm font-medium text-white shadow-lg transition-shadow duration-300\",\n        isHovering && \"shadow-xl shadow-purple-500/20\",\n        disabled && \"opacity-50 cursor-not-allowed\",\n        className\n      )}\n    >\n      <motion.span\n        animate={isHovering ? { scale: 1.05 } : { scale: 1 }}\n        transition={{ type: \"spring\", stiffness: 400, damping: 20 }}\n        className=\"relative z-10\"\n      >\n        {children}\n      </motion.span>\n\n      {/* Glow effect on hover */}\n      <motion.div\n        className=\"absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600/20 to-pink-600/20\"\n        animate={{ opacity: isHovering ? 1 : 0 }}\n        transition={{ duration: 0.3 }}\n      />\n    </motion.button>\n  );\n}\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util"
+    }
+  ]
+}

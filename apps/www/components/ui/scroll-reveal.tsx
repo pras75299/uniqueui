@@ -1,7 +1,12 @@
 "use client";
 import React, { useRef } from "react";
 import { motion, useInView, Variant } from "motion/react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 type AnimationPreset = "fade-up" | "fade-down" | "fade-left" | "fade-right" | "scale" | "blur";
 
@@ -124,11 +129,8 @@ export function ScrollRevealGroup({
       }}
       className={cn(className)}
     >
-      {React.Children.map(children, (child, index) => {
-        const key = React.isValidElement(child) && child.key ? child.key : index;
-        return (
-          <motion.div
-            key={key}
+      {React.Children.map(children, (child) => (
+        <motion.div
           variants={{
             hidden: preset.hidden,
             visible: {
@@ -143,8 +145,7 @@ export function ScrollRevealGroup({
         >
           {child}
         </motion.div>
-        );
-      })}
+      ))}
     </motion.div>
   );
 }

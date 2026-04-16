@@ -1,0 +1,37 @@
+name: Verify Registry
+
+on:
+  push:
+    branches:
+      - "pras75299/initial-feature-setup"
+      - "main"
+    paths:
+      - "registry/**"
+      - "scripts/build-registry.ts"
+
+jobs:
+  verify-registry:
+    name: Verify registry.json is not stale
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.12.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild registry
+        run: pnpm build:registry
+
+      - name: Check registry.json is committed
+        run: |
+          git diff --exit-code registry.json || (echo "" && echo "ERROR: registry.json is out of sync with registry source files." && echo "Run 'pnpm build:registry' and commit the result before merging." && exit 1)

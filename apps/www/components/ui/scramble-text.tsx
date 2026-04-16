@@ -1,7 +1,12 @@
 "use client";
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useInView } from "motion/react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
 
@@ -45,6 +50,7 @@ export function ScrambleText({
       const newText = originalChars
         .map((char, i) => {
           if (char === " ") return " ";
+          // Characters resolve left-to-right based on progress
           if (i / originalChars.length < progress) return char;
           return characterSet[Math.floor(Math.random() * characterSet.length)];
         })

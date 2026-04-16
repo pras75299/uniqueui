@@ -1,0 +1,25 @@
+{
+  "components": [
+    "moving-border",
+    "typewriter-text",
+    "3d-tilt-card",
+    "spotlight-card",
+    "aurora-background",
+    "animated-tabs",
+    "magnetic-button",
+    "infinite-marquee",
+    "scroll-reveal",
+    "skeleton-shimmer",
+    "morphing-modal",
+    "gradient-text-reveal",
+    "scramble-text",
+    "meteors-card",
+    "flip-card",
+    "dot-grid-background",
+    "floating-dock",
+    "confetti-burst",
+    "drawer-slide",
+    "notification-stack",
+    "animated-timeline"
+  ]
+}

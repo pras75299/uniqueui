@@ -1,7 +1,12 @@
 "use client";
 import React, { useRef, useCallback } from "react";
 import { motion, useMotionValue, useMotionTemplate } from "motion/react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export interface SpotlightCardProps {
   children: React.ReactNode;

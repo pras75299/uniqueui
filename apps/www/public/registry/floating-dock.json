@@ -1,0 +1,20 @@
+{
+  "name": "floating-dock",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "floating-dock.tsx",
+      "content": "\"use client\";\nimport React, { useRef } from \"react\";\nimport {\n  motion,\n  useMotionValue,\n  useSpring,\n  useTransform,\n  type MotionValue,\n} from \"motion/react\";\nimport { type ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nfunction cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\nexport interface FloatingDockProps {\n  items: {\n    id: string;\n    icon: React.ReactNode;\n    label: string;\n    onClick?: () => void;\n    href?: string;\n  }[];\n  className?: string;\n  iconSize?: number;\n  maxScale?: number;\n  magneticRange?: number;\n}\n\nexport function FloatingDock({\n  items,\n  className,\n  iconSize = 40,\n  maxScale = 1.8,\n  magneticRange = 120,\n}: FloatingDockProps) {\n  const mouseX = useMotionValue(Infinity);\n\n  return (\n    <motion.div\n      onMouseMove={(e) => mouseX.set(e.pageX)}\n      onMouseLeave={() => mouseX.set(Infinity)}\n      className={cn(\n        \"inline-flex items-end gap-2 rounded-2xl border border-neutral-800 bg-neutral-900/80 backdrop-blur-md px-4 py-3\",\n        className\n      )}\n    >\n      {items.map((item) => (\n        <DockItem\n          key={item.id}\n          mouseX={mouseX}\n          iconSize={iconSize}\n          maxScale={maxScale}\n          magneticRange={magneticRange}\n          {...item}\n        />\n      ))}\n    </motion.div>\n  );\n}\n\nfunction DockItem({\n  icon,\n  label,\n  onClick,\n  href,\n  mouseX,\n  iconSize,\n  maxScale,\n  magneticRange,\n}: {\n  icon: React.ReactNode;\n  label: string;\n  onClick?: () => void;\n  href?: string;\n  mouseX: MotionValue<number>;\n  iconSize: number;\n  maxScale: number;\n  magneticRange: number;\n}) {\n  const ref = useRef<HTMLDivElement>(null);\n\n  const distance = useTransform(mouseX, (val: number) => {\n    const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };\n    return val - bounds.x - bounds.width / 2;\n  });\n\n  const springConfig = { stiffness: 200, damping: 15, mass: 0.5 };\n\n  const sizeTransform = useTransform(\n    distance,\n    [-magneticRange, 0, magneticRange],\n    [iconSize, iconSize * maxScale, iconSize]\n  );\n  const size = useSpring(sizeTransform, springConfig);\n\n  const yTransform = useTransform(\n    distance,\n    [-magneticRange, 0, magneticRange],\n    [0, -10, 0]\n  );\n  const y = useSpring(yTransform, springConfig);\n\n  const Wrapper = href ? \"a\" : \"button\";\n  const wrapperProps = href\n    ? { href, target: \"_blank\", rel: \"noopener noreferrer\" }\n    : { onClick };\n\n  return (\n    <Wrapper {...(wrapperProps as Record<string, unknown>)} className=\"group relative\">\n      <motion.div\n        ref={ref}\n        style={{ width: size, height: size, y }}\n        className=\"flex items-center justify-center rounded-xl bg-neutral-800 border border-neutral-700 text-neutral-300 hover:text-white transition-colors\"\n      >\n        {icon}\n      </motion.div>\n      <div className=\"pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200\">\n        <div className=\"whitespace-nowrap rounded-md bg-neutral-800 border border-neutral-700 px-2 py-1 text-xs text-neutral-200 shadow-lg\">\n          {label}\n        </div>\n      </div>\n    </Wrapper>\n  );\n}\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util"
+    }
+  ]
+}

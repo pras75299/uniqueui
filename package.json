@@ -3,9 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build:registry": "ts-node scripts/build-registry.ts"
+    "build:registry": "ts-node scripts/build-registry.ts",
+    "test": "pnpm --dir packages/cli test & pnpm --dir apps/www test & wait",
+    "test:ci": "pnpm --dir packages/cli test && pnpm --dir apps/www test",
+    "lint": "pnpm --dir apps/www lint",
+    "build": "turbo run build",
+    "typecheck": "pnpm --dir packages/cli exec tsc --noEmit && pnpm --dir apps/www exec tsc --noEmit",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build:registry && pnpm --dir packages/cli build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.10.0",
     "@types/react": "^19.2.8",
@@ -16,6 +25,7 @@
     "react-dom": "^19.2.3",
     "tailwind-merge": "^3.4.0",
     "ts-node": "^10.9.2",
+    "turbo": "^2.3.3",
     "typescript": "^5.3.3"
   },
   "packageManager": "pnpm@8.12.1",

@@ -1,5 +1,24 @@
+# Dependencies
 /node_modules
 /packages/cli/node_modules
+/apps/www/node_modules
+
+# Build outputs
 /packages/cli/dist
-NPM_PUBLISH_GUIDE.md
+/apps/www/.next
+
+# Generated registry artifacts (committed intentionally — do not ignore)
+# registry.json is committed so CI can verify it's not stale
+
+# Local dev / tooling
 /temp-test
+NPM_PUBLISH_GUIDE.md
+
+# Python virtual environment (not part of this project)
+.venv
+__pycache__
+*.pyc
+
+# Editor
+.DS_Store
+*.local

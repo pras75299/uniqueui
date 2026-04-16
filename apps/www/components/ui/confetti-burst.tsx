@@ -1,6 +1,11 @@
 "use client";
 import React, { useCallback, useRef } from "react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export interface ConfettiBurstProps {
   children: React.ReactNode;
@@ -37,7 +42,7 @@ export function ConfettiBurst({
         const angle = Math.random() * Math.PI * 2;
         const velocity = Math.random() * spread + spread * 0.3;
         const targetX = Math.cos(angle) * velocity;
-        const targetY = Math.sin(angle) * velocity - 100;
+        const targetY = Math.sin(angle) * velocity - 100; // bias upward
         const rotation = Math.random() * 720 - 360;
 
         Object.assign(particle.style, {
@@ -57,6 +62,7 @@ export function ConfettiBurst({
 
         containerRef.current.appendChild(particle);
 
+        // Trigger animation in next frame
         requestAnimationFrame(() => {
           Object.assign(particle.style, {
             transform: `translate(calc(-50% + ${targetX}px), calc(-50% + ${targetY}px)) rotate(${rotation}deg)`,
@@ -64,6 +70,7 @@ export function ConfettiBurst({
           });
         });
 
+        // Cleanup
         setTimeout(() => {
           particle.remove();
         }, duration + 100);

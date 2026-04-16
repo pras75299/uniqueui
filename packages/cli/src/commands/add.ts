@@ -2,10 +2,11 @@
 import { Command } from "commander";
 import fetch from "node-fetch";
 import path from "path";
+import os from "os";
 import fs from "fs-extra";
 import chalk from "chalk";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
 
 // Type definition for Registry (matching what we built)
 type RegistryItem = {
@@ -14,6 +15,14 @@ type RegistryItem = {
     files: Array<{ path: string; type: string; content: string }>;
     tailwindConfig?: Record<string, any>;
 };
+
+type RegistryCache = {
+    timestamp: number;
+    data: RegistryItem[];
+};
+
+const CACHE_PATH = path.join(os.homedir(), ".uniqueui", "registry-cache.json");
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 export async function add(componentName: string, options: { url: string }) {
     console.log(`Fetching ${componentName} from ${options.url}...`);
@@ -28,9 +37,25 @@ export async function add(componentName: string, options: { url: string }) {
     }
 
     // 2. Fetch registry
-    let registry: RegistryItem[];
     const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
 
+    // --- Per-component split fetch (fast path: ~3 KB instead of 304 KB) ---
+    async function fetchComponentFromSplit(baseUrl: string, slug: string): Promise<RegistryItem | null> {
+        try {
+            const indexRes = await fetch(`${baseUrl}/registry/index.json`);
+            if (!indexRes.ok) return null;
+            const index = await indexRes.json() as { components: string[] };
+            if (!Array.isArray(index.components) || !index.components.includes(slug)) return null;
+
+            const componentRes = await fetch(`${baseUrl}/registry/${slug}.json`);
+            if (!componentRes.ok) return null;
+            return await componentRes.json() as RegistryItem;
+        } catch {
+            return null;
+        }
+    }
+
+    // --- Monolith fetch (fallback) ---
     async function fetchRegistryFromUrl(baseUrl: string): Promise<RegistryItem[] | null> {
         try {
             const registryUrl = baseUrl.endsWith('.json') ? baseUrl : `${baseUrl}/registry.json`;
@@ -43,41 +68,79 @@ export async function add(componentName: string, options: { url: string }) {
         }
     }
 
+    // --- Cache helpers ---
+    async function readCache(): Promise<RegistryItem[] | null> {
+        try {
+            const cache = await fs.readJson(CACHE_PATH) as RegistryCache;
+            if (Date.now() - cache.timestamp < CACHE_TTL_MS) {
+                return cache.data;
+            }
+        } catch {
+            // Cache miss or corrupt — proceed to fetch
+        }
+        return null;
+    }
+
+    async function writeCache(data: RegistryItem[]): Promise<void> {
+        try {
+            await fs.ensureDir(path.dirname(CACHE_PATH));
+            await fs.writeJson(CACHE_PATH, { timestamp: Date.now(), data } as RegistryCache);
+        } catch {
+            // Cache write failure is non-fatal
+        }
+    }
+
+    let item: RegistryItem | undefined;
+
     try {
-        // For local testing, if url is a file path, read it
         if (options.url.startsWith(".")) {
-            registry = await fs.readJson(options.url);
+            // Local file path — read directly, no cache
+            const registry = await fs.readJson(options.url) as RegistryItem[];
+            item = registry.find((c) => c.name === componentName);
         } else {
-            // Try primary URL first
-            let result = await fetchRegistryFromUrl(options.url);
+            // 1. Try split per-component fetch (fast path)
+            const splitResult = await fetchComponentFromSplit(options.url, componentName);
+            if (splitResult) {
+                item = splitResult;
+            } else {
+                // 2. Fall back to monolith — check cache first
+                let registry = await readCache();
 
-            // Try /api/registry endpoint as alternative
-            if (!result) {
-                console.log(chalk.yellow(`Could not fetch from ${options.url}/registry.json, trying API endpoint...`));
-                result = await fetchRegistryFromUrl(`${options.url}/api/registry`);
-            }
+                if (!registry) {
+                    // Cache miss — fetch monolith
+                    registry = await fetchRegistryFromUrl(options.url);
 
-            // Try fallback GitHub raw URL
-            if (!result && options.url !== FALLBACK_URL) {
-                console.log(chalk.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
-                result = await fetchRegistryFromUrl(FALLBACK_URL);
-            }
+                    // Try /api/registry endpoint
+                    if (!registry) {
+                        console.log(chalk.yellow(`Trying API endpoint...`));
+                        registry = await fetchRegistryFromUrl(`${options.url}/api/registry`);
+                    }
 
-            if (!result) {
-                throw new Error(
-                    `Failed to fetch registry from ${options.url}.\n` +
-                    `  Make sure the registry URL is accessible.\n` +
-                    `  You can specify a custom URL with: uniqueui add <component> --url <url>`
-                );
+                    // Try GitHub raw fallback
+                    if (!registry && options.url !== FALLBACK_URL) {
+                        console.log(chalk.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
+                        registry = await fetchRegistryFromUrl(FALLBACK_URL);
+                    }
+
+                    if (!registry) {
+                        throw new Error(
+                            `Failed to fetch registry from ${options.url}.\n` +
+                            `  Make sure the registry URL is accessible.\n` +
+                            `  You can specify a custom URL with: uniqueui add <component> --url <url>`
+                        );
+                    }
+
+                    await writeCache(registry);
+                }
+
+                item = registry.find((c) => c.name === componentName);
             }
-            registry = result;
         }
     } catch (e) {
-        console.error(chalk.red("Could not fetch registry.json"), e);
+        console.error(chalk.red("Could not fetch registry"), e);
         process.exit(1);
     }
 
-    const item = registry.find((c) => c.name === componentName);
     if (!item) {
         console.error(chalk.red(`Component ${componentName} not found.`));
         process.exit(1);
@@ -86,12 +149,14 @@ export async function add(componentName: string, options: { url: string }) {
     // 3. Install dependencies
     if (item.dependencies.length) {
         console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
-        try {
-            // Detect package manager - simplified
-            const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
-            const cmd = pm === "npm" ? "install" : "add"; // yarn add, pnpm add
-            execSync(`${pm} ${cmd} ${item.dependencies.join(" ")}`, { stdio: "inherit" });
-        } catch (e) {
+        // Use spawnSync with shell: false to prevent shell injection
+        const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
+        const cmd = pm === "npm" ? "install" : "add";
+        const result = spawnSync(pm, [cmd, ...item.dependencies], {
+            stdio: "inherit",
+            shell: false,
+        });
+        if (result.status !== 0) {
             console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
         }
     }
@@ -126,11 +191,10 @@ export async function add(componentName: string, options: { url: string }) {
     }
 }
 
-async function updateTailwindConfig(configPath: string, newConfig: any) {
+export async function updateTailwindConfig(configPath: string, newConfig: any) {
     // Check for config file existence and handle fallback
     let finalConfigPath = configPath;
     if (!fs.existsSync(finalConfigPath)) {
-        // Try alternatives
         const ext = path.extname(configPath);
         const base = configPath.slice(0, -ext.length);
         const altExts = [".ts", ".js", ".mjs", ".cjs"];
@@ -151,7 +215,6 @@ async function updateTailwindConfig(configPath: string, newConfig: any) {
         }
     });
 
-    // Attempt to add the file
     let sourceFile;
     try {
         sourceFile = project.addSourceFileAtPath(finalConfigPath);
@@ -160,13 +223,7 @@ async function updateTailwindConfig(configPath: string, newConfig: any) {
         return;
     }
 
-    // Simplistic handling: look for export default or module.exports
-    // We expect the config to be an object literal.
-
-    // We need to merge `newConfig.theme.extend` into the existing config.
-    // logic: find 'theme' property -> find 'extend' property -> merge properties.
-
-    const exportAssignment = sourceFile.getExportAssignment((e) => !e.isExportEquals()); // export default
+    const exportAssignment = sourceFile.getExportAssignment((e) => !e.isExportEquals());
     let objectLiteral;
 
     if (exportAssignment) {
@@ -195,10 +252,6 @@ async function updateTailwindConfig(configPath: string, newConfig: any) {
         return;
     }
 
-    // Heuristics:
-    // newConfig is { theme: { extend: { animation: {...}, keyframes: {...} } } }
-
-    // Helper to get or create property object
     const getOrCreateObjectProperty = (parentObj: any, name: string) => {
         let prop = parentObj.getProperty(name);
         if (!prop) {
@@ -214,7 +267,6 @@ async function updateTailwindConfig(configPath: string, newConfig: any) {
         if (themeObj) {
             const extendObj = getOrCreateObjectProperty(themeObj, "extend");
             if (extendObj) {
-                // Merge animations
                 const animations = newConfig.theme.extend.animation;
                 if (animations) {
                     const animObj = getOrCreateObjectProperty(extendObj, "animation");
@@ -227,15 +279,12 @@ async function updateTailwindConfig(configPath: string, newConfig: any) {
                     }
                 }
 
-                // Merge keyframes
                 const keyframes = newConfig.theme.extend.keyframes;
                 if (keyframes) {
                     const keyframesObj = getOrCreateObjectProperty(extendObj, "keyframes");
                     if (keyframesObj) {
                         for (const [key, value] of Object.entries(keyframes)) {
                             if (!keyframesObj.getProperty(key)) {
-                                // value is an object, strictly JSON stringify might be valid JS valid object literal needed?
-                                // "JSON.stringify(value)" produces valid JSON which is valid JS object literal initializer if keys are quoted.
                                 keyframesObj.addPropertyAssignment({ name: `"${key}"`, initializer: JSON.stringify(value) });
                             }
                         }

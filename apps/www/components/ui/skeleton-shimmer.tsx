@@ -1,7 +1,12 @@
 "use client";
 import React from "react";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export interface SkeletonShimmerProps {
   className?: string;
@@ -55,6 +60,20 @@ export function SkeletonShimmer({
               repeatType: "loop",
               ease: "easeInOut",
               delay: i * 0.15,
+            }}
+          />
+          {/* Subtle pulse on top of shimmer */}
+          <motion.div
+            className="absolute inset-0 bg-neutral-700/20"
+            animate={{
+              opacity: [0, 0.3, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatType: "loop",
+              ease: "easeInOut",
+              delay: i * 0.1,
             }}
           />
         </div>

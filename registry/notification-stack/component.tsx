@@ -80,17 +80,13 @@ export function NotificationStack({
   className,
   position = "top-right",
   maxVisible = 5,
+  notifications,
+  onRemove,
 }: NotificationStackProps & {
   notifications: Notification[];
   onRemove: (id: string) => void;
 }) {
-  // Cast to get the extra props
-  const props = arguments[0] as NotificationStackProps & {
-    notifications: Notification[];
-    onRemove: (id: string) => void;
-  };
-
-  const visible = props.notifications.slice(-maxVisible);
+  const visible = notifications.slice(-maxVisible);
   const isBottom = position.startsWith("bottom");
 
   return (
@@ -107,7 +103,7 @@ export function NotificationStack({
           <NotificationItem
             key={notification.id}
             notification={notification}
-            onRemove={props.onRemove}
+            onRemove={onRemove}
             position={position}
           />
         ))}
@@ -127,13 +123,17 @@ function NotificationItem({
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
   const [progress, setProgress] = useState(100);
-  const startTime = useRef(Date.now());
+  const startTime = useRef<number | null>(null);
+
+  useEffect(() => {
+    startTime.current = Date.now();
+  }, []);
 
   useEffect(() => {
     if (duration <= 0) return;
 
     const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime.current;
+      const elapsed = Date.now() - (startTime.current ?? Date.now());
       const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
       setProgress(remaining);
       if (remaining <= 0) {

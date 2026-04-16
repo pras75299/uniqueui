@@ -32,7 +32,7 @@ export async function GET() {
             { error: 'Registry not found' },
             { status: 404 }
         );
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { error: 'Failed to load registry' },
             { status: 500 }

@@ -8,7 +8,7 @@ import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedTabs } from "@/components/ui/animated-tabs";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { InfiniteMarquee, MarqueeItem } from "@/components/ui/infinite-marquee";
-import { ScrollReveal, ScrollRevealGroup } from "@/components/ui/scroll-reveal";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SkeletonShimmer, SkeletonCard } from "@/components/ui/skeleton-shimmer";
 import { MorphingModal, MorphingModalTrigger } from "@/components/ui/morphing-modal";
 import { GradientTextReveal } from "@/components/ui/gradient-text-reveal";

@@ -17,7 +17,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
-import { ScrambleText } from "@/components/ui/scramble-text";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "build:registry": {
+      "inputs": [
+        "registry/**",
+        "scripts/build-registry.ts"
+      ],
+      "outputs": [
+        "registry.json",
+        "apps/www/public/registry.json",
+        "apps/www/public/registry/**",
+        "apps/www/components/ui/**"
+      ]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "lint": {
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

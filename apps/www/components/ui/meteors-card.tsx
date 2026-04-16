@@ -1,6 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export interface MeteorsCardProps {
   children: React.ReactNode;
@@ -36,16 +41,24 @@ interface MeteorData {
   tailWidth: number;
 }
 
+function generateMeteors(count: number): MeteorData[] {
+  return Array.from({ length: count }).map(() => ({
+    left: `${Math.random() * 100}%`,
+    delay: `${Math.random() * 5}s`,
+    duration: `${Math.random() * 3 + 2}s`,
+    size: Math.random() * 1.5 + 0.5,
+    tailWidth: Math.random() * 80 + 40,
+  }));
+}
+
 function Meteors({ count, color }: { count: number; color: string }) {
-  const [meteors, setMeteors] = useState<MeteorData[]>(() => 
-    Array.from({ length: count }).map(() => ({
-      left: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 5}s`,
-      duration: `${Math.random() * 3 + 2}s`,
-      size: Math.random() * 1.5 + 0.5,
-      tailWidth: Math.random() * 80 + 40,
-    }))
+  const [meteors, setMeteors] = useState<MeteorData[]>(() =>
+    generateMeteors(count)
   );
+
+  useEffect(() => {
+    setMeteors(generateMeteors(count));
+  }, [count]);
 
   return (
     <>

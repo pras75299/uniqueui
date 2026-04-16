@@ -1,7 +1,12 @@
 "use client";
 import React, { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { cn } from "@/lib/utils";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export type DrawerPosition = "left" | "right" | "top" | "bottom";
 
@@ -98,6 +103,7 @@ export function DrawerSlide({
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -110,6 +116,7 @@ export function DrawerSlide({
             )}
           />
 
+          {/* Drawer */}
           <motion.div
             initial={config.initial}
             animate={config.animate}
@@ -139,6 +146,7 @@ export function DrawerSlide({
               height: !isHorizontal ? height : undefined,
             }}
           >
+            {/* Drag handle */}
             {dragToClose && (
               <div
                 className={cn(
