@@ -1,12 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export interface MorphingModalProps {
   isOpen: boolean;
@@ -15,6 +10,7 @@ export interface MorphingModalProps {
   className?: string;
   overlayClassName?: string;
   layoutId?: string;
+  theme?: "light" | "dark";
 }
 
 export function MorphingModal({
@@ -24,6 +20,7 @@ export function MorphingModal({
   className,
   overlayClassName,
   layoutId,
+  theme = "dark",
 }: MorphingModalProps) {
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -73,7 +70,8 @@ export function MorphingModal({
                 damping: 30,
               }}
               className={cn(
-                "relative w-full max-w-lg rounded-2xl border border-neutral-800 bg-neutral-950 p-6 shadow-2xl shadow-purple-500/10",
+                "relative w-full max-w-lg rounded-2xl border p-6 shadow-2xl shadow-purple-500/10",
+                theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
                 className
               )}
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
@@ -84,7 +82,7 @@ export function MorphingModal({
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 onClick={onClose}
-                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-neutral-400 hover:text-white transition-colors"
+                className={cn("absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors", theme === "dark" ? "bg-neutral-900 text-neutral-400 hover:text-white" : "bg-neutral-100 text-neutral-600 hover:text-neutral-900")}
                 aria-label="Close modal"
               >
                 <svg
@@ -129,6 +127,7 @@ export interface MorphingModalTriggerProps {
   className?: string;
   layoutId?: string;
   onClick?: () => void;
+  theme?: "light" | "dark";
 }
 
 export function MorphingModalTrigger({
@@ -136,6 +135,7 @@ export function MorphingModalTrigger({
   className,
   layoutId,
   onClick,
+  theme = "dark",
 }: MorphingModalTriggerProps) {
   return (
     <motion.div

@@ -2,17 +2,42 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-export async function GET() {
+const REGISTRY_CACHE_CONTROL = 'public, s-maxage=60, stale-while-revalidate=600';
+
+/**
+ * Public registry JSON for CLI and browsers. Intentionally readable from any origin
+ * unless REGISTRY_CORS_ORIGIN is set (single origin or comma-separated list for self-hosted).
+ */
+function corsHeaders(request: Request): Record<string, string> {
+    const raw = process.env.REGISTRY_CORS_ORIGIN?.trim();
+    const base = { 'Cache-Control': REGISTRY_CACHE_CONTROL } as Record<string, string>;
+    if (!raw) {
+        return { ...base, 'Access-Control-Allow-Origin': '*' };
+    }
+    const allowed = raw.split(',').map((o) => o.trim()).filter(Boolean);
+    if (allowed.length === 0) {
+        return { ...base, 'Access-Control-Allow-Origin': '*' };
+    }
+    if (allowed.length === 1) {
+        return { ...base, 'Access-Control-Allow-Origin': allowed[0]! };
+    }
+    const variedBase = { ...base, Vary: 'Origin' };
+    const origin = request.headers.get('Origin');
+    if (origin && allowed.includes(origin)) {
+        return { ...variedBase, 'Access-Control-Allow-Origin': origin };
+    }
+    // Non-browser clients (no Origin) still get JSON; browsers on a disallowed origin get no ACAO.
+    return variedBase;
+}
+
+export async function GET(request: Request) {
     try {
         // Try to read from the public directory first (static copy)
         const publicPath = path.join(process.cwd(), 'public', 'registry.json');
         if (fs.existsSync(publicPath)) {
             const data = JSON.parse(fs.readFileSync(publicPath, 'utf-8'));
             return NextResponse.json(data, {
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=600',
-                },
+                headers: corsHeaders(request),
             });
         }
 
@@ -21,10 +46,7 @@ export async function GET() {
         if (fs.existsSync(rootPath)) {
             const data = JSON.parse(fs.readFileSync(rootPath, 'utf-8'));
             return NextResponse.json(data, {
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=600',
-                },
+                headers: corsHeaders(request),
             });
         }
 
@@ -32,7 +54,8 @@ export async function GET() {
             { error: 'Registry not found' },
             { status: 404 }
         );
-    } catch {
+    } catch (error) {
+        console.error('[registry API]', error);
         return NextResponse.json(
             { error: 'Failed to load registry' },
             { status: 500 }

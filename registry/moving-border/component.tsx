@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRef, useEffect } from "react";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 
 export function Button({
   borderRadius = "1.75rem",
@@ -11,6 +11,7 @@ export function Button({
   borderClassName,
   duration,
   className,
+  theme = "dark",
   ...otherProps
 }: {
   borderRadius?: string;
@@ -20,6 +21,7 @@ export function Button({
   borderClassName?: string;
   duration?: number;
   className?: string;
+  theme?: "light" | "dark";
   [key: string]: unknown;
 }) {
   return (
@@ -49,7 +51,8 @@ export function Button({
 
       <div
         className={cn(
-          "relative bg-slate-900 border border-slate-800 text-white flex items-center justify-center w-full h-full text-sm antialiased",
+          "relative flex items-center justify-center w-full h-full text-sm antialiased",
+          theme === "dark" ? "bg-slate-900 border border-slate-800 text-white" : "bg-slate-100 border border-slate-300 text-slate-900",
           className
         )}
         style={{
@@ -75,9 +78,11 @@ export const MovingBorder = ({
   ry?: string;
   [key: string]: unknown;
 }) => {
+  const safeDuration = duration > 0 ? duration : 2000;
   const pathRef = useRef<SVGRectElement | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
+  const pathLengthRef = useRef<number | null>(null);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -88,9 +93,18 @@ export const MovingBorder = ({
       const deltaTime = time - lastTime;
       lastTime = time;
 
-      const pathLength = pathRef.current?.getTotalLength();
+      if (!pathRef.current) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+
+      if (pathLengthRef.current == null) {
+        pathLengthRef.current = pathRef.current.getTotalLength();
+      }
+
+      const pathLength = pathLengthRef.current;
       if (pathLength) {
-        const pxPerMs = pathLength / duration;
+        const pxPerMs = pathLength / safeDuration;
         progressRef.current = (progressRef.current + deltaTime * pxPerMs) % pathLength;
         const point = pathRef.current?.getPointAtLength?.(progressRef.current);
         if (point && elementRef.current) {
@@ -102,7 +116,7 @@ export const MovingBorder = ({
 
     animationFrameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [duration]);
+  }, [safeDuration]);
 
   return (
     <>

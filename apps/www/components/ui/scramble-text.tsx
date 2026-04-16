@@ -1,12 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useInView } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
 
@@ -18,6 +13,7 @@ export interface ScrambleTextProps {
   triggerOnView?: boolean;
   once?: boolean;
   characterSet?: string;
+  theme?: "light" | "dark";
 }
 
 export function ScrambleText({
@@ -34,6 +30,7 @@ export function ScrambleText({
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once, amount: 0.5 });
   const hasTriggered = useRef(false);
+  const intervalRef = useRef<number | null>(null);
 
   const scramble = useCallback(() => {
     if (isScrambling) return;
@@ -43,7 +40,12 @@ export function ScrambleText({
     const totalSteps = Math.ceil(scrambleDuration / speed);
     let step = 0;
 
-    const interval = setInterval(() => {
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    const intervalId = window.setInterval(() => {
       step++;
       const progress = step / totalSteps;
 
@@ -59,13 +61,14 @@ export function ScrambleText({
       setDisplayText(newText);
 
       if (step >= totalSteps) {
-        clearInterval(interval);
+        clearInterval(intervalId);
+        intervalRef.current = null;
         setDisplayText(text);
         setIsScrambling(false);
       }
     }, speed);
 
-    return () => clearInterval(interval);
+    intervalRef.current = intervalId;
   }, [text, speed, scrambleDuration, characterSet, isScrambling]);
 
   useEffect(() => {
@@ -74,6 +77,14 @@ export function ScrambleText({
       scramble();
     }
   }, [isInView, triggerOnView, scramble]);
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   return (
     <span

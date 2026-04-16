@@ -1,12 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export type NotificationType = "success" | "error" | "warning" | "info";
 
@@ -22,6 +17,7 @@ export interface NotificationStackProps {
   className?: string;
   position?: "top-right" | "top-left" | "bottom-right" | "bottom-left";
   maxVisible?: number;
+  theme?: "light" | "dark";
 }
 
 const typeStyles: Record<NotificationType, string> = {
@@ -80,13 +76,18 @@ export function NotificationStack({
   className,
   position = "top-right",
   maxVisible = 5,
-  notifications,
-  onRemove,
+  theme = "dark",
 }: NotificationStackProps & {
   notifications: Notification[];
   onRemove: (id: string) => void;
 }) {
-  const visible = notifications.slice(-maxVisible);
+  // Cast to get the extra props
+  const props = arguments[0] as NotificationStackProps & {
+    notifications: Notification[];
+    onRemove: (id: string) => void;
+  };
+
+  const visible = props.notifications.slice(-maxVisible);
   const isBottom = position.startsWith("bottom");
 
   return (
@@ -103,8 +104,9 @@ export function NotificationStack({
           <NotificationItem
             key={notification.id}
             notification={notification}
-            onRemove={onRemove}
+            onRemove={props.onRemove}
             position={position}
+            theme={theme}
           />
         ))}
       </AnimatePresence>
@@ -116,33 +118,30 @@ function NotificationItem({
   notification,
   onRemove,
   position,
+  theme = "dark",
 }: {
   notification: Notification;
   onRemove: (id: string) => void;
   position: string;
+  theme?: "light" | "dark";
 }) {
   const { id, title, description, type = "info", duration = 5000 } = notification;
   const [progress, setProgress] = useState(100);
-  const startTime = useRef<number | null>(null);
-
-  useEffect(() => {
-    startTime.current = Date.now();
-  }, []);
+  const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (duration <= 0) return;
 
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - (startTime.current ?? Date.now());
-      const remaining = Math.max(0, 100 - (elapsed / duration) * 100);
-      setProgress(remaining);
-      if (remaining <= 0) {
-        clearInterval(interval);
-        onRemove(id);
-      }
-    }, 50);
+    timeoutRef.current = window.setTimeout(() => {
+      onRemove(id);
+      setProgress(0);
+    }, duration);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [id, duration, onRemove]);
 
   const isRight = position.includes("right");
@@ -181,14 +180,14 @@ function NotificationItem({
           {typeIcons[type]}
         </span>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-white">{title}</p>
+          <p className={cn("text-sm font-semibold", theme === "dark" ? "text-white" : "text-neutral-900")}>{title}</p>
           {description && (
-            <p className="text-xs text-neutral-400 mt-1">{description}</p>
+            <p className={cn("text-xs mt-1", theme === "dark" ? "text-neutral-400" : "text-neutral-600")}>{description}</p>
           )}
         </div>
         <button
           onClick={() => onRemove(id)}
-          className="flex-shrink-0 text-neutral-500 hover:text-white transition-colors text-sm"
+          className={cn("flex-shrink-0 transition-colors text-sm", theme === "dark" ? "text-neutral-500 hover:text-white" : "text-neutral-600 hover:text-neutral-900")}
         >
           ✕
         </button>
@@ -205,8 +204,9 @@ function NotificationItem({
               type === "warning" && "bg-yellow-500",
               type === "info" && "bg-blue-500"
             )}
-            style={{ width: `${progress}%` }}
-            transition={{ duration: 0.05 }}
+            initial={{ width: "100%" }}
+            animate={{ width: "0%" }}
+            transition={{ duration: duration / 1000, ease: "linear" }}
           />
         </div>
       )}

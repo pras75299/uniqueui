@@ -1,99 +1,115 @@
 "use client";
-import React from "react";
-import { motion } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
+import React, { ReactNode } from "react";
 
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-export interface AuroraBackgroundProps {
-  children?: React.ReactNode;
-  className?: string;
+export interface AuroraBackgroundProps extends React.HTMLProps<HTMLDivElement> {
+  children?: ReactNode;
   showRadialGradient?: boolean;
+  theme?: "light" | "dark";
+  /**
+   * Preserve original preset names for backward compatibility if needed,
+   * though the implementation is now fully customizable via `colors` prop.
+   */
+  preset?: "cinematic" | "stitch" | "custom";
+  /** Optional array of exactly *five* color stops (e.g. hex, rgba) */
+  colors?: string[];
+  /** Animation duration in seconds. Default: 60 */
+  speed?: number;
+  /** Blur filter strength in pixels. Default: 10 */
+  blur?: number;
 }
 
-export function AuroraBackground({
-  children,
+const PRESET_COLORS: Record<string, string[]> = {
+  cinematic: [
+    "rgba(45,95,108,0.8)", // teal
+    "rgba(78,56,98,0.8)", // plum
+    "rgba(112,76,52,0.8)", // copper
+    "rgba(48,72,82,0.8)", // muted teal
+    "rgba(72,52,88,0.8)", // dark plum
+  ],
+  stitch: [
+    "rgba(194,132,255,0.8)", // purple
+    "rgba(47,46,190,0.8)", // blue
+    "rgba(250,83,164,0.8)", // pink
+    "rgba(194,132,255,0.8)", // purple
+    "rgba(47,46,190,0.8)", // blue
+  ],
+  default: [
+    "#3b82f6", // blue-500
+    "#a5b4fc", // indigo-300
+    "#93c5fd", // blue-300
+    "#ddd6fe", // violet-200
+    "#60a5fa", // blue-400
+  ],
+};
+
+export const AuroraBackground = ({
   className,
+  children,
   showRadialGradient = true,
-}: AuroraBackgroundProps) {
+  theme = "dark",
+  preset,
+  colors,
+  speed = 1,
+  blur = 1,
+  ...props
+}: AuroraBackgroundProps) => {
+  const isDark = theme === "dark";
+
+  // Resolve colors: user colors > preset colors > default colors
+  const activeColors = colors || PRESET_COLORS[preset || "default"] || PRESET_COLORS.default;
+
+  // Create repeating gradient stops
+  const colorStr = activeColors.map((c, i) => `${c} ${10 + i * 5}%`).join(", ");
+  const auroraGradient = `repeating-linear-gradient(100deg, ${colorStr})`;
+  
+  const whiteGradient = `repeating-linear-gradient(100deg, #fff 0%, #fff 7%, transparent 10%, transparent 12%, #fff 16%)`;
+  const darkGradient = `repeating-linear-gradient(100deg, #000 0%, #000 7%, transparent 10%, transparent 12%, #000 16%)`;
+
+  const backgroundImage = isDark 
+    ? `${darkGradient}, ${auroraGradient}`
+    : `${whiteGradient}, ${auroraGradient}`;
+
   return (
     <div
       className={cn(
-        "relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-neutral-950 text-white transition-all",
+        "relative flex flex-col h-[100vh] items-center justify-center transition-bg",
+        isDark ? "bg-zinc-900 text-white" : "bg-zinc-50 text-slate-950",
         className
       )}
+      {...props}
     >
       <div className="absolute inset-0 overflow-hidden">
-        {/* Aurora blob 1 */}
-        <motion.div
-          className="absolute -top-40 -left-40 h-[600px] w-[600px] rounded-full opacity-30 blur-[100px]"
+        {/* Main masked wrapper */}
+        <div
+          className={cn(
+            "pointer-events-none absolute -inset-[10px] opacity-50 will-change-transform",
+            showRadialGradient &&
+              `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,transparent_70%)]` // The Aceternity style radial gradient
+          )}
           style={{
-            background:
-              "linear-gradient(135deg, #6366f1, #a855f7, #ec4899)",
+            backgroundImage,
+            backgroundSize: "300%, 200%",
+            backgroundPosition: "50% 50%, 50% 50%",
+            filter: `blur(${10 * blur}px)${isDark ? "" : " invert(1)"}`,
           }}
-          animate={{
-            x: [0, 100, -50, 0],
-            y: [0, -80, 60, 0],
-            scale: [1, 1.2, 0.9, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Aurora blob 2 */}
-        <motion.div
-          className="absolute -bottom-20 -right-20 h-[500px] w-[500px] rounded-full opacity-25 blur-[100px]"
-          style={{
-            background:
-              "linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6)",
-          }}
-          animate={{
-            x: [0, -120, 80, 0],
-            y: [0, 60, -100, 0],
-            scale: [1, 0.8, 1.3, 1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Aurora blob 3 */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[700px] w-[700px] rounded-full opacity-20 blur-[120px]"
-          style={{
-            background:
-              "linear-gradient(45deg, #10b981, #06b6d4, #6366f1)",
-          }}
-          animate={{
-            x: [0, 80, -60, 40, 0],
-            y: [0, -60, 80, -40, 0],
-            rotate: [0, 90, 180, 270, 360],
-            scale: [1, 1.1, 0.9, 1.05, 1],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          }}
-        />
-
-        {showRadialGradient && (
-          <div className="absolute inset-0 bg-neutral-950 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black_70%)]" />
-        )}
+        >
+          {/* Animated overlapping element recreating internal 'after' pseudo class */}
+          <div 
+             className="absolute inset-0 animate-aurora"
+             style={{
+               backgroundImage,
+               backgroundSize: "200%, 100%",
+               backgroundAttachment: "fixed",
+               mixBlendMode: "difference",
+               animationDuration: `${60 / Math.max(speed, 0.01)}s`,
+             }}
+          />
+        </div>
       </div>
-
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">{children}</div>
     </div>
   );
-}
+};
+
+export default AuroraBackground;

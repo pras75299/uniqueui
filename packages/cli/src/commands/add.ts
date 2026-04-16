@@ -2,11 +2,12 @@
 import { Command } from "commander";
 import fetch from "node-fetch";
 import path from "path";
-import os from "os";
 import fs from "fs-extra";
 import chalk from "chalk";
+import os from "os";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
 import { spawnSync } from "child_process";
+import { assertSafeNpmDependencies } from "../npm-dependency-name";
 
 // Type definition for Registry (matching what we built)
 type RegistryItem = {
@@ -16,16 +17,137 @@ type RegistryItem = {
     tailwindConfig?: Record<string, any>;
 };
 
-type RegistryCache = {
-    timestamp: number;
+/** Reject malformed registry JSON before any property access (avoids throws from bad remote/local data). */
+function validateRegistryPayload(data: unknown): RegistryItem[] | null {
+    if (!Array.isArray(data)) {
+        return null;
+    }
+    const out: RegistryItem[] = [];
+    for (const entry of data) {
+        if (entry === null || typeof entry !== "object" || Array.isArray(entry)) {
+            return null;
+        }
+        const o = entry as Record<string, unknown>;
+        if (typeof o.name !== "string" || o.name.length === 0) {
+            return null;
+        }
+        let dependencies: string[] = [];
+        if (o.dependencies !== undefined) {
+            if (!Array.isArray(o.dependencies)) {
+                return null;
+            }
+            for (const d of o.dependencies) {
+                if (typeof d !== "string") {
+                    return null;
+                }
+            }
+            dependencies = o.dependencies;
+        }
+        if (!Array.isArray(o.files)) {
+            return null;
+        }
+        const files: RegistryItem["files"] = [];
+        for (const f of o.files) {
+            if (f === null || typeof f !== "object" || Array.isArray(f)) {
+                return null;
+            }
+            const fo = f as Record<string, unknown>;
+            if (typeof fo.path !== "string" || typeof fo.type !== "string" || typeof fo.content !== "string") {
+                return null;
+            }
+            files.push({ path: fo.path, type: fo.type, content: fo.content });
+        }
+        let tailwindConfig: Record<string, any> | undefined;
+        if (o.tailwindConfig !== undefined) {
+            if (o.tailwindConfig === null || typeof o.tailwindConfig !== "object" || Array.isArray(o.tailwindConfig)) {
+                return null;
+            }
+            tailwindConfig = o.tailwindConfig as Record<string, any>;
+        }
+        out.push({ name: o.name, dependencies, files, tailwindConfig });
+    }
+    return out;
+}
+
+/** Local file path (./...) or official registry hosts only. */
+function isTrustedRegistryUrl(url: string): boolean {
+    if (url.startsWith(".")) return true;
+    try {
+        const u = new URL(url);
+        if (u.hostname === "uniqueui-platform.vercel.app") return true;
+        if (
+            u.hostname === "raw.githubusercontent.com" &&
+            (u.pathname === "/pras75299/uniqueui" || u.pathname.startsWith("/pras75299/uniqueui/"))
+        ) {
+            return true;
+        }
+        return false;
+    } catch {
+        return false;
+    }
+}
+
+function warnIfUntrustedRegistry(url: string) {
+    if (process.env.UNIQUEUI_SKIP_REGISTRY_WARN) return;
+    if (isTrustedRegistryUrl(url)) return;
+    console.warn(
+        chalk.yellow(
+            "Warning: custom registry URL — only use sources you trust. The registry controls package installs and files written to your project. See SECURITY.md in the UniqueUI repository.",
+        ),
+    );
+}
+
+const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
+
+const CACHE_DIR = path.join(os.homedir(), ".uniqueui");
+const CACHE_FILE = path.join(CACHE_DIR, "registry-cache.json");
+const CACHE_TTL = 3600 * 1000; // 1 hour
+
+type CachedRegistry = {
+    sourceUrl: string;
     data: RegistryItem[];
 };
 
-const CACHE_PATH = path.join(os.homedir(), ".uniqueui", "registry-cache.json");
-const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+async function getCachedRegistry(sourceUrl: string): Promise<RegistryItem[] | null> {
+    try {
+        if (!fs.existsSync(CACHE_FILE)) return null;
+        const stat = await fs.stat(CACHE_FILE);
+        if (Date.now() - stat.mtimeMs > CACHE_TTL) return null;
+        const cached = (await fs.readJson(CACHE_FILE)) as CachedRegistry;
+        if (cached?.sourceUrl !== sourceUrl || !Array.isArray(cached?.data)) return null;
+        return cached.data;
+    } catch {
+        return null;
+    }
+}
+
+async function setCachedRegistry(sourceUrl: string, data: RegistryItem[]) {
+    try {
+        await fs.ensureDir(CACHE_DIR);
+        await fs.writeJson(CACHE_FILE, { sourceUrl, data } satisfies CachedRegistry);
+    } catch {
+        // ignore cache write errors
+    }
+}
+
+async function fetchRegistryFromUrl(baseUrl: string): Promise<RegistryItem[] | null> {
+    try {
+        const normalized = baseUrl.replace(/\/+$/, "");
+        const isDirectEndpoint =
+            normalized.endsWith(".json") || normalized.endsWith("/api/registry");
+        const registryUrl = isDirectEndpoint ? normalized : `${normalized}/registry.json`;
+        const res = await fetch(registryUrl);
+        if (!res.ok) return null;
+        return await res.json() as RegistryItem[];
+    } catch (error) {
+        console.error(chalk.yellow(`\nWarning: Failed to fetch from ${baseUrl}:`), error);
+        return null;
+    }
+}
 
 export async function add(componentName: string, options: { url: string }) {
     console.log(`Fetching ${componentName} from ${options.url}...`);
+    warnIfUntrustedRegistry(options.url);
 
     // 1. Load config
     let config;
@@ -37,126 +159,98 @@ export async function add(componentName: string, options: { url: string }) {
     }
 
     // 2. Fetch registry
-    const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
-
-    // --- Per-component split fetch (fast path: ~3 KB instead of 304 KB) ---
-    async function fetchComponentFromSplit(baseUrl: string, slug: string): Promise<RegistryItem | null> {
-        try {
-            const indexRes = await fetch(`${baseUrl}/registry/index.json`);
-            if (!indexRes.ok) return null;
-            const index = await indexRes.json() as { components: string[] };
-            if (!Array.isArray(index.components) || !index.components.includes(slug)) return null;
-
-            const componentRes = await fetch(`${baseUrl}/registry/${slug}.json`);
-            if (!componentRes.ok) return null;
-            return await componentRes.json() as RegistryItem;
-        } catch {
-            return null;
-        }
-    }
-
-    // --- Monolith fetch (fallback) ---
-    async function fetchRegistryFromUrl(baseUrl: string): Promise<RegistryItem[] | null> {
-        try {
-            const registryUrl = baseUrl.endsWith('.json') ? baseUrl : `${baseUrl}/registry.json`;
-            const res = await fetch(registryUrl);
-            if (!res.ok) return null;
-            return await res.json() as RegistryItem[];
-        } catch (error) {
-            console.error(chalk.yellow(`\nWarning: Failed to fetch from ${baseUrl}:`), error);
-            return null;
-        }
-    }
-
-    // --- Cache helpers ---
-    async function readCache(): Promise<RegistryItem[] | null> {
-        try {
-            const cache = await fs.readJson(CACHE_PATH) as RegistryCache;
-            if (Date.now() - cache.timestamp < CACHE_TTL_MS) {
-                return cache.data;
-            }
-        } catch {
-            // Cache miss or corrupt — proceed to fetch
-        }
-        return null;
-    }
-
-    async function writeCache(data: RegistryItem[]): Promise<void> {
-        try {
-            await fs.ensureDir(path.dirname(CACHE_PATH));
-            await fs.writeJson(CACHE_PATH, { timestamp: Date.now(), data } as RegistryCache);
-        } catch {
-            // Cache write failure is non-fatal
-        }
-    }
-
-    let item: RegistryItem | undefined;
+    let registry: RegistryItem[];
 
     try {
+        let raw: unknown;
+        let shouldWriteCache = false;
+
+        // For local testing, if url is a file path, read it
         if (options.url.startsWith(".")) {
-            // Local file path — read directly, no cache
-            const registry = await fs.readJson(options.url) as RegistryItem[];
-            item = registry.find((c) => c.name === componentName);
+            raw = await fs.readJson(options.url);
         } else {
-            // 1. Try split per-component fetch (fast path)
-            const splitResult = await fetchComponentFromSplit(options.url, componentName);
-            if (splitResult) {
-                item = splitResult;
+            // Try cache first
+            const cached = await getCachedRegistry(options.url);
+            if (cached) {
+                console.log(chalk.gray("Using cached component registry"));
+                raw = cached;
             } else {
-                // 2. Fall back to monolith — check cache first
-                let registry = await readCache();
+                // Try primary URL first
+                let result = await fetchRegistryFromUrl(options.url);
 
-                if (!registry) {
-                    // Cache miss — fetch monolith
-                    registry = await fetchRegistryFromUrl(options.url);
-
-                    // Try /api/registry endpoint
-                    if (!registry) {
-                        console.log(chalk.yellow(`Trying API endpoint...`));
-                        registry = await fetchRegistryFromUrl(`${options.url}/api/registry`);
-                    }
-
-                    // Try GitHub raw fallback
-                    if (!registry && options.url !== FALLBACK_URL) {
-                        console.log(chalk.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
-                        registry = await fetchRegistryFromUrl(FALLBACK_URL);
-                    }
-
-                    if (!registry) {
-                        throw new Error(
-                            `Failed to fetch registry from ${options.url}.\n` +
-                            `  Make sure the registry URL is accessible.\n` +
-                            `  You can specify a custom URL with: uniqueui add <component> --url <url>`
-                        );
-                    }
-
-                    await writeCache(registry);
+                // Try /api/registry endpoint as alternative
+                if (!result) {
+                    console.log(chalk.yellow(`Could not fetch from ${options.url}/registry.json, trying API endpoint...`));
+                    result = await fetchRegistryFromUrl(`${options.url}/api/registry`);
                 }
 
-                item = registry.find((c) => c.name === componentName);
+                // Try fallback GitHub raw URL
+                if (!result && options.url !== FALLBACK_URL) {
+                    console.log(chalk.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
+                    result = await fetchRegistryFromUrl(FALLBACK_URL);
+                }
+
+                if (!result) {
+                    throw new Error(
+                        `Failed to fetch registry from ${options.url}.\n` +
+                        `  Make sure the registry URL is accessible.\n` +
+                        `  You can specify a custom URL with: uniqueui add <component> --url <url>`
+                    );
+                }
+                raw = result;
+                shouldWriteCache = true;
             }
         }
+
+        const validated = validateRegistryPayload(raw);
+        if (validated === null) {
+            console.error(
+                chalk.red(
+                    "Invalid registry.json: expected an array of components. Each item needs a non-empty string name, " +
+                        "a files array of { path, type, content }, and optional dependencies as an array of strings.",
+                ),
+            );
+            process.exit(1);
+        }
+        registry = validated;
+        if (shouldWriteCache) {
+            await setCachedRegistry(options.url, registry);
+        }
     } catch (e) {
-        console.error(chalk.red("Could not fetch registry"), e);
+        console.error(chalk.red("Could not fetch registry.json"), e);
         process.exit(1);
     }
 
+    const item = registry.find((c) => c.name === componentName);
     if (!item) {
         console.error(chalk.red(`Component ${componentName} not found.`));
         process.exit(1);
     }
 
-    // 3. Install dependencies
+    // 3. Install dependencies (validated names + no shell — avoids injection from a malicious registry)
     if (item.dependencies.length) {
+        const depCheck = assertSafeNpmDependencies(item.dependencies);
+        if (!depCheck.ok) {
+            console.error(
+                chalk.red(
+                    `Refusing to install: invalid dependency name(s) from registry: ${depCheck.invalid.join(", ")}`,
+                ),
+            );
+            process.exit(1);
+        }
         console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
-        // Use spawnSync with shell: false to prevent shell injection
-        const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
-        const cmd = pm === "npm" ? "install" : "add";
-        const result = spawnSync(pm, [cmd, ...item.dependencies], {
-            stdio: "inherit",
-            shell: false,
-        });
-        if (result.status !== 0) {
+        try {
+            const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
+            const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
+            const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
+            if (result.error) throw result.error;
+            if (result.signal) {
+                throw new Error(`package manager terminated by signal ${result.signal}`);
+            }
+            if (result.status !== 0) {
+                throw new Error(`package manager exited with code ${result.status}`);
+            }
+        } catch (e) {
             console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
         }
     }
@@ -167,12 +261,18 @@ export async function add(componentName: string, options: { url: string }) {
         await updateTailwindConfig(config.tailwind.config, item.tailwindConfig);
     }
 
+    const allowedRegistryFile = (name: string) => /\.(tsx?|jsx?|mjs|cjs)$/i.test(name);
+
     // 5. Write Files
     for (const file of item.files) {
         if (file.type === "registry:ui") {
             const targetDir = path.resolve(config.paths.components || "components/ui");
             await fs.ensureDir(targetDir);
             const fileName = path.basename(file.path);
+            if (!allowedRegistryFile(fileName)) {
+                console.error(chalk.red(`Refusing to write disallowed file name from registry: ${fileName}`));
+                process.exit(1);
+            }
             const targetPath = path.join(targetDir, fileName);
             await fs.writeFile(targetPath, file.content);
             console.log(chalk.green(`Created ${fileName}`));
@@ -180,6 +280,10 @@ export async function add(componentName: string, options: { url: string }) {
             const targetDir = path.resolve(config.paths.lib || "utils");
             await fs.ensureDir(targetDir);
             const fileName = path.basename(file.path);
+            if (!allowedRegistryFile(fileName)) {
+                console.error(chalk.red(`Refusing to write disallowed util file name from registry: ${fileName}`));
+                process.exit(1);
+            }
             const targetPath = path.join(targetDir, fileName);
 
             // Only create util if it doesn't exist
@@ -191,10 +295,11 @@ export async function add(componentName: string, options: { url: string }) {
     }
 }
 
-export async function updateTailwindConfig(configPath: string, newConfig: any) {
+async function updateTailwindConfig(configPath: string, newConfig: any) {
     // Check for config file existence and handle fallback
     let finalConfigPath = configPath;
     if (!fs.existsSync(finalConfigPath)) {
+        // Try alternatives
         const ext = path.extname(configPath);
         const base = configPath.slice(0, -ext.length);
         const altExts = [".ts", ".js", ".mjs", ".cjs"];
@@ -215,6 +320,7 @@ export async function updateTailwindConfig(configPath: string, newConfig: any) {
         }
     });
 
+    // Attempt to add the file
     let sourceFile;
     try {
         sourceFile = project.addSourceFileAtPath(finalConfigPath);
@@ -223,7 +329,13 @@ export async function updateTailwindConfig(configPath: string, newConfig: any) {
         return;
     }
 
-    const exportAssignment = sourceFile.getExportAssignment((e) => !e.isExportEquals());
+    // Simplistic handling: look for export default or module.exports
+    // We expect the config to be an object literal.
+
+    // We need to merge `newConfig.theme.extend` into the existing config.
+    // logic: find 'theme' property -> find 'extend' property -> merge properties.
+
+    const exportAssignment = sourceFile.getExportAssignment((e) => !e.isExportEquals()); // export default
     let objectLiteral;
 
     if (exportAssignment) {
@@ -252,6 +364,10 @@ export async function updateTailwindConfig(configPath: string, newConfig: any) {
         return;
     }
 
+    // Heuristics:
+    // newConfig is { theme: { extend: { animation: {...}, keyframes: {...} } } }
+
+    // Helper to get or create property object
     const getOrCreateObjectProperty = (parentObj: any, name: string) => {
         let prop = parentObj.getProperty(name);
         if (!prop) {
@@ -267,6 +383,7 @@ export async function updateTailwindConfig(configPath: string, newConfig: any) {
         if (themeObj) {
             const extendObj = getOrCreateObjectProperty(themeObj, "extend");
             if (extendObj) {
+                // Merge animations
                 const animations = newConfig.theme.extend.animation;
                 if (animations) {
                     const animObj = getOrCreateObjectProperty(extendObj, "animation");
@@ -279,12 +396,15 @@ export async function updateTailwindConfig(configPath: string, newConfig: any) {
                     }
                 }
 
+                // Merge keyframes
                 const keyframes = newConfig.theme.extend.keyframes;
                 if (keyframes) {
                     const keyframesObj = getOrCreateObjectProperty(extendObj, "keyframes");
                     if (keyframesObj) {
                         for (const [key, value] of Object.entries(keyframes)) {
                             if (!keyframesObj.getProperty(key)) {
+                                // value is an object, strictly JSON stringify might be valid JS valid object literal needed?
+                                // "JSON.stringify(value)" produces valid JSON which is valid JS object literal initializer if keys are quoted.
                                 keyframesObj.addPropertyAssignment({ name: `"${key}"`, initializer: JSON.stringify(value) });
                             }
                         }

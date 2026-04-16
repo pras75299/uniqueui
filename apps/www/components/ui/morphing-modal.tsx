@@ -1,12 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export interface MorphingModalProps {
   isOpen: boolean;
@@ -15,6 +10,17 @@ export interface MorphingModalProps {
   className?: string;
   overlayClassName?: string;
   layoutId?: string;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
+  theme?: "light" | "dark";
+}
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+  );
 }
 
 export function MorphingModal({
@@ -24,7 +30,14 @@ export function MorphingModal({
   className,
   overlayClassName,
   layoutId,
+  ariaLabel,
+  ariaLabelledBy,
+  theme = "dark",
 }: MorphingModalProps) {
+  const dialogRef = React.useRef<HTMLDivElement>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const previousFocusRef = React.useRef<HTMLElement | null>(null);
+
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -34,14 +47,51 @@ export function MorphingModal({
 
   useEffect(() => {
     if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement | null;
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
+      closeButtonRef.current?.focus();
     }
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
+      previousFocusRef.current?.focus();
     };
   }, [isOpen, handleEscape]);
+
+  useEffect(() => {
+    if (!isOpen || !dialogRef.current) {
+      return;
+    }
+
+    const dialog = dialogRef.current;
+    const handleTab = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const focusable = getFocusableElements(dialog);
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    dialog.addEventListener("keydown", handleTab);
+    return () => dialog.removeEventListener("keydown", handleTab);
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -64,27 +114,36 @@ export function MorphingModal({
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
               layoutId={layoutId}
+              ref={dialogRef}
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              role="dialog"
+              aria-modal="true"
+              aria-label={ariaLabel}
+              aria-labelledby={ariaLabelledBy}
+              tabIndex={-1}
               transition={{
                 type: "spring",
                 stiffness: 350,
                 damping: 30,
               }}
               className={cn(
-                "relative w-full max-w-lg rounded-2xl border border-neutral-800 bg-neutral-950 p-6 shadow-2xl shadow-purple-500/10",
+                "relative w-full max-w-lg rounded-2xl border p-6 shadow-2xl shadow-purple-500/10",
+                theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
                 className
               )}
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               {/* Close button */}
               <motion.button
+                ref={closeButtonRef}
+                type="button"
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 onClick={onClose}
-                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-neutral-400 hover:text-white transition-colors"
+                className={cn("absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors", theme === "dark" ? "bg-neutral-900 text-neutral-400 hover:text-white" : "bg-neutral-100 text-neutral-600 hover:text-neutral-900")}
                 aria-label="Close modal"
               >
                 <svg
@@ -129,6 +188,7 @@ export interface MorphingModalTriggerProps {
   className?: string;
   layoutId?: string;
   onClick?: () => void;
+  theme?: "light" | "dark";
 }
 
 export function MorphingModalTrigger({
@@ -138,7 +198,8 @@ export function MorphingModalTrigger({
   onClick,
 }: MorphingModalTriggerProps) {
   return (
-    <motion.div
+    <motion.button
+      type="button"
       layoutId={layoutId}
       onClick={onClick}
       className={cn("cursor-pointer", className)}
@@ -147,6 +208,6 @@ export function MorphingModalTrigger({
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
       {children}
-    </motion.div>
+    </motion.button>
   );
 }

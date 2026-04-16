@@ -1,21 +1,38 @@
+<!-- 
+Please ensure your PR title follows conventional commits format:
+<type>(<scope>): <subject>
+Example: feat(components): add magnetic button
+-->
+
+## Type of Change
+
+- [ ] 🚀 New Component
+- [ ] 🐛 Bug Fix
+- [ ] 📝 Documentation Update
+- [ ] 💄 Styling or Animation adjustment
+- [ ] 🔧 CLI Tooling
+- [ ] 🧹 Refactoring / Chore
+
 ## Description
 
-<!-- Describe your changes and why you made them -->
+<!-- Please include a summary of the changes and the related issue. Please also include relevant motivation and context. -->
 
-## Type of change
+## Testing
 
-- [ ] Bug fix
-- [ ] New component
-- [ ] Enhancement to existing component
-- [ ] CLI change
-- [ ] Docs / config
-- [ ] Infrastructure / CI
+<!-- Please describe the tests that you ran to verify your changes. If you added a new component, please confirm you tested it in a fresh project. -->
 
-## Checklist
+## Checklist (for New Components)
 
-- [ ] Tests pass locally (`pnpm test`)
-- [ ] Lint passes (`pnpm --dir apps/www lint`)
-- [ ] Run `pnpm build:registry` if any `registry/` source files changed
-- [ ] `registry.json` committed if rebuilt
-- [ ] Added a changeset if this affects `packages/cli` (`pnpm changeset`)
-- [ ] New component: added entry in `registry/config.ts`, `apps/www/config/components.ts`, and `apps/www/config/demos.tsx`
+If adding a new component, please ensure you've completed the following:
+
+- [ ] Created `registry/{component-name}.tsx` with the source code.
+- [ ] Added entry to `registry/config.ts` specifying dependencies and Tailwind configuration.
+- [ ] Ran `pnpm build:registry` to regenerate `registry.json`.
+- [ ] Added a showcase demo in `apps/www/app/page.tsx`.
+- [ ] Formatted the code using Prettier / project standards.
+- [ ] Verified animations use `motion` (Motion.dev).
+- [ ] Verified the component supports standard Tailwind classes via `className` prop (`cn` utility).
+
+## Related Issues
+
+<!-- Mention any related issues here, e.g., "Fixes #123" -->

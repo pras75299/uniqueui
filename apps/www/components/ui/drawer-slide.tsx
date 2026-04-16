@@ -1,12 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export type DrawerPosition = "left" | "right" | "top" | "bottom";
 
@@ -20,6 +15,17 @@ export interface DrawerSlideProps {
   width?: string;
   height?: string;
   dragToClose?: boolean;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
+  theme?: "light" | "dark";
+}
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+  );
 }
 
 const positionStyles: Record<
@@ -77,9 +83,15 @@ export function DrawerSlide({
   width = "400px",
   height = "400px",
   dragToClose = true,
+  ariaLabel,
+  ariaLabelledBy,
+  theme = "dark",
 }: DrawerSlideProps) {
   const config = positionStyles[position];
   const isHorizontal = position === "left" || position === "right";
+  const drawerRef = React.useRef<HTMLDivElement>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const previousFocusRef = React.useRef<HTMLElement | null>(null);
 
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -90,14 +102,51 @@ export function DrawerSlide({
 
   useEffect(() => {
     if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement | null;
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
+      closeButtonRef.current?.focus();
     }
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
+      previousFocusRef.current?.focus();
     };
   }, [isOpen, handleEscape]);
+
+  useEffect(() => {
+    if (!isOpen || !drawerRef.current) {
+      return;
+    }
+
+    const drawer = drawerRef.current;
+    const handleTab = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const focusable = getFocusableElements(drawer);
+      if (focusable.length === 0) {
+        event.preventDefault();
+        drawer.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    drawer.addEventListener("keydown", handleTab);
+    return () => drawer.removeEventListener("keydown", handleTab);
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -118,9 +167,15 @@ export function DrawerSlide({
 
           {/* Drawer */}
           <motion.div
+            ref={drawerRef}
             initial={config.initial}
             animate={config.animate}
             exit={config.exit}
+            role="dialog"
+            aria-modal="true"
+            aria-label={ariaLabel}
+            aria-labelledby={ariaLabelledBy}
+            tabIndex={-1}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             drag={dragToClose ? config.drag : false}
             dragConstraints={config.dragConstraint}
@@ -136,7 +191,8 @@ export function DrawerSlide({
               if (shouldClose) onClose();
             }}
             className={cn(
-              "fixed z-50 border-neutral-800 bg-neutral-950 shadow-2xl",
+              "fixed z-50 shadow-2xl",
+              theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
               config.container,
               isHorizontal ? "border-l" : "border-t",
               className
@@ -146,9 +202,38 @@ export function DrawerSlide({
               height: !isHorizontal ? height : undefined,
             }}
           >
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={onClose}
+              aria-label="Close drawer"
+              className={cn(
+                "absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors",
+                theme === "dark"
+                  ? "bg-neutral-900 text-neutral-400 hover:text-white"
+                  : "bg-neutral-100 text-neutral-600 hover:text-neutral-900"
+              )}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
             {/* Drag handle */}
             {dragToClose && (
               <div
+                aria-hidden="true"
                 className={cn(
                   "flex items-center justify-center",
                   isHorizontal
@@ -162,14 +247,15 @@ export function DrawerSlide({
               >
                 <div
                   className={cn(
-                    "rounded-full bg-neutral-700",
+                    "rounded-full",
+                    theme === "dark" ? "bg-neutral-700" : "bg-neutral-300",
                     isHorizontal ? "w-1 h-8" : "h-1 w-8"
                   )}
                 />
               </div>
             )}
 
-            <div className="h-full overflow-y-auto p-6">{children}</div>
+            <div className="h-full overflow-y-auto p-6 pt-14">{children}</div>
           </motion.div>
         </>
       )}

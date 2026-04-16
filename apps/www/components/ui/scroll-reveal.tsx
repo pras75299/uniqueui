@@ -1,40 +1,18 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useRef } from "react";
-import { motion, useInView, Variant } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { m, LazyMotion, domAnimation, useInView } from "motion/react";
+import type { Variant } from "motion/react";
 
 type AnimationPreset = "fade-up" | "fade-down" | "fade-left" | "fade-right" | "scale" | "blur";
 
 const presets: Record<AnimationPreset, { hidden: Variant; visible: Variant }> = {
-  "fade-up": {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0 },
-  },
-  "fade-down": {
-    hidden: { opacity: 0, y: -40 },
-    visible: { opacity: 1, y: 0 },
-  },
-  "fade-left": {
-    hidden: { opacity: 0, x: -40 },
-    visible: { opacity: 1, x: 0 },
-  },
-  "fade-right": {
-    hidden: { opacity: 0, x: 40 },
-    visible: { opacity: 1, x: 0 },
-  },
-  scale: {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1 },
-  },
-  blur: {
-    hidden: { opacity: 0, filter: "blur(10px)" },
-    visible: { opacity: 1, filter: "blur(0px)" },
-  },
+  "fade-up": { hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0 } },
+  "fade-down": { hidden: { opacity: 0, y: -40 }, visible: { opacity: 1, y: 0 } },
+  "fade-left": { hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } },
+  "fade-right": { hidden: { opacity: 0, x: 40 }, visible: { opacity: 1, x: 0 } },
+  scale: { hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 1, scale: 1 } },
+  blur: { hidden: { opacity: 0, filter: "blur(10px)" }, visible: { opacity: 1, filter: "blur(0px)" } },
 };
 
 export interface ScrollRevealProps {
@@ -45,6 +23,7 @@ export interface ScrollRevealProps {
   duration?: number;
   threshold?: number;
   once?: boolean;
+  theme?: "light" | "dark";
 }
 
 export function ScrollReveal({
@@ -57,35 +36,34 @@ export function ScrollReveal({
   once = true,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, {
-    once,
-    amount: threshold,
-  });
+  const isInView = useInView(ref, { once, amount: threshold });
 
   const preset = presets[animation];
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden: preset.hidden,
-        visible: {
-          ...preset.visible,
-          transition: {
-            type: "spring",
-            stiffness: 100,
-            damping: 15,
-            delay,
-            duration,
+    <LazyMotion features={domAnimation}>
+      <m.div
+        ref={ref}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={{
+          hidden: preset.hidden,
+          visible: {
+            ...preset.visible,
+            transition: {
+              type: "spring",
+              stiffness: 100,
+              damping: 15,
+              delay,
+              duration,
+            },
           },
-        },
-      }}
-      className={cn(className)}
-    >
-      {children}
-    </motion.div>
+        }}
+        className={cn(className)}
+      >
+        {children}
+      </m.div>
+    </LazyMotion>
   );
 }
 
@@ -96,6 +74,7 @@ export interface ScrollRevealGroupProps {
   staggerDelay?: number;
   threshold?: number;
   once?: boolean;
+  theme?: "light" | "dark";
 }
 
 export function ScrollRevealGroup({
@@ -107,45 +86,48 @@ export function ScrollRevealGroup({
   once = true,
 }: ScrollRevealGroupProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, {
-    once,
-    amount: threshold,
-  });
+  const isInView = useInView(ref, { once, amount: threshold });
 
   const preset = presets[animation];
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: {
-            staggerChildren: staggerDelay,
-          },
-        },
-      }}
-      className={cn(className)}
-    >
-      {React.Children.map(children, (child) => (
-        <motion.div
-          variants={{
-            hidden: preset.hidden,
-            visible: {
-              ...preset.visible,
-              transition: {
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              },
+    <LazyMotion features={domAnimation}>
+      <m.div
+        ref={ref}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: staggerDelay,
             },
-          }}
-        >
-          {child}
-        </motion.div>
-      ))}
-    </motion.div>
+          },
+        }}
+        className={cn(className)}
+      >
+        {React.Children.map(children, (child, index) => {
+          const key = React.isValidElement(child) && child.key ? child.key : index;
+          return (
+            <m.div
+              key={key}
+              variants={{
+                hidden: preset.hidden,
+                visible: {
+                  ...preset.visible,
+                  transition: {
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 15,
+                  },
+                },
+              }}
+            >
+              {child}
+            </m.div>
+          );
+        })}
+      </m.div>
+    </LazyMotion>
   );
 }

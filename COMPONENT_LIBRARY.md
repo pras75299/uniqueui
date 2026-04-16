@@ -279,15 +279,13 @@ uniqueui add typewriter-text
 > Advanced components for differentiation
 
 21. Particle Field
-22. Stacked Cards
-23. Horizontal Scroll Gallery
-24. Radial Menu
-25. Cursor Trail
-26. Image Carousel 3D
-27. Bento Grid
-28. Animated Pricing Table
-29. Comparison Slider
-30. Page Transition Wrapper
+22. Horizontal Scroll Gallery
+23. Radial Menu
+24. Cursor Trail
+25. Image Carousel 3D
+26. Animated Pricing Table
+27. Comparison Slider
+28. Page Transition Wrapper
 
 ### Phase 4 — Full Library
 > Complete coverage across all categories

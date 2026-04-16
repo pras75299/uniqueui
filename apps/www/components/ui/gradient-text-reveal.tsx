@@ -1,10 +1,9 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React from "react";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
-function cn(...classes: (string | undefined | null | false)[]) {
-  return classes.filter(Boolean).join(" ");
-}
+
 
 export interface GradientTextRevealProps {
   text: string;
@@ -32,36 +31,35 @@ export function GradientTextReveal({
   const words = text.split(" ");
 
   return (
-    <Tag
-      ref={ref as React.RefObject<HTMLElement>}
-      className={cn("flex flex-wrap gap-x-2 gap-y-1", className)}
-    >
-      {words.map((word, i) => (
-        <motion.span
-          key={`${word}-${i}`}
-          initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
-          animate={
-            isInView
-              ? { opacity: 1, y: 0, filter: "blur(0px)" }
-              : { opacity: 0, y: 20, filter: "blur(8px)" }
-          }
-          transition={{
-            duration,
-            delay: i * staggerDelay,
-            type: "spring",
-            stiffness: 100,
-            damping: 12,
-          }}
-          style={{
-            background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})`,
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
-          {word}
-        </motion.span>
-      ))}
-    </Tag>
+    <div ref={ref}>
+      <Tag className={cn("flex flex-wrap gap-x-2 gap-y-1", className)}>
+        {words.map((word, i) => (
+          <motion.span
+            key={`${word}-${i}`}
+            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            animate={
+              isInView
+                ? { opacity: 1, y: 0, filter: "blur(0px)" }
+                : { opacity: 0, y: 20, filter: "blur(8px)" }
+            }
+            transition={{
+              duration,
+              delay: i * staggerDelay,
+              type: "spring",
+              stiffness: 100,
+              damping: 12,
+            }}
+            style={{
+              background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            {word}
+          </motion.span>
+        ))}
+      </Tag>
+    </div>
   );
 }

@@ -1,11 +1,6 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useCallback, useRef } from "react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export interface ConfettiBurstProps {
   children: React.ReactNode;
@@ -14,6 +9,7 @@ export interface ConfettiBurstProps {
   colors?: string[];
   spread?: number;
   duration?: number;
+  theme?: "light" | "dark";
 }
 
 export function ConfettiBurst({

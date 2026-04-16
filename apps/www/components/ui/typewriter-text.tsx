@@ -1,13 +1,12 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
+/**
+ * TypewriterText is intended for a small number of simultaneous instances.
+ * For very large grids of text, consider a lighter-weight or shared-timer approach.
+ */
 export interface TypewriterTextProps {
   words: string[];
   className?: string;
@@ -17,6 +16,7 @@ export interface TypewriterTextProps {
   delayBetweenWords?: number;
   loop?: boolean;
   cursor?: boolean;
+  theme?: "light" | "dark";
 }
 
 export function TypewriterText({

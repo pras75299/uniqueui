@@ -122,6 +122,14 @@ export const registry: Registry = [
     },
     // ─── Phase 2 — Core Library ───
     {
+        name: "animated-glowing-text-outline",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "animated-glowing-text-outline.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "gradient-text-reveal",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
@@ -214,6 +222,171 @@ export const registry: Registry = [
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
             { path: "animated-timeline/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "nested-comments",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "nested-comments.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "hover-reveal-card",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "hover-reveal-card.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "bento-grid",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "bento-grid.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "horizontal-scroll-gallery",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "horizontal-scroll-gallery.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    // ─── Phase 3 — Premium & Polish  ───
+    {
+        name: "particle-field",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "particle-field.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "interactive-cursor",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "interactive-cursor.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "radial-menu",
+        dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            { path: "radial-menu.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "cursor-trail",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "cursor-trail.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "pen-cursor",
+        dependencies: ["clsx", "tailwind-merge"],
+        files: [
+            { path: "pen-cursor.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "glow-hero-section",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "glow-hero-section.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "morphing-card-stack",
+        dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            {
+                path: "morphing-card-stack.tsx",
+                type: "registry:ui",
+            },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "limelight-nav",
+        dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            { path: "limelight-nav.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "data-table",
+        dependencies: ["lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            { path: "data-table.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "multi-step-auth-card",
+        dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
+        files: [
+            { path: "multi-step-auth-card.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    // ─── Phase 4 — Hero & Text Effects  ───
+    {
+        name: "shiny-text",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "shiny-text.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "blur-reveal",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "blur-reveal.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "count-up",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "count-up.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "border-beam",
+        dependencies: ["clsx", "tailwind-merge"],
+        files: [
+            { path: "border-beam.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "ripple",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "ripple.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "word-rotate",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "word-rotate.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },

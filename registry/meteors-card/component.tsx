@@ -1,17 +1,13 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export interface MeteorsCardProps {
   children: React.ReactNode;
   className?: string;
   meteorCount?: number;
   meteorColor?: string;
+  theme?: "light" | "dark";
 }
 
 export function MeteorsCard({
@@ -19,11 +15,13 @@ export function MeteorsCard({
   className,
   meteorCount = 20,
   meteorColor = "white",
+  theme = "dark",
 }: MeteorsCardProps) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950 p-8",
+        "relative overflow-hidden rounded-xl border p-8",
+        theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
         className
       )}
     >
