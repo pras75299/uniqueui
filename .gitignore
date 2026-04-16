@@ -19,6 +19,9 @@ NPM_PUBLISH_GUIDE.md
 __pycache__
 *.pyc
 
+# Claude Code
+.claude/worktrees
+
 # Editor
 .DS_Store
 *.local
