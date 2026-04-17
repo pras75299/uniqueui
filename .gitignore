@@ -5,6 +5,7 @@ NPM_PUBLISH_GUIDE.md
 /temp-test
 /e2e-components-test
 /docs/repo-ui-audit.local.md
+/docs/repo-ui-audit-current.local.md
 .venv
 .env
 .mempalace
@@ -17,3 +18,6 @@ entities.json
 # Claude Code
 .claude/worktrees
 .worktrees/
+
+.turbo*
+.claire*

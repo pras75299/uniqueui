@@ -19,13 +19,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.3.0
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5.0.0
         with:
           version: 8.12.1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.0.4
         with:
           node-version: "20"
           cache: "pnpm"
@@ -36,8 +36,8 @@ jobs:
       - name: Build CLI
         run: pnpm --dir packages/cli build
 
-      - name: Run CLI tests
-        run: pnpm --dir packages/cli test
+      - name: Run workspace tests
+        run: pnpm test
 
       - name: Lint docs site
         run: pnpm --dir apps/www lint
@@ -48,7 +48,7 @@ jobs:
       - name: Type-check docs site
         run: pnpm --dir apps/www exec tsc --noEmit
 
-      - name: Verify registry.json is up to date
+      - name: Verify generated registry artifacts are up to date
         run: |
           pnpm build:registry
-          git diff --exit-code registry.json || (echo "" && echo "ERROR: registry.json is out of sync." && echo "Run 'pnpm build:registry' locally and commit the updated registry.json." && exit 1)
+          git diff --exit-code -- registry.json apps/www/public/registry.json apps/www/public/registry apps/www/components/ui apps/www/config/components.ts apps/www/config/docs-scenarios.ts apps/www/config/demos.tsx || (echo "" && echo "ERROR: generated registry/docs artifacts are out of sync." && echo "Run 'pnpm build:registry' locally and commit the updated generated files." && exit 1)

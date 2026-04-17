@@ -4,16 +4,17 @@
   "private": true,
   "scripts": {
     "build:registry": "ts-node scripts/build-registry.ts",
-    "test": "pnpm --dir packages/cli exec vitest run && pnpm --dir apps/www exec vitest run",
+    "test": "turbo run test",
     "test:ci": "pnpm --dir packages/cli test && pnpm --dir apps/www test",
     "lint": "pnpm --dir apps/www lint",
     "build": "turbo run build",
     "typecheck": "pnpm --dir packages/cli exec tsc --noEmit && pnpm --dir apps/www exec tsc --noEmit",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version-packages": "changeset version && node scripts/sync-root-changelog.mjs",
     "release": "pnpm build:registry && pnpm --dir packages/cli build && changeset publish",
     "prepare": "husky",
-    "precommit": "./scripts/pre-commit.sh"
+    "precommit": "./scripts/pre-commit.sh",
+    "changelog:verify": "bash scripts/verify-changelog.sh"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

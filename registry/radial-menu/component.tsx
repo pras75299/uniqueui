@@ -46,7 +46,7 @@ export function RadialMenu({
   className,
   triggerClassName,
   itemClassName,
-  _theme = "dark",
+  theme: _theme = "dark",
   triggerAriaLabel,
 }: RadialMenuProps) {
   const [isOpen, setIsOpen] = useState(false);

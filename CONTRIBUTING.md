@@ -28,13 +28,23 @@ cd apps/www && pnpm dev    # Docs site at localhost:3000
 
 ## Adding a New Component
 
-1. Create `registry/<component-name>.tsx` with the component source
+1. Create `registry/<component-name>/component.tsx` with the component source
 2. Add an entry to `registry/config.ts` with `name`, `dependencies`, `files`, and optional `tailwindConfig`
-3. Run `pnpm build:registry` from the root — this regenerates `registry.json` and syncs to `apps/www/`
-4. Add the component to `apps/www/config/components.ts` (`componentsList`)
-5. Add a live demo to `apps/www/config/demos.tsx` (`componentDemos`)
-6. Optionally add documentation scenarios to `apps/www/config/docs-scenarios.ts`
-7. Test in the docs site: `cd apps/www && pnpm dev`
+3. Add docs metadata to `registry/docs.json` for the component page and scenarios
+4. Add the live demo mapping to `registry/demos.tsx`
+5. Run `pnpm build:registry` from the root — this regenerates `registry.json`, refreshes `apps/www/public/registry/*`, syncs `apps/www/components/ui/*`, and generates `apps/www/config/components.ts`, `apps/www/config/docs-scenarios.ts`, and `apps/www/config/demos.tsx`
+6. Test in the docs site: `cd apps/www && pnpm dev`
+
+### Docs metadata and demos
+
+| Source (edit these) | Generated (do not edit by hand) |
+|---------------------|----------------------------------|
+| `registry/docs.json` | `apps/www/config/components.ts`, `apps/www/config/docs-scenarios.ts` |
+| `registry/demos.tsx` | `apps/www/config/demos.tsx` |
+
+- **Policy:** Keep docs metadata authoring centralized in `registry/docs.json` unless a [documented migration](docs/adr/0001-registry-docs-metadata-storage.md) has happened. The ADR lists quantitative **migration triggers** (file size, conflict rate, ownership needs) and qualitative **friction signals** — open a discussion if friction grows, but do not split metadata files until triggers are met.
+- **When the model changes:** If an ADR supersedes 0001 (for example per-component `registry/<slug>/docs.json`), update this section, `BUILD.md`, and any `scripts/build-registry.ts` / CI drift checks in the same change series so contributors have a single coherent story.
+- After any edit to `registry/docs.json` or `registry/demos.tsx`, run `pnpm build:registry` and commit generated files under `apps/www/config/`, `apps/www/components/ui/`, `apps/www/public/registry/`, and root `registry.json` as required by CI.
 
 ## Component Design Rules
 
@@ -72,10 +82,18 @@ Common scopes: `registry`, `cli`, `docs`, or the component name (e.g. `moving-bo
 
 1. Fork the repo and create a branch from `pras75299/initial-feature-setup`
 2. Make your changes following the guidelines above
-3. Run `pnpm build:registry` if you touched any `registry/` files, and commit `registry.json`
+3. Run `pnpm build:registry` if you touched registry source or docs metadata, and commit the regenerated artifacts
 4. Run `pnpm test` and ensure all tests pass
 5. Add a changeset if your changes affect `packages/cli`: `pnpm changeset`
-6. Open a PR — fill in the PR template
+6. Do not edit `CHANGELOG.md` manually. Release automation updates it from changesets.
+7. Open a PR — fill in the PR template
+
+## Release notes and changelog
+
+- Changesets are the source of truth for **versioned** CLI releases.
+- The release automation opens or updates a PR that runs `pnpm version-packages`.
+- `pnpm version-packages` updates `packages/cli/CHANGELOG.md` and syncs root `CHANGELOG.md`.
+- Write changeset summaries for **end users** (what changed in behavior or usage). See `.changeset/README.md` for bump types and examples. Root changelog richness depends on good changeset first lines.
 
 ## Code of Conduct
 

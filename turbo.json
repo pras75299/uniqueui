@@ -15,11 +15,13 @@
         "registry.json",
         "apps/www/public/registry.json",
         "apps/www/public/registry/**",
-        "apps/www/components/ui/**"
+        "apps/www/components/ui/**",
+        "apps/www/config/components.ts",
+        "apps/www/config/docs-scenarios.ts",
+        "apps/www/config/demos.tsx"
       ]
     },
     "test": {
-      "dependsOn": ["build"],
       "outputs": []
     },
     "lint": {

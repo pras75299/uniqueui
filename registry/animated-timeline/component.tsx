@@ -137,7 +137,7 @@ function TimelineNode({ item, index }: { item: TimelineItem; index: number }) {
 // ─── Horizontal timeline ──────────────────────────────────────────────────────
 // Animation: connecting line grows left-to-right, dots pop in with spring
 
-function HorizontalTimeline({ items, className, lineColor, _theme = "dark" }: {
+function HorizontalTimeline({ items, className, lineColor, theme: _theme = "dark" }: {
   items: TimelineItem[]; className?: string; lineColor: string; theme?: "light" | "dark";
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -227,7 +227,7 @@ function HorizontalTimeline({ items, className, lineColor, _theme = "dark" }: {
 // ─── Cards timeline ───────────────────────────────────────────────────────────
 // Animation: center vertical line, items alternate left/right and slide in
 
-function CardsTimeline({ items, className, lineColor, _theme = "dark" }: {
+function CardsTimeline({ items, className, lineColor, theme: _theme = "dark" }: {
   items: TimelineItem[]; className?: string; lineColor: string; theme?: "light" | "dark";
 }) {
   return (
@@ -352,7 +352,7 @@ function CardContent({ item, color, isInView, index }: {
 // ─── Steps timeline ───────────────────────────────────────────────────────────
 // Animation: numbered circle fills radially, connector bar scales width, text blurs in
 
-function StepsTimeline({ items, className, _theme = "dark" }: { items: TimelineItem[]; className?: string; theme?: "light" | "dark" }) {
+function StepsTimeline({ items, className, theme: _theme = "dark" }: { items: TimelineItem[]; className?: string; theme?: "light" | "dark" }) {
   return (
     <div className={cn("space-y-0", className)}>
       {items.map((item, index) => (

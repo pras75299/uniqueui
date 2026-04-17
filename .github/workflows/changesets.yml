@@ -1,0 +1,35 @@
+name: Prepare Release Changelog
+
+on:
+  push:
+    branches:
+      - main
+      - pras75299/initial-feature-setup
+  workflow_dispatch:
+
+jobs:
+  changesets:
+    name: Open or update release PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.12.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create release PR from changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm version-packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

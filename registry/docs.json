@@ -1,0 +1,2593 @@
+{
+  "demos": {
+    "sourceFile": "registry/demos.tsx"
+  },
+  "components": [
+    {
+      "slug": "animated-glowing-text-outline",
+      "name": "Animated Glowing Text",
+      "description": "Animated SVG drawing trace outline over shimmering text characters.",
+      "icon": "LucideSparkles",
+      "category": "Text",
+      "props": [
+        {
+          "name": "text",
+          "type": "string",
+          "default": "\"Hello World\"",
+          "description": "The text content to be displayed."
+        },
+        {
+          "name": "fontSize",
+          "type": "number | string",
+          "default": "80",
+          "description": "The font size of the text."
+        },
+        {
+          "name": "fontWeight",
+          "type": "string | number",
+          "default": "900",
+          "description": "The CSS font-weight of the text."
+        },
+        {
+          "name": "textColor",
+          "type": "string",
+          "default": "\"#080808\"",
+          "description": "Fill color of the text face."
+        },
+        {
+          "name": "outlineColor",
+          "type": "string",
+          "default": "\"#333333\"",
+          "description": "The default color of the text stroke outline."
+        },
+        {
+          "name": "colors",
+          "type": "string[]",
+          "default": "[\"#ffaa40\", \"#9c40ff\", \"#ffaa40\"]",
+          "description": "Array of colors forming the animated gradient sweep."
+        },
+        {
+          "name": "outlineWidth",
+          "type": "number | string",
+          "default": "\"2px\"",
+          "description": "Width of the stroke outline."
+        },
+        {
+          "name": "animationDuration",
+          "type": "number",
+          "default": "4",
+          "description": "Duration of the stroke-drawing animation for a SINGLE character (in seconds)."
+        },
+        {
+          "name": "staggerDelay",
+          "type": "number",
+          "default": "0.15",
+          "description": "Delay between each character starting to draw (in seconds)."
+        },
+        {
+          "name": "dashArray",
+          "type": "number",
+          "default": "1000",
+          "description": "Length of the SVG stroke dash array. Tune this higher for longer paths."
+        }
+      ],
+      "usageCode": "import GlowingTextOutline from \"@/components/ui/animated-glowing-text-outline\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex justify-center p-10 bg-black rounded-xl\">\n      <GlowingTextOutline \n        text=\"Hello World\" \n        colors={[\"#ffaa40\", \"#9c40ff\", \"#ffaa40\"]}\n        animationDuration={5}\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "moving-border",
+      "name": "Moving Border",
+      "description": "SVG-path-tracing animated border that orbits a button or card.",
+      "icon": "LucideSparkles",
+      "category": "Effects & Animations",
+      "props": [
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "description": "Visual theme; light or dark. Default: dark."
+        },
+        {
+          "name": "borderRadius",
+          "type": "string",
+          "description": "The radius for rounding the button edges and the orbiting path."
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "The label or content displayed inside the button."
+        },
+        {
+          "name": "as",
+          "type": "React.ElementType",
+          "description": "The HTML element tag to use for the button wrapper (e.g., 'button', 'div')."
+        },
+        {
+          "name": "containerClassName",
+          "type": "string",
+          "description": "Add CSS classes to the outermost container."
+        },
+        {
+          "name": "borderClassName",
+          "type": "string",
+          "description": "Add CSS classes directly to the moving animated SVG border."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Time in milliseconds to complete one full orbit around the border."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Add CSS classes to the inner content layer."
+        }
+      ],
+      "usageCode": "import { Button } from \"@/components/ui/moving-border\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-6 items-center justify-center p-10\">\n      <Button\n        borderRadius=\"1.75rem\"\n        className=\"bg-zinc-950 text-white border-neutral-200 dark:border-slate-800\"\n      >\n        Click me\n      </Button>\n      <Button\n        borderRadius=\"1rem\"\n        className=\"bg-zinc-950 text-white border-neutral-200 dark:border-slate-800\"\n        containerClassName=\"h-12 w-48\"\n      >\n        Rounded Button\n      </Button>\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "MovingBorder traces an animated SVG path around a button or card, creating the appearance of a glowing line orbiting the element. The path speed and glow intensity are fully configurable.",
+        "scenarios": [
+          {
+            "title": "Highlighted CTA button",
+            "description": "Draw immediate attention to a primary action with an orbiting glow border.",
+            "code": "import { MovingBorder } from \"@/components/ui/moving-border\";\n\nexport default function GlowCTA() {\n  return (\n    <MovingBorder duration={3000} borderRadius=\"9999px\">\n      <button className=\"px-8 py-3 font-semibold text-white bg-neutral-950 rounded-full\">\n        Start building for free\n      </button>\n    </MovingBorder>\n  );\n}"
+          },
+          {
+            "title": "Featured pricing card",
+            "description": "Indicate the recommended pricing tier with a subtle moving border that stands out from static cards.",
+            "code": "import { MovingBorder } from \"@/components/ui/moving-border\";\n\nexport default function FeaturedPricingCard() {\n  return (\n    <MovingBorder duration={4000} borderRadius=\"1rem\" borderClassName=\"bg-[radial-gradient(var(--tw-gradient-stops))] from-purple-500 via-transparent to-transparent\">\n      <div className=\"p-8 bg-neutral-950 rounded-2xl min-w-[280px] space-y-4\">\n        <span className=\"text-xs font-bold uppercase tracking-widest text-purple-400\">\n          Most popular\n        </span>\n        <p className=\"text-4xl font-bold text-white\">\n          $29<span className=\"text-lg text-neutral-400\">/mo</span>\n        </p>\n        <button className=\"w-full py-3 bg-purple-600 text-white rounded-xl font-medium\">\n          Get started\n        </button>\n      </div>\n    </MovingBorder>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "typewriter-text",
+      "name": "Typewriter Text",
+      "description": "Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop.",
+      "icon": "LucideTerminal",
+      "category": "Text",
+      "props": [
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "description": "Visual theme; light or dark. Default: dark."
+        },
+        {
+          "name": "words",
+          "type": "string[]",
+          "description": "An array of words or phrases to be typed out sequentially."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Add CSS classes to the text container."
+        },
+        {
+          "name": "cursorClassName",
+          "type": "string",
+          "description": "Add CSS classes to customize the blinking cursor span."
+        },
+        {
+          "name": "typingSpeed",
+          "type": "number",
+          "description": "Delay in milliseconds between typing each character."
+        },
+        {
+          "name": "deletingSpeed",
+          "type": "number",
+          "description": "Delay in milliseconds between deleting each character."
+        },
+        {
+          "name": "delayBetweenWords",
+          "type": "number",
+          "description": "Pause duration before erasing a completed word to type the next."
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "description": "Whether the typewriter sequence should repeat infinitely."
+        },
+        {
+          "name": "cursor",
+          "type": "boolean",
+          "description": "Controls the visibility of the blinking cursor at the end of the text."
+        }
+      ],
+      "usageCode": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-6 text-center p-10\">\n      <div className=\"text-3xl font-bold text-white\">\n        I love{\" \"}\n        <TypewriterText\n          words={[\"React\", \"TypeScript\", \"Motion\", \"Tailwind\", \"UniqueUI\"]}\n          className=\"text-purple-400\"\n          typingSpeed={100}\n          deletingSpeed={60}\n        />\n      </div>\n      <div className=\"text-lg text-neutral-400\">\n        <TypewriterText\n          words={[\n            \"Building amazing user interfaces...\",\n            \"With beautiful animations...\",\n            \"That stand out from the crowd.\",\n          ]}\n          typingSpeed={50}\n          deletingSpeed={30}\n          delayBetweenWords={2000}\n        />\n      </div>\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "TypewriterText cycles through an array of words with a smooth typing and erasing animation. It's great for hero headings that need to convey multiple value propositions without cluttering the layout.",
+        "scenarios": [
+          {
+            "title": "Hero headline rotator",
+            "description": "Swap your hero subtitle or adjective with a typewriter that cycles through your key benefits.",
+            "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function HeroHeadline() {\n  return (\n    <h1 className=\"text-5xl font-bold text-white\">\n      Build{\" \"}\n      <TypewriterText\n        words={[\"faster\", \"smarter\", \"beautifully\"]}\n        className=\"text-purple-400\"\n      />\n      <br />\n      with UniqueUI\n    </h1>\n  );\n}"
+          },
+          {
+            "title": "Loading / processing indicator",
+            "description": "Use a single looping word to hint that background work is in progress.",
+            "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function ProcessingBadge() {\n  return (\n    <div className=\"flex items-center gap-2 text-sm text-neutral-400\">\n      <span className=\"h-2 w-2 rounded-full bg-green-500 animate-pulse\" />\n      <TypewriterText\n        words={[\"Analyzing…\", \"Optimizing…\", \"Almost done…\"]}\n        typingSpeed={60}\n        deletingSpeed={40}\n        pauseDuration={1200}\n      />\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Feature tagline in a navbar",
+            "description": "Animate a short tagline beside your logo to keep visitors engaged right from the header.",
+            "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function NavTagline() {\n  return (\n    <nav className=\"flex items-center gap-3 px-6 py-4 border-b border-neutral-800\">\n      <span className=\"font-bold text-white\">UniqueUI</span>\n      <span className=\"text-neutral-600\">·</span>\n      <TypewriterText\n        words={[\"Copy-paste components\", \"Zero design system lock-in\", \"Motion-first\"]}\n        className=\"text-xs text-neutral-400 font-mono\"\n        typingSpeed={55}\n      />\n    </nav>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "3d-tilt-card",
+      "name": "3D Tilt Card",
+      "description": "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
+      "icon": "Layers",
+      "category": "Cards",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "The element(s) suspended inside the 3D card layout."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Tailwind configuration applied directly to the physical card."
+        },
+        {
+          "name": "containerClassName",
+          "type": "string",
+          "description": "Tailwind bounds defining the invisible hover hit-box."
+        },
+        {
+          "name": "tiltMaxDeg",
+          "type": "number",
+          "description": "The maximum angle the card aggressively pitches on hover."
+        },
+        {
+          "name": "perspective",
+          "type": "number",
+          "description": "The CSS perspective depth in pixels determining 3D deformation strength."
+        },
+        {
+          "name": "scale",
+          "type": "number",
+          "description": "Float multiplier for card scaling when hovered (e.g. 1.05)."
+        },
+        {
+          "name": "glare",
+          "type": "boolean",
+          "description": "Enable a dynamic radial-gradient glare sweep that tracks the pointer."
+        },
+        {
+          "name": "glareMaxOpacity",
+          "type": "number",
+          "description": "Max brightness (0 to 1) for the dynamic glare effect."
+        }
+      ],
+      "usageCode": "import { TiltCard } from \"@/components/ui/3d-tilt-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-8 items-center justify-center p-10 text-white\">\n      <TiltCard className=\"w-72 bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl p-6\">\n        <h3 className=\"text-xl font-bold mb-2\">Hover me</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Move your cursor over this card to see the 3D tilt effect with glare.\n        </p>\n        <div className=\"mt-4 h-24 rounded-lg bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-neutral-700/50\" />\n      </TiltCard>\n      <TiltCard\n        tiltMaxDeg={25}\n        glare={true}\n        className=\"w-72 bg-gradient-to-br from-purple-950 to-indigo-950 border border-purple-800/50 rounded-xl p-6\"\n      >\n        <h3 className=\"text-xl font-bold mb-2 text-purple-200\">Extra Tilt</h3>\n        <p className=\"text-purple-300/60 text-sm\">\n          This card has a stronger tilt angle for a more dramatic effect.\n        </p>\n        <div className=\"mt-4 flex gap-2\">\n          <div className=\"h-12 w-12 rounded-lg bg-purple-500/20 border border-purple-500/30\" />\n          <div className=\"h-12 w-12 rounded-lg bg-pink-500/20 border border-pink-500/30\" />\n          <div className=\"h-12 w-12 rounded-lg bg-indigo-500/20 border border-indigo-500/30\" />\n        </div>\n      </TiltCard>\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "spotlight-card",
+      "name": "Spotlight Card",
+      "description": "Card with a radial spotlight that follows the mouse cursor across its surface.",
+      "icon": "LucideMousePointer",
+      "category": "Cards",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Components visible on the card."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "CSS classes for sizing and styling the card layout."
+        },
+        {
+          "name": "spotlightColor",
+          "type": "string",
+          "description": "The hex/rgba color code used for the center cursor glow."
+        },
+        {
+          "name": "spotlightSize",
+          "type": "number",
+          "description": "Diameter width/height of the gradient spotlight in pixels."
+        }
+      ],
+      "usageCode": "import { SpotlightCard } from \"@/components/ui/spotlight-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6 p-10 text-white text-left\">\n      <SpotlightCard>\n        <h3 className=\"text-xl font-bold mb-2\">Hover for spotlight</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Move your mouse over the card to reveal a tracking spotlight effect.\n        </p>\n      </SpotlightCard>\n      <SpotlightCard spotlightColor=\"rgba(232, 121, 249, 0.1)\" spotlightSize={300}>\n        <h3 className=\"text-xl font-bold mb-2\">Custom spotlight</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Different color and size for the spotlight effect.\n        </p>\n      </SpotlightCard>\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "SpotlightCard tracks your cursor and projects a soft radial light on the card surface, creating a sense of physical depth. Ideal anywhere you need premium-feeling content cards.",
+        "scenarios": [
+          {
+            "title": "Pricing tier card",
+            "description": "Make pricing options feel tactile and premium — spotlight highlights the selected plan naturally.",
+            "code": "import { SpotlightCard } from \"@/components/ui/spotlight-card\";\n\nexport default function PricingCard() {\n  return (\n    <SpotlightCard theme=\"dark\" className=\"p-8 max-w-sm\">\n      <div className=\"space-y-4\">\n        <span className=\"text-xs font-semibold text-purple-400 uppercase tracking-widest\">\n          Pro\n        </span>\n        <p className=\"text-4xl font-bold text-white\">\n          $29<span className=\"text-lg text-neutral-400\">/mo</span>\n        </p>\n        <ul className=\"space-y-2 text-sm text-neutral-300\">\n          <li>✓ Unlimited components</li>\n          <li>✓ Commercial license</li>\n          <li>✓ Priority support</li>\n        </ul>\n        <button className=\"w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-xl text-white font-semibold transition-colors\">\n          Get started\n        </button>\n      </div>\n    </SpotlightCard>\n  );\n}"
+          },
+          {
+            "title": "Team member profile card",
+            "description": "Spotlight turns a standard team grid into an interactive, warm experience.",
+            "code": "import { SpotlightCard } from \"@/components/ui/spotlight-card\";\n\nexport default function TeamMemberCard() {\n  return (\n    <SpotlightCard theme=\"dark\" className=\"p-6 text-center\">\n      <img\n        src=\"/avatar.jpg\"\n        alt=\"Prashant\"\n        className=\"w-16 h-16 rounded-full mx-auto mb-4 object-cover\"\n      />\n      <h3 className=\"text-white font-semibold text-lg\">Prashant Kumar</h3>\n      <p className=\"text-neutral-400 text-sm\">Founder · Full-stack engineer</p>\n      <div className=\"mt-4 flex justify-center gap-3\">\n        <a href=\"#\" className=\"text-xs text-purple-400 hover:underline\">GitHub</a>\n        <a href=\"#\" className=\"text-xs text-purple-400 hover:underline\">Twitter</a>\n      </div>\n    </SpotlightCard>\n  );\n}"
+          },
+          {
+            "title": "Feature highlight card",
+            "description": "Wrap each feature description in a spotlight card to make your feature grid feel alive.",
+            "code": "import { SpotlightCard } from \"@/components/ui/spotlight-card\";\nimport { Zap } from \"lucide-react\";\n\nexport default function FeatureCard() {\n  return (\n    <SpotlightCard theme=\"dark\" className=\"p-6\">\n      <div className=\"p-2.5 w-fit rounded-lg bg-purple-500/10 border border-purple-500/20 mb-4\">\n        <Zap className=\"w-5 h-5 text-purple-400\" />\n      </div>\n      <h3 className=\"text-white font-semibold mb-2\">Instant installs</h3>\n      <p className=\"text-neutral-400 text-sm leading-relaxed\">\n        One CLI command drops a single-file component into your project.\n        No dependency hell, no config files.\n      </p>\n    </SpotlightCard>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "aurora-background",
+      "name": "Aurora Background",
+      "description": "A fully customizable, smooth aurora light background mimicking the northern lights. Configurable via exact hex props alongside automatic integration with the current light or dark mode theme. Accessibility: Respects prefers-reduced-motion (drifting pauses smoothly).",
+      "icon": "LucideSparkles",
+      "category": "Backgrounds",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Content layered above the aurora; keep contrast high on the charcoal base."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Classes on the outer container (height, rounding, layout)."
+        },
+        {
+          "name": "showRadialGradient",
+          "type": "boolean",
+          "default": "true",
+          "description": "Radial vignette so the hero center stays readable."
+        },
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "default": "\"dark\"",
+          "description": "Dark uses screen blend; light uses multiply and a softer base."
+        },
+        {
+          "name": "preset",
+          "type": "\"cinematic\" | \"stitch\"",
+          "default": "\"cinematic\"",
+          "description": "Color story: cinematic (reference-style pillars) or stitch (MCP showcase DS)."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "default": "1",
+          "description": "Drift speed multiplier; higher = faster horizontal travel."
+        },
+        {
+          "name": "blur",
+          "type": "number",
+          "default": "1",
+          "description": "Blur strength multiplier for the pillar layer."
+        }
+      ],
+      "variants": [
+        {
+          "id": "cinematic",
+          "label": "Cinematic",
+          "demoKey": "aurora-background/cinematic",
+          "usageCode": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative text-white\">\n      <AuroraBackground preset=\"cinematic\" speed={0.95} className=\"min-h-0 h-full rounded-xl\">\n        <div className=\"text-center z-10 w-full px-4\">\n          <h3 className=\"text-2xl font-bold mb-2 tracking-tight\">Background lights</h3>\n          <p className=\"text-neutral-400 text-sm\">Vertical pillars, slow drift</p>\n        </div>\n      </AuroraBackground>\n    </div>\n  );\n}"
+        },
+        {
+          "id": "stitch",
+          "label": "Stitch DS",
+          "demoKey": "aurora-background/stitch",
+          "usageCode": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative text-white\">\n      <AuroraBackground preset=\"stitch\" blur={1.05} className=\"min-h-0 h-full rounded-xl\">\n        <div className=\"text-center z-10 w-full px-4\">\n          <h3 className=\"text-2xl font-bold mb-2 tracking-tight\">Stitch showcase</h3>\n          <p className=\"text-neutral-400 text-sm\">Container tokens in motion</p>\n        </div>\n      </AuroraBackground>\n    </div>\n  );\n}"
+        }
+      ],
+      "docs": {
+        "overview": "AuroraBackground renders a shifting, color-cycling radial gradient behind your content. It uses a CSS keyframe animation that's optimized for performance and respects prefers-reduced-motion.",
+        "scenarios": [
+          {
+            "title": "Full-page hero section",
+            "description": "Wrap your entire landing hero with the aurora to create an immediate cinematic impression.",
+            "code": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function HeroSection() {\n  return (\n    <AuroraBackground className=\"min-h-screen flex items-center justify-center\">\n      <div className=\"text-center space-y-4 z-10 relative\">\n        <h1 className=\"text-6xl font-bold text-white\">\n          Ship beautiful UIs\n        </h1>\n        <p className=\"text-neutral-300 text-xl max-w-xl mx-auto\">\n          Animated components that make your product feel alive.\n        </p>\n        <button className=\"mt-6 px-8 py-3 bg-white text-black rounded-full font-semibold\">\n          Get started\n        </button>\n      </div>\n    </AuroraBackground>\n  );\n}"
+          },
+          {
+            "title": "Feature section banner",
+            "description": "Apply the aurora to a single section mid-page to break up a long-scrolling layout.",
+            "code": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function FeatureBanner() {\n  return (\n    <AuroraBackground\n      className=\"rounded-3xl overflow-hidden py-24 px-8 text-center\"\n      showRadialGradient={false}\n    >\n      <span className=\"text-xs uppercase tracking-widest text-purple-300 font-semibold\">\n        New in v2\n      </span>\n      <h2 className=\"mt-3 text-4xl font-bold text-white\">\n        Bento Grid layouts\n      </h2>\n      <p className=\"mt-2 text-neutral-400 max-w-md mx-auto\">\n        Drag-and-drop grid sections that adapt to any content type.\n      </p>\n    </AuroraBackground>\n  );\n}"
+          },
+          {
+            "title": "CTA section with custom colors",
+            "description": "Customize the aurora colors to match your brand palette on a bottom-of-page conversion section.",
+            "code": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function CTASection() {\n  return (\n    <AuroraBackground\n      className=\"py-32 text-center\"\n      colors={[\"#7c3aed\", \"#2563eb\", \"#7c3aed\"]}\n    >\n      <div className=\"relative z-10 space-y-6\">\n        <h2 className=\"text-5xl font-bold text-white\">\n          Ready to build something great?\n        </h2>\n        <div className=\"flex gap-4 justify-center\">\n          <button className=\"px-6 py-3 bg-white text-neutral-900 rounded-full font-semibold\">\n            Start free\n          </button>\n          <button className=\"px-6 py-3 border border-white/30 text-white rounded-full\">\n            View docs\n          </button>\n        </div>\n      </div>\n    </AuroraBackground>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "animated-tabs",
+      "name": "Animated Tabs",
+      "description": "Tab bar with a sliding pill that morphs between active tabs using layout animation.",
+      "icon": "Layers",
+      "category": "Navigation & Overlays",
+      "props": [
+        {
+          "name": "tabs",
+          "type": "{",
+          "description": "Array of tab configurations establishing navigation schema."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "A unique identifier used strictly for layout animations."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "The string/node rendered on the clickable tab button."
+        },
+        {
+          "name": "content",
+          "type": "React.ReactNode",
+          "description": "The DOM payload rendered below when this tab is selected."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Description coming soon"
+        },
+        {
+          "name": "tabClassName",
+          "type": "string",
+          "description": "Description coming soon"
+        },
+        {
+          "name": "activeTabClassName",
+          "type": "string",
+          "description": "Description coming soon"
+        },
+        {
+          "name": "contentClassName",
+          "type": "string",
+          "description": "Description coming soon"
+        },
+        {
+          "name": "onChange",
+          "type": "(id: string) => void",
+          "description": "Description coming soon"
+        }
+      ],
+      "usageCode": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-md mx-auto p-10\">\n      <AnimatedTabs\n        tabs={[\n          {\n            id: \"design\",\n            label: \"Design\",\n            content: (\n              <div className=\"p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm\">\n                Build stunning interfaces with our design system. Every component is crafted with\n                attention to detail.\n              </div>\n            ),\n          },\n          {\n            id: \"animate\",\n            label: \"Animate\",\n            content: (\n              <div className=\"p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm\">\n                Add life to your UI with spring-physics animations powered by Motion.dev.\n              </div>\n            ),\n          },\n          {\n            id: \"ship\",\n            label: \"Ship\",\n            content: (\n              <div className=\"p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm\">\n                Deploy with confidence. All components are production-ready and accessible.\n              </div>\n            ),\n          },\n        ]}\n      />\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "AnimatedTabs uses a layoutId-driven underline or pill indicator to transition between tabs with a fluid spring. The active indicator follows the selected tab without a hard jump.",
+        "scenarios": [
+          {
+            "title": "Settings panel",
+            "description": "A classic tab bar for separating profile, notifications, and security settings.",
+            "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\n\nconst tabs = [\n  { id: \"profile\", label: \"Profile\" },\n  { id: \"notifications\", label: \"Notifications\" },\n  { id: \"security\", label: \"Security\" },\n];\n\nexport default function SettingsPanel() {\n  return (\n    <div className=\"max-w-2xl space-y-6\">\n      <AnimatedTabs tabs={tabs} defaultTab=\"profile\" />\n      {/* Render panel content based on active tab */}\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Dashboard content switcher",
+            "description": "Switch between weekly, monthly, and yearly data views in a dashboard.",
+            "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\n\nconst ranges = [\n  { id: \"7d\", label: \"7 days\" },\n  { id: \"30d\", label: \"30 days\" },\n  { id: \"90d\", label: \"90 days\" },\n  { id: \"1y\", label: \"1 year\" },\n];\n\nexport default function DateRangeTabs() {\n  const [range, setRange] = useState(\"30d\");\n\n  return (\n    <div>\n      <AnimatedTabs\n        tabs={ranges}\n        defaultTab=\"30d\"\n        onChange={setRange}\n        size=\"sm\"\n      />\n      <p className=\"mt-4 text-sm text-neutral-400\">\n        Showing data for: {range}\n      </p>\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Product feature showcase tabs",
+            "description": "Let marketing highlight different product features with animated tab transitions.",
+            "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst features = [\n  { id: \"speed\", label: \"Speed\", content: \"Deploy components in seconds with the CLI.\" },\n  { id: \"design\", label: \"Design\", content: \"Motion-first animations out of the box.\" },\n  { id: \"dx\", label: \"DX\", content: \"Single-file components, zero config.\" },\n];\n\nexport default function FeatureTabs() {\n  const [active, setActive] = useState(\"speed\");\n  const feature = features.find(f => f.id === active)!;\n\n  return (\n    <div className=\"space-y-6 max-w-lg\">\n      <AnimatedTabs tabs={features} defaultTab=\"speed\" onChange={setActive} />\n      <AnimatePresence mode=\"wait\">\n        <motion.p\n          key={active}\n          initial={{ opacity: 0, y: 6 }}\n          animate={{ opacity: 1, y: 0 }}\n          exit={{ opacity: 0, y: -6 }}\n          className=\"text-neutral-300\"\n        >\n          {feature.content}\n        </motion.p>\n      </AnimatePresence>\n    </div>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "magnetic-button",
+      "name": "Magnetic Button",
+      "description": "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
+      "icon": "LucideMousePointer",
+      "category": "Effects & Animations",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "The internal content of the button."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Style overrides appended to the interactive boundary."
+        },
+        {
+          "name": "magneticStrength",
+          "type": "number",
+          "description": "Float determining how fast/far the button lerps toward the cursor."
+        },
+        {
+          "name": "magneticRadius",
+          "type": "number",
+          "description": "Pixel radius extending outward from the button where gravity begins."
+        },
+        {
+          "name": "onClick",
+          "type": "() => void",
+          "description": "Standard click event handler."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables interaction and magnetic gravitational pull."
+        }
+      ],
+      "usageCode": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-8 items-center justify-center p-20 text-white\">\n      <MagneticButton>Hover near me</MagneticButton>\n      <MagneticButton\n        magneticStrength={0.5}\n        magneticRadius={200}\n        className=\"bg-gradient-to-b from-purple-700 to-purple-900\"\n      >\n        Stronger pull\n      </MagneticButton>\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "MagneticButton adds a physics-based cursor attraction effect to any button or interactive element. As the cursor approaches, the element gently pulls toward it, creating a satisfying tactile feel.",
+        "scenarios": [
+          {
+            "title": "Primary CTA button",
+            "description": "Apply the magnetic effect to your hero CTA to make it irresistible to click.",
+            "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function HeroCTA() {\n  return (\n    <div className=\"flex justify-center py-20\">\n      <MagneticButton>\n        <button className=\"px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-neutral-100 transition-colors\">\n          Get started free →\n        </button>\n      </MagneticButton>\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Icon navigation links",
+            "description": "Magnetic icons in a header or dock feel playful and high-quality.",
+            "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\nimport { Code, X, Mail } from \"lucide-react\";\n\nconst socialLinks = [\n  { icon: Code, href: \"https://github.com\", label: \"GitHub\" },\n  { icon: X, href: \"https://twitter.com\", label: \"Twitter\" },\n  { icon: Mail, href: \"mailto:hi@example.com\", label: \"Email\" },\n];\n\nexport default function SocialNav() {\n  return (\n    <div className=\"flex items-center gap-2\">\n      {socialLinks.map(({ icon: Icon, href, label }) => (\n        <MagneticButton key={label} strength={0.4}>\n          <a\n            href={href}\n            aria-label={label}\n            className=\"p-2.5 rounded-xl border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors\"\n          >\n            <Icon className=\"w-5 h-5\" />\n          </a>\n        </MagneticButton>\n      ))}\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Reduced-strength subtle hover",
+            "description": "Lower the strength for elements that should feel premium but not distracting.",
+            "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function SubtleCard() {\n  return (\n    <MagneticButton strength={0.25} className=\"block\">\n      <div className=\"p-6 rounded-2xl border border-neutral-800 bg-neutral-900 cursor-pointer hover:border-neutral-700 transition-colors\">\n        <h3 className=\"text-white font-semibold mb-2\">UniqueUI Pro</h3>\n        <p className=\"text-neutral-400 text-sm\">Access all templates and premium components.</p>\n      </div>\n    </MagneticButton>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "infinite-marquee",
+      "name": "Infinite Marquee",
+      "description": "Seamless infinite-scrolling ticker with pause-on-hover and variable speed.",
+      "icon": "LucideScrollText",
+      "category": "Effects & Animations",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Individual cards, images, or elements you want scrolling seamlessly."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Styling classes mapping to the outer tracking viewport."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "description": "Scrolling velocity, representing translation pixels per second."
+        },
+        {
+          "name": "direction",
+          "type": "\"left\" | \"right\"",
+          "description": "Horizontal (left/right) scroll direction."
+        },
+        {
+          "name": "pauseOnHover",
+          "type": "boolean",
+          "description": "Temporarily pause the animation sequence when a user points at the element."
+        },
+        {
+          "name": "gap",
+          "type": "number",
+          "description": "Consistent spacing separating each repeated instance loop."
+        }
+      ],
+      "usageCode": "import { InfiniteMarquee, MarqueeItem } from \"@/components/ui/infinite-marquee\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-6 w-full p-10 overflow-hidden\">\n      <InfiniteMarquee speed={30}>\n        {[\n          \"React\",\n          \"Next.js\",\n          \"TypeScript\",\n          \"Tailwind\",\n          \"Motion\",\n          \"UniqueUI\",\n          \"Vercel\",\n          \"Node.js\",\n        ].map((item) => (\n          <MarqueeItem key={item}>\n            <span className=\"text-sm font-medium text-neutral-300\">{item}</span>\n          </MarqueeItem>\n        ))}\n      </InfiniteMarquee>\n      <InfiniteMarquee speed={20} direction=\"right\">\n        {[\n          \"⚡ Fast\",\n          \"🎨 Beautiful\",\n          \"♿ Accessible\",\n          \"📱 Responsive\",\n          \"🔧 Customizable\",\n          \"🚀 Production Ready\",\n        ].map((item) => (\n          <MarqueeItem key={item} className=\"bg-purple-950/30 border-purple-800/50\">\n            <span className=\"text-sm font-medium text-purple-300\">{item}</span>\n          </MarqueeItem>\n        ))}\n      </InfiniteMarquee>\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "InfiniteMarquee continuously scrolls a row of items horizontally, looping seamlessly. It's commonly used for logo strips, testimonial tickers, and feature highlights.",
+        "scenarios": [
+          {
+            "title": "Client logo strip",
+            "description": "Showcase trusted brand logos below the hero section to build social proof.",
+            "code": "import { InfiniteMarquee } from \"@/components/ui/infinite-marquee\";\n\nconst logos = [\"Vercel\", \"Stripe\", \"Linear\", \"Notion\", \"Figma\", \"GitHub\"];\n\nexport default function LogoStrip() {\n  return (\n    <div className=\"py-12 border-y border-neutral-800\">\n      <InfiniteMarquee speed={30} gap={64}>\n        {logos.map((name) => (\n          <span key={name} className=\"text-lg font-semibold text-neutral-500 shrink-0\">\n            {name}\n          </span>\n        ))}\n      </InfiniteMarquee>\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Bidirectional feature ticker",
+            "description": "Two rows scrolling in opposite directions create depth and visual interest for a features section.",
+            "code": "import { InfiniteMarquee } from \"@/components/ui/infinite-marquee\";\n\nconst row1 = [\"Motion.dev springs\", \"Copy-paste DX\", \"Dark mode\", \"TypeScript-first\"];\nconst row2 = [\"Zero config\", \"Tailwind CSS v4\", \"Single-file\", \"Accessible\"];\n\nexport default function FeatureTicker() {\n  return (\n    <div className=\"space-y-3 py-10 overflow-hidden\">\n      <InfiniteMarquee speed={25} direction=\"left\">\n        {row1.map((f) => (\n          <span key={f} className=\"px-4 py-1.5 rounded-full border border-neutral-700 text-sm text-neutral-300 shrink-0\">\n            {f}\n          </span>\n        ))}\n      </InfiniteMarquee>\n      <InfiniteMarquee speed={25} direction=\"right\">\n        {row2.map((f) => (\n          <span key={f} className=\"px-4 py-1.5 rounded-full border border-purple-500/30 text-sm text-purple-300 shrink-0\">\n            {f}\n          </span>\n        ))}\n      </InfiniteMarquee>\n    </div>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "scroll-reveal",
+      "name": "Scroll Reveal",
+      "description": "Elements animate into view when they enter the viewport, with 6 animation presets.",
+      "icon": "LucideScrollText",
+      "category": "Effects & Animations",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "The DOM elements to animate into view upon scrolling."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Styling classes mapping to the outer tracking viewport."
+        },
+        {
+          "name": "animation",
+          "type": "AnimationPreset",
+          "description": "The specific animation choreography preset (e.g. 'fade-up', 'scale-in')."
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "description": "Delay in seconds before the animation begins."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Duration in seconds for the reveal animation."
+        },
+        {
+          "name": "threshold",
+          "type": "number",
+          "description": "Intersection ratio (0-1) required to trigger the reveal."
+        },
+        {
+          "name": "once",
+          "type": "boolean",
+          "description": "Whether the element should hide and re-animate when scrolled out and back in."
+        }
+      ],
+      "usageCode": "import { ScrollReveal, ScrollRevealGroup } from \"@/components/ui/scroll-reveal\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-10 text-white\">\n      <ScrollRevealGroup\n        animation=\"fade-up\"\n        staggerDelay={0.15}\n        className=\"grid grid-cols-1 md:grid-cols-3 gap-4\"\n      >\n        {[\"fade-up\", \"scale\", \"blur\"].map((preset) => (\n          <div\n            key={preset}\n            className=\"p-6 rounded-lg bg-neutral-900/50 border border-neutral-800 text-center\"\n          >\n            <div className=\"text-lg font-semibold mb-1 text-neutral-200\">{preset}</div>\n            <p className=\"text-neutral-500 text-xs\">Scroll to reveal</p>\n          </div>\n        ))}\n      </ScrollRevealGroup>\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "ScrollReveal wraps any element and fades + slides it into view when it enters the viewport using an IntersectionObserver. Zero layout shift, respects prefers-reduced-motion.",
+        "scenarios": [
+          {
+            "title": "Staggered feature list",
+            "description": "Reveal bullet points one by one as the user scrolls down a features section.",
+            "code": "import { ScrollReveal } from \"@/components/ui/scroll-reveal\";\n\nconst features = [\n  \"Copy-paste single-file components\",\n  \"Motion.dev spring animations\",\n  \"Dark and light theme support\",\n  \"TypeScript-first API\",\n];\n\nexport default function FeatureList() {\n  return (\n    <ul className=\"space-y-3\">\n      {features.map((feature, i) => (\n        <ScrollReveal key={i} delay={i * 0.08}>\n          <li className=\"flex items-center gap-3 text-neutral-300\">\n            <span className=\"h-1.5 w-1.5 rounded-full bg-purple-500\" />\n            {feature}\n          </li>\n        </ScrollReveal>\n      ))}\n    </ul>\n  );\n}"
+          },
+          {
+            "title": "Animated section headers",
+            "description": "Reveal each section heading with a subtle upward drift as the user reaches it.",
+            "code": "import { ScrollReveal } from \"@/components/ui/scroll-reveal\";\n\nexport default function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {\n  return (\n    <div className=\"text-center space-y-3\">\n      <ScrollReveal>\n        <h2 className=\"text-4xl font-bold text-white\">{title}</h2>\n      </ScrollReveal>\n      <ScrollReveal delay={0.1}>\n        <p className=\"text-neutral-400 max-w-xl mx-auto\">{subtitle}</p>\n      </ScrollReveal>\n    </div>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "skeleton-shimmer",
+      "name": "Skeleton Shimmer",
+      "description": "Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade.",
+      "icon": "Loader2",
+      "category": "Effects & Animations",
+      "props": [
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional CSS configuration applied to the background container."
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "description": "Explicit CSS width for the placeholder element."
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "description": "Explicit CSS height for the placeholder element."
+        },
+        {
+          "name": "rounded",
+          "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | \"full\"",
+          "description": "Tailwind border-radius abstraction class string (e.g. 'md', 'full')."
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "description": "Number of consecutive skeleton items to iterate."
+        },
+        {
+          "name": "gap",
+          "type": "number",
+          "description": "Spacing separating consecutive skeleton layers."
+        }
+      ],
+      "usageCode": "import { SkeletonShimmer, SkeletonCard } from \"@/components/ui/skeleton-shimmer\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full text-white\">\n      <SkeletonCard />\n      <div className=\"space-y-4 p-6 rounded-xl border border-neutral-800 bg-neutral-900/50\">\n        <SkeletonShimmer width=\"80%\" height={20} rounded=\"md\" />\n        <SkeletonShimmer count={4} height={14} />\n        <div className=\"flex gap-3\">\n          <SkeletonShimmer width={100} height={36} rounded=\"lg\" />\n          <SkeletonShimmer width={100} height={36} rounded=\"lg\" />\n        </div>\n      </div>\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "morphing-modal",
+      "name": "Morphing Modal",
+      "description": "Modal that expands from the trigger element with spring physics and backdrop blur.",
+      "icon": "LucideMaximize2",
+      "category": "Navigation & Overlays",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "The payload rendering inside the physical boundaries of the modal dialog box."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Tailwind definitions passing specific sizes and visuals onto the dialog constraint."
+        },
+        {
+          "name": "layoutId",
+          "type": "string",
+          "description": "Unique arbitrary string utilized by Framer Motion to tie trigger layout transitions."
+        },
+        {
+          "name": "onClick",
+          "type": "() => void",
+          "description": "Description coming soon"
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { useState } from \"react\";\nimport { MorphingModal, MorphingModalTrigger } from \"@/components/ui/morphing-modal\";\n\nexport default function Example() {\n  const [modalOpen, setModalOpen] = useState(false);\n  return (\n    <>\n      <div className=\"flex items-center justify-center p-20\">\n        <MorphingModalTrigger\n          layoutId=\"modal-demo\"\n          onClick={() => setModalOpen(true)}\n          className=\"p-6 rounded-xl bg-neutral-900/50 border border-neutral-800 hover:border-neutral-700 transition-colors max-w-xs text-white\"\n        >\n          <h3 className=\"text-lg font-bold mb-2\">Click to open modal</h3>\n          <p className=\"text-neutral-400 text-sm\">\n            This card morphs into a modal with spring physics.\n          </p>\n        </MorphingModalTrigger>\n      </div>\n      <MorphingModal\n        isOpen={modalOpen}\n        onClose={() => setModalOpen(false)}\n        layoutId=\"modal-demo\"\n      >\n        <div className=\"pt-4 text-white\">\n          <h3 className=\"text-2xl font-bold mb-4\">Morphing Modal</h3>\n          <p className=\"text-neutral-400 mb-6\">\n            This modal expands from the trigger element with spring-based animation. It supports\n            Escape key to close, click-outside to dismiss, and an animated close button.\n          </p>\n          <div className=\"flex gap-3\">\n            <button\n              onClick={() => setModalOpen(false)}\n              className=\"px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-sm font-medium\"\n            >\n              Got it\n            </button>\n            <button\n              onClick={() => setModalOpen(false)}\n              className=\"px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors text-sm font-medium text-neutral-300\"\n            >\n              Cancel\n            </button>\n          </div>\n        </div>\n      </MorphingModal>\n    </>\n  );\n}",
+      "docs": {
+        "overview": "MorphingModal animates open/close with a spring-driven scale and blur, making overlays feel fluid rather than jarring. Supports a trigger element for shared-layout animations.",
+        "scenarios": [
+          {
+            "title": "Confirmation dialog",
+            "description": "Use the modal for destructive actions — a focused modal prevents accidental clicks better than inline prompts.",
+            "code": "import { MorphingModal } from \"@/components/ui/morphing-modal\";\nimport { useState } from \"react\";\n\nexport default function ConfirmDelete() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <>\n      <button\n        onClick={() => setOpen(true)}\n        className=\"px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg text-sm\"\n      >\n        Delete project\n      </button>\n\n      <MorphingModal open={open} onClose={() => setOpen(false)}>\n        <div className=\"p-6 space-y-4 max-w-sm\">\n          <h2 className=\"text-lg font-semibold text-white\">Are you sure?</h2>\n          <p className=\"text-sm text-neutral-400\">\n            This will permanently delete the project and all its data. This action cannot be undone.\n          </p>\n          <div className=\"flex gap-3 pt-2\">\n            <button\n              onClick={() => setOpen(false)}\n              className=\"flex-1 py-2 rounded-lg border border-neutral-700 text-neutral-300 text-sm\"\n            >\n              Cancel\n            </button>\n            <button className=\"flex-1 py-2 rounded-lg bg-red-600 text-white text-sm font-medium\">\n              Delete\n            </button>\n          </div>\n        </div>\n      </MorphingModal>\n    </>\n  );\n}"
+          },
+          {
+            "title": "Image / media preview",
+            "description": "Expand a thumbnail into a full preview with a smooth morph transition.",
+            "code": "import { MorphingModal } from \"@/components/ui/morphing-modal\";\nimport { useState } from \"react\";\n\nexport default function ImagePreview() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <>\n      <img\n        src=\"/preview-thumb.jpg\"\n        alt=\"Preview\"\n        onClick={() => setOpen(true)}\n        className=\"w-32 h-20 object-cover rounded-lg cursor-zoom-in\"\n      />\n\n      <MorphingModal open={open} onClose={() => setOpen(false)}>\n        <div className=\"p-2\">\n          <img\n            src=\"/preview-full.jpg\"\n            alt=\"Full preview\"\n            className=\"max-w-2xl w-full rounded-xl object-cover\"\n          />\n        </div>\n      </MorphingModal>\n    </>\n  );\n}"
+          },
+          {
+            "title": "Multi-step onboarding modal",
+            "description": "Use internal state to drive a step-by-step flow inside a single modal instance.",
+            "code": "import { MorphingModal } from \"@/components/ui/morphing-modal\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst steps = [\"Welcome\", \"Choose plan\", \"You're ready\"];\n\nexport default function OnboardingModal({ open, onClose }: { open: boolean; onClose: () => void }) {\n  const [step, setStep] = useState(0);\n\n  return (\n    <MorphingModal open={open} onClose={onClose}>\n      <div className=\"p-8 w-full max-w-md space-y-6\">\n        <div className=\"flex gap-1.5\">\n          {steps.map((_, i) => (\n            <div\n              key={i}\n              className={`h-1 flex-1 rounded-full transition-colors ${\n                i <= step ? \"bg-purple-500\" : \"bg-neutral-700\"\n              }`}\n            />\n          ))}\n        </div>\n\n        <AnimatePresence mode=\"wait\">\n          <motion.div\n            key={step}\n            initial={{ opacity: 0, x: 12 }}\n            animate={{ opacity: 1, x: 0 }}\n            exit={{ opacity: 0, x: -12 }}\n            className=\"space-y-2\"\n          >\n            <h2 className=\"text-xl font-bold text-white\">{steps[step]}</h2>\n            <p className=\"text-sm text-neutral-400\">Step {step + 1} of {steps.length}</p>\n          </motion.div>\n        </AnimatePresence>\n\n        <button\n          onClick={() => step < steps.length - 1 ? setStep(s => s + 1) : onClose()}\n          className=\"w-full py-2.5 bg-purple-600 text-white rounded-xl font-medium\"\n        >\n          {step < steps.length - 1 ? \"Continue\" : \"Finish\"}\n        </button>\n      </div>\n    </MorphingModal>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "gradient-text-reveal",
+      "name": "Gradient Text Reveal",
+      "description": "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
+      "icon": "LucidePalette",
+      "category": "Text",
+      "props": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "The exact sentence paragraph targeted for staggered rendering."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Add CSS classes mapping typographic configurations."
+        },
+        {
+          "name": "gradientFrom",
+          "type": "string",
+          "description": "Color indicating the start coordinate mapping of the visual gradient ramp."
+        },
+        {
+          "name": "gradientTo",
+          "type": "string",
+          "description": "Terminal color definition ending the textual mask gradient."
+        },
+        {
+          "name": "staggerDelay",
+          "type": "number",
+          "description": "Seconds mapping the offset differential delay evaluating subsequent sequential words."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Metric representation detailing exact sequence total span (measured in seconds)."
+        },
+        {
+          "name": "once",
+          "type": "boolean",
+          "description": "Prevent re-evaluating the intersection layout and permanently mark complete once run."
+        },
+        {
+          "name": "as",
+          "type": "\"h1\" | \"h2\" | \"h3\" | \"h4\" | \"p\" | \"span\"",
+          "description": "Explicit HTML element defining correct semantics matching the parent boundary box."
+        }
+      ],
+      "usageCode": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-8 text-center p-10 text-white\">\n      <GradientTextReveal\n        text=\"Build stunning interfaces with UniqueUI\"\n        as=\"h3\"\n        className=\"text-3xl font-bold justify-center\"\n      />\n      <GradientTextReveal\n        text=\"Beautiful animated components for modern web apps\"\n        gradientFrom=\"#6366f1\"\n        gradientTo=\"#06b6d4\"\n        className=\"text-lg justify-center\"\n      />\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "GradientTextReveal animates a gradient sweep across text as it enters the viewport — a dramatic way to introduce headlines or key phrases on scroll.",
+        "scenarios": [
+          {
+            "title": "Section headline reveal",
+            "description": "Fire the reveal when the section scrolls into view for a cinematic entrance.",
+            "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function SectionHeadline() {\n  return (\n    <div className=\"py-24 text-center\">\n      <GradientTextReveal\n        text=\"Design that moves people.\"\n        className=\"text-5xl font-bold\"\n        gradient=\"from-white via-purple-300 to-white\"\n      />\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Pull quote in a blog post",
+            "description": "Highlight a key quote mid-article with a gradient sweep to re-engage readers.",
+            "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function PullQuote() {\n  return (\n    <blockquote className=\"my-12 px-8 border-l-2 border-purple-500\">\n      <GradientTextReveal\n        text=\"The best design is invisible — until it moves.\"\n        className=\"text-2xl font-medium italic\"\n        gradient=\"from-neutral-300 via-purple-400 to-neutral-300\"\n        duration={1.4}\n      />\n    </blockquote>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "scramble-text",
+      "name": "Scramble Text",
+      "description": "Matrix-style text scramble effect that resolves characters left-to-right.",
+      "icon": "LucideType",
+      "category": "Text",
+      "props": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "The target string the scramble transition eventually resolves into."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Standard Tailwind configuration for typographic adjustment."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "description": "Multiplier scaling the character mutation flip rate."
+        },
+        {
+          "name": "scrambleDuration",
+          "type": "number",
+          "description": "Duration the sequence spends generating noise before revealing real characters."
+        },
+        {
+          "name": "triggerOnView",
+          "type": "boolean",
+          "description": "Wait until intersection observers detect the element on screen before starting."
+        },
+        {
+          "name": "once",
+          "type": "boolean",
+          "description": "Lock the transition state as resolved after completing one full loop."
+        },
+        {
+          "name": "characterSet",
+          "type": "string",
+          "description": "A custom dictionary string configuring the alphabet the noise generator selects from."
+        }
+      ],
+      "usageCode": "import { ScrambleText } from \"@/components/ui/scramble-text\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-6 text-center p-10 text-white\">\n      <ScrambleText text=\"UNIQUEUI COMPONENTS\" className=\"text-3xl font-bold tracking-wider text-emerald-400\" />\n      <ScrambleText\n        text=\"Hover to scramble again\"\n        triggerOnView={false}\n        className=\"text-lg text-neutral-400 cursor-pointer\"\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "meteors-card",
+      "name": "Meteors Card",
+      "description": "Card with animated meteor/shooting star particles falling through the background.",
+      "icon": "Flame",
+      "category": "Cards",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "The payload rendering above the background particle effect."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Layout configurations for the wrapping card boundary."
+        },
+        {
+          "name": "meteorCount",
+          "type": "number",
+          "description": "Total integer quantity defining maximum concurrent active meteor particles."
+        },
+        {
+          "name": "meteorColor",
+          "type": "string",
+          "description": "Hex string establishing the primary focal styling of light trails."
+        }
+      ],
+      "usageCode": "import { MeteorsCard } from \"@/components/ui/meteors-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6 p-10 text-white\">\n      <MeteorsCard className=\"h-full\">\n        <h3 className=\"text-xl font-bold mb-2\">Meteors Effect</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Watch the shooting stars fall through this card's background.\n        </p>\n      </MeteorsCard>\n      <MeteorsCard meteorColor=\"#a855f7\" meteorCount={30} className=\"h-full\">\n        <h3 className=\"text-xl font-bold mb-2 text-purple-200\">Purple Meteors</h3>\n        <p className=\"text-purple-300/60 text-sm\">Custom colored meteors with extra density.</p>\n      </MeteorsCard>\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "flip-card",
+      "name": "Flip Card",
+      "description": "3D card flip with spring physics, supporting hover or click triggers.",
+      "icon": "LucideRotateCw",
+      "category": "Cards",
+      "props": [
+        {
+          "name": "front",
+          "type": "React.ReactNode",
+          "description": "The leading visible standard interface node."
+        },
+        {
+          "name": "back",
+          "type": "React.ReactNode",
+          "description": "The trailing hidden secondary information node."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Overarching classes driving constraints on the 3D rotating canvas."
+        },
+        {
+          "name": "frontClassName",
+          "type": "string",
+          "description": "Granular overrides for the un-rotated visual state."
+        },
+        {
+          "name": "backClassName",
+          "type": "string",
+          "description": "Granular overrides targeting the inverted 180-degree state representation."
+        },
+        {
+          "name": "trigger",
+          "type": "\"hover\" | \"click\"",
+          "description": "Enum literal targeting 'hover' execution or explicit 'click' toggles."
+        },
+        {
+          "name": "direction",
+          "type": "\"horizontal\" | \"vertical\"",
+          "description": "Axis orientation literal mapping rotation logic to 'horizontal' vs 'vertical'."
+        },
+        {
+          "name": "perspective",
+          "type": "number",
+          "description": "Z-depth translation simulating three-dimensional depth stretching."
+        }
+      ],
+      "usageCode": "import { FlipCard } from \"@/components/ui/flip-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-8 items-center justify-center p-10 text-white\">\n      <FlipCard\n        className=\"w-60 h-40\"\n        front={\n          <div className=\"flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800\">\n            <p className=\"text-lg font-bold\">Hover to flip →</p>\n          </div>\n        }\n        back={\n          <div className=\"flex items-center justify-center h-full bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl\">\n            <p className=\"text-lg font-bold text-purple-200\">Back side! ✨</p>\n          </div>\n        }\n      />\n      <FlipCard\n        className=\"w-60 h-40\"\n        trigger=\"click\"\n        front={\n          <div className=\"flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800\">\n            <p className=\"text-lg font-bold\">Click to flip</p>\n          </div>\n        }\n        back={\n          <div className=\"flex items-center justify-center h-full bg-zinc-800 rounded-xl border border-zinc-700\">\n            <p className=\"text-lg font-bold text-green-400\">Click again!</p>\n          </div>\n        }\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "dot-grid-background",
+      "name": "Dot Grid Background",
+      "description": "Interactive dot-grid pattern with a glowing cursor-following effect.",
+      "icon": "Grid",
+      "category": "Backgrounds",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Components mapped into the z-index layer visually above the matrix."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Container abstraction classes."
+        },
+        {
+          "name": "dotColor",
+          "type": "string",
+          "description": "Color code controlling the default un-illuminated grid representation."
+        },
+        {
+          "name": "dotSize",
+          "type": "number",
+          "description": "Diameter specifying visual footprint density of single grid intersections."
+        },
+        {
+          "name": "gap",
+          "type": "number",
+          "description": "Vector translation pixel count separating independent grid items."
+        },
+        {
+          "name": "hoverRadius",
+          "type": "number",
+          "description": "Spread area around the cursor triggering focus interactions."
+        },
+        {
+          "name": "hoverScale",
+          "type": "number",
+          "description": "Float magnitude expanding intersections actively caught inside the hover bounds."
+        }
+      ],
+      "usageCode": "import { DotGridBackground } from \"@/components/ui/dot-grid-background\";\n\nexport default function Example() {\n  return (\n    <DotGridBackground className=\"w-full h-[340px] flex items-center justify-center rounded-xl\">\n      <div className=\"text-center relative z-10 select-none px-6\">\n        <p className=\"text-xs font-mono tracking-[0.25em] uppercase mb-4 text-neutral-500\">\n          Move your cursor\n        </p>\n        <h3 className=\"text-4xl font-bold tracking-tight text-white\">\n          Ripple Field\n        </h3>\n        <p className=\"mt-3 text-sm text-neutral-500\">\n          Each movement fires a shockwave through the grid\n        </p>\n      </div>\n    </DotGridBackground>\n  );\n}"
+    },
+    {
+      "slug": "floating-dock",
+      "name": "Floating Dock",
+      "description": "macOS-style dock with magnetic scaling, spring physics, and tooltips.",
+      "icon": "Anchor",
+      "category": "Navigation & Overlays",
+      "props": [
+        {
+          "name": "items",
+          "type": "{",
+          "description": "Array defining mapping configuration objects containing icons and references."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "A unique mapping identifier referencing the component node."
+        },
+        {
+          "name": "icon",
+          "type": "React.ReactNode",
+          "description": "The SVG image rendered actively on the dock interface."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "String payload rendered inside the expanding tooltip layout."
+        },
+        {
+          "name": "onClick",
+          "type": "() => void",
+          "description": "Routine capturing specific explicit interactions mapped to the dock region."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "description": "Link routing path if the interface object encapsulates an anchor tag natively."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Description coming soon"
+        },
+        {
+          "name": "iconSize",
+          "type": "number",
+          "description": "Description coming soon"
+        },
+        {
+          "name": "maxScale",
+          "type": "number",
+          "description": "Description coming soon"
+        },
+        {
+          "name": "magneticRange",
+          "type": "number",
+          "description": "Description coming soon"
+        }
+      ],
+      "usageCode": "import { FloatingDock } from \"@/components/ui/floating-dock\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-20 text-white\">\n      <FloatingDock\n        items={[\n          { id: \"home\", icon: <span className=\"text-xl\">🏠</span>, label: \"Home\" },\n          { id: \"search\", icon: <span className=\"text-xl\">✨</span>, label: \"Search\" },\n          { id: \"layers\", icon: <span className=\"text-xl\">📚</span>, label: \"Layers\" },\n          { id: \"scroll\", icon: <span className=\"text-xl\">📜</span>, label: \"Scroll\" },\n          { id: \"terminal\", icon: <span className=\"text-xl\">💻</span>, label: \"Terminal\" },\n        ]}\n      />\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "FloatingDock renders a macOS-style icon dock with a magnetic magnification effect. Icons near the cursor scale up smoothly, making navigation feel interactive and playful.",
+        "scenarios": [
+          {
+            "title": "App bottom navigation",
+            "description": "Replace a static mobile nav bar with a floating dock for a more expressive feel.",
+            "code": "import { FloatingDock } from \"@/components/ui/floating-dock\";\nimport { Home, Search, Bell, User, Settings } from \"lucide-react\";\n\nconst navItems = [\n  { title: \"Home\", icon: <Home className=\"w-5 h-5\" />, href: \"/\" },\n  { title: \"Search\", icon: <Search className=\"w-5 h-5\" />, href: \"/search\" },\n  { title: \"Notifications\", icon: <Bell className=\"w-5 h-5\" />, href: \"/notifications\" },\n  { title: \"Profile\", icon: <User className=\"w-5 h-5\" />, href: \"/profile\" },\n  { title: \"Settings\", icon: <Settings className=\"w-5 h-5\" />, href: \"/settings\" },\n];\n\nexport default function AppNav() {\n  return (\n    <div className=\"fixed bottom-8 left-1/2 -translate-x-1/2 z-50\">\n      <FloatingDock items={navItems} />\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Social media quick-share dock",
+            "description": "A share toolbar that floats alongside article content for quick social sharing.",
+            "code": "import { FloatingDock } from \"@/components/ui/floating-dock\";\nimport { X, Globe, Link2, Bookmark } from \"lucide-react\";\n\nconst shareItems = [\n  { title: \"Share on X\", icon: <X className=\"w-5 h-5\" />, href: \"#\" },\n  { title: \"Share on LinkedIn\", icon: <Globe className=\"w-5 h-5\" />, href: \"#\" },\n  { title: \"Copy link\", icon: <Link2 className=\"w-5 h-5\" />, href: \"#\" },\n  { title: \"Bookmark\", icon: <Bookmark className=\"w-5 h-5\" />, href: \"#\" },\n];\n\nexport default function ShareDock() {\n  return (\n    <aside className=\"fixed right-6 top-1/2 -translate-y-1/2 hidden lg:block\">\n      <FloatingDock items={shareItems} direction=\"vertical\" />\n    </aside>\n  );\n}"
+          },
+          {
+            "title": "Document editor toolbar",
+            "description": "A compact formatting toolbar with magnification for a rich-text or canvas editor.",
+            "code": "import { FloatingDock } from \"@/components/ui/floating-dock\";\nimport { Bold, Italic, Underline, AlignLeft, AlignCenter, List, Image } from \"lucide-react\";\n\nconst toolbarItems = [\n  { title: \"Bold\", icon: <Bold className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Italic\", icon: <Italic className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Underline\", icon: <Underline className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Align left\", icon: <AlignLeft className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Center\", icon: <AlignCenter className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"List\", icon: <List className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Image\", icon: <Image className=\"w-4 h-4\" />, href: \"#\" },\n];\n\nexport default function EditorToolbar() {\n  return (\n    <div className=\"flex justify-center py-4\">\n      <FloatingDock items={toolbarItems} magnification={52} distance={100} />\n    </div>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "confetti-burst",
+      "name": "Confetti Burst",
+      "description": "Click-triggered confetti particle explosion with customizable colors and physics.",
+      "icon": "LucidePartyPopper",
+      "category": "Effects & Animations",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Trigger element wrapped by the particle generation effect zone."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Styling configurations for the interaction wrapper logic container."
+        },
+        {
+          "name": "particleCount",
+          "type": "number",
+          "description": "Quantity multiplier defining how many fragments evaluate per execution."
+        },
+        {
+          "name": "colors",
+          "type": "string[]",
+          "description": "Array defining hex code palettes defining sequential particle rendering."
+        },
+        {
+          "name": "spread",
+          "type": "number",
+          "description": "Radiant measurement indicating geometric angle variance for throwing trajectories."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Timer limit capping maximum gravity simulation lifetime."
+        }
+      ],
+      "usageCode": "import { ConfettiBurst } from \"@/components/ui/confetti-burst\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-20 text-white\">\n      <ConfettiBurst className=\"rounded-xl p-12 border border-neutral-800 bg-neutral-900/50 hover:border-neutral-700 transition-colors cursor-pointer\">\n        <div className=\"text-center\">\n          <h3 className=\"text-xl font-bold mb-2\">🎉 Click me!</h3>\n          <p className=\"text-neutral-400 text-sm\">Click anywhere on this card for confetti</p>\n        </div>\n      </ConfettiBurst>\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "ConfettiBurst fires a particle explosion from a point on screen — perfect for celebrating milestones like a completed form, a successful payment, or an unlocked achievement.",
+        "scenarios": [
+          {
+            "title": "Success after form submission",
+            "description": "Trigger a confetti burst when the user completes a sign-up or checkout form.",
+            "code": "import { ConfettiBurst } from \"@/components/ui/confetti-burst\";\nimport { useState } from \"react\";\n\nexport default function SignupForm() {\n  const [submitted, setSubmitted] = useState(false);\n  const [triggerConfetti, setTriggerConfetti] = useState(false);\n\n  const handleSubmit = (e: React.FormEvent) => {\n    e.preventDefault();\n    setSubmitted(true);\n    setTriggerConfetti(true);\n    setTimeout(() => setTriggerConfetti(false), 100);\n  };\n\n  return (\n    <div className=\"relative\">\n      {submitted ? (\n        <div className=\"text-center text-white py-8\">\n          <p className=\"text-2xl font-bold\">You're in! 🎉</p>\n        </div>\n      ) : (\n        <form onSubmit={handleSubmit} className=\"space-y-4\">\n          <input type=\"email\" placeholder=\"Your email\" className=\"w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-white\" />\n          <button type=\"submit\" className=\"w-full py-3 bg-purple-600 text-white rounded-xl font-semibold\">\n            Join waitlist\n          </button>\n        </form>\n      )}\n      <ConfettiBurst trigger={triggerConfetti} origin={{ x: 0.5, y: 0.5 }} />\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Achievement unlock",
+            "description": "Celebrate when a user reaches a milestone inside a dashboard or onboarding flow.",
+            "code": "import { ConfettiBurst } from \"@/components/ui/confetti-burst\";\nimport { useState } from \"react\";\nimport { Trophy } from \"lucide-react\";\n\nexport default function AchievementCard() {\n  const [unlocked, setUnlocked] = useState(false);\n  const [burst, setBurst] = useState(false);\n\n  const unlock = () => {\n    setUnlocked(true);\n    setBurst(true);\n    setTimeout(() => setBurst(false), 100);\n  };\n\n  return (\n    <div className=\"relative p-6 rounded-2xl border border-neutral-800 bg-neutral-900 text-center space-y-4\">\n      <Trophy className={`w-10 h-10 mx-auto transition-colors ${unlocked ? \"text-yellow-400\" : \"text-neutral-600\"}`} />\n      <p className=\"text-white font-semibold\">First component added</p>\n      {!unlocked && (\n        <button onClick={unlock} className=\"px-5 py-2 bg-purple-600 text-white rounded-xl text-sm font-medium\">\n          Claim reward\n        </button>\n      )}\n      <ConfettiBurst trigger={burst} particleCount={80} />\n    </div>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "drawer-slide",
+      "name": "Drawer Slide",
+      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
+      "icon": "LucidePanelRight",
+      "category": "Navigation & Overlays",
+      "props": [
+        {
+          "name": "isOpen",
+          "type": "boolean",
+          "description": "React state abstraction determining visible rendering."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "description": "Method triggered when dismiss actions evaluation (drag, backdrop, external limit)."
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Content rendered inside the active sliding sheet."
+        },
+        {
+          "name": "position",
+          "type": "DrawerPosition",
+          "description": "Anchoring enumeration bounding left, right, top, or bottom screen edges."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Specific styling modifiers passing onto the physical sliding panel."
+        },
+        {
+          "name": "overlayClassName",
+          "type": "string",
+          "description": "Specific styling modifiers passing onto the dimming backdrop."
+        },
+        {
+          "name": "width",
+          "type": "string",
+          "description": "CSS explicit translation sizing left/right sliding panels."
+        },
+        {
+          "name": "height",
+          "type": "string",
+          "description": "CSS explicit translation sizing top/bottom sliding panels."
+        },
+        {
+          "name": "dragToClose",
+          "type": "boolean",
+          "description": "Map touch swiping events onto gesture recognizers supporting drag dismiss."
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { useState } from \"react\";\nimport { DrawerSlide } from \"@/components/ui/drawer-slide\";\n\nexport default function Example() {\n  const [drawerOpen, setDrawerOpen] = useState(false);\n  return (\n    <>\n      <div className=\"flex items-center justify-center p-20\">\n        <button\n          onClick={() => setDrawerOpen(true)}\n          className=\"px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors font-medium\"\n        >\n          Open Drawer\n        </button>\n      </div>\n      <DrawerSlide isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}>\n        <h3 className=\"text-xl font-bold mb-4 text-white\">Drawer Content</h3>\n        <p className=\"text-neutral-400 mb-4\">\n          This drawer slides in from the right with spring physics. You can drag it to dismiss.\n        </p>\n        <button\n          onClick={() => setDrawerOpen(false)}\n          className=\"px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors text-sm\"\n        >\n          Close Drawer\n        </button>\n      </DrawerSlide>\n    </>\n  );\n}"
+    },
+    {
+      "slug": "notification-stack",
+      "name": "Notification Stack",
+      "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
+      "icon": "Bell",
+      "category": "Navigation & Overlays",
+      "props": [
+        {
+          "name": "className",
+          "type": "string",
+          "description": "CSS attributes tailoring the absolute container."
+        },
+        {
+          "name": "position",
+          "type": "\"top-right\" | \"top-left\" | \"bottom-right\" | \"bottom-left\"",
+          "description": "Screen coordinate literal dictating orientation constraints."
+        },
+        {
+          "name": "maxVisible",
+          "type": "number",
+          "description": "Limit quantity threshold managing physical screen stack instances."
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { NotificationStack, useNotifications } from \"@/components/ui/notification-stack\";\n\nexport default function Example() {\n  const { notifications, addNotification, removeNotification } = useNotifications();\n  return (\n    <div className=\"flex flex-col items-center gap-4 w-full p-20\">\n      <div className=\"flex flex-wrap gap-3 items-center justify-center\">\n        {([\"success\", \"error\", \"warning\", \"info\"] as const).map((type) => (\n          <button\n            key={type}\n            onClick={() =>\n              addNotification({\n                title: `${type.charAt(0).toUpperCase() + type.slice(1)} notification`,\n                description: \"This is a demo notification that auto-dismisses.\",\n                type,\n                duration: 4000,\n              })\n            }\n            className=\"px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize text-white bg-neutral-800 hover:bg-neutral-700\"\n          >\n            {type}\n          </button>\n        ))}\n      </div>\n      <NotificationStack notifications={notifications} onRemove={removeNotification} />\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "NotificationStack renders a stacked pile of toast-style cards that animate in and collapse when dismissed. Great for live activity feeds, system alerts, or social notifications.",
+        "scenarios": [
+          {
+            "title": "Live activity feed",
+            "description": "Push real-time events (new users, payments, deployments) into the stack.",
+            "code": "import { NotificationStack } from \"@/components/ui/notification-stack\";\nimport { useState } from \"react\";\n\nconst events = [\n  { id: 1, title: \"New signup\", body: \"prashant@example.com just joined.\" },\n  { id: 2, title: \"Payment received\", body: \"$49 from Stripe · Order #1042\" },\n  { id: 3, title: \"Deploy success\", body: \"main → production in 34s\" },\n];\n\nexport default function ActivityFeed() {\n  const [notifications, setNotifications] = useState(events);\n\n  return (\n    <NotificationStack\n      notifications={notifications}\n      onDismiss={(id) => setNotifications((n) => n.filter((x) => x.id !== id))}\n    />\n  );\n}"
+          },
+          {
+            "title": "Form validation errors",
+            "description": "Surface validation errors as dismissible stacked notices instead of inline messages.",
+            "code": "import { NotificationStack } from \"@/components/ui/notification-stack\";\n\nconst errors = [\n  { id: 1, title: \"Email required\", body: \"Please enter a valid email address.\" },\n  { id: 2, title: \"Password too short\", body: \"Password must be at least 8 characters.\" },\n];\n\nexport default function FormErrors() {\n  return (\n    <div className=\"fixed bottom-6 right-6 z-50 w-80\">\n      <NotificationStack notifications={errors} variant=\"error\" />\n    </div>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "animated-timeline",
+      "name": "Animated Timeline",
+      "description": "Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps.",
+      "icon": "Clock",
+      "category": "Effects & Animations",
+      "props": [
+        {
+          "name": "items",
+          "type": "TimelineItem[]",
+          "description": "Ordered array of timeline items (id, title, description, date, color, icon)."
+        },
+        {
+          "name": "variant",
+          "type": "\"vertical\" | \"horizontal\" | \"cards\" | \"steps\"",
+          "description": "Layout and animation style. Defaults to \"vertical\"."
+        },
+        {
+          "name": "lineColor",
+          "type": "string",
+          "description": "Connecting line color. Defaults to rgba(255,255,255,0.08)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional classes on the root wrapper."
+        }
+      ],
+      "variants": [
+        {
+          "id": "vertical",
+          "label": "Vertical",
+          "demoKey": "animated-timeline/vertical",
+          "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Project Kickoff\",   description: \"Scope defined and team assembled.\",             color: \"#a855f7\", date: \"Jan 2026\" },\n  { id: \"2\", title: \"Design Phase\",      description: \"Wireframes and component system finalised.\",    color: \"#6366f1\", date: \"Jan 2026\" },\n  { id: \"3\", title: \"Dev Sprint\",        description: \"Core components built and tested end-to-end.\", color: \"#ec4899\", date: \"Feb 2026\" },\n  { id: \"4\", title: \"Public Launch\",     description: \"CLI published and registry live.\",             color: \"#10b981\", date: \"Feb 2026\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-sm mx-auto p-6 w-full\">\n      <AnimatedTimeline items={items} variant=\"vertical\" lineColor=\"#3f3f46\" />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "horizontal",
+          "label": "Horizontal",
+          "demoKey": "animated-timeline/horizontal",
+          "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Kickoff\",  description: \"Scope agreed.\",          color: \"#a855f7\", date: \"Jan\" },\n  { id: \"2\", title: \"Design\",   description: \"Wireframes done.\",       color: \"#6366f1\", date: \"Jan\" },\n  { id: \"3\", title: \"Build\",    description: \"Components shipped.\",    color: \"#ec4899\", date: \"Feb\" },\n  { id: \"4\", title: \"Launch\",   description: \"Registry live.\",         color: \"#10b981\", date: \"Feb\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-6 w-full overflow-x-auto\">\n      <AnimatedTimeline items={items} variant=\"horizontal\" lineColor=\"#3f3f46\" />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "cards",
+          "label": "Cards",
+          "demoKey": "animated-timeline/cards",
+          "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Project Kickoff\",   description: \"Scope defined and team assembled.\",             color: \"#a855f7\", date: \"Jan 2026\" },\n  { id: \"2\", title: \"Design Phase\",      description: \"Wireframes and component system finalised.\",    color: \"#6366f1\", date: \"Jan 2026\" },\n  { id: \"3\", title: \"Dev Sprint\",        description: \"Core components built and tested end-to-end.\", color: \"#ec4899\", date: \"Feb 2026\" },\n  { id: \"4\", title: \"Public Launch\",     description: \"CLI published and registry live.\",             color: \"#10b981\", date: \"Feb 2026\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-lg mx-auto p-6 w-full\">\n      <AnimatedTimeline items={items} variant=\"cards\" lineColor=\"#3f3f46\" />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "steps",
+          "label": "Steps",
+          "demoKey": "animated-timeline/steps",
+          "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Install the CLI\",        description: \"Run npx uniqueui init in your project.\",         color: \"#a855f7\" },\n  { id: \"2\", title: \"Add a component\",        description: \"Run npx uniqueui add animated-timeline.\",        color: \"#6366f1\" },\n  { id: \"3\", title: \"Import and customise\",   description: \"Use variant, color, and date props as needed.\",  color: \"#ec4899\" },\n  { id: \"4\", title: \"Ship to production\",     description: \"Zero runtime dependency — fully your code.\",     color: \"#10b981\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-sm mx-auto p-6 w-full\">\n      <AnimatedTimeline items={items} variant=\"steps\" />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "slug": "nested-comments",
+      "name": "Nested Comments",
+      "description": "Threaded comment section with infinite nesting, animated expand/collapse, inline reply composer, and spring-physics like button.",
+      "icon": "LucideMessageSquare",
+      "category": "Social & Interaction",
+      "props": [
+        {
+          "name": "comments",
+          "type": "Comment[]",
+          "description": "Array of top-level comment objects, each optionally containing a `replies` array for nested threading."
+        },
+        {
+          "name": "maxDepth",
+          "type": "number",
+          "default": "4",
+          "description": "Maximum nesting depth allowed before disabling the Reply button to prevent infinite threading."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional CSS classes applied to the root wrapper element."
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "default": "\"#8b5cf6\"",
+          "description": "Hex or CSS color used for reply badge highlights and interactive accent elements."
+        },
+        {
+          "name": "onReply",
+          "type": "(commentId: string, content: string) => void",
+          "description": "Callback fired when a user submits a reply, receiving the parent comment ID and reply text."
+        },
+        {
+          "name": "onLike",
+          "type": "(commentId: string) => void",
+          "description": "Callback fired when a user likes a comment, receiving the comment ID."
+        }
+      ],
+      "usageCode": "import { NestedComments } from \"@/components/ui/nested-comments\";\nimport type { Comment } from \"@/components/ui/nested-comments\";\n\nconst comments: Comment[] = [\n  {\n    id: \"1\",\n    author: \"Alex Kim\",\n    content: \"This component is incredible! The animations feel so natural.\",\n    timestamp: \"2 hours ago\",\n    likes: 14,\n    replies: [\n      {\n        id: \"1-1\",\n        author: \"Sarah Chen\",\n        content: \"Agreed! The collapse animation is especially smooth.\",\n        timestamp: \"1 hour ago\",\n        likes: 6,\n        replies: [\n          {\n            id: \"1-1-1\",\n            author: \"Alex Kim\",\n            content: \"Thanks! Motion.dev's layout animations make it effortless.\",\n            timestamp: \"45 min ago\",\n            likes: 3,\n          },\n        ],\n      },\n    ],\n  },\n  {\n    id: \"2\",\n    author: \"Jordan Lee\",\n    content: \"Love the inline reply box with keyboard shortcuts. Very intuitive UX.\",\n    timestamp: \"3 hours ago\",\n    likes: 9,\n  },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-6 bg-neutral-950 rounded-xl min-h-[400px]\">\n      <NestedComments\n        comments={comments}\n        maxDepth={4}\n        accentColor=\"#8b5cf6\"\n        onReply={(id, content) => console.log(\"Reply to\", id, \":\", content)}\n        onLike={(id) => console.log(\"Liked\", id)}\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "hover-reveal-card",
+      "name": "Hover Reveal Card",
+      "description": "Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations.",
+      "icon": "Layers",
+      "category": "Cards",
+      "props": [
+        {
+          "name": "image",
+          "type": "string",
+          "description": "URL of the image displayed as the card's primary visual."
+        },
+        {
+          "name": "imageAlt",
+          "type": "string",
+          "description": "Accessible alt text attached to the img element."
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "Small uppercase label rendered above the heading in both states."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Primary headline text displayed in both the default and reveal states."
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "description": "Supporting line shown beneath the title in the default state and as a footer in the reveal panel."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Extended body copy that appears only inside the slide-up hover panel."
+        },
+        {
+          "name": "ctaText",
+          "type": "string",
+          "description": "Call-to-action label rendered at the bottom of the hover panel."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "description": "When supplied the wrapper renders as an anchor element pointing to this URL."
+        },
+        {
+          "name": "accentColor",
+          "type": "string",
+          "description": "Hex or CSS colour driving the tag, CTA text, and border-glow accent."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Tailwind utility classes forwarded onto the outermost card wrapper."
+        },
+        {
+          "name": "imageHeight",
+          "type": "number",
+          "description": "Pixel height reserved for the image section before the content area."
+        }
+      ],
+      "usageCode": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-6 items-start justify-center p-10\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80\"\n        imageAlt=\"People at a conference table\"\n        tag=\"AI\"\n        title=\"AI for inclusive growth: Leadership lessons from Davos\"\n        subtitle=\"Article\"\n        description=\"What are the practical ways to ensure AI expands opportunity, strengthens resilience and supports a more inclusive, equitable future?\"\n        ctaText=\"Read the article →\"\n        accentColor=\"#6366f1\"\n        imageHeight={220}\n        className=\"w-72\"\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "bento-grid",
+      "name": "Bento Grid",
+      "description": "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
+      "icon": "LayoutGrid",
+      "category": "Cards",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Headline text displayed at the bottom of the card."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Supporting body text shown beneath the title."
+        },
+        {
+          "name": "icon",
+          "type": "React.ReactNode",
+          "description": "Icon element rendered inside a pill at the top of the card."
+        },
+        {
+          "name": "background",
+          "type": "React.ReactNode",
+          "description": "Optional decorative layer (image, gradient, SVG) rendered behind the content."
+        },
+        {
+          "name": "cta",
+          "type": "string",
+          "description": "Call-to-action label that slides up into view on hover."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "description": "When supplied the card renders as an anchor element."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Grid span and sizing classes forwarded to the cell wrapper, e.g. col-span-2 or row-span-2."
+        },
+        {
+          "name": "spinBorder",
+          "type": "boolean",
+          "description": "Enable the spinning conic-gradient border effect (same technique as the hero button). Replaces the static border."
+        },
+        {
+          "name": "spinBorderColors",
+          "type": "[string, string]",
+          "description": "Two hex/CSS color values for the conic gradient. Defaults to [\"#E2CBFF\", \"#393BB2\"] (purple–indigo)."
+        }
+      ],
+      "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\nimport { Sparkles, Zap, Shield, Globe } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"max-w-3xl mx-auto\">\n        <BentoCard\n          icon={<Sparkles className=\"w-5 h-5\" />}\n          title=\"Beautiful animations\"\n          description=\"Every interaction is crafted with spring-physics Motion.dev animations for a premium feel.\"\n          cta=\"Explore components\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          icon={<Zap className=\"w-5 h-5\" />}\n          title=\"Lightning fast\"\n          description=\"Copy-paste components with zero runtime overhead.\"\n        />\n        <BentoCard\n          icon={<Shield className=\"w-5 h-5\" />}\n          title=\"Type safe\"\n          description=\"Built with TypeScript and fully typed props.\"\n        />\n        <BentoCard\n          icon={<Globe className=\"w-5 h-5\" />}\n          title=\"Zero lock-in\"\n          description=\"You own the code. No external runtime dependency.\"\n          cta=\"Get started\"\n          className=\"col-span-2\"\n        />\n      </BentoGrid>\n    </div>\n  );\n}",
+      "variants": [
+        {
+          "id": "features",
+          "label": "Features",
+          "demoKey": "bento-grid/features",
+          "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\nimport { Sparkles, Zap, Shield, Globe } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid>\n        <BentoCard\n          icon={<Sparkles className=\"w-5 h-5\" />}\n          title=\"Beautiful animations\"\n          description=\"Every interaction is crafted with spring-physics Motion.dev animations.\"\n          cta=\"Explore components\"\n          className=\"col-span-2\"\n          spinBorder\n          spinBorderColors={[\"#E2CBFF\", \"#393BB2\"]}\n        />\n        <BentoCard\n          icon={<Zap className=\"w-5 h-5\" />}\n          title=\"Lightning fast\"\n          description=\"Copy-paste components with zero runtime overhead.\"\n          spinBorder\n          spinBorderColors={[\"#a3e635\", \"#065f46\"]}\n        />\n        <BentoCard\n          icon={<Shield className=\"w-5 h-5\" />}\n          title=\"Type-safe props\"\n          description=\"Fully typed with TypeScript for confidence at scale.\"\n          spinBorder\n          spinBorderColors={[\"#67e8f9\", \"#1e3a5f\"]}\n        />\n        <BentoCard\n          icon={<Globe className=\"w-5 h-5\" />}\n          title=\"Zero lock-in\"\n          description=\"You own the code. No external runtime dependency.\"\n          cta=\"Get started\"\n          className=\"col-span-2\"\n          spinBorder\n          spinBorderColors={[\"#fda4af\", \"#9f1239\"]}\n        />\n      </BentoGrid>\n    </div>\n  );\n}"
+        },
+        {
+          "id": "showcase",
+          "label": "Showcase",
+          "demoKey": "bento-grid/showcase",
+          "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid>\n        <BentoCard\n          title=\"Aurora vibes\"\n          description=\"Layered animated gradients that feel alive.\"\n          background={\n            <div className=\"absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse\" />\n          }\n          cta=\"View component\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          title=\"Magnetic pull\"\n          description=\"Spring-physics cursor attraction.\"\n          background={\n            <div className=\"absolute inset-0 bg-gradient-to-br from-rose-700/25 to-orange-600/20\" />\n          }\n        />\n        <BentoCard\n          title=\"Spotlight effect\"\n          description=\"Radial light that follows your mouse.\"\n          background={\n            <div className=\"absolute inset-0 bg-gradient-to-br from-sky-700/25 to-indigo-700/20\" />\n          }\n        />\n        <BentoCard\n          title=\"Meteor storm\"\n          description=\"Shooting star particles raining through cards.\"\n          background={\n            <div className=\"absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20\" />\n          }\n          cta=\"Try it\"\n          className=\"col-span-2\"\n        />\n      </BentoGrid>\n    </div>\n  );\n}"
+        },
+        {
+          "id": "stats",
+          "label": "Stats",
+          "demoKey": "bento-grid/stats",
+          "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"auto-rows-[160px]\">\n        <BentoCard\n          title=\"Components\"\n          description=\"Production-ready animated components\"\n          background={\n            <div className=\"absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none\">24</div>\n          }\n          icon={<span className=\"text-2xl font-black text-violet-400\">24</span>}\n        />\n        <BentoCard\n          title=\"Zero dependencies\"\n          description=\"No UniqueUI runtime in your bundle\"\n          background={\n            <div className=\"absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none\">0</div>\n          }\n          icon={<span className=\"text-2xl font-black text-emerald-400\">0</span>}\n        />\n        <BentoCard\n          title=\"Install time\"\n          description=\"Seconds from CLI to working component\"\n          icon={<span className=\"text-2xl font-black text-sky-400\">~3s</span>}\n        />\n        <BentoCard\n          title=\"MIT License\"\n          description=\"Open source forever. Fork it, extend it, ship it.\"\n          cta=\"View on GitHub\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          title=\"Tailwind compatible\"\n          description=\"v3 and v4 supported\"\n          icon={<span className=\"text-2xl font-black text-cyan-400\">✓</span>}\n        />\n      </BentoGrid>\n    </div>\n  );\n}"
+        },
+        {
+          "id": "team",
+          "label": "Team",
+          "demoKey": "bento-grid/team",
+          "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nconst members = [\n  { name: \"Alex Kim\",   role: \"Lead Engineer\",    tag: \"Motion\",     color: \"#a855f7\" },\n  { name: \"Sara Chen\",  role: \"Design Systems\",   tag: \"Tailwind\",   color: \"#6366f1\" },\n  { name: \"Jordan Lee\", role: \"DX Engineer\",      tag: \"CLI\",        color: \"#ec4899\" },\n  { name: \"Maya Patel\", role: \"Animations Lead\",  tag: \"Motion.dev\", color: \"#10b981\" },\n  { name: \"Ryan Wu\",    role: \"Accessibility\",    tag: \"ARIA\",       color: \"#f59e0b\" },\n  { name: \"Priya Shah\", role: \"TypeScript Infra\", tag: \"TS 5.x\",    color: \"#3b82f6\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"auto-rows-[180px]\">\n        {members.map((m) => (\n          <BentoCard\n            key={m.name}\n            title={m.name}\n            description={m.role}\n            background={\n              <div\n                className=\"absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-10\"\n                style={{ backgroundColor: m.color }}\n              />\n            }\n            icon={\n              <div\n                className=\"w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white\"\n                style={{ backgroundColor: m.color + \"33\", border: `1.5px solid ${m.color}66` }}\n              >\n                {m.name.split(\" \").map((n) => n[0]).join(\"\")}\n              </div>\n            }\n            cta={m.tag}\n          />\n        ))}\n      </BentoGrid>\n    </div>\n  );\n}"
+        }
+      ],
+      "docs": {
+        "overview": "BentoGrid lays out content cards in an asymmetric masonry-style grid inspired by Apple's design language. Each cell can span multiple columns or rows, with animated entrance and hover effects.",
+        "scenarios": [
+          {
+            "title": "Product feature overview",
+            "description": "Showcase multiple features in a single glanceable grid without overwhelming the user.",
+            "code": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\nimport { Zap, Shield, Code } from \"lucide-react\";\n\nexport default function FeatureGrid() {\n  return (\n    <BentoGrid>\n      <BentoCard\n        title=\"Blazing fast\"\n        description=\"Server-side rendered with zero layout shift.\"\n        icon={<Zap className=\"w-6 h-6\" />}\n        className=\"col-span-2\"\n      />\n      <BentoCard\n        title=\"Type-safe\"\n        description=\"Full TypeScript support out of the box.\"\n        icon={<Code className=\"w-6 h-6\" />}\n      />\n      <BentoCard\n        title=\"Secure by default\"\n        description=\"No external requests. Your data stays local.\"\n        icon={<Shield className=\"w-6 h-6\" />}\n      />\n    </BentoGrid>\n  );\n}"
+          },
+          {
+            "title": "Personal portfolio grid",
+            "description": "Display projects, skills, and social links in an editorial bento layout.",
+            "code": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function PortfolioGrid() {\n  return (\n    <BentoGrid className=\"max-w-4xl mx-auto\">\n      <BentoCard\n        title=\"UniqueUI\"\n        description=\"An open-source animated component library.\"\n        className=\"col-span-2 row-span-2\"\n      />\n      <BentoCard title=\"React\" description=\"5 years\" />\n      <BentoCard title=\"Next.js\" description=\"3 years\" />\n      <BentoCard\n        title=\"Open to work\"\n        description=\"Based in India · Remote-friendly\"\n        className=\"col-span-2\"\n      />\n    </BentoGrid>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "particle-field",
+      "name": "Particle Field",
+      "description": "Canvas-based floating particles with mouse-repulsion physics and responsive connecting lines.",
+      "icon": "LucideSparkles",
+      "category": "Backgrounds",
+      "props": [
+        {
+          "name": "particleCount",
+          "type": "number",
+          "description": "The number of particles rendered dynamically."
+        },
+        {
+          "name": "particleColor",
+          "type": "string | string[]",
+          "description": "One hex color or an array of hex colors for particles and connecting lines."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "description": "The base movement speed multiplier."
+        },
+        {
+          "name": "interactionRadius",
+          "type": "number",
+          "description": "The pixel radius for the mouse repulsion event."
+        }
+      ],
+      "usageCode": "import { ParticleField } from \"@/components/ui/particle-field\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950\">\n      <div className=\"absolute inset-0 z-10 pointer-events-none flex items-center justify-center\">\n        <h3 className=\"text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500\">\n          Hover Around\n        </h3>\n      </div>\n      <ParticleField \n        particleCount={120}\n        particleColor={[\"#a855f7\", \"#06b6d4\", \"#f472b6\"]}\n        speed={0.5}\n      />\n    </div>\n  );\n}",
+      "variants": [
+        {
+          "id": "single",
+          "label": "Single Color",
+          "demoKey": "particle-field/single",
+          "usageCode": "import { ParticleField } from \"@/components/ui/particle-field\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950\">\n      <div className=\"absolute inset-0 z-10 pointer-events-none flex items-center justify-center\">\n        <h3 className=\"text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500\">\n          Hover Around\n        </h3>\n      </div>\n      <ParticleField\n        particleCount={120}\n        particleColor=\"#a855f7\"\n        speed={0.5}\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "multi",
+          "label": "Multi Color",
+          "demoKey": "particle-field/multi",
+          "usageCode": "import { ParticleField } from \"@/components/ui/particle-field\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950\">\n      <div className=\"absolute inset-0 z-10 pointer-events-none flex items-center justify-center\">\n        <h3 className=\"text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500\">\n          Hover Around\n        </h3>\n      </div>\n      <ParticleField\n        particleCount={120}\n        particleColor={[\"#a855f7\", \"#06b6d4\", \"#f472b6\"]}\n        speed={0.5}\n      />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "slug": "horizontal-scroll-gallery",
+      "name": "Horizontal Scroll Gallery",
+      "description": "Converts vertical scroll into horizontal movement with momentum physics for immersive galleries.",
+      "icon": "Layers",
+      "category": "Effects & Animations",
+      "props": [
+        {
+          "name": "items",
+          "type": "React.ReactNode[]",
+          "description": "Array of React nodes (e.g. images, cards) to map across the horizontal track."
+        },
+        {
+          "name": "direction",
+          "type": "\"left\" | \"right\"",
+          "description": "Direction the track moves when the user scrolls down."
+        },
+        {
+          "name": "itemClassName",
+          "type": "string",
+          "description": "Common classes applied to every individual container."
+        }
+      ],
+      "usageCode": "import { HorizontalScrollGallery } from \"@/components/ui/horizontal-scroll-gallery\";\n\nexport default function Example() {\n  const images = [\n    <img key=\"1\" src=\"https://images.unsplash.com/photo-1681935396624-006f4acdc530?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\" alt=\"Landscape 1\" className=\"object-cover w-full h-full\" />,\n    <img key=\"2\" src=\"https://images.unsplash.com/photo-1775059956734-78ffd2075cec?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\" alt=\"Landscape 2\" className=\"object-cover w-full h-full\" />,\n    <img key=\"3\" src=\"https://images.unsplash.com/photo-1722152246589-23370458081f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\" alt=\"Landscape 3\" className=\"object-cover w-full h-full\" />,\n    <div key=\"4\" className=\"w-full h-full bg-neutral-900 flex items-center justify-center p-8 text-center text-white\">\n      <h3 className=\"text-4xl font-bold\">End of Gallery</h3>\n    </div>\n  ];\n  return (\n    <HorizontalScrollGallery items={images} />\n  );\n}"
+    },
+    {
+      "slug": "radial-menu",
+      "name": "Radial Menu",
+      "description": "Circular flyout menu that bursts items outward from a center trigger with staggered spring animation.",
+      "icon": "LucidePalette",
+      "category": "Navigation & Overlays",
+      "props": [
+        {
+          "name": "items",
+          "type": "RadialMenuItem[]",
+          "description": "Array of item configurations representing the burst actions."
+        },
+        {
+          "name": "radius",
+          "type": "number",
+          "description": "Distance in pixels each item travels from the trigger center."
+        },
+        {
+          "name": "startAngle",
+          "type": "number",
+          "description": "The starting angle for the radial arc (e.g. -90 for top)."
+        },
+        {
+          "name": "endAngle",
+          "type": "number",
+          "description": "The concluding angle for the radial arc."
+        },
+        {
+          "name": "staggerDelay",
+          "type": "number",
+          "description": "Staggering time multiplier between cascading children."
+        }
+      ],
+      "usageCode": "import { RadialMenu } from \"@/components/ui/radial-menu\";\nimport { User, Settings, Mail, Bell } from \"lucide-react\";\n\nexport default function Example() {\n  const menuItems = [\n    { id: \"profile\", label: \"Profile\", icon: <User className=\"w-5 h-5\" /> },\n    { id: \"settings\", label: \"Settings\", icon: <Settings className=\"w-5 h-5\" /> },\n    { id: \"messages\", label: \"Messages\", icon: <Mail className=\"w-5 h-5\" /> },\n    { id: \"notifications\", label: \"Notifications\", icon: <Bell className=\"w-5 h-5\" /> },\n  ];\n\n  return (\n    <div className=\"h-[400px] w-full flex items-center justify-center\">\n      <RadialMenu items={menuItems} radius={120} />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "cursor-trail",
+      "name": "Cursor Trail",
+      "description": "Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail.",
+      "icon": "LayoutGrid",
+      "category": "Cursor Effects",
+      "props": [
+        {
+          "name": "color",
+          "type": "string",
+          "description": "The color of the trail particles."
+        },
+        {
+          "name": "trailLength",
+          "type": "number",
+          "description": "Maximum number of particles rendering concurrently."
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "description": "Base size of the trailing particle dots."
+        },
+        {
+          "name": "decayDuration",
+          "type": "number",
+          "description": "How long it takes for a drawn particle to fade and shrink out."
+        }
+      ],
+      "usageCode": "import { CursorTrail } from \"@/components/ui/cursor-trail\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center\">\n      <h3 className=\"text-white text-2xl font-bold uppercase tracking-widest pointer-events-none\">\n        Move your mouse\n      </h3>\n      \n      {/* Ensures it captures pointer events across the block but doesn't block the content */}\n      <CursorTrail \n        color=\"#a855f7\"\n        size={14}\n        trailLength={25}\n        decayDuration={0.6}\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "interactive-cursor",
+      "name": "Interactive Cursor",
+      "description": "Spring-smoothed cursor overlay with magnetic hover states, click ripples, optional particles, and support for full-page or container-scoped interactions.",
+      "icon": "LucideMousePointer",
+      "category": "Cursor Effects",
+      "props": [
+        {
+          "name": "color",
+          "type": "string",
+          "description": "Primary color for the cursor dot."
+        },
+        {
+          "name": "clickColor",
+          "type": "string",
+          "description": "Ripple and particle color used on click."
+        },
+        {
+          "name": "glow",
+          "type": "boolean",
+          "description": "Enables the trailing glow around the cursor."
+        },
+        {
+          "name": "trailColor",
+          "type": "string",
+          "description": "Color of the outer ring and trailing glow."
+        },
+        {
+          "name": "particleEffect",
+          "type": "boolean",
+          "description": "Whether click interactions emit particles."
+        },
+        {
+          "name": "magneticPull",
+          "type": "boolean",
+          "description": "Snaps the cursor toward interactive elements such as buttons and links."
+        },
+        {
+          "name": "hideSystemCursor",
+          "type": "boolean",
+          "description": "Hides the native cursor while the component is mounted."
+        },
+        {
+          "name": "containerRef",
+          "type": "RefObject<HTMLElement | null>",
+          "description": "Optional ref limiting the interaction area to a specific container instead of the full window."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional classes applied to the overlay root."
+        }
+      ],
+      "usageCode": "import { useRef } from \"react\";\nimport { InteractiveCursor } from \"@/components/ui/interactive-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n\n  return (\n    <div\n      ref={containerRef}\n      className=\"relative h-[400px] w-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950\"\n    >\n      <div className=\"relative z-10 flex h-full items-center justify-center\">\n        <button\n          type=\"button\"\n          data-magnetic=\"true\"\n          className=\"rounded-full bg-white px-6 py-3 font-semibold text-black\"\n        >\n          Hover me\n        </button>\n      </div>\n\n      <InteractiveCursor\n        containerRef={containerRef}\n        color=\"#a855f7\"\n        clickColor=\"#b280ff\"\n        trailColor=\"rgba(168, 85, 247, 0.35)\"\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "pen-cursor",
+      "name": "Pen Cursor",
+      "description": "Physics-driven ribbon trail rendered on canvas — a chain of linked points follows the mouse with spring-damping inertia, width scales with speed, and colors interpolate head-to-tail. Inspired by obsidianassembly.com.",
+      "icon": "Edit2",
+      "category": "Cursor Effects",
+      "props": [
+        {
+          "name": "trailLength",
+          "type": "number",
+          "description": "Number of chain-linked trail points. Default 60."
+        },
+        {
+          "name": "maxWidth",
+          "type": "number",
+          "description": "Maximum ribbon width in px (scales with speed). Default 1."
+        },
+        {
+          "name": "minWidth",
+          "type": "number",
+          "description": "Minimum ribbon width in px at the tail. Default 1."
+        },
+        {
+          "name": "damping",
+          "type": "number",
+          "description": "Spring damping for the head point (0–1). Default 0.6."
+        },
+        {
+          "name": "speedInfluence",
+          "type": "number",
+          "description": "How much mouse speed widens the ribbon (0–1). Default 0.9."
+        },
+        {
+          "name": "colorHead",
+          "type": "string",
+          "description": "RGB string for the ribbon head color. Default \"159, 175, 155\" (sage green)."
+        },
+        {
+          "name": "colorTail",
+          "type": "string",
+          "description": "RGB string for the ribbon tail color. Default \"198, 167, 106\" (warm gold)."
+        },
+        {
+          "name": "alphaHead",
+          "type": "number",
+          "description": "Opacity at the ribbon head (0–1). Default 0.9."
+        },
+        {
+          "name": "alphaTail",
+          "type": "number",
+          "description": "Opacity at the ribbon tail (0–1). Default 0."
+        },
+        {
+          "name": "hideSystemCursor",
+          "type": "boolean",
+          "description": "Hide the system cursor while mounted. Default false."
+        },
+        {
+          "name": "containerRef",
+          "type": "RefObject<HTMLElement | null>",
+          "description": "Optional. Limits drawing to this element; parent should be `relative`. Omit for full-window tracking."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra classes on the canvas element."
+        }
+      ],
+      "usageCode": "import { useRef } from \"react\";\nimport { PenCursor } from \"@/components/ui/pen-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n  return (\n    <div\n      ref={containerRef}\n      className=\"h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center\"\n    >\n      <h3 className=\"text-white text-2xl font-bold uppercase tracking-widest pointer-events-none\">\n        Move your mouse\n      </h3>\n      <PenCursor\n        containerRef={containerRef}\n        trailLength={40}\n        maxWidth={1}\n        colorHead=\"159, 175, 155\"\n        colorTail=\"198, 167, 106\"\n        alphaHead={0.95}\n        damping={0.55}\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "glow-hero-section",
+      "name": "Glow Hero Section",
+      "description": "Physics-driven hero section with an interactive aqueous mesh canvas, spring-based motion text entrance, and fully configurable badge, heading, description, colors, and dimensions.",
+      "icon": "LucideSparkles",
+      "category": "Backgrounds",
+      "props": [
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra CSS classes applied to the root container."
+        },
+        {
+          "name": "height",
+          "type": "string",
+          "default": "\"h-[520px]\"",
+          "description": "Tailwind height class for the component, e.g. \"h-screen\" or \"h-[600px]\"."
+        },
+        {
+          "name": "badge",
+          "type": "string | null",
+          "default": "\"Decentralized · Environmental · Protocol\"",
+          "description": "Text shown in the badge above the heading. Pass null to hide the badge entirely."
+        },
+        {
+          "name": "heading",
+          "type": "string",
+          "default": "\"The Gaia Protocol\"",
+          "description": "Main heading text."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "default": "\"A decentralized framework...\"",
+          "description": "Subheading / description paragraph beneath the heading."
+        },
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "default": "\"#f0f4f0\"",
+          "description": "CSS background color of the container behind the mesh canvas."
+        },
+        {
+          "name": "meshColorStart",
+          "type": "string",
+          "default": "\"rgba(255, 122, 0, 0.45)\"",
+          "description": "Start color of the linear gradient applied to mesh lines."
+        },
+        {
+          "name": "meshColorEnd",
+          "type": "string",
+          "default": "\"rgba(50, 205, 50, 0.45)\"",
+          "description": "End color of the linear gradient applied to mesh lines."
+        },
+        {
+          "name": "meshOpacity",
+          "type": "number",
+          "default": "0.6",
+          "description": "Overall opacity of the mesh canvas layer (0–1)."
+        },
+        {
+          "name": "gridSize",
+          "type": "number",
+          "default": "30",
+          "description": "Pixel size of each mesh grid cell. Smaller = denser mesh."
+        },
+        {
+          "name": "mouseRadius",
+          "type": "number",
+          "default": "150",
+          "description": "Radius in pixels within which mouse movement repels mesh grid points."
+        }
+      ],
+      "variants": [
+        {
+          "id": "default",
+          "label": "Default",
+          "demoKey": "glow-hero-section/default",
+          "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      height=\"h-[520px]\"\n      badge=\"Decentralized · Environmental · Protocol\"\n      heading=\"The Gaia Protocol\"\n      description=\"A decentralized framework for global environmental synthesis, powered by a living, self-organizing data network.\"\n      backgroundColor=\"#f0f4f0\"\n      meshColorStart=\"rgba(255, 122, 0, 0.45)\"\n      meshColorEnd=\"rgba(50, 205, 50, 0.45)\"\n      meshOpacity={0.6}\n      gridSize={30}\n      mouseRadius={150}\n    />\n  );\n}"
+        },
+        {
+          "id": "dark",
+          "label": "Dark Theme",
+          "demoKey": "glow-hero-section/dark",
+          "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      backgroundColor=\"#0a0a0f\"\n      meshColorStart=\"rgba(139, 92, 246, 0.5)\"\n      meshColorEnd=\"rgba(6, 182, 212, 0.5)\"\n      badge=\"Next-Gen · Web · Components\"\n      heading=\"UniqueUI\"\n      description=\"Premium animated React components, copy-paste ready.\"\n      gridSize={40}\n      mouseRadius={200}\n    />\n  );\n}"
+        },
+        {
+          "id": "no-badge",
+          "label": "No Badge",
+          "demoKey": "glow-hero-section/no-badge",
+          "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      badge={null}\n      heading=\"Build Interfaces That Stand Out\"\n      description=\"Drop-in animated components powered by Motion.dev and Tailwind CSS.\"\n    />\n  );\n}"
+        }
+      ],
+      "docs": {
+        "overview": "GlowHeroSection is a full-width hero component with a customizable radial glow effect behind the content. It combines a gradient background, centered text hierarchy, and optional CTA buttons into one production-ready section.",
+        "scenarios": [
+          {
+            "title": "SaaS product landing hero",
+            "description": "The most common pattern — headline, subheadline, and two CTA buttons over a dark glowing background.",
+            "code": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\nimport Link from \"next/link\";\n\nexport default function LandingHero() {\n  return (\n    <GlowHeroSection\n      badge=\"Now in public beta\"\n      title=\"Ship cinematic UI in minutes\"\n      subtitle=\"Copy-paste animated React components powered by motion.dev and Tailwind CSS.\"\n      glowColor=\"purple\"\n    >\n      <div className=\"flex gap-4 justify-center mt-8\">\n        <Link href=\"/components\" className=\"px-7 py-3.5 bg-white text-black rounded-full font-semibold\">\n          Browse components\n        </Link>\n        <a href=\"https://github.com/pras75299/uniqueui\" className=\"px-7 py-3.5 border border-neutral-700 text-white rounded-full\">\n          Star on GitHub\n        </a>\n      </div>\n    </GlowHeroSection>\n  );\n}"
+          },
+          {
+            "title": "Open-source project hero",
+            "description": "Show contributor count and GitHub stars as social proof badges inside the glow hero.",
+            "code": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\nimport { Star, Users } from \"lucide-react\";\n\nexport default function OpenSourceHero() {\n  return (\n    <GlowHeroSection\n      title=\"Built in the open.\"\n      subtitle=\"Every component is MIT-licensed and community-maintained.\"\n      glowColor=\"blue\"\n    >\n      <div className=\"flex gap-4 justify-center mt-6\">\n        <span className=\"flex items-center gap-1.5 text-sm border border-neutral-700 rounded-full px-4 py-1.5 text-neutral-300\">\n          <Star className=\"w-4 h-4 text-yellow-400\" /> 2.4k stars\n        </span>\n        <span className=\"flex items-center gap-1.5 text-sm border border-neutral-700 rounded-full px-4 py-1.5 text-neutral-300\">\n          <Users className=\"w-4 h-4 text-blue-400\" /> 120 contributors\n        </span>\n      </div>\n    </GlowHeroSection>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "limelight-nav",
+      "name": "Limelight Nav",
+      "description": "Adaptive fluid navigation bar with a limelight spotlight and spring-animated tabs.",
+      "icon": "Layers",
+      "category": "Navigation & Overlays",
+      "props": [
+        {
+          "name": "items",
+          "type": "NavItem[]",
+          "description": "Array of navigation items containing id, icon, label, and onClick."
+        },
+        {
+          "name": "defaultActiveIndex",
+          "type": "number",
+          "default": "0",
+          "description": "Initial active tab index."
+        },
+        {
+          "name": "limelightColor",
+          "type": "string",
+          "default": "\"#a855f7\"",
+          "description": "The CSS color passed inline to define the spotlight glow."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Styles applied to the container."
+        }
+      ],
+      "variants": [
+        {
+          "id": "default",
+          "label": "Default",
+          "demoKey": "limelight-nav/default",
+          "usageCode": "import { LimelightNav } from \"@/components/ui/limelight-nav\";\nimport { Home, Compass, Bell } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-12 h-[300px] w-full bg-neutral-950 rounded-xl border border-neutral-800\">\n      <LimelightNav \n        limelightColor=\"#a855f7\"\n        items={[\n          { id: '1', icon: <Home />, label: 'Home' },\n          { id: '2', icon: <Compass />, label: 'Explore' },\n          { id: '3', icon: <Bell />, label: 'Notifications' }\n        ]}\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "custom",
+          "label": "Custom",
+          "demoKey": "limelight-nav/custom",
+          "usageCode": "import { LimelightNav } from \"@/components/ui/limelight-nav\";\nimport { Home, Bookmark, PlusCircle, User, Settings } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-12 h-[300px] w-full bg-neutral-950 rounded-xl border border-neutral-800\">\n      <LimelightNav \n        limelightColor=\"#06b6d4\"\n        className=\"bg-neutral-900/50\"\n        items={[\n          { id: '1', icon: <Home />, label: 'Home' },\n          { id: '2', icon: <Bookmark />, label: 'Bookmarks' },\n          { id: '3', icon: <PlusCircle />, label: 'Add' },\n          { id: '4', icon: <User />, label: 'Profile' },\n          { id: '5', icon: <Settings />, label: 'Settings' }\n        ]}\n      />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "slug": "data-table",
+      "name": "Data Table",
+      "description": "Configurable data table with optional column freeze (left/right), customizable header and body colors and backgrounds, optional borders, and optional sortable columns.",
+      "icon": "LucideTable",
+      "category": "Data & Layout",
+      "props": [
+        {
+          "name": "columns",
+          "type": "DataTableColumn[]",
+          "description": "Column definitions: key, label, and optional sortKey for sortable columns."
+        },
+        {
+          "name": "data",
+          "type": "Record<string, React.ReactNode>[]",
+          "description": "Row data; each row is an object keyed by column key."
+        },
+        {
+          "name": "freezeColumns",
+          "type": "\"none\" | \"left\" | \"right\" | \"both\"",
+          "default": "\"none\"",
+          "description": "Which columns to freeze when horizontally scrolling: none, left, right, or both sides."
+        },
+        {
+          "name": "freezeCount",
+          "type": "number",
+          "default": "1",
+          "description": "Legacy fallback count used only when freezeLeftCount or freezeRightCount are not provided."
+        },
+        {
+          "name": "freezeLeftCount",
+          "type": "number",
+          "default": "1",
+          "description": "How many columns to freeze on the left when freezeColumns is \"left\" or \"both\"."
+        },
+        {
+          "name": "freezeRightCount",
+          "type": "number",
+          "default": "1",
+          "description": "How many columns to freeze on the right when freezeColumns is \"right\" or \"both\"."
+        },
+        {
+          "name": "paginated",
+          "type": "boolean",
+          "default": "false",
+          "description": "Enable built-in pagination controls."
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "default": "8",
+          "description": "Number of rows per page when paginated is true."
+        },
+        {
+          "name": "pageSizeOptions",
+          "type": "number[]",
+          "description": "Optional list of page sizes to show in a selector."
+        },
+        {
+          "name": "initialPage",
+          "type": "number",
+          "default": "1",
+          "description": "Initial page index (1-based) when paginated is true."
+        },
+        {
+          "name": "onPageChange",
+          "type": "(page: number, pageSize: number) => void",
+          "description": "Called when the current page or page size changes."
+        },
+        {
+          "name": "paginationPreviousLabel",
+          "type": "React.ReactNode",
+          "description": "Previous-page control content; defaults to a left chevron icon."
+        },
+        {
+          "name": "paginationNextLabel",
+          "type": "React.ReactNode",
+          "description": "Next-page control content; defaults to a right chevron icon."
+        },
+        {
+          "name": "getRowKey",
+          "type": "(row, index) => React.Key",
+          "description": "Optional stable key per row for React reconciliation (sort, pagination). Defaults to row.id / row.key when string or number, else a generated key."
+        },
+        {
+          "name": "headerTextColor",
+          "type": "string",
+          "description": "Tailwind class for header text, e.g. text-neutral-900."
+        },
+        {
+          "name": "bodyTextColor",
+          "type": "string",
+          "description": "Tailwind class for body cell text."
+        },
+        {
+          "name": "headerBackground",
+          "type": "string",
+          "description": "Tailwind class for header background, e.g. bg-neutral-100."
+        },
+        {
+          "name": "bodyBackground",
+          "type": "string",
+          "description": "Tailwind class for body background."
+        },
+        {
+          "name": "border",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether to show table and cell borders."
+        },
+        {
+          "name": "sortable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether column headers with sortKey are clickable to sort."
+        },
+        {
+          "name": "onSort",
+          "type": "(key: string, direction: \"asc\" | \"desc\") => void",
+          "description": "Callback when sort changes (for controlled use)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional classes on the root wrapper."
+        },
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "default": "\"dark\"",
+          "description": "Theme for default header/body colors when not overridden."
+        }
+      ],
+      "variants": [
+        {
+          "id": "default",
+          "label": "Default",
+          "demoKey": "data-table/default",
+          "overflowVisible": true,
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"joined\", label: \"Joined\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", email: \"alex@example.com\", department: \"Platform\", status: \"Active\", joined: \"2023-01\" },\n  { name: \"Sara Chen\", role: \"Designer\", email: \"sara@example.com\", department: \"Product\", status: \"Active\", joined: \"2023-03\" },\n  { name: \"Jordan Lee\", role: \"PM\", email: \"jordan@example.com\", department: \"Growth\", status: \"Away\", joined: \"2023-06\" },\n  { name: \"Maya Patel\", role: \"Engineer\", email: \"maya@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-01\" },\n  { name: \"Ryan Wu\", role: \"Designer\", email: \"ryan@example.com\", department: \"Product\", status: \"Away\", joined: \"2024-02\" },\n  { name: \"Priya Shah\", role: \"PM\", email: \"priya@example.com\", department: \"Growth\", status: \"Active\", joined: \"2024-04\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", email: \"sam@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-05\" },\n  { name: \"Jess Taylor\", role: \"Designer\", email: \"jess@example.com\", department: \"Product\", status: \"Active\", joined: \"2024-06\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable columns={columns} data={data} paginated pageSize={5} theme=\"dark\" />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "freeze-left",
+          "label": "Freeze left",
+          "demoKey": "data-table/freeze-left",
+          "overflowVisible": true,
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Alex Kim\", email: \"alex@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"2\", name: \"Sara Chen\", email: \"sara@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"3\", name: \"Jordan Lee\", email: \"jordan@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"4\", name: \"Maya Patel\", email: \"maya@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"5\", name: \"Ryan Wu\", email: \"ryan@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"6\", name: \"Priya Shah\", email: \"priya@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"7\", name: \"Sam Rivera\", email: \"sam@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"8\", name: \"Jess Taylor\", email: \"jess@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", status: \"Active\", actions: \"Edit · View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"left\"\n          freezeLeftCount={2}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "freeze-right",
+          "label": "Freeze right",
+          "demoKey": "data-table/freeze-right",
+          "overflowVisible": true,
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"lastActive\", label: \"Last active\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"alex@example.com\", joined: \"2023-01\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Sara Chen\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Active\", email: \"sara@example.com\", joined: \"2023-03\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", region: \"Central\", status: \"Away\", email: \"jordan@example.com\", joined: \"2023-06\", lastActive: \"2024-02\", actions: \"Edit · View\" },\n  { name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"maya@example.com\", joined: \"2024-01\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Away\", email: \"ryan@example.com\", joined: \"2024-02\", lastActive: \"2024-01\", actions: \"Edit · View\" },\n  { name: \"Priya Shah\", role: \"PM\", department: \"Growth\", region: \"Central\", status: \"Active\", email: \"priya@example.com\", joined: \"2024-04\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"sam@example.com\", joined: \"2024-05\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Jess Taylor\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Active\", email: \"jess@example.com\", joined: \"2024-06\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"right\"\n          freezeRightCount={1}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "freeze-both",
+          "label": "Freeze both",
+          "demoKey": "data-table/freeze-both",
+          "overflowVisible": true,
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Alex Kim\", email: \"alex@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"2\", name: \"Sara Chen\", email: \"sara@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"3\", name: \"Jordan Lee\", email: \"jordan@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"4\", name: \"Maya Patel\", email: \"maya@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"5\", name: \"Ryan Wu\", email: \"ryan@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"6\", name: \"Priya Shah\", email: \"priya@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"7\", name: \"Sam Rivera\", email: \"sam@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"8\", name: \"Jess Taylor\", email: \"jess@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", status: \"Active\", actions: \"Edit · View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"both\"\n          freezeLeftCount={2}\n          freezeRightCount={1}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "bordered",
+          "label": "Bordered",
+          "demoKey": "data-table/bordered",
+          "overflowVisible": true,
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"joined\", label: \"Joined\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", email: \"alex@example.com\", department: \"Platform\", status: \"Active\", joined: \"2023-01\" },\n  { name: \"Sara Chen\", role: \"Designer\", email: \"sara@example.com\", department: \"Product\", status: \"Active\", joined: \"2023-03\" },\n  { name: \"Jordan Lee\", role: \"PM\", email: \"jordan@example.com\", department: \"Growth\", status: \"Away\", joined: \"2023-06\" },\n  { name: \"Maya Patel\", role: \"Engineer\", email: \"maya@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-01\" },\n  { name: \"Ryan Wu\", role: \"Designer\", email: \"ryan@example.com\", department: \"Product\", status: \"Away\", joined: \"2024-02\" },\n  { name: \"Priya Shah\", role: \"PM\", email: \"priya@example.com\", department: \"Growth\", status: \"Active\", joined: \"2024-04\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", email: \"sam@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-05\" },\n  { name: \"Jess Taylor\", role: \"Designer\", email: \"jess@example.com\", department: \"Product\", status: \"Active\", joined: \"2024-06\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable columns={columns} data={data} border paginated pageSize={5} theme=\"dark\" />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "sortable",
+          "label": "Sortable",
+          "demoKey": "data-table/sortable",
+          "overflowVisible": true,
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\", sortKey: \"name\" },\n  { key: \"role\", label: \"Role\", sortKey: \"role\" },\n  { key: \"department\", label: \"Department\", sortKey: \"department\" },\n  { key: \"joined\", label: \"Joined\", sortKey: \"joined\" },\n  { key: \"status\", label: \"Status\", sortKey: \"status\" },\n];\nconst data = [\n  { name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", joined: \"2024-03\", status: \"Away\" },\n  { name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", joined: \"2024-01\", status: \"Active\" },\n  { name: \"Sara Chen\", role: \"Designer\", department: \"Product\", joined: \"2024-02\", status: \"Active\" },\n  { name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", joined: \"2023-11\", status: \"Active\" },\n  { name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", joined: \"2024-05\", status: \"Away\" },\n  { name: \"Priya Shah\", role: \"PM\", department: \"Growth\", joined: \"2023-08\", status: \"Active\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", joined: \"2024-06\", status: \"Active\" },\n  { name: \"Jess Taylor\", role: \"Designer\", department: \"Product\", joined: \"2023-09\", status: \"Active\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable columns={columns} data={data} sortable paginated pageSize={5} theme=\"dark\" />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "custom-colors",
+          "label": "Custom colors",
+          "demoKey": "data-table/custom-colors",
+          "overflowVisible": true,
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"joined\", label: \"Joined\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", email: \"alex@example.com\", department: \"Platform\", status: \"Active\", joined: \"2023-01\" },\n  { name: \"Sara Chen\", role: \"Designer\", email: \"sara@example.com\", department: \"Product\", status: \"Active\", joined: \"2023-03\" },\n  { name: \"Jordan Lee\", role: \"PM\", email: \"jordan@example.com\", department: \"Growth\", status: \"Away\", joined: \"2023-06\" },\n  { name: \"Maya Patel\", role: \"Engineer\", email: \"maya@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-01\" },\n  { name: \"Ryan Wu\", role: \"Designer\", email: \"ryan@example.com\", department: \"Product\", status: \"Away\", joined: \"2024-02\" },\n  { name: \"Priya Shah\", role: \"PM\", email: \"priya@example.com\", department: \"Growth\", status: \"Active\", joined: \"2024-04\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", email: \"sam@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-05\" },\n  { name: \"Jess Taylor\", role: \"Designer\", email: \"jess@example.com\", department: \"Product\", status: \"Active\", joined: \"2024-06\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable\n        columns={columns}\n        data={data}\n        headerTextColor=\"text-purple-900\"\n        bodyTextColor=\"text-neutral-800\"\n        headerBackground=\"bg-purple-100\"\n        bodyBackground=\"bg-purple-50/50\"\n        paginated\n        pageSize={5}\n        border\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "full",
+          "label": "Full options",
+          "demoKey": "data-table/full",
+          "overflowVisible": true,
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\", sortKey: \"name\" },\n  { key: \"role\", label: \"Role\", sortKey: \"role\" },\n  { key: \"department\", label: \"Dept\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", actions: \"Edit\" },\n  { id: \"2\", name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", actions: \"Edit\" },\n  { id: \"3\", name: \"Sara Chen\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", actions: \"Edit\" },\n  { id: \"4\", name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", actions: \"Edit\" },\n  { id: \"5\", name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", actions: \"Edit\" },\n  { id: \"6\", name: \"Priya Shah\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", actions: \"Edit\" },\n  { id: \"7\", name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", actions: \"Edit\" },\n  { id: \"8\", name: \"Jess Taylor\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", actions: \"Edit\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"left\"\n          freezeLeftCount={1}\n        headerTextColor=\"text-neutral-100\"\n        bodyTextColor=\"text-neutral-300\"\n        headerBackground=\"bg-neutral-800\"\n        bodyBackground=\"bg-neutral-950\"\n        border\n        sortable\n        paginated\n        pageSize={5}\n        pageSizeOptions={[5, 10, 20]}\n        onPageChange={(page, pageSize) =>\n          console.log(\"page changed\", page, \"pageSize\", pageSize)\n        }\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "slug": "morphing-card-stack",
+      "name": "Morphing Card Stack",
+      "description": "An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using Framer Motion springs.",
+      "icon": "Layers",
+      "category": "Cards",
+      "props": [
+        {
+          "name": "cards",
+          "type": "CardData[]",
+          "description": "Array of CardData containing id, title, description, icon, and optional color."
+        },
+        {
+          "name": "defaultLayout",
+          "type": "\"stack\" | \"grid\" | \"list\"",
+          "default": "\"stack\"",
+          "description": "Initial layout mode configuration."
+        },
+        {
+          "name": "onCardClick",
+          "type": "(card: CardData) => void",
+          "description": "Callback function triggered when clicking a card."
+        }
+      ],
+      "variants": [
+        {
+          "id": "default",
+          "label": "Default",
+          "demoKey": "morphing-card-stack/default",
+          "usageCode": "import { MorphingCardStack } from \"@/components/ui/morphing-card-stack\";\nimport { Layers, Palette, Clock, Sparkles } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-12 min-h-[500px] w-full bg-neutral-950 rounded-xl border border-neutral-800\">\n      <MorphingCardStack \n        cards={[\n          {\n            id: \"1\",\n            title: \"Magnetic Dock\",\n            description: \"Cursor-responsive scaling with smooth spring animations\",\n            icon: <Layers className=\"h-5 w-5\" />,\n          },\n          {\n            id: \"2\",\n            title: \"Gradient Mesh\",\n            description: \"Dynamic animated gradient backgrounds that follow your cursor\",\n            icon: <Palette className=\"h-5 w-5\" />,\n          },\n          {\n            id: \"3\",\n            title: \"Pulse Timeline\",\n            description: \"Interactive timeline with animated pulse nodes\",\n            icon: <Clock className=\"h-5 w-5\" />,\n          },\n          {\n            id: \"4\",\n            title: \"Command Palette\",\n            description: \"Radial command menu with keyboard navigation\",\n            icon: <Sparkles className=\"h-5 w-5\" />,\n          },\n        ]} \n      />\n    </div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "slug": "multi-step-auth-card",
+      "name": "Multi-Step Auth Card",
+      "description": "Animation-first enterprise auth flow: email discovery, first-time and returning user paths, password create/login, and OTP verification with spring transitions between steps.",
+      "icon": "LucideShield",
+      "category": "Navigation & Overlays",
+      "props": [
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional Tailwind classes for the outer card container."
+        },
+        {
+          "name": "initialState",
+          "type": "AuthState",
+          "default": "\"email\"",
+          "description": "Starting step: \"email\" | \"unregistered\" | \"first-time\" | \"create-password\" | \"password-login\" | \"otp\"."
+        },
+        {
+          "name": "onStateChange",
+          "type": "(state: AuthState) => void",
+          "description": "Called whenever the active auth step changes."
+        },
+        {
+          "name": "onSubmitEmail",
+          "type": "(email: string) => Promise<{ exists: boolean; registered: boolean }>",
+          "description": "If provided, drives routing after email submit; otherwise demo heuristics apply (e.g. email containing \"new\" or \"err\")."
+        },
+        {
+          "name": "onSubmitPassword",
+          "type": "(password: string) => Promise<boolean | void>",
+          "description": "Called on password login submit. Return false to stay on this step and show an error; any other return (including void) advances to OTP on success."
+        },
+        {
+          "name": "onCreatePassword",
+          "type": "(password: string) => Promise<boolean | void>",
+          "description": "Called when saving a new password. Return false to stay on this step and show an error; otherwise advance to OTP."
+        },
+        {
+          "name": "onSubmitOTP",
+          "type": "(otp: string) => Promise<boolean | void>",
+          "description": "Called when the user submits a six-digit code. Return false to show an invalid-code message without leaving the step."
+        },
+        {
+          "name": "onResendOTP",
+          "type": "() => Promise<boolean | void>",
+          "description": "Optional resend handler. Return false to keep the current timer and code; on throw or false, resend count is not incremented."
+        },
+        {
+          "name": "strings",
+          "type": "MultiStepAuthStringsPartial",
+          "description": "Deep-partial overrides for all UI copy; defaults are exported as MULTI_STEP_AUTH_DEFAULT_STRINGS for reference and i18n."
+        },
+        {
+          "name": "otpResendCooldownSeconds",
+          "type": "number",
+          "default": "30",
+          "description": "Countdown length before the resend action is available again."
+        },
+        {
+          "name": "otpMaxResends",
+          "type": "number",
+          "default": "3",
+          "description": "Maximum resend taps before the UI locks resend."
+        },
+        {
+          "name": "demoEmailDelayMs",
+          "type": "number",
+          "default": "800",
+          "description": "Artificial delay after email submit when onSubmitEmail is omitted (demo mode)."
+        },
+        {
+          "name": "demoPasswordDelayMs",
+          "type": "number",
+          "default": "1000",
+          "description": "Artificial delay after password/OTP demo submits when the matching handler is omitted."
+        },
+        {
+          "name": "requireTermsConsent",
+          "type": "boolean",
+          "default": "true",
+          "description": "When true, the initial email step shows a terms/privacy checkbox and blocks submit until it is checked. Set false to hide it."
+        },
+        {
+          "name": "termsUrl",
+          "type": "string",
+          "default": "\"#\"",
+          "description": "URL for the 'Terms of Service' consent link."
+        },
+        {
+          "name": "privacyUrl",
+          "type": "string",
+          "default": "\"#\"",
+          "description": "URL for the 'Privacy Policy' consent link."
+        }
+      ],
+      "usageCode": "\"use client\";\n\nimport { MultiStepAuthCard } from \"@/components/ui/multi-step-auth-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <MultiStepAuthCard\n        strings={{\n          email: { titleSignIn: \"Log in\", continue: \"Continue\" },\n        }}\n        otpResendCooldownSeconds={45}\n        onSubmitEmail={async (email) => {\n          const res = await fetch(\"/api/auth/lookup\", {\n            method: \"POST\",\n            body: JSON.stringify({ email }),\n          }).then((r) => r.json());\n          return { exists: res.exists, registered: res.registered };\n        }}\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "shiny-text",
+      "name": "Shiny Text",
+      "description": "A shimmering highlight that continuously sweeps across text — perfect for hero taglines and call-to-action copy.",
+      "icon": "LucideWand2",
+      "category": "Text",
+      "props": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "The text content to render."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "default": "3",
+          "description": "Duration of one shimmer pass in seconds."
+        },
+        {
+          "name": "shimmerWidth",
+          "type": "number",
+          "default": "40",
+          "description": "Width of the bright band as a percentage."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra Tailwind classes (font size, weight, colour, etc.)."
+        },
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "default": "\"dark\"",
+          "description": "Controls the shimmer palette."
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function Hero() {\n  return (\n    <h1 className=\"text-5xl font-black\">\n      <ShinyText\n        text=\"Build something brilliant.\"\n        speed={3}\n        shimmerWidth={45}\n        className=\"text-5xl font-black\"\n      />\n    </h1>\n  );\n}",
+      "docs": {
+        "overview": "ShinyText adds a moving shimmer highlight that sweeps across your text using a CSS background-clip animation. Ideal for hero taglines, badge labels, or any copy that needs a premium metallic feel.",
+        "scenarios": [
+          {
+            "title": "Hero tagline highlight",
+            "description": "Draw attention to a key phrase in your hero section with a continuous shimmer sweep.",
+            "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function HeroTagline() {\n  return (\n    <h1 className=\"text-5xl font-bold text-white\">\n      Build beautiful UIs{\" \"}\n      <ShinyText text=\"effortlessly\" speed={2.5} className=\"text-purple-400\" />\n    </h1>\n  );\n}"
+          },
+          {
+            "title": "Premium badge label",
+            "description": "Use a smaller shimmer span inside a pill badge to signal a paid or featured tier.",
+            "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function PremiumBadge() {\n  return (\n    <span className=\"inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-xs font-semibold\">\n      ✦ <ShinyText text=\"PRO\" speed={4} className=\"text-yellow-400\" />\n    </span>\n  );\n}"
+          },
+          {
+            "title": "CTA button text",
+            "description": "Give a call-to-action button a shimmering label to make it pop on dark landing pages.",
+            "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function ShinyButton() {\n  return (\n    <button className=\"px-6 py-3 rounded-xl bg-neutral-800 border border-neutral-700 hover:border-purple-500 transition-colors\">\n      <ShinyText text=\"Get started for free →\" speed={3} className=\"text-white\" />\n    </button>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "blur-reveal",
+      "name": "Blur Reveal",
+      "description": "Characters or words materialise from a soft blur — the cinematic text entrance used in top SaaS hero sections.",
+      "icon": "LucideScanLine",
+      "category": "Text",
+      "props": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "The text to animate."
+        },
+        {
+          "name": "animateBy",
+          "type": "\"characters\" | \"words\"",
+          "default": "\"characters\"",
+          "description": "Whether to stagger individual characters or whole words."
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "default": "0",
+          "description": "Extra delay before the animation starts (seconds)."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "default": "0.6",
+          "description": "Spring duration per item."
+        },
+        {
+          "name": "once",
+          "type": "boolean",
+          "default": "true",
+          "description": "Only animate on first scroll-enter."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra Tailwind classes."
+        },
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "default": "\"dark\"",
+          "description": "Theme context."
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { BlurReveal } from \"@/components/ui/blur-reveal\";\n\nexport default function Hero() {\n  return (\n    <h1 className=\"text-4xl font-bold text-white\">\n      <BlurReveal\n        text=\"The future of UI is here.\"\n        animateBy=\"words\"\n        delay={0.1}\n        className=\"text-4xl font-bold text-white\"\n      />\n    </h1>\n  );\n}",
+      "docs": {
+        "overview": "BlurReveal staggers a blur-fade-in animation across each character or word as the element enters the viewport. It creates an elegant reveal effect perfect for hero text and section headings.",
+        "scenarios": [
+          {
+            "title": "Hero heading entrance",
+            "description": "Animate your primary headline character-by-character as the page loads.",
+            "code": "import { BlurReveal } from \"@/components/ui/blur-reveal\";\n\nexport default function HeroHeading() {\n  return (\n    <h1 className=\"text-6xl font-bold text-white\">\n      <BlurReveal text=\"Ship faster.\" animateBy=\"characters\" duration={0.5} />\n    </h1>\n  );\n}"
+          },
+          {
+            "title": "Section subtitle word reveal",
+            "description": "Reveal a section subtitle word-by-word for a slightly slower, more dramatic effect.",
+            "code": "import { BlurReveal } from \"@/components/ui/blur-reveal\";\n\nexport default function SectionSubtitle() {\n  return (\n    <p className=\"text-xl text-neutral-400 max-w-xl\">\n      <BlurReveal\n        text=\"Beautifully crafted components that make your UI stand out.\"\n        animateBy=\"words\"\n        delay={0.1}\n        duration={0.7}\n      />\n    </p>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "count-up",
+      "name": "Count Up",
+      "description": "An animated number that counts from a starting value to a target when scrolled into view — essential for metrics and stats sections.",
+      "icon": "Hash",
+      "category": "Text",
+      "props": [
+        {
+          "name": "to",
+          "type": "number",
+          "description": "Target (end) value."
+        },
+        {
+          "name": "from",
+          "type": "number",
+          "default": "0",
+          "description": "Starting value."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "default": "2",
+          "description": "Animation duration in seconds."
+        },
+        {
+          "name": "decimals",
+          "type": "number",
+          "default": "0",
+          "description": "Number of decimal places."
+        },
+        {
+          "name": "prefix",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Prepended string, e.g. \"$\"."
+        },
+        {
+          "name": "suffix",
+          "type": "string",
+          "default": "\"\"",
+          "description": "Appended string, e.g. \"k+\"."
+        },
+        {
+          "name": "separator",
+          "type": "string",
+          "default": "\",\"",
+          "description": "Thousands separator. Pass empty string to disable."
+        },
+        {
+          "name": "once",
+          "type": "boolean",
+          "default": "true",
+          "description": "Only animate on first scroll-enter."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra Tailwind classes."
+        },
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "default": "\"dark\"",
+          "description": "Theme context."
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { CountUp } from \"@/components/ui/count-up\";\n\nexport default function Stats() {\n  return (\n    <div className=\"flex gap-12\">\n      <div className=\"text-center\">\n        <p className=\"text-5xl font-black text-white\">\n          <CountUp to={12400} suffix=\"+\" duration={2.5} />\n        </p>\n        <p className=\"text-neutral-400 mt-1\">Stars on GitHub</p>\n      </div>\n      <div className=\"text-center\">\n        <p className=\"text-5xl font-black text-white\">\n          <CountUp to={99.9} decimals={1} suffix=\"%\" duration={2} />\n        </p>\n        <p className=\"text-neutral-400 mt-1\">Uptime SLA</p>\n      </div>\n    </div>\n  );\n}",
+      "docs": {
+        "overview": "CountUp animates a number from a starting value to a target value as it enters the viewport. It supports decimals, prefixes, suffixes, and thousands separators — perfect for stats and metrics sections.",
+        "scenarios": [
+          {
+            "title": "Stats row",
+            "description": "Display key product metrics that animate in when the user scrolls to them.",
+            "code": "import { CountUp } from \"@/components/ui/count-up\";\n\nconst stats = [\n  { label: \"Components\", value: 60, suffix: \"+\" },\n  { label: \"GitHub Stars\", value: 4.2, suffix: \"k\", decimals: 1 },\n  { label: \"Downloads\", value: 120, suffix: \"k+\" },\n];\n\nexport default function StatsRow() {\n  return (\n    <div className=\"grid grid-cols-3 gap-8 text-center\">\n      {stats.map(({ label, value, suffix, decimals }) => (\n        <div key={label}>\n          <p className=\"text-4xl font-bold text-white\">\n            <CountUp to={value} suffix={suffix} decimals={decimals} />\n          </p>\n          <p className=\"text-sm text-neutral-400 mt-1\">{label}</p>\n        </div>\n      ))}\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Revenue counter with currency prefix",
+            "description": "Show an animated revenue or savings figure with a dollar sign prefix.",
+            "code": "import { CountUp } from \"@/components/ui/count-up\";\n\nexport default function RevenueCounter() {\n  return (\n    <div className=\"text-center space-y-1\">\n      <p className=\"text-5xl font-extrabold text-emerald-400\">\n        <CountUp from={0} to={1250000} prefix=\"$\" separator=\",\" duration={2.5} />\n      </p>\n      <p className=\"text-sm text-neutral-400\">Total revenue generated</p>\n    </div>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "border-beam",
+      "name": "Border Beam",
+      "description": "A glowing comet that continuously orbits the border of a container — instantly upgrades cards, code blocks, and feature sections.",
+      "icon": "Flame",
+      "category": "Effects & Animations",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Content inside the bordered container."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "default": "5",
+          "description": "Seconds for one full orbit."
+        },
+        {
+          "name": "colorFrom",
+          "type": "string",
+          "default": "\"#a855f7\"",
+          "description": "Comet head colour."
+        },
+        {
+          "name": "colorTo",
+          "type": "string",
+          "default": "\"#ec4899\"",
+          "description": "Comet tail colour."
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "default": "160",
+          "description": "Diameter of the glowing orb in px."
+        },
+        {
+          "name": "borderWidth",
+          "type": "number",
+          "default": "1.5",
+          "description": "Width of the container border in px."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra Tailwind classes on the container."
+        },
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "default": "\"dark\"",
+          "description": "Controls border colour."
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { BorderBeam } from \"@/components/ui/border-beam\";\n\nexport default function FeatureCard() {\n  return (\n    <BorderBeam\n      colorFrom=\"#a855f7\"\n      colorTo=\"#ec4899\"\n      duration={5}\n      className=\"rounded-xl p-6 bg-neutral-900\"\n    >\n      <h3 className=\"text-xl font-bold text-white\">Spotlight Feature</h3>\n      <p className=\"text-neutral-400 mt-2\">\n        Drop BorderBeam around any card to make it shine.\n      </p>\n    </BorderBeam>\n  );\n}",
+      "docs": {
+        "overview": "BorderBeam traces an animated glowing orb around the perimeter of any container using requestAnimationFrame. Wrap any card, input, or panel to give it a dynamic, premium border highlight.",
+        "scenarios": [
+          {
+            "title": "Glowing feature card",
+            "description": "Wrap a feature card so a colorful beam traces its border continuously.",
+            "code": "import { BorderBeam } from \"@/components/ui/border-beam\";\n\nexport default function FeatureCard() {\n  return (\n    <BorderBeam colorFrom=\"#a855f7\" colorTo=\"#06b6d4\" duration={4}>\n      <div className=\"p-6 rounded-2xl bg-neutral-900 space-y-2\">\n        <h3 className=\"text-lg font-semibold text-white\">Motion-powered</h3>\n        <p className=\"text-sm text-neutral-400\">\n          Every animation uses spring physics for natural, fluid movement.\n        </p>\n      </div>\n    </BorderBeam>\n  );\n}"
+          },
+          {
+            "title": "Highlighted input field",
+            "description": "Give a search or email input an animated border beam to draw focus.",
+            "code": "import { BorderBeam } from \"@/components/ui/border-beam\";\n\nexport default function BeamInput() {\n  return (\n    <BorderBeam colorFrom=\"#f59e0b\" colorTo=\"#ef4444\" borderWidth={2} duration={3}>\n      <input\n        type=\"email\"\n        placeholder=\"Enter your email\"\n        className=\"w-full px-4 py-3 rounded-xl bg-neutral-800 text-white outline-none text-sm\"\n      />\n    </BorderBeam>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "ripple",
+      "name": "Ripple",
+      "description": "Luminous orbs that drift slowly across the viewport — a liquid nebula hero background with warm, organic colour blooms.",
+      "icon": "LucideWaves",
+      "category": "Backgrounds",
+      "props": [
+        {
+          "name": "mainCircleSize",
+          "type": "number",
+          "default": "120",
+          "description": "Controls orb diameter — each orb renders at mainCircleSize × 4.5 px."
+        },
+        {
+          "name": "mainCircleOpacity",
+          "type": "number",
+          "default": "0.6",
+          "description": "Peak opacity for every orb (0–1). Individual orbs shimmer around this value."
+        },
+        {
+          "name": "numCircles",
+          "type": "number",
+          "default": "7",
+          "description": "Number of orbs to render. Capped at 8."
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "description": "Pin all orbs to one colour (hex or rgba). Omit to use the built-in warm palette."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "default": "9",
+          "description": "Base drift-cycle length in seconds. Each orb is staggered so they never move in sync."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra classes on the wrapper div."
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { Ripple } from \"@/components/ui/ripple\";\n\nexport default function Hero() {\n  return (\n    <section className=\"relative h-[500px] w-full flex items-center justify-center overflow-hidden bg-[#0c0608]\">\n      {/* Animated nebula background */}\n      <Ripple mainCircleSize={90} mainCircleOpacity={0.55} numCircles={7} duration={10} />\n\n      {/* Radial vignette so centre text stays readable */}\n      <div\n        className=\"absolute inset-0 pointer-events-none\"\n        style={{\n          background:\n            \"radial-gradient(ellipse 55% 60% at 50% 50%, transparent 0%, rgba(12,6,8,0.75) 60%, rgba(12,6,8,0.97) 100%)\",\n        }}\n      />\n\n      {/* Hero content sits above the orbs */}\n      <div className=\"relative z-10 flex flex-col items-center gap-4 px-6 text-center max-w-sm\">\n        <p className=\"text-[10px] uppercase tracking-[0.35em] text-rose-300/70\">\n          Maison de Parfum\n        </p>\n        <h1 className=\"text-6xl font-light italic text-white\" style={{ fontFamily: \"Georgia, serif\" }}>\n          Aurore.\n        </h1>\n        <p className=\"text-xs leading-relaxed tracking-wide text-stone-400\">\n          A scent composed at the edge of dawn — rose, oud, and amber woven into silence.\n        </p>\n        <button className=\"mt-1 border border-rose-300/30 px-7 py-2.5 text-xs tracking-[0.18em] uppercase text-rose-200/80 transition-colors hover:border-rose-300/70 hover:text-rose-100\">\n          Discover the collection\n        </button>\n      </div>\n    </section>\n  );\n}",
+      "docs": {
+        "overview": "Ripple renders concentric animated rings that pulse outward from a center point. Use it as a background for icons, avatars, or buttons to convey activity, presence, or emphasis.",
+        "scenarios": [
+          {
+            "title": "Live presence indicator",
+            "description": "Show a pulsing ripple behind an avatar to indicate a user is online or broadcasting.",
+            "code": "import { Ripple } from \"@/components/ui/ripple\";\n\nexport default function LivePresence() {\n  return (\n    <div className=\"relative flex items-center justify-center w-24 h-24\">\n      <Ripple mainCircleSize={48} numCircles={5} color=\"#22c55e\" duration={2.5} />\n      <img\n        src=\"/avatar.png\"\n        alt=\"User\"\n        className=\"relative z-10 w-12 h-12 rounded-full border-2 border-green-500\"\n      />\n    </div>\n  );\n}"
+          },
+          {
+            "title": "CTA focus ring",
+            "description": "Add a ripple effect behind a primary CTA button to make it visually magnetic.",
+            "code": "import { Ripple } from \"@/components/ui/ripple\";\n\nexport default function RippleCTA() {\n  return (\n    <div className=\"relative inline-flex items-center justify-center\">\n      <Ripple mainCircleSize={64} numCircles={4} color=\"#a855f7\" duration={3} />\n      <button className=\"relative z-10 px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold text-sm\">\n        Get Started\n      </button>\n    </div>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "word-rotate",
+      "name": "Word Rotate",
+      "description": "A list of words that cycle with slide, flip, or fade transitions — the signature hero-headline effect used across modern SaaS sites.",
+      "icon": "LucideRefreshCw",
+      "category": "Text",
+      "props": [
+        {
+          "name": "words",
+          "type": "string[]",
+          "description": "Array of words to cycle through."
+        },
+        {
+          "name": "interval",
+          "type": "number",
+          "default": "2500",
+          "description": "How long each word is shown in ms."
+        },
+        {
+          "name": "animation",
+          "type": "\"slide-up\" | \"slide-down\" | \"flip\" | \"fade\"",
+          "default": "\"slide-up\"",
+          "description": "Transition style between words."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra Tailwind classes (font size, colour, etc.)."
+        },
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "default": "\"dark\"",
+          "description": "Theme context."
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function Hero() {\n  return (\n    <h1 className=\"text-5xl font-black text-white\">\n      Build interfaces that are{\" \"}\n      <WordRotate\n        words={[\"faster\", \"smarter\", \"bolder\", \"yours\"]}\n        animation=\"slide-up\"\n        className=\"text-purple-400\"\n      />\n    </h1>\n  );\n}",
+      "docs": {
+        "overview": "WordRotate cycles through an array of words with configurable entrance and exit animations — slide, flip, or fade. Drop it inline within headings to convey multiple ideas without extra layout space.",
+        "scenarios": [
+          {
+            "title": "Hero headline value rotator",
+            "description": "Cycle through your product's core benefits inline inside a headline.",
+            "code": "import { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function HeroHeadline() {\n  return (\n    <h1 className=\"text-5xl font-bold text-white\">\n      The{\" \"}\n      <WordRotate\n        words={[\"fastest\", \"cleanest\", \"smartest\"]}\n        animation=\"slide-up\"\n        className=\"text-purple-400\"\n      />\n      {\" \"}way to ship UI\n    </h1>\n  );\n}"
+          },
+          {
+            "title": "Feature list rotator with flip",
+            "description": "Use the flip animation for a more dramatic 3-D card-turning effect.",
+            "code": "import { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function FlipRotator() {\n  return (\n    <p className=\"text-2xl font-semibold text-white\">\n      Built for{\" \"}\n      <WordRotate\n        words={[\"designers\", \"developers\", \"startups\", \"agencies\"]}\n        animation=\"flip\"\n        interval={2000}\n        className=\"text-emerald-400\"\n      />\n    </p>\n  );\n}"
+          },
+          {
+            "title": "Subtle fade rotator in body copy",
+            "description": "Use the fade animation for a soft, unobtrusive rotation inside a paragraph.",
+            "code": "import { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function FadeRotator() {\n  return (\n    <p className=\"text-base text-neutral-400\">\n      Perfect for{\" \"}\n      <WordRotate\n        words={[\"landing pages\", \"SaaS apps\", \"portfolios\", \"dashboards\"]}\n        animation=\"fade\"\n        interval={3000}\n        className=\"text-white font-medium\"\n      />\n    </p>\n  );\n}"
+          }
+        ]
+      }
+    }
+  ]
+}

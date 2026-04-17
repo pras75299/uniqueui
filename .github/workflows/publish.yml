@@ -30,6 +30,9 @@ jobs:
       - name: Build CLI
         run: pnpm --dir packages/cli build
 
+      - name: Verify CHANGELOG has release entry
+        run: bash scripts/verify-changelog.sh
+
       - name: Publish to npm
         run: pnpm --dir packages/cli publish --access public --no-git-checks
         env:

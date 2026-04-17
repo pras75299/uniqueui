@@ -29,15 +29,14 @@ export function GradientTextReveal({
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once, amount: 0.3 });
   const words = text.split(" ");
+  const Wrapper = Tag === "span" ? "span" : "div";
 
   return (
-    <Tag
-      ref={ref as React.RefObject<HTMLElement>}
-      className={cn("flex flex-wrap gap-x-2 gap-y-1", className)}
-    >
-      {words.map((word, i) => (
-        <motion.span
-          key={`${word}-${i}`}
+    <Wrapper ref={ref} className={Tag === "span" ? "inline-block" : undefined}>
+      <Tag className={cn("flex flex-wrap gap-x-2 gap-y-1", className)}>
+        {words.map((word, i) => (
+          <motion.span
+            key={`${word}-${i}`}
           initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
           animate={
             isInView
@@ -60,7 +59,8 @@ export function GradientTextReveal({
         >
           {word}
         </motion.span>
-      ))}
-    </Tag>
+        ))}
+      </Tag>
+    </Wrapper>
   );
 }

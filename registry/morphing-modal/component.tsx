@@ -140,7 +140,7 @@ export function MorphingModalTrigger({
   className,
   layoutId,
   onClick,
-  _theme = "dark",
+  theme: _theme = "dark",
 }: MorphingModalTriggerProps) {
   return (
     <motion.button

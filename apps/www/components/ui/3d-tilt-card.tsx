@@ -24,7 +24,7 @@ export function TiltCard({
   scale = 1.05,
   glare = true,
   glareMaxOpacity = 0.35,
-  _theme = "dark",
+  theme: _theme = "dark",
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
