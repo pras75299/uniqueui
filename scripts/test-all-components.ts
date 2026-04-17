@@ -73,20 +73,45 @@ async function run() {
 
     // ── 1. Parse components.ts for slugs + usageCodes ─────────────────────────
     console.log('📖  Extracting component configurations from components.ts...');
-    const content = fs.readFileSync(COMPONENTS_FILE, 'utf-8');
     const rawComponents: { slug: string; usageCode: string }[] = [];
-    const slugRegex = /slug:\s*"([^"]+)"/g;
-    let match: RegExpExecArray | null;
+    try {
+        // Prefer loading the generated module directly. This is resilient to
+        // formatting changes (quoted keys, string literals, etc.) in components.ts.
+        const componentsModule = require(path.join(ROOT_DIR, 'apps/www/config/components'));
+        const componentsList = Array.isArray(componentsModule?.componentsList) ? componentsModule.componentsList : [];
+        for (const component of componentsList) {
+            if (typeof component?.slug !== 'string') continue;
+            if (typeof component?.usageCode !== 'string') continue;
+            rawComponents.push({ slug: component.slug, usageCode: component.usageCode });
+        }
+    } catch (e) {
+        // Fallback parser for environments where requiring TS config fails.
+        const content = fs.readFileSync(COMPONENTS_FILE, 'utf-8');
+        const slugRegex = /(?:slug|"slug")\s*:\s*"([^"]+)"/g;
+        let match: RegExpExecArray | null;
+        while ((match = slugRegex.exec(content)) !== null) {
+            const slug = match[1];
+            const usageMatch = content.slice(match.index).match(/(?:usageCode|"usageCode")\s*:\s*("((?:\\.|[^"\\])*)"|`)/);
+            if (!usageMatch) continue;
 
-    while ((match = slugRegex.exec(content)) !== null) {
-        const slug = match[1];
-        const usageIdx = content.indexOf('usageCode:', match.index);
-        if (usageIdx === -1) continue;
-        const startTick = content.indexOf('`', usageIdx);
-        if (startTick === -1) continue;
-        const { raw } = extractTemplateLiteral(content, startTick);
-        const usageCode = raw.replace(/\\`/g, '`').replace(/\\\$/g, '$');
-        rawComponents.push({ slug, usageCode });
+            let usageCode = '';
+            if (usageMatch[1] === '`') {
+                const startTick = content.indexOf('`', match.index);
+                if (startTick === -1) continue;
+                const { raw } = extractTemplateLiteral(content, startTick);
+                usageCode = raw.replace(/\\`/g, '`').replace(/\\\$/g, '$');
+            } else {
+                try {
+                    usageCode = JSON.parse(usageMatch[1]);
+                } catch {
+                    usageCode = usageMatch[2]?.replace(/\\"/g, '"').replace(/\\n/g, '\n') ?? '';
+                }
+            }
+
+            if (usageCode) {
+                rawComponents.push({ slug, usageCode });
+            }
+        }
     }
 
     console.log(`   Found ${rawComponents.length} components.\n`);
