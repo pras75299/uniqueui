@@ -370,4 +370,5 @@ describe("TypewriterText", () => {
     const outerSpan = container.firstChild as HTMLElement;
     expect(outerSpan.className).toContain("text-purple-500");
   });
+
 });

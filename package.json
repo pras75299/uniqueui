@@ -14,7 +14,9 @@
     "release": "pnpm build:registry && pnpm --dir packages/cli build && changeset publish",
     "prepare": "husky",
     "precommit": "./scripts/pre-commit.sh",
-    "changelog:verify": "bash scripts/verify-changelog.sh"
+    "changelog:verify": "bash scripts/verify-changelog.sh",
+    "docs:metadata-friction": "node scripts/docs-metadata-friction.mjs",
+    "changeset:quality": "node scripts/verify-changeset-quality.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

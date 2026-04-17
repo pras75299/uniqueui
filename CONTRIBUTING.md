@@ -94,6 +94,7 @@ Common scopes: `registry`, `cli`, `docs`, or the component name (e.g. `moving-bo
 - The release automation opens or updates a PR that runs `pnpm version-packages`.
 - `pnpm version-packages` updates `packages/cli/CHANGELOG.md` and syncs root `CHANGELOG.md`.
 - Write changeset summaries for **end users** (what changed in behavior or usage). See `.changeset/README.md` for bump types and examples. Root changelog richness depends on good changeset first lines.
+- Optional quality check: run `pnpm changeset:quality` to catch weak changeset summaries before PR review.
 
 ## Code of Conduct
 

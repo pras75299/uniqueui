@@ -44,6 +44,15 @@ Revisit this decision and split to per-component metadata files when **two or mo
 
 If only one condition is true, prefer process changes (smaller PRs, section comments in `registry/docs.json`, stricter merge cadence) before starting a migration.
 
+## Monitoring cadence (lightweight)
+
+To reduce subjective decision-making while staying on the centralized model:
+
+- Track a periodic snapshot in `docs/maintainers/docs-metadata-friction-log.md`.
+- Use `pnpm docs:metadata-friction --append` once per release cycle (or monthly) to capture objective signals (`lines`, `size`, `touches`).
+- Maintainers fill manual trigger inputs (`C2` conflicts, `C3` ownership need, `C4` tooling need) in the same row.
+- If `met >= 2` for more than one release cycle, open an issue/RFC and begin migration path planning from this ADR.
+
 ## Planned Migration Path (when triggered)
 
 1. Introduce `registry/<component>/docs.json` as the new authoring format.

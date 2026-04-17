@@ -45,6 +45,23 @@ The first line of a changeset becomes the changelog entry for that bump. Prefer 
 
 If a PR mixes user-facing fixes and internal-only chores, split changesets or write the summary around the **shipping** change.
 
+## Optional quality check (recommended)
+
+Run this from the repo root before opening a PR:
+
+```bash
+pnpm changeset:quality
+```
+
+The check is intentionally lightweight and catches only common low-signal entries:
+
+- Missing summary body after frontmatter
+- Very short summaries (too little user context)
+- Placeholder-only text (for example `WIP`, `TODO`, `update`)
+- Ticket-ID-only summaries with no user-facing explanation
+
+Treat failures as guidance to rewrite the first line in language release-note readers can understand quickly.
+
 ## Release process
 
 1. Merging changesets accumulates entries. The **Version Packages** / release automation opens or updates a PR that runs `pnpm version-packages`.

@@ -33,6 +33,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Validate changeset summary quality (PR only)
+        if: github.event_name == 'pull_request'
+        run: pnpm changeset:quality
+
       - name: Build CLI
         run: pnpm --dir packages/cli build
 
