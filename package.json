@@ -42,7 +42,10 @@
     "vitest": "^4.0.18",
     "vitest-fetch-mock": "^0.4.5"
   },
-  "packageManager": "pnpm@8.12.1",
+  "engines": {
+    "node": "20.x"
+  },
+  "packageManager": "pnpm@9.15.4",
   "dependencies": {
     "motion": "^12.26.0"
   }
