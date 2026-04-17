@@ -2,8 +2,8 @@
 
 ## Requirements
 
-- Node.js 18 or higher
-- pnpm 8.12.1 — `npm install -g pnpm@8.12.1`
+- Node.js 24 LTS (recommended)
+- pnpm 10.33.0 — `npm install -g pnpm@10.33.0`
 
 ## Quick Start
 

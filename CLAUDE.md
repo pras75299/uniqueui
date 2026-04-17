@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 UniqueUI is a monorepo for an animated React component library built on a copy-paste model (similar to shadcn/ui). Users install components via `npx uniqueui add <component>` rather than importing a package.
 
-**Package manager**: pnpm 8.12.1 with workspaces (`pnpm-workspace.yaml`)
+**Package manager**: pnpm 10.33.0 with workspaces (`pnpm-workspace.yaml`)
 
 **Workspaces**:
 - `apps/www` — Next.js 16 showcase/docs site
