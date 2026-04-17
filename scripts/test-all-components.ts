@@ -164,6 +164,20 @@ async function run() {
     if (fs.existsSync(TEST_DIR)) {
         console.log('🗑   Removing previous e2e-components-test directory...');
         fs.rmSync(TEST_DIR, { recursive: true, force: true });
+
+        // Wait until the directory is fully gone before proceeding.
+        // On some systems (macOS APFS, network volumes) the filesystem flushes
+        // asynchronously, so create-next-app can still see residual entries
+        // like .next/ even right after rmSync returns.
+        const pollStart = Date.now();
+        const pollTimeout = 2000; // ms
+        while (fs.existsSync(TEST_DIR)) {
+            if (Date.now() - pollStart > pollTimeout) {
+                console.error(`    ❌ Timed out waiting for ${TEST_DIR} to be removed.`);
+                process.exit(1);
+            }
+            execSync('sleep 0.1');
+        }
     }
 
     console.log('🚀  Creating fresh Next.js app...');

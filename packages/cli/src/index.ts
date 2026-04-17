@@ -17,7 +17,10 @@ program
 program
     .command("init")
     .description("Configure your project for UniqueUI")
-    .action(init);
+    .option("-y, --yes", "Skip prompts and use defaults")
+    .option("--dir <path>", "Components install directory")
+    .option("--typescript", "Use TypeScript (default: true)")
+    .action((opts) => init({ yes: opts.yes, dir: opts.dir, typescript: opts.typescript }));
 
 program
     .command("add")
