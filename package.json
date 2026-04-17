@@ -4,11 +4,22 @@
   "private": true,
   "scripts": {
     "build:registry": "ts-node scripts/build-registry.ts",
-    "test": "pnpm --dir packages/cli exec vitest run && pnpm --dir apps/www exec vitest run",
+    "test": "turbo run test",
+    "test:ci": "pnpm --dir packages/cli test && pnpm --dir apps/www test",
+    "lint": "pnpm --dir apps/www lint",
+    "build": "turbo run build",
+    "typecheck": "pnpm --dir packages/cli exec tsc --noEmit && pnpm --dir apps/www exec tsc --noEmit",
+    "changeset": "changeset",
+    "version-packages": "changeset version && node scripts/sync-root-changelog.mjs",
+    "release": "pnpm build:registry && pnpm --dir packages/cli build && changeset publish",
     "prepare": "husky",
-    "precommit": "./scripts/pre-commit.sh"
+    "precommit": "./scripts/pre-commit.sh",
+    "changelog:verify": "bash scripts/verify-changelog.sh",
+    "docs:metadata-friction": "node scripts/docs-metadata-friction.mjs",
+    "changeset:quality": "node scripts/verify-changeset-quality.mjs"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -26,11 +37,15 @@
     "react-dom": "^19.2.3",
     "tailwind-merge": "^3.4.0",
     "ts-node": "^10.9.2",
+    "turbo": "^2.3.3",
     "typescript": "^5.3.3",
     "vitest": "^4.0.18",
     "vitest-fetch-mock": "^0.4.5"
   },
-  "packageManager": "pnpm@8.12.1",
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "pnpm@10.33.0",
   "dependencies": {
     "motion": "^12.26.0"
   }

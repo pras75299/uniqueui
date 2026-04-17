@@ -1,0 +1,20 @@
+{
+  "name": "3d-tilt-card",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "3d-tilt-card/component.tsx",
+      "content": "\"use client\";\nimport { cn } from \"@/lib/utils\";\nimport React, { useRef, useState, useCallback } from \"react\";\nimport { motion, useMotionValue, useSpring, useTransform } from \"motion/react\";\n\nexport interface TiltCardProps {\n  children: React.ReactNode;\n  className?: string;\n  containerClassName?: string;\n  tiltMaxDeg?: number;\n  perspective?: number;\n  scale?: number;\n  glare?: boolean;\n  glareMaxOpacity?: number;\n  theme?: \"light\" | \"dark\";\n}\n\nexport function TiltCard({\n  children,\n  className,\n  containerClassName,\n  tiltMaxDeg = 15,\n  perspective = 1000,\n  scale = 1.05,\n  glare = true,\n  glareMaxOpacity = 0.35,\n  theme: _theme = \"dark\",\n}: TiltCardProps) {\n  const ref = useRef<HTMLDivElement>(null);\n  const [isHovering, setIsHovering] = useState(false);\n\n  const mouseX = useMotionValue(0.5);\n  const mouseY = useMotionValue(0.5);\n\n  const springConfig = { stiffness: 300, damping: 20 };\n  const rotateX = useSpring(\n    useTransform(mouseY, [0, 1], [tiltMaxDeg, -tiltMaxDeg]),\n    springConfig\n  );\n  const rotateY = useSpring(\n    useTransform(mouseX, [0, 1], [-tiltMaxDeg, tiltMaxDeg]),\n    springConfig\n  );\n\n  const glareOpacity = useSpring(0, springConfig);\n\n  const handleMouseMove = useCallback(\n    (e: React.MouseEvent<HTMLDivElement>) => {\n      if (!ref.current) return;\n      const rect = ref.current.getBoundingClientRect();\n      mouseX.set((e.clientX - rect.left) / rect.width);\n      mouseY.set((e.clientY - rect.top) / rect.height);\n    },\n    [mouseX, mouseY]\n  );\n\n  const handleMouseEnter = useCallback(() => {\n    setIsHovering(true);\n    glareOpacity.set(glareMaxOpacity);\n  }, [glareOpacity, glareMaxOpacity]);\n\n  const handleMouseLeave = useCallback(() => {\n    setIsHovering(false);\n    mouseX.set(0.5);\n    mouseY.set(0.5);\n    glareOpacity.set(0);\n  }, [mouseX, mouseY, glareOpacity]);\n\n  return (\n    <div\n      className={cn(\"relative\", containerClassName)}\n      style={{ perspective: `${perspective}px` }}\n    >\n      <motion.div\n        ref={ref}\n        onMouseMove={handleMouseMove}\n        onMouseEnter={handleMouseEnter}\n        onMouseLeave={handleMouseLeave}\n        style={{\n          rotateX,\n          rotateY,\n          transformStyle: \"preserve-3d\",\n        }}\n        animate={{ scale: isHovering ? scale : 1 }}\n        transition={{ type: \"spring\", stiffness: 300, damping: 20 }}\n        className={cn(\n          \"relative rounded-xl overflow-hidden\",\n          className\n        )}\n      >\n        <div style={{ transform: \"translateZ(0)\" }}>{children}</div>\n        {glare && (\n          <motion.div\n            className=\"pointer-events-none absolute inset-0 rounded-xl\"\n            style={{\n              opacity: glareOpacity,\n              background:\n                \"linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 60%)\",\n            }}\n          />\n        )}\n      </motion.div>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util"
+    }
+  ]
+}

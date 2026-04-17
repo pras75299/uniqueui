@@ -1,0 +1,2992 @@
+"use client";
+
+import { Button } from "@/components/ui/moving-border";
+import { TypewriterText } from "@/components/ui/typewriter-text";
+import { TiltCard } from "@/components/ui/3d-tilt-card";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { AuroraBackground } from "@/components/ui/aurora-background";
+import { AnimatedTabs } from "@/components/ui/animated-tabs";
+import { MagneticButton } from "@/components/ui/magnetic-button";
+import { InfiniteMarquee, MarqueeItem } from "@/components/ui/infinite-marquee";
+import { ScrollRevealGroup } from "@/components/ui/scroll-reveal";
+import {
+  SkeletonShimmer,
+  SkeletonCard,
+} from "@/components/ui/skeleton-shimmer";
+import {
+  MorphingModal,
+  MorphingModalTrigger,
+} from "@/components/ui/morphing-modal";
+import { GradientTextReveal } from "@/components/ui/gradient-text-reveal";
+import { ScrambleText } from "@/components/ui/scramble-text";
+import { MeteorsCard } from "@/components/ui/meteors-card";
+import { FlipCard } from "@/components/ui/flip-card";
+import { DotGridBackground } from "@/components/ui/dot-grid-background";
+import { FloatingDock } from "@/components/ui/floating-dock";
+import { ConfettiBurst } from "@/components/ui/confetti-burst";
+import { DrawerSlide } from "@/components/ui/drawer-slide";
+import {
+  NotificationStack,
+  useNotifications,
+} from "@/components/ui/notification-stack";
+import { AnimatedTimeline } from "@/components/ui/animated-timeline";
+import { NestedComments } from "@/components/ui/nested-comments";
+import type { Comment } from "@/components/ui/nested-comments";
+import { HoverRevealCard } from "@/components/ui/hover-reveal-card";
+import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+import { ParticleField } from "@/components/ui/particle-field";
+import { HorizontalScrollGallery } from "@/components/ui/horizontal-scroll-gallery";
+import { RadialMenu } from "@/components/ui/radial-menu";
+import { CursorTrail } from "@/components/ui/cursor-trail";
+import Image from "next/image";
+import { PenCursor } from "@/components/ui/pen-cursor";
+import { InteractiveCursor } from "@/components/ui/interactive-cursor";
+import GlowHeroSection from "@/components/ui/glow-hero-section";
+import { LimelightNav } from "@/components/ui/limelight-nav";
+import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
+import { MultiStepAuthCard } from "@/components/ui/multi-step-auth-card";
+import { DataTable } from "@/components/ui/data-table";
+import GlowingTextOutline from "@/components/ui/animated-glowing-text-outline";
+import { ShinyText } from "@/components/ui/shiny-text";
+import { BlurReveal } from "@/components/ui/blur-reveal";
+import { CountUp } from "@/components/ui/count-up";
+import { BorderBeam } from "@/components/ui/border-beam";
+import { Ripple } from "@/components/ui/ripple";
+import { WordRotate } from "@/components/ui/word-rotate";
+import { motion } from "motion/react";
+import { useRef, useState } from "react";
+import {
+  Ghost,
+  Sparkles,
+  Layers,
+  ScrollText,
+  Terminal,
+  Zap,
+  Shield,
+  Globe,
+  Home as HomeIcon,
+  Bookmark,
+  PlusCircle,
+  User,
+  Settings,
+  Compass,
+  Bell,
+  Palette,
+  Clock,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export type DemoThemeProps = { theme?: "light" | "dark" };
+export type DemoComponent = React.ComponentType<DemoThemeProps>;
+
+// Helper for notifications demo
+function NotificationDemo({ theme = "dark" }: DemoThemeProps) {
+  const { notifications, addNotification, removeNotification } =
+    useNotifications();
+  return (
+    <div className="flex flex-col items-center gap-4 w-full">
+      <div className="flex flex-wrap gap-3 items-center justify-center">
+        {(["success", "error", "warning", "info"] as const).map((type) => (
+          <button
+            key={type}
+            onClick={() =>
+              addNotification({
+                title: `${type.charAt(0).toUpperCase() + type.slice(1)} notification`,
+                description: "This is a demo notification that auto-dismisses.",
+                type,
+                duration: 4000,
+              })
+            }
+            className={cn(
+              "px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize",
+              type === "success" &&
+                "bg-green-900/50 border border-green-800/50 hover:bg-green-900/80 text-green-300",
+              type === "error" &&
+                "bg-red-900/50 border border-red-800/50 hover:bg-red-900/80 text-red-300",
+              type === "warning" &&
+                "bg-yellow-900/50 border border-yellow-800/50 hover:bg-yellow-900/80 text-yellow-300",
+              type === "info" &&
+                "bg-blue-900/50 border border-blue-800/50 hover:bg-blue-900/80 text-blue-300",
+            )}
+          >
+            {type}
+          </button>
+        ))}
+      </div>
+      <NotificationStack
+        theme={theme}
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
+    </div>
+  );
+}
+
+function InteractiveCursorDemo({ theme = "dark" }: DemoThemeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDark = theme === "dark";
+  return (
+    <div
+      ref={containerRef}
+      className={cn(
+        "relative h-[440px] w-full flex items-center justify-center overflow-hidden rounded-xl border",
+        isDark
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-50 border-neutral-200",
+      )}
+    >
+      {/* Ambient center glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: isDark
+            ? "radial-gradient(ellipse 60% 50% at 50% 55%, rgba(168,85,247,0.08) 0%, transparent 80%)"
+            : "radial-gradient(ellipse 60% 50% at 50% 55%, rgba(124,58,237,0.06) 0%, transparent 80%)",
+        }}
+      />
+
+      <div className="relative z-10 flex flex-col items-center gap-5 text-center px-8 select-none">
+        {/* Eyebrow label */}
+        <span
+          className={cn(
+            "text-[11px] font-mono tracking-[0.2em] uppercase pointer-events-none",
+            isDark ? "text-purple-400/70" : "text-purple-600/70",
+          )}
+        >
+          Spring Physics · Magnetic Snap · Click Particles
+        </span>
+
+        {/* Heading */}
+        <h3
+          className={cn(
+            "text-4xl font-bold tracking-tight pointer-events-none",
+            isDark
+              ? "bg-gradient-to-b from-white to-neutral-400 bg-clip-text text-transparent"
+              : "bg-gradient-to-b from-neutral-900 to-neutral-500 bg-clip-text text-transparent",
+          )}
+        >
+          Interactive Cursor
+        </h3>
+
+        {/* Description */}
+        <p
+          className={cn(
+            "max-w-xs text-sm leading-relaxed pointer-events-none",
+            isDark ? "text-neutral-500" : "text-neutral-500",
+          )}
+        >
+          Move inside this card. Hover buttons to see magnetic pull. Click anywhere for burst particles.
+        </p>
+
+        {/* Button row — each one is a magnetic target */}
+        <div className="flex items-center gap-3 mt-1">
+          <button
+            className={cn(
+              "px-5 py-2.5 rounded-full text-sm font-semibold transition-colors",
+              isDark
+                ? "bg-purple-600 hover:bg-purple-500 text-white"
+                : "bg-purple-600 hover:bg-purple-700 text-white",
+            )}
+          >
+            Primary
+          </button>
+          <button
+            className={cn(
+              "px-5 py-2.5 rounded-full text-sm font-semibold border transition-colors",
+              isDark
+                ? "border-neutral-700 text-neutral-300 hover:border-purple-500 hover:text-purple-300"
+                : "border-neutral-300 text-neutral-600 hover:border-purple-400 hover:text-purple-700",
+            )}
+          >
+            Secondary
+          </button>
+          <button
+            className={cn(
+              "px-5 py-2.5 rounded-full text-sm font-semibold transition-colors",
+              isDark
+                ? "text-neutral-500 hover:text-neutral-200"
+                : "text-neutral-400 hover:text-neutral-800",
+            )}
+          >
+            Ghost
+          </button>
+        </div>
+
+        {/* Hint */}
+        <p
+          className={cn(
+            "text-[11px] pointer-events-none mt-1",
+            isDark ? "text-neutral-700" : "text-neutral-400",
+          )}
+        >
+          Pass <code className={isDark ? "text-neutral-500" : "text-neutral-500"}>hideSystemCursor</code> to fully replace the native cursor
+        </p>
+      </div>
+
+      <InteractiveCursor
+        containerRef={containerRef}
+        hideSystemCursor={false}
+        color={isDark ? "#a855f7" : "#7c3aed"}
+        clickColor={isDark ? "#c084fc" : "#8b5cf6"}
+        trailColor={isDark ? "rgba(168, 85, 247, 0.35)" : "rgba(124, 58, 237, 0.25)"}
+        glow={true}
+        particleEffect={true}
+        magneticPull={true}
+      />
+    </div>
+  );
+}
+
+function PenCursorDemo({ theme = "dark" }: DemoThemeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      ref={containerRef}
+      className={cn(
+        "relative h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <div className="text-center relative z-10 pointer-events-none select-none">
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent mb-4",
+            theme === "dark"
+              ? "bg-gradient-to-br from-white to-neutral-500"
+              : "bg-gradient-to-br from-neutral-900 to-neutral-600",
+          )}
+        >
+          Ribbon trail
+        </h3>
+        <p
+          className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}
+        >
+          Move your mouse — a physics-driven ribbon trails the pointer.
+        </p>
+      </div>
+      <PenCursor
+        containerRef={containerRef}
+        trailLength={40}
+        maxWidth={1}
+        minWidth={1}
+        colorHead={theme === "dark" ? "159, 175, 155" : "100, 80, 200"}
+        colorTail={theme === "dark" ? "198, 167, 106" : "180, 120, 230"}
+        alphaHead={0.95}
+        alphaTail={0}
+        damping={0.55}
+        speedInfluence={0.8}
+        speedMax={500}
+      />
+    </div>
+  );
+}
+
+// Helper for Modal Demo
+function ModalDemo({ theme = "dark" }: DemoThemeProps) {
+  const [modalOpen, setModalOpen] = useState(false);
+  return (
+    <>
+      <div className="flex items-center justify-center">
+        <MorphingModalTrigger
+          theme={theme}
+          layoutId="modal-demo"
+          onClick={() => setModalOpen(true)}
+          className={cn(
+            "p-6 rounded-xl border transition-colors max-w-xs",
+            theme === "dark"
+              ? "bg-neutral-900/50 border-neutral-800 hover:border-neutral-700"
+              : "bg-neutral-100 border-neutral-200 hover:border-neutral-300",
+          )}
+        >
+          <h3
+            className={cn(
+              "text-lg font-bold mb-2",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Click to open modal
+          </h3>
+          <p
+            className={cn(
+              "text-sm",
+              theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+            )}
+          >
+            This card morphs into a modal with spring physics.
+          </p>
+        </MorphingModalTrigger>
+      </div>
+      <MorphingModal
+        theme={theme}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        layoutId="modal-demo"
+      >
+        <div className="pt-4">
+          <h3
+            className={cn(
+              "text-2xl font-bold mb-4",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Morphing Modal
+          </h3>
+          <p
+            className={cn(
+              "mb-6",
+              theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+            )}
+          >
+            This modal expands from the trigger element with spring-based
+            animation. It supports Escape key to close, click-outside to
+            dismiss, and an animated close button.
+          </p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setModalOpen(false)}
+              className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-sm font-medium"
+            >
+              Got it
+            </button>
+            <button
+              onClick={() => setModalOpen(false)}
+              className={cn(
+                "px-4 py-2 rounded-lg transition-colors text-sm font-medium",
+                theme === "dark"
+                  ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-300"
+                  : "bg-neutral-200 hover:bg-neutral-300 text-neutral-700",
+              )}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </MorphingModal>
+    </>
+  );
+}
+
+// Helper for Drawer Demo
+function DrawerDemo({ theme = "dark" }: DemoThemeProps) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  return (
+    <>
+      <div className="flex items-center justify-center">
+        <button
+          onClick={() => setDrawerOpen(true)}
+          className="px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors font-medium"
+        >
+          Open Drawer
+        </button>
+      </div>
+      <DrawerSlide
+        theme={theme}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
+        <h3
+          className={cn(
+            "text-xl font-bold mb-4",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Drawer Content
+        </h3>
+        <p
+          className={cn(
+            "mb-4",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
+          This drawer slides in from the right with spring physics. You can drag
+          it to dismiss.
+        </p>
+        <button
+          onClick={() => setDrawerOpen(false)}
+          className={cn(
+            "px-4 py-2 rounded-lg transition-colors text-sm",
+            theme === "dark"
+              ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-300"
+              : "bg-neutral-200 hover:bg-neutral-300 text-neutral-700",
+          )}
+        >
+          Close Drawer
+        </button>
+      </DrawerSlide>
+    </>
+  );
+}
+
+// Helper for Nested Comments demo
+const DEMO_COMMENTS: Comment[] = [
+  {
+    id: "1",
+    author: "Alex Kim",
+    content:
+      "This component is incredible! The spring animations feel so natural and snappy.",
+    timestamp: "2 hours ago",
+    likes: 14,
+    replies: [
+      {
+        id: "1-1",
+        author: "Sarah Chen",
+        content:
+          "Agreed! The collapse animation is especially smooth. Love the thread lines too.",
+        timestamp: "1 hour ago",
+        likes: 6,
+        replies: [
+          {
+            id: "1-1-1",
+            author: "Alex Kim",
+            content:
+              "Thanks! Motion.dev's layout animations make nested content effortless to build.",
+            timestamp: "45 min ago",
+            likes: 3,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "2",
+    author: "Jordan Lee",
+    content:
+      "Love the inline reply box with ⌘+Enter shortcut. Very intuitive UX — try clicking Reply!",
+    timestamp: "3 hours ago",
+    likes: 9,
+  },
+  {
+    id: "3",
+    author: "Maya Patel",
+    content:
+      "The like button spring animation is a nice touch. Small details make a big difference.",
+    timestamp: "4 hours ago",
+    likes: 21,
+  },
+];
+
+function NestedCommentsDemo({ theme = "dark" }: DemoThemeProps) {
+  return (
+    <div className="w-full p-6 overflow-y-auto max-h-[520px]">
+      <NestedComments
+        theme={theme}
+        comments={DEMO_COMMENTS}
+        maxDepth={4}
+        accentColor="#8b5cf6"
+      />
+    </div>
+  );
+}
+
+export const componentDemos: Record<string, DemoComponent> = {
+  "animated-glowing-text-outline": () => (
+    <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-background gap-16 border border-border rounded-xl overflow-hidden relative">
+      <GlowingTextOutline 
+        text="Hello World" 
+        fontSize={80} 
+        colors={["#ffaa40", "#9c40ff", "#ffaa40"]} 
+        animationDuration={5}
+      />
+      
+    </div>
+  ),
+  "moving-border": ({ theme = "dark" }) => (
+    <div className="flex flex-wrap gap-6 items-center justify-center p-10">
+      <Button
+        theme={theme}
+        borderRadius="1.75rem"
+        className="bg-zinc-950 text-white border-neutral-200 dark:border-slate-800"
+      >
+        Click me
+      </Button>
+      <Button
+        theme={theme}
+        borderRadius="1rem"
+        className="bg-zinc-950 text-white border-neutral-200 dark:border-slate-800"
+        containerClassName="h-12 w-48"
+      >
+        Rounded Button
+      </Button>
+    </div>
+  ),
+  "typewriter-text": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "space-y-6 text-center p-10",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <div
+        className={cn(
+          "text-3xl font-bold",
+          theme === "dark" ? "text-white" : "text-neutral-900",
+        )}
+      >
+        I love{" "}
+        <TypewriterText
+          theme={theme}
+          words={["React", "TypeScript", "Motion", "Tailwind", "UniqueUI"]}
+          className="text-purple-400"
+          typingSpeed={100}
+          deletingSpeed={60}
+        />
+      </div>
+      <div
+        className={cn(
+          "text-lg",
+          theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+        )}
+      >
+        <TypewriterText
+          theme={theme}
+          words={[
+            "Building amazing user interfaces...",
+            "With beautiful animations...",
+            "That stand out from the crowd.",
+          ]}
+          typingSpeed={50}
+          deletingSpeed={30}
+          delayBetweenWords={2000}
+        />
+      </div>
+    </div>
+  ),
+  "3d-tilt-card": ({ theme = "dark" }) => (
+    <div className="flex flex-wrap gap-8 items-center justify-center p-10">
+      <TiltCard
+        theme={theme}
+        className={cn(
+          "w-72 rounded-xl p-6",
+          theme === "dark"
+            ? "bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700"
+            : "bg-gradient-to-br from-neutral-100 to-neutral-200 border border-neutral-300",
+        )}
+      >
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Hover me
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
+          Move your cursor over this card to see the 3D tilt effect with glare.
+        </p>
+        <div
+          className={cn(
+            "mt-4 h-24 rounded-lg",
+            theme === "dark"
+              ? "bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-neutral-700/50"
+              : "bg-gradient-to-br from-purple-200/40 to-pink-200/40 border border-neutral-300",
+          )}
+        />
+      </TiltCard>
+      <TiltCard
+        theme={theme}
+        tiltMaxDeg={25}
+        glare={true}
+        className={cn(
+          "w-72 rounded-xl p-6",
+          theme === "dark"
+            ? "bg-gradient-to-br from-purple-950 to-indigo-950 border border-purple-800/50"
+            : "bg-gradient-to-br from-purple-100 to-indigo-100 border border-purple-300/50",
+        )}
+      >
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-purple-200" : "text-purple-800",
+          )}
+        >
+          Extra Tilt
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-purple-300/60" : "text-purple-700/80",
+          )}
+        >
+          This card has a stronger tilt angle for a more dramatic effect.
+        </p>
+        <div className="mt-4 flex gap-2">
+          <div className="h-12 w-12 rounded-lg bg-purple-500/20 border border-purple-500/30" />
+          <div className="h-12 w-12 rounded-lg bg-pink-500/20 border border-pink-500/30" />
+          <div className="h-12 w-12 rounded-lg bg-indigo-500/20 border border-indigo-500/30" />
+        </div>
+      </TiltCard>
+    </div>
+  ),
+  "spotlight-card": ({ theme = "dark" }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
+      <SpotlightCard theme={theme}>
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Hover for spotlight
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
+          Move your mouse over the card to reveal a tracking spotlight effect.
+        </p>
+      </SpotlightCard>
+      <SpotlightCard
+        theme={theme}
+        spotlightColor="rgba(232, 121, 249, 0.1)"
+        spotlightSize={300}
+      >
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Custom spotlight
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
+          Different color and size for the spotlight effect.
+        </p>
+      </SpotlightCard>
+    </div>
+  ),
+  "aurora-background/cinematic": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark" ? "border-neutral-800" : "border-neutral-200",
+      )}
+    >
+      <AuroraBackground
+        preset="cinematic"
+        theme={theme}
+        className="min-h-0 h-full rounded-xl"
+      >
+        <div className="text-center z-10 px-4">
+          <h3
+            className={cn(
+              "text-2xl font-bold mb-2 tracking-tight",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Background lights
+          </h3>
+          <p
+            className={
+              theme === "dark" ? "text-neutral-400 text-sm" : "text-neutral-600 text-sm"
+            }
+          >
+            Vertical pillars drift right → left; soft overlap
+          </p>
+        </div>
+      </AuroraBackground>
+    </div>
+  ),
+  "aurora-background/stitch": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark" ? "border-neutral-800" : "border-neutral-200",
+      )}
+    >
+      <AuroraBackground
+        preset="stitch"
+        theme={theme}
+        blur={1.05}
+        className="min-h-0 h-full rounded-xl"
+      >
+        <div className="text-center z-10 px-4">
+          <h3
+            className={cn(
+              "text-2xl font-bold mb-2 tracking-tight",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Stitch DS
+          </h3>
+          <p
+            className={
+              theme === "dark" ? "text-neutral-400 text-sm" : "text-neutral-600 text-sm"
+            }
+          >
+            Showcase tokens — same motion language
+          </p>
+        </div>
+      </AuroraBackground>
+    </div>
+  ),
+  "animated-tabs": ({ theme = "dark" }) => (
+    <div className="max-w-md mx-auto p-10">
+      <AnimatedTabs
+        theme={theme}
+        tabs={[
+          {
+            id: "design",
+            label: "Design",
+            content: (
+              <div
+                className={cn(
+                  "p-4 rounded-lg text-sm",
+                  theme === "dark"
+                    ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300"
+                    : "bg-neutral-100 border border-neutral-200 text-neutral-700",
+                )}
+              >
+                Build stunning interfaces with our design system. Every
+                component is crafted with attention to detail.
+              </div>
+            ),
+          },
+          {
+            id: "animate",
+            label: "Animate",
+            content: (
+              <div
+                className={cn(
+                  "p-4 rounded-lg text-sm",
+                  theme === "dark"
+                    ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300"
+                    : "bg-neutral-100 border border-neutral-200 text-neutral-700",
+                )}
+              >
+                Add life to your UI with spring-physics animations powered by
+                Motion.dev.
+              </div>
+            ),
+          },
+          {
+            id: "ship",
+            label: "Ship",
+            content: (
+              <div
+                className={cn(
+                  "p-4 rounded-lg text-sm",
+                  theme === "dark"
+                    ? "bg-neutral-900/50 border border-neutral-800 text-neutral-300"
+                    : "bg-neutral-100 border border-neutral-200 text-neutral-700",
+                )}
+              >
+                Deploy with confidence. All components are production-ready and
+                accessible.
+              </div>
+            ),
+          },
+        ]}
+      />
+    </div>
+  ),
+  "magnetic-button": ({ theme = "dark" }) => (
+    <div className="flex flex-wrap gap-8 items-center justify-center p-20">
+      <MagneticButton theme={theme}>Hover near me</MagneticButton>
+      <MagneticButton
+        theme={theme}
+        magneticStrength={0.5}
+        magneticRadius={200}
+        className="bg-gradient-to-b from-purple-700 to-purple-900"
+      >
+        Stronger pull
+      </MagneticButton>
+    </div>
+  ),
+  "infinite-marquee": ({ theme = "dark" }) => (
+    <div className="space-y-6 w-full p-10 overflow-hidden">
+      <InfiniteMarquee theme={theme} speed={30}>
+        {[
+          "React",
+          "Next.js",
+          "TypeScript",
+          "Tailwind",
+          "Motion",
+          "UniqueUI",
+          "Vercel",
+          "Node.js",
+        ].map((item) => (
+          <MarqueeItem key={item}>
+            <span
+              className={cn(
+                "text-sm font-medium",
+                theme === "dark" ? "text-neutral-300" : "text-neutral-600",
+              )}
+            >
+              {item}
+            </span>
+          </MarqueeItem>
+        ))}
+      </InfiniteMarquee>
+      <InfiniteMarquee theme={theme} speed={20} direction="right">
+        {[
+          "⚡ Fast",
+          "🎨 Beautiful",
+          "♿ Accessible",
+          "📱 Responsive",
+          "🔧 Customizable",
+          "🚀 Production Ready",
+        ].map((item) => (
+          <MarqueeItem
+            key={item}
+            className={
+              theme === "dark"
+                ? "bg-purple-950/30 border-purple-800/50"
+                : "bg-purple-100 border-purple-200/50"
+            }
+          >
+            <span
+              className={cn(
+                "text-sm font-medium",
+                theme === "dark" ? "text-purple-300" : "text-purple-700",
+              )}
+            >
+              {item}
+            </span>
+          </MarqueeItem>
+        ))}
+      </InfiniteMarquee>
+    </div>
+  ),
+  "scroll-reveal": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "p-10",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <ScrollRevealGroup
+        theme={theme}
+        animation="fade-up"
+        staggerDelay={0.15}
+        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+      >
+        {["fade-up", "scale", "blur"].map((preset) => (
+          <div
+            key={preset}
+            className={cn(
+              "p-6 rounded-lg text-center",
+              theme === "dark"
+                ? "bg-neutral-900/50 border border-neutral-800"
+                : "bg-neutral-100 border border-neutral-200",
+            )}
+          >
+            <div
+              className={cn(
+                "text-lg font-semibold mb-1",
+                theme === "dark" ? "text-neutral-200" : "text-neutral-800",
+              )}
+            >
+              {preset}
+            </div>
+            <p
+              className={cn(
+                "text-xs",
+                theme === "dark" ? "text-neutral-500" : "text-neutral-600",
+              )}
+            >
+              Scroll to reveal
+            </p>
+          </div>
+        ))}
+      </ScrollRevealGroup>
+    </div>
+  ),
+  "skeleton-shimmer": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <SkeletonCard theme={theme} />
+      <div
+        className={cn(
+          "space-y-4 p-6 rounded-xl border",
+          theme === "dark"
+            ? "border-neutral-800 bg-neutral-900/50"
+            : "border-neutral-200 bg-neutral-100",
+        )}
+      >
+        <SkeletonShimmer theme={theme} width="80%" height={20} rounded="md" />
+        <SkeletonShimmer theme={theme} count={4} height={14} />
+        <div className="flex gap-3">
+          <SkeletonShimmer theme={theme} width={100} height={36} rounded="lg" />
+          <SkeletonShimmer theme={theme} width={100} height={36} rounded="lg" />
+        </div>
+      </div>
+    </div>
+  ),
+  "morphing-modal": ({ theme = "dark" }) => <ModalDemo theme={theme} />,
+  "gradient-text-reveal": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "space-y-8 text-center p-10",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <GradientTextReveal
+        text="Build stunning interfaces with UniqueUI"
+        as="h3"
+        className={cn(
+          "text-3xl font-bold justify-center",
+          theme === "dark" ? "text-white" : "text-neutral-900",
+        )}
+      />
+      <GradientTextReveal
+        text="Beautiful animated components for modern web apps"
+        gradientFrom="#6366f1"
+        gradientTo="#06b6d4"
+        className={cn(
+          "text-lg justify-center",
+          theme === "dark" ? "text-neutral-300" : "text-neutral-600",
+        )}
+      />
+    </div>
+  ),
+  "scramble-text": ({ theme = "dark" }) => (
+    <div className="space-y-6 text-center p-10">
+      <ScrambleText
+        theme={theme}
+        text="UNIQUEUI COMPONENTS"
+        className={cn(
+          "text-3xl font-bold tracking-wider",
+          theme === "dark" ? "text-white" : "text-neutral-900",
+        )}
+      />
+      <ScrambleText
+        theme={theme}
+        text="Hover to scramble again"
+        triggerOnView={false}
+        className={cn(
+          "text-lg cursor-pointer",
+          theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+        )}
+      />
+    </div>
+  ),
+  "meteors-card": ({ theme = "dark" }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
+      <MeteorsCard theme={theme}>
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Meteors Effect
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+          )}
+        >
+          Watch the shooting stars fall through this card&apos;s background.
+        </p>
+      </MeteorsCard>
+      <MeteorsCard theme={theme} meteorColor="#a855f7" meteorCount={30}>
+        <h3
+          className={cn(
+            "text-xl font-bold mb-2",
+            theme === "dark" ? "text-purple-200" : "text-purple-800",
+          )}
+        >
+          Purple Meteors
+        </h3>
+        <p
+          className={cn(
+            "text-sm",
+            theme === "dark" ? "text-purple-300/60" : "text-purple-700/80",
+          )}
+        >
+          Custom colored meteors with extra density.
+        </p>
+      </MeteorsCard>
+    </div>
+  ),
+  "flip-card": ({ theme = "dark" }) => (
+    <div className="flex flex-wrap gap-8 items-center justify-center p-10">
+      <FlipCard
+        theme={theme}
+        className="w-60 h-40"
+        front={
+          <div
+            className={cn(
+              "flex items-center justify-center h-full rounded-xl border",
+              theme === "dark"
+                ? "bg-zinc-900 border-zinc-800"
+                : "bg-zinc-100 border-zinc-300",
+            )}
+          >
+            <p
+              className={cn(
+                "text-lg font-bold",
+                theme === "dark" ? "text-white" : "text-neutral-900",
+              )}
+            >
+              Hover to flip →
+            </p>
+          </div>
+        }
+        back={
+          <div className="flex items-center justify-center h-full bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl">
+            <p className="text-lg font-bold text-purple-200">Back side! ✨</p>
+          </div>
+        }
+      />
+      <FlipCard
+        theme={theme}
+        className="w-60 h-40"
+        trigger="click"
+        front={
+          <div
+            className={cn(
+              "flex items-center justify-center h-full rounded-xl border",
+              theme === "dark"
+                ? "bg-zinc-900 border-zinc-800"
+                : "bg-zinc-100 border-zinc-300",
+            )}
+          >
+            <p
+              className={cn(
+                "text-lg font-bold",
+                theme === "dark" ? "text-white" : "text-neutral-900",
+              )}
+            >
+              Click to flip
+            </p>
+          </div>
+        }
+        back={
+          <div
+            className={cn(
+              "flex items-center justify-center h-full rounded-xl border",
+              theme === "dark"
+                ? "bg-zinc-800 border-zinc-700"
+                : "bg-zinc-200 border-zinc-400",
+            )}
+          >
+            <p
+              className={cn(
+                "text-lg font-bold",
+                theme === "dark" ? "text-green-400" : "text-green-700",
+              )}
+            >
+              Click again!
+            </p>
+          </div>
+        }
+      />
+    </div>
+  ),
+  "dot-grid-background": ({ theme = "dark" }) => (
+    <DotGridBackground
+      theme={theme}
+      className="w-full h-[340px] flex items-center justify-center rounded-xl"
+    >
+      <div className="text-center relative z-10 select-none px-6">
+        <p
+          className={cn(
+            "text-xs font-mono tracking-[0.25em] uppercase mb-4",
+            theme === "dark" ? "text-neutral-500" : "text-neutral-400",
+          )}
+        >
+          Move your cursor
+        </p>
+        <h3
+          className={cn(
+            "text-4xl font-bold tracking-tight",
+            theme === "dark" ? "text-white" : "text-neutral-900",
+          )}
+        >
+          Ripple Field
+        </h3>
+        <p
+          className={cn(
+            "mt-3 text-sm",
+            theme === "dark" ? "text-neutral-500" : "text-neutral-400",
+          )}
+        >
+          Each movement fires a shockwave through the grid
+        </p>
+      </div>
+    </DotGridBackground>
+  ),
+  "floating-dock": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex items-center justify-center p-20",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <FloatingDock
+        theme={theme}
+        items={[
+          {
+            id: "home",
+            icon: <span className="text-xl">🏠</span>,
+            label: "Home",
+          },
+          {
+            id: "search",
+            icon: <span className="text-xl">✨</span>,
+            label: "Search",
+          },
+          {
+            id: "layers",
+            icon: <span className="text-xl">📚</span>,
+            label: "Layers",
+          },
+          {
+            id: "scroll",
+            icon: <span className="text-xl">📜</span>,
+            label: "Scroll",
+          },
+          {
+            id: "terminal",
+            icon: <span className="text-xl">💻</span>,
+            label: "Terminal",
+          },
+        ]}
+      />
+    </div>
+  ),
+  "confetti-burst": ({ theme = "dark" }) => (
+    <div className="flex items-center justify-center p-20">
+      <ConfettiBurst
+        theme={theme}
+        className={cn(
+          "rounded-xl p-12 border transition-colors cursor-pointer",
+          theme === "dark"
+            ? "border-neutral-800 bg-neutral-900/50 hover:border-neutral-700"
+            : "border-neutral-200 bg-neutral-100 hover:border-neutral-300",
+        )}
+      >
+        <div className="text-center">
+          <h3
+            className={cn(
+              "text-xl font-bold mb-2",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            🎉 Click me!
+          </h3>
+          <p
+            className={cn(
+              "text-sm",
+              theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+            )}
+          >
+            Click anywhere on this card for confetti
+          </p>
+        </div>
+      </ConfettiBurst>
+    </div>
+  ),
+  "drawer-slide": ({ theme = "dark" }) => <DrawerDemo theme={theme} />,
+  "notification-stack": ({ theme = "dark" }) => (
+    <NotificationDemo theme={theme} />
+  ),
+  // ─── Animated Timeline per-variant demos ─────────────────────────────────────
+  "animated-timeline/vertical": ({ theme = "dark" }) => (
+    <div className="p-10 w-full max-w-sm mx-auto">
+      <AnimatedTimeline
+        theme={theme}
+        variant="vertical"
+        lineColor="#3f3f46"
+        items={[
+          {
+            id: "1",
+            title: "Project Kickoff",
+            description: "Scope defined and team assembled.",
+            color: "#a855f7",
+            date: "Jan 2026",
+          },
+          {
+            id: "2",
+            title: "Design Phase",
+            description: "Wireframes and component system finalised.",
+            color: "#6366f1",
+            date: "Jan 2026",
+          },
+          {
+            id: "3",
+            title: "Dev Sprint",
+            description: "Core components built and tested end-to-end.",
+            color: "#ec4899",
+            date: "Feb 2026",
+          },
+          {
+            id: "4",
+            title: "Public Launch",
+            description: "CLI published and registry live.",
+            color: "#10b981",
+            date: "Feb 2026",
+          },
+        ]}
+      />
+    </div>
+  ),
+  "animated-timeline/horizontal": ({ theme = "dark" }) => (
+    <div className="p-10 w-full overflow-x-auto">
+      <AnimatedTimeline
+        theme={theme}
+        variant="horizontal"
+        lineColor="#3f3f46"
+        items={[
+          {
+            id: "1",
+            title: "Kickoff",
+            description: "Scope agreed.",
+            color: "#a855f7",
+            date: "Jan",
+          },
+          {
+            id: "2",
+            title: "Design",
+            description: "Wireframes done.",
+            color: "#6366f1",
+            date: "Jan",
+          },
+          {
+            id: "3",
+            title: "Build",
+            description: "Components shipped.",
+            color: "#ec4899",
+            date: "Feb",
+          },
+          {
+            id: "4",
+            title: "Launch",
+            description: "Registry live.",
+            color: "#10b981",
+            date: "Feb",
+          },
+        ]}
+      />
+    </div>
+  ),
+  "animated-timeline/cards": ({ theme = "dark" }) => (
+    <div className="p-8 w-full max-w-lg mx-auto">
+      <AnimatedTimeline
+        theme={theme}
+        variant="cards"
+        lineColor="#3f3f46"
+        items={[
+          {
+            id: "1",
+            title: "Project Kickoff",
+            description: "Scope defined and team assembled.",
+            color: "#a855f7",
+            date: "Jan 2026",
+          },
+          {
+            id: "2",
+            title: "Design Phase",
+            description: "Wireframes and component system finalised.",
+            color: "#6366f1",
+            date: "Jan 2026",
+          },
+          {
+            id: "3",
+            title: "Dev Sprint",
+            description: "Core components built and tested end-to-end.",
+            color: "#ec4899",
+            date: "Feb 2026",
+          },
+          {
+            id: "4",
+            title: "Public Launch",
+            description: "CLI published and registry live.",
+            color: "#10b981",
+            date: "Feb 2026",
+          },
+        ]}
+      />
+    </div>
+  ),
+  "animated-timeline/steps": ({ theme = "dark" }) => (
+    <div className="p-10 w-full max-w-sm mx-auto">
+      <AnimatedTimeline
+        theme={theme}
+        variant="steps"
+        items={[
+          {
+            id: "1",
+            title: "Install the CLI",
+            description: "Run npx uniqueui init in your project.",
+            color: "#a855f7",
+          },
+          {
+            id: "2",
+            title: "Add a component",
+            description: "Run npx uniqueui add animated-timeline.",
+            color: "#6366f1",
+          },
+          {
+            id: "3",
+            title: "Import and customise",
+            description: "Use variant, color, and date props as needed.",
+            color: "#ec4899",
+          },
+          {
+            id: "4",
+            title: "Ship to production",
+            description: "Zero runtime dependency — fully your code.",
+            color: "#10b981",
+          },
+        ]}
+      />
+    </div>
+  ),
+  "nested-comments": ({ theme = "dark" }) => (
+    <NestedCommentsDemo theme={theme} />
+  ),
+  "hover-reveal-card": ({ theme = "dark" }) => (
+    <div className="flex flex-wrap gap-6 items-start justify-center p-10">
+      <HoverRevealCard
+        theme={theme}
+        image="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80"
+        imageAlt="People at a conference table"
+        tag="AI"
+        title="AI for inclusive growth: Leadership lessons from Davos"
+        subtitle="Article"
+        description="What are the practical ways to ensure AI expands opportunity, strengthens resilience and supports a more inclusive, equitable future?"
+        ctaText="Read the article →"
+        accentColor="#6366f1"
+        imageHeight={220}
+        className="w-72"
+      />
+    </div>
+  ),
+  // ─── Bento Grid per-variant demos ───────────────────────────────────────────
+  // These keys exactly match the demoKey in each ComponentVariant in components.ts
+  "bento-grid/features": ({ theme = "dark" }) => (
+    <div className="p-6 w-full">
+      <BentoGrid theme={theme}>
+        <BentoCard
+          theme={theme}
+          icon={<Sparkles className="w-5 h-5" />}
+          title="Beautiful animations"
+          description="Every interaction is crafted with spring-physics Motion.dev animations for a premium feel."
+          cta="Explore components"
+          className="col-span-2"
+          spinBorder
+          spinBorderColors={["#E2CBFF", "#393BB2"]}
+        />
+        <BentoCard
+          theme={theme}
+          icon={<Zap className="w-5 h-5" />}
+          title="Lightning fast"
+          description="Copy-paste components with zero runtime overhead."
+          spinBorder
+          spinBorderColors={["#a3e635", "#065f46"]}
+        />
+        <BentoCard
+          theme={theme}
+          icon={<Shield className="w-5 h-5" />}
+          title="Type-safe props"
+          description="Fully typed with TypeScript for confidence at scale."
+          spinBorder
+          spinBorderColors={["#67e8f9", "#1e3a5f"]}
+        />
+        <BentoCard
+          theme={theme}
+          icon={<Globe className="w-5 h-5" />}
+          title="Zero lock-in"
+          description="You own the code. No external runtime dependency."
+          cta="Get started"
+          className="col-span-2"
+          spinBorder
+          spinBorderColors={["#fda4af", "#9f1239"]}
+        />
+      </BentoGrid>
+    </div>
+  ),
+  "bento-grid/showcase": ({ theme = "dark" }) => (
+    <div className="p-6 w-full">
+      <BentoGrid theme={theme}>
+        <BentoCard
+          theme={theme}
+          title="Aurora vibes"
+          description="Layered animated gradients that feel alive."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse" />
+          }
+          cta="View component"
+          className="col-span-2"
+        />
+        <BentoCard
+          theme={theme}
+          title="Magnetic pull"
+          description="Spring-physics cursor attraction."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-700/25 to-orange-600/20" />
+          }
+        />
+        <BentoCard
+          theme={theme}
+          title="Spotlight effect"
+          description="Radial light that follows your mouse."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-sky-700/25 to-indigo-700/20" />
+          }
+        />
+        <BentoCard
+          theme={theme}
+          title="Meteor storm"
+          description="Shooting star particles raining through cards."
+          background={
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20" />
+          }
+          cta="Try it"
+          className="col-span-2"
+        />
+      </BentoGrid>
+    </div>
+  ),
+  "bento-grid/stats": ({ theme = "dark" }) => (
+    <div className="p-6 w-full">
+      <BentoGrid theme={theme} className="auto-rows-[160px]">
+        <BentoCard
+          theme={theme}
+          title="Components"
+          description="Production-ready animated components"
+          background={
+            <div
+              className={cn(
+                "absolute top-4 right-4 text-6xl font-black select-none",
+                theme === "dark" ? "text-white/[0.06]" : "text-neutral-900/10",
+              )}
+            >
+              24
+            </div>
+          }
+          icon={<span className="text-2xl font-black text-violet-400">24</span>}
+        />
+        <BentoCard
+          theme={theme}
+          title="Zero dependencies"
+          description="No UniqueUI runtime in your bundle"
+          background={
+            <div
+              className={cn(
+                "absolute top-4 right-4 text-6xl font-black select-none",
+                theme === "dark" ? "text-white/[0.06]" : "text-neutral-900/10",
+              )}
+            >
+              0
+            </div>
+          }
+          icon={<span className="text-2xl font-black text-emerald-400">0</span>}
+        />
+        <BentoCard
+          theme={theme}
+          title="Install time"
+          description="Seconds from CLI to working component"
+          icon={<span className="text-2xl font-black text-sky-400">~3s</span>}
+        />
+        <BentoCard
+          theme={theme}
+          title="MIT License"
+          description="Open source forever. Fork it, extend it, ship it."
+          cta="View on GitHub"
+          className="col-span-2"
+        />
+        <BentoCard
+          theme={theme}
+          title="Tailwind compatible"
+          description="v3 and v4 supported"
+          icon={<span className="text-2xl font-black text-cyan-400">✓</span>}
+        />
+      </BentoGrid>
+    </div>
+  ),
+  "bento-grid/team": ({ theme = "dark" }) => (
+    <div className="p-6 w-full">
+      <BentoGrid theme={theme} className="auto-rows-[180px]">
+        {[
+          {
+            name: "Alex Kim",
+            role: "Lead Engineer",
+            tag: "Motion",
+            color: "#a855f7",
+          },
+          {
+            name: "Sara Chen",
+            role: "Design Systems",
+            tag: "Tailwind",
+            color: "#6366f1",
+          },
+          {
+            name: "Jordan Lee",
+            role: "DX Engineer",
+            tag: "CLI",
+            color: "#ec4899",
+          },
+          {
+            name: "Maya Patel",
+            role: "Animations Lead",
+            tag: "Motion.dev",
+            color: "#10b981",
+          },
+          {
+            name: "Ryan Wu",
+            role: "Accessibility",
+            tag: "ARIA",
+            color: "#f59e0b",
+          },
+          {
+            name: "Priya Shah",
+            role: "TypeScript Infra",
+            tag: "TS 5.x",
+            color: "#3b82f6",
+          },
+        ].map((m) => (
+          <BentoCard
+            key={m.name}
+            theme={theme}
+            title={m.name}
+            description={m.role}
+            cta={m.tag}
+            background={
+              <div
+                className="absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-10"
+                style={{ backgroundColor: m.color }}
+              />
+            }
+            icon={
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                style={{
+                  backgroundColor: m.color + "33",
+                  border: `1.5px solid ${m.color}66`,
+                }}
+              >
+                {m.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+              </div>
+            }
+          />
+        ))}
+      </BentoGrid>
+    </div>
+  ),
+  "particle-field/single": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark"
+          ? "border-neutral-800 bg-neutral-950"
+          : "border-neutral-200 bg-neutral-800",
+      )}
+    >
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent text-center",
+            theme === "dark"
+              ? "bg-gradient-to-b from-white to-neutral-500"
+              : "bg-gradient-to-b from-neutral-100 to-neutral-400",
+          )}
+        >
+          Interactive
+          <br />
+          Particle Field
+        </h3>
+      </div>
+      <ParticleField
+        particleCount={120}
+        particleColor="#a855f7"
+        speed={0.5}
+      />
+    </div>
+  ),
+  "particle-field/multi": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark"
+          ? "border-neutral-800 bg-neutral-950"
+          : "border-neutral-200 bg-neutral-800",
+      )}
+    >
+      <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent text-center",
+            theme === "dark"
+              ? "bg-gradient-to-b from-white to-neutral-500"
+              : "bg-gradient-to-b from-neutral-100 to-neutral-400",
+          )}
+        >
+          Interactive
+          <br />
+          Particle Field
+        </h3>
+      </div>
+      <ParticleField
+        particleCount={120}
+        particleColor={["#a855f7", "#06b6d4", "#f472b6"]}
+        speed={0.5}
+      />
+    </div>
+  ),
+  "horizontal-scroll-gallery": ({ theme = "dark" }) => (
+    <HorizontalScrollGallery
+      theme={theme}
+      items={[
+        <Image
+          key="1"
+          src="https://images.unsplash.com/photo-1681935396624-006f4acdc530?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Landscape 1"
+          width={1200}
+          height={900}
+          className="object-cover w-full h-full"
+          unoptimized
+        />,
+        <Image
+          key="2"
+          src="https://images.unsplash.com/photo-1775059956734-78ffd2075cec?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Landscape 2"
+          width={1200}
+          height={900}
+          className="object-cover w-full h-full"
+          unoptimized
+        />,
+        <Image
+          key="3"
+          src="https://images.unsplash.com/photo-1722152246589-23370458081f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Landscape 3"
+          width={1200}
+          height={900}
+          className="object-cover w-full h-full"
+          unoptimized
+        />,
+        <div
+          key="4"
+          className={cn(
+            "w-full h-full flex items-center justify-center p-8 text-center",
+            theme === "dark"
+              ? "bg-neutral-900 text-white"
+              : "bg-neutral-200 text-neutral-900",
+          )}
+        >
+          <h3 className="text-4xl font-bold">End of Gallery</h3>
+        </div>,
+      ]}
+    />
+  ),
+  "radial-menu": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <RadialMenu
+        theme={theme}
+        radius={110}
+        startAngle={-180}
+        endAngle={0}
+        staggerDelay={0.06}
+        items={[
+          { id: "1", label: "Settings", icon: <Layers className="w-5 h-5" /> },
+          { id: "2", label: "Search", icon: <Ghost className="w-5 h-5" /> },
+          { id: "3", label: "Apps", icon: <Terminal className="w-5 h-5" /> },
+          { id: "4", label: "Docs", icon: <ScrollText className="w-5 h-5" /> },
+          { id: "5", label: "Theme", icon: <Sparkles className="w-5 h-5" /> },
+        ]}
+      />
+    </div>
+  ),
+  "cursor-trail": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "h-[400px] w-full flex items-center justify-center p-12 rounded-xl overflow-hidden shadow-inner border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <div className="text-center relative z-10 pointer-events-none">
+        <h3
+          className={cn(
+            "text-3xl font-bold bg-clip-text text-transparent mb-4",
+            theme === "dark"
+              ? "bg-gradient-to-br from-white to-neutral-500"
+              : "bg-gradient-to-br from-neutral-900 to-neutral-600",
+          )}
+        >
+          Interactive Cursor Trail
+        </h3>
+        <p
+          className={theme === "dark" ? "text-neutral-400" : "text-neutral-600"}
+        >
+          Move your mouse inside this block to see the effect.
+        </p>
+      </div>
+      <CursorTrail
+        theme={theme}
+        color="#a855f7"
+        trailLength={30}
+        size={15}
+        decayDuration={0.8}
+      />
+    </div>
+  ),
+  "interactive-cursor": ({ theme = "dark" }) => <InteractiveCursorDemo theme={theme} />,
+  "pen-cursor": ({ theme = "dark" }) => <PenCursorDemo theme={theme} />,
+  "glow-hero-section/default": ({ theme = "dark" }) => (
+    <GlowHeroSection theme={theme} height="h-[520px]" />
+  ),
+  "glow-hero-section/dark": ({ theme = "dark" }) => (
+    <GlowHeroSection
+      theme={theme}
+      height="h-[520px]"
+      backgroundColor="#0a0a0f"
+      meshColorStart="rgba(139, 92, 246, 0.5)"
+      meshColorEnd="rgba(6, 182, 212, 0.5)"
+      badge="Next-Gen · Web · Components"
+      heading="UniqueUI"
+      description="Premium animated React components, copy-paste ready."
+      gridSize={40}
+      mouseRadius={200}
+    />
+  ),
+  "glow-hero-section/no-badge": ({ theme = "dark" }) => (
+    <GlowHeroSection
+      theme={theme}
+      height="h-[520px]"
+      badge={null}
+      heading="Build Interfaces That Stand Out"
+      description="Drop-in animated components powered by Motion.dev and Tailwind CSS."
+    />
+  ),
+  "limelight-nav/default": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <LimelightNav
+        theme={theme}
+        limelightColor="#a855f7"
+        items={[
+          { id: "1", icon: <HomeIcon />, label: "Home" },
+          { id: "2", icon: <Compass />, label: "Explore" },
+          { id: "3", icon: <Bell />, label: "Notifications" },
+        ]}
+      />
+    </div>
+  ),
+  "limelight-nav/custom": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <LimelightNav
+        theme={theme}
+        limelightColor="#06b6d4"
+        className={theme === "dark" ? "bg-neutral-900/50" : "bg-white/60"}
+        items={[
+          { id: "1", icon: <HomeIcon />, label: "Home" },
+          { id: "2", icon: <Bookmark />, label: "Bookmarks" },
+          { id: "3", icon: <PlusCircle />, label: "Add" },
+          { id: "4", icon: <User />, label: "Profile" },
+          { id: "5", icon: <Settings />, label: "Settings" },
+        ]}
+      />
+    </div>
+  ),
+  "morphing-card-stack/default": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex items-center justify-center p-12 min-h-[500px] w-full rounded-xl border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <MorphingCardStack
+        theme={theme}
+        cards={[
+          {
+            id: "1",
+            title: "Magnetic Dock",
+            description:
+              "Cursor-responsive scaling with smooth spring animations",
+            icon: <Layers className="h-5 w-5" />,
+          },
+          {
+            id: "2",
+            title: "Gradient Mesh",
+            description:
+              "Dynamic animated gradient backgrounds that follow your cursor",
+            icon: <Palette className="h-5 w-5" />,
+          },
+          {
+            id: "3",
+            title: "Pulse Timeline",
+            description: "Interactive timeline with animated pulse nodes",
+            icon: <Clock className="h-5 w-5" />,
+          },
+          {
+            id: "4",
+            title: "Command Palette",
+            description: "Radial command menu with keyboard navigation",
+            icon: <Sparkles className="h-5 w-5" />,
+          },
+        ]}
+      />
+    </div>
+  ),
+  "multi-step-auth-card": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex items-center justify-center p-10 min-h-[420px] w-full rounded-xl border",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-100 border-neutral-200",
+      )}
+    >
+      <MultiStepAuthCard />
+    </div>
+  ),
+  "data-table/default": ({ theme = "dark" }) => {
+    const columns = [
+      { key: "name", label: "Name" },
+      { key: "role", label: "Role" },
+      { key: "email", label: "Email" },
+      { key: "department", label: "Department" },
+      { key: "status", label: "Status" },
+      { key: "joined", label: "Joined" },
+    ];
+    const data = [
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        email: "alex@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2023-01",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        email: "sara@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2023-03",
+      },
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        email: "jordan@example.com",
+        department: "Growth",
+        status: "Away",
+        joined: "2023-06",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        email: "maya@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-01",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        email: "ryan@example.com",
+        department: "Product",
+        status: "Away",
+        joined: "2024-02",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        email: "priya@example.com",
+        department: "Growth",
+        status: "Active",
+        joined: "2024-04",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        email: "sam@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-05",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        email: "jess@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2024-06",
+      },
+    ];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          columns={columns}
+          data={data}
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
+      </div>
+    );
+  },
+  "data-table/freeze-left": ({ theme = "dark" }) => {
+    const columns = [
+      { key: "id", label: "ID" },
+      { key: "name", label: "Name" },
+      { key: "email", label: "Email" },
+      { key: "role", label: "Role" },
+      { key: "department", label: "Department" },
+      { key: "region", label: "Region" },
+      { key: "joined", label: "Joined" },
+      { key: "status", label: "Status" },
+      { key: "actions", label: "Actions" },
+    ];
+    const data = [
+      {
+        id: "1",
+        name: "Alex Kim",
+        email: "alex@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2023-01",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "2",
+        name: "Sara Chen",
+        email: "sara@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2023-03",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "3",
+        name: "Jordan Lee",
+        email: "jordan@example.com",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2023-06",
+        status: "Away",
+        actions: "Edit · View",
+      },
+      {
+        id: "4",
+        name: "Maya Patel",
+        email: "maya@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-01",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "5",
+        name: "Ryan Wu",
+        email: "ryan@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-02",
+        status: "Away",
+        actions: "Edit · View",
+      },
+      {
+        id: "6",
+        name: "Priya Shah",
+        email: "priya@example.com",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2024-04",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "7",
+        name: "Sam Rivera",
+        email: "sam@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-05",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "8",
+        name: "Jess Taylor",
+        email: "jess@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-06",
+        status: "Active",
+        actions: "Edit · View",
+      },
+    ];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="left"
+          freezeLeftCount={2}
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
+      </div>
+    );
+  },
+  "data-table/freeze-right": ({ theme = "dark" }) => {
+    const columns = [
+      { key: "name", label: "Name" },
+      { key: "role", label: "Role" },
+      { key: "department", label: "Department" },
+      { key: "region", label: "Region" },
+      { key: "status", label: "Status" },
+      { key: "email", label: "Email" },
+      { key: "joined", label: "Joined" },
+      { key: "lastActive", label: "Last active" },
+      { key: "actions", label: "Actions" },
+    ];
+    const data = [
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        status: "Active",
+        email: "alex@example.com",
+        joined: "2023-01",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        status: "Active",
+        email: "sara@example.com",
+        joined: "2023-03",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        status: "Away",
+        email: "jordan@example.com",
+        joined: "2023-06",
+        lastActive: "2024-02",
+        actions: "Edit · View",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        status: "Active",
+        email: "maya@example.com",
+        joined: "2024-01",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        status: "Away",
+        email: "ryan@example.com",
+        joined: "2024-02",
+        lastActive: "2024-01",
+        actions: "Edit · View",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        status: "Active",
+        email: "priya@example.com",
+        joined: "2024-04",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        status: "Active",
+        email: "sam@example.com",
+        joined: "2024-05",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        status: "Active",
+        email: "jess@example.com",
+        joined: "2024-06",
+        lastActive: "2024-03",
+        actions: "Edit · View",
+      },
+    ];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="right"
+          freezeRightCount={1}
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
+      </div>
+    );
+  },
+  "data-table/freeze-both": ({ theme = "dark" }) => {
+    const columns = [
+      { key: "id", label: "ID" },
+      { key: "name", label: "Name" },
+      { key: "email", label: "Email" },
+      { key: "role", label: "Role" },
+      { key: "department", label: "Department" },
+      { key: "region", label: "Region" },
+      { key: "joined", label: "Joined" },
+      { key: "status", label: "Status" },
+      { key: "actions", label: "Actions" },
+    ];
+    const data = [
+      {
+        id: "1",
+        name: "Alex Kim",
+        email: "alex@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2023-01",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "2",
+        name: "Sara Chen",
+        email: "sara@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2023-03",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "3",
+        name: "Jordan Lee",
+        email: "jordan@example.com",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2023-06",
+        status: "Away",
+        actions: "Edit · View",
+      },
+      {
+        id: "4",
+        name: "Maya Patel",
+        email: "maya@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-01",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "5",
+        name: "Ryan Wu",
+        email: "ryan@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-02",
+        status: "Away",
+        actions: "Edit · View",
+      },
+      {
+        id: "6",
+        name: "Priya Shah",
+        email: "priya@example.com",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2024-04",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "7",
+        name: "Sam Rivera",
+        email: "sam@example.com",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-05",
+        status: "Active",
+        actions: "Edit · View",
+      },
+      {
+        id: "8",
+        name: "Jess Taylor",
+        email: "jess@example.com",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-06",
+        status: "Active",
+        actions: "Edit · View",
+      },
+    ];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="both"
+          freezeLeftCount={2}
+          freezeRightCount={1}
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
+      </div>
+    );
+  },
+  "data-table/bordered": ({ theme = "dark" }) => {
+    const columns = [
+      { key: "name", label: "Name" },
+      { key: "role", label: "Role" },
+      { key: "email", label: "Email" },
+      { key: "department", label: "Department" },
+      { key: "status", label: "Status" },
+      { key: "joined", label: "Joined" },
+    ];
+    const data = [
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        email: "alex@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2023-01",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        email: "sara@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2023-03",
+      },
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        email: "jordan@example.com",
+        department: "Growth",
+        status: "Away",
+        joined: "2023-06",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        email: "maya@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-01",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        email: "ryan@example.com",
+        department: "Product",
+        status: "Away",
+        joined: "2024-02",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        email: "priya@example.com",
+        department: "Growth",
+        status: "Active",
+        joined: "2024-04",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        email: "sam@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-05",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        email: "jess@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2024-06",
+      },
+    ];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          columns={columns}
+          data={data}
+          border
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
+      </div>
+    );
+  },
+  "data-table/sortable": ({ theme = "dark" }) => {
+    const columns = [
+      { key: "name", label: "Name", sortKey: "name" },
+      { key: "role", label: "Role", sortKey: "role" },
+      { key: "department", label: "Department", sortKey: "department" },
+      { key: "joined", label: "Joined", sortKey: "joined" },
+      { key: "status", label: "Status", sortKey: "status" },
+    ];
+    const data = [
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        department: "Growth",
+        joined: "2024-03",
+        status: "Away",
+      },
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        department: "Platform",
+        joined: "2024-01",
+        status: "Active",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        department: "Product",
+        joined: "2024-02",
+        status: "Active",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        department: "Platform",
+        joined: "2023-11",
+        status: "Active",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        department: "Product",
+        joined: "2024-05",
+        status: "Away",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        department: "Growth",
+        joined: "2023-08",
+        status: "Active",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        department: "Platform",
+        joined: "2024-06",
+        status: "Active",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        department: "Product",
+        joined: "2023-09",
+        status: "Active",
+      },
+    ];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          columns={columns}
+          data={data}
+          sortable
+          paginated
+          pageSize={5}
+          theme={theme}
+        />
+      </div>
+    );
+  },
+  "data-table/custom-colors": ({ theme = "dark" }) => {
+    const columns = [
+      { key: "name", label: "Name" },
+      { key: "role", label: "Role" },
+      { key: "email", label: "Email" },
+      { key: "department", label: "Department" },
+      { key: "status", label: "Status" },
+      { key: "joined", label: "Joined" },
+    ];
+    const data = [
+      {
+        name: "Alex Kim",
+        role: "Engineer",
+        email: "alex@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2023-01",
+      },
+      {
+        name: "Sara Chen",
+        role: "Designer",
+        email: "sara@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2023-03",
+      },
+      {
+        name: "Jordan Lee",
+        role: "PM",
+        email: "jordan@example.com",
+        department: "Growth",
+        status: "Away",
+        joined: "2023-06",
+      },
+      {
+        name: "Maya Patel",
+        role: "Engineer",
+        email: "maya@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-01",
+      },
+      {
+        name: "Ryan Wu",
+        role: "Designer",
+        email: "ryan@example.com",
+        department: "Product",
+        status: "Away",
+        joined: "2024-02",
+      },
+      {
+        name: "Priya Shah",
+        role: "PM",
+        email: "priya@example.com",
+        department: "Growth",
+        status: "Active",
+        joined: "2024-04",
+      },
+      {
+        name: "Sam Rivera",
+        role: "Engineer",
+        email: "sam@example.com",
+        department: "Platform",
+        status: "Active",
+        joined: "2024-05",
+      },
+      {
+        name: "Jess Taylor",
+        role: "Designer",
+        email: "jess@example.com",
+        department: "Product",
+        status: "Active",
+        joined: "2024-06",
+      },
+    ];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          columns={columns}
+          data={data}
+          headerTextColor="text-purple-900"
+          bodyTextColor="text-neutral-800"
+          headerBackground="bg-purple-100"
+          bodyBackground="bg-purple-50/50"
+          paginated
+          pageSize={5}
+          border
+          theme={theme}
+        />
+      </div>
+    );
+  },
+  "data-table/full": ({ theme = "dark" }) => {
+    const columns = [
+      { key: "id", label: "ID" },
+      { key: "name", label: "Name", sortKey: "name" },
+      { key: "role", label: "Role", sortKey: "role" },
+      { key: "department", label: "Dept" },
+      { key: "region", label: "Region" },
+      { key: "joined", label: "Joined" },
+      { key: "actions", label: "Actions" },
+    ];
+    const data = [
+      {
+        id: "1",
+        name: "Jordan Lee",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2023-06",
+        actions: "Edit",
+      },
+      {
+        id: "2",
+        name: "Alex Kim",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2023-01",
+        actions: "Edit",
+      },
+      {
+        id: "3",
+        name: "Sara Chen",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2023-03",
+        actions: "Edit",
+      },
+      {
+        id: "4",
+        name: "Maya Patel",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-01",
+        actions: "Edit",
+      },
+      {
+        id: "5",
+        name: "Ryan Wu",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-02",
+        actions: "Edit",
+      },
+      {
+        id: "6",
+        name: "Priya Shah",
+        role: "PM",
+        department: "Growth",
+        region: "Central",
+        joined: "2024-04",
+        actions: "Edit",
+      },
+      {
+        id: "7",
+        name: "Sam Rivera",
+        role: "Engineer",
+        department: "Platform",
+        region: "West",
+        joined: "2024-05",
+        actions: "Edit",
+      },
+      {
+        id: "8",
+        name: "Jess Taylor",
+        role: "Designer",
+        department: "Product",
+        region: "East",
+        joined: "2024-06",
+        actions: "Edit",
+      },
+    ];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          columns={columns}
+          data={data}
+          freezeColumns="left"
+          freezeLeftCount={1}
+          headerTextColor="text-neutral-100"
+          bodyTextColor="text-neutral-300"
+          headerBackground="bg-neutral-800"
+          bodyBackground="bg-neutral-950"
+          border
+          sortable
+          paginated
+          pageSize={5}
+          pageSizeOptions={[5, 10, 20]}
+          onPageChange={(page, pageSize) =>
+            console.log("page changed", page, "pageSize", pageSize)
+          }
+          theme={theme}
+        />
+      </div>
+    );
+  },
+
+  // ─── Phase 4 — Hero & Text Effects ───────────────────────────────────────
+
+  "shiny-text": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-8 p-10 text-center",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <ShinyText
+        text="The future of UI is here."
+        speed={3}
+        shimmerWidth={40}
+        theme={theme}
+        className="text-4xl font-black tracking-tight"
+      />
+      <ShinyText
+        text="Ship faster. Look better."
+        speed={4}
+        shimmerWidth={50}
+        theme={theme}
+        className="text-2xl font-semibold"
+      />
+      <ShinyText
+        text="Designed for builders who care."
+        speed={5}
+        shimmerWidth={35}
+        theme={theme}
+        className="text-lg font-medium"
+      />
+    </div>
+  ),
+
+  "blur-reveal": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-8 p-10 text-center",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <BlurReveal
+        text="Build stunning interfaces."
+        animateBy="characters"
+        delay={0}
+        theme={theme}
+        className="text-3xl font-black tracking-tight"
+      />
+      <BlurReveal
+        text="Animated components that make users stop and stare."
+        animateBy="words"
+        delay={0.2}
+        theme={theme}
+        className={cn(
+          "text-base max-w-sm leading-relaxed",
+          theme === "dark" ? "text-neutral-400" : "text-neutral-600",
+        )}
+      />
+    </div>
+  ),
+
+  "count-up": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-center gap-12 p-10",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      {[
+        { to: 12400, suffix: "+", label: "GitHub Stars", prefix: "" },
+        { to: 99.9, suffix: "%", label: "Uptime SLA", prefix: "", decimals: 1 },
+        { to: 68, suffix: " components", label: "Ready to use", prefix: "" },
+        { to: 4200, suffix: "+", label: "Developers", prefix: "" },
+      ].map(({ to, suffix, label, prefix, decimals }) => (
+        <div key={label} className="text-center space-y-1">
+          <p
+            className={cn(
+              "text-4xl font-black",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            <CountUp
+              to={to}
+              suffix={suffix}
+              prefix={prefix}
+              decimals={decimals ?? 0}
+              duration={2.2}
+              theme={theme}
+            />
+          </p>
+          <p
+            className={cn(
+              "text-sm",
+              theme === "dark" ? "text-neutral-500" : "text-neutral-500",
+            )}
+          >
+            {label}
+          </p>
+        </div>
+      ))}
+    </div>
+  ),
+
+  "border-beam": ({ theme = "dark" }) => (
+    <div className="flex flex-wrap items-center justify-center gap-6 p-10">
+      <BorderBeam
+        colorFrom="#a855f7"
+        colorTo="#ec4899"
+        duration={5}
+        size={180}
+        theme={theme}
+        className="w-64"
+      >
+        <div
+          className={cn(
+            "p-6 rounded-[10px]",
+            theme === "dark" ? "bg-neutral-950" : "bg-white",
+          )}
+        >
+          <div className="w-8 h-8 rounded-lg bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mb-3">
+            <Sparkles className="w-4 h-4 text-purple-400" />
+          </div>
+          <h3
+            className={cn(
+              "text-sm font-semibold mb-1",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Animated border
+          </h3>
+          <p
+            className={cn(
+              "text-xs",
+              theme === "dark" ? "text-neutral-500" : "text-neutral-500",
+            )}
+          >
+            A comet orbits continuously.
+          </p>
+        </div>
+      </BorderBeam>
+
+      <BorderBeam
+        colorFrom="#06b6d4"
+        colorTo="#3b82f6"
+        duration={7}
+        size={150}
+        theme={theme}
+        className="w-64"
+      >
+        <div
+          className={cn(
+            "p-6 rounded-[10px]",
+            theme === "dark" ? "bg-neutral-950" : "bg-white",
+          )}
+        >
+          <div className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mb-3">
+            <Zap className="w-4 h-4 text-cyan-400" />
+          </div>
+          <h3
+            className={cn(
+              "text-sm font-semibold mb-1",
+              theme === "dark" ? "text-white" : "text-neutral-900",
+            )}
+          >
+            Custom colours
+          </h3>
+          <p
+            className={cn(
+              "text-xs",
+              theme === "dark" ? "text-neutral-500" : "text-neutral-500",
+            )}
+          >
+            Any gradient, any speed.
+          </p>
+        </div>
+      </BorderBeam>
+    </div>
+  ),
+
+  "ripple": ({ theme = "dark" }) => {
+    const isDark = theme === "dark";
+    return (
+      <div
+        className="relative w-full h-[460px] flex items-center justify-center overflow-hidden"
+        style={{ background: isDark ? "#0c0608" : "#fdf8f5" }}
+      >
+        <Ripple
+          mainCircleSize={90}
+          mainCircleOpacity={isDark ? 0.55 : 0.45}
+          numCircles={7}
+          duration={10}
+        />
+
+        {/* Vignette so text stays readable over animated orbs */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: isDark
+              ? "radial-gradient(ellipse 55% 60% at 50% 50%, rgba(12,6,8,0) 0%, rgba(12,6,8,0.72) 60%, rgba(12,6,8,0.96) 100%)"
+              : "radial-gradient(ellipse 55% 60% at 50% 50%, rgba(253,248,245,0) 0%, rgba(253,248,245,0.72) 60%, rgba(253,248,245,0.96) 100%)",
+          }}
+        />
+
+        <div className="relative z-10 flex flex-col items-center gap-4 px-6 text-center max-w-xs">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ type: "spring", stiffness: 60, damping: 20, delay: 0.1 }}
+            className={cn(
+              "text-[10px] uppercase tracking-[0.35em]",
+              isDark ? "text-rose-300/70" : "text-rose-500/70",
+            )}
+          >
+            Maison de Parfum
+          </motion.p>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 80, damping: 22, delay: 0.28 }}
+            className={cn(
+              "text-[3.4rem] leading-[1] font-light",
+              isDark ? "text-white" : "text-stone-900",
+            )}
+            style={{ fontFamily: '"Cormorant Garamond", "Garamond", "Georgia", serif', fontStyle: "italic" }}
+          >
+            Aurore.
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 90, damping: 24, delay: 0.46 }}
+            className={cn(
+              "text-xs leading-relaxed tracking-wide",
+              isDark ? "text-stone-400" : "text-stone-500",
+            )}
+          >
+            A scent composed at the edge of dawn — rose, oud, and liquid amber woven into silence.
+          </motion.p>
+
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 26, delay: 0.62 }}
+            className={cn(
+              "mt-1 px-7 py-2.5 text-xs tracking-[0.18em] uppercase transition-all duration-300",
+              isDark
+                ? "border border-rose-300/30 text-rose-200/80 hover:border-rose-300/70 hover:text-rose-100"
+                : "border border-rose-400/40 text-rose-700/80 hover:border-rose-500/70 hover:text-rose-800",
+            )}
+          >
+            Discover the collection
+          </motion.button>
+        </div>
+      </div>
+    );
+  },
+
+  "word-rotate": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-10 p-10 text-center",
+        theme === "dark" ? "text-white" : "text-neutral-900",
+      )}
+    >
+      <h2
+        className={cn(
+          "text-3xl font-black tracking-tight",
+          theme === "dark" ? "text-white" : "text-neutral-900",
+        )}
+      >
+        Build interfaces that are{" "}
+        <WordRotate
+          words={["faster", "smarter", "bolder", "yours"]}
+          animation="slide-up"
+          interval={2000}
+          theme={theme}
+          className="text-purple-400"
+        />
+      </h2>
+
+      <div className="flex flex-wrap justify-center gap-6 text-sm">
+        {(["slide-up", "slide-down", "flip", "fade"] as const).map((anim) => (
+          <div key={anim} className="text-center space-y-1">
+            <p
+              className={cn(
+                "text-xs font-mono mb-2",
+                theme === "dark" ? "text-neutral-500" : "text-neutral-400",
+              )}
+            >
+              {anim}
+            </p>
+            <WordRotate
+              words={["React", "Motion", "Tailwind"]}
+              animation={anim}
+              interval={1800}
+              theme={theme}
+              className={cn(
+                "text-lg font-semibold",
+                theme === "dark" ? "text-neutral-200" : "text-neutral-800",
+              )}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+};

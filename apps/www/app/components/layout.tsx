@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { componentsList } from "@/config/components";
-import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
 import { SECTION_NAV } from "@/config/navigation";
 import { ArrowLeft, Menu, X } from "lucide-react";
+import { motion } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 
 export default function ComponentsLayout({

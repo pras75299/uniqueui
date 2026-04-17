@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 UniqueUI is a monorepo for an animated React component library built on a copy-paste model (similar to shadcn/ui). Users install components via `npx uniqueui add <component>` rather than importing a package.
 
-**Package manager**: pnpm 8.12.1 with workspaces (`pnpm-workspace.yaml`)
+**Package manager**: pnpm 10.33.0 with workspaces (`pnpm-workspace.yaml`)
 
 **Workspaces**:
 - `apps/www` — Next.js 16 showcase/docs site
@@ -17,7 +17,7 @@ UniqueUI is a monorepo for an animated React component library built on a copy-p
 
 ### Root
 ```bash
-pnpm build:registry       # Regenerate registry.json from registry/ sources
+pnpm build:registry       # Rebuild registry artifacts and sync docs UI from registry/
 pnpm test                 # Run Vitest across all workspaces
 ```
 
@@ -56,11 +56,13 @@ pnpm test -- packages/cli/src/commands/add.test.ts
 ### Component Data Flow
 
 ```
-registry/{component}.tsx          ← source of truth for component code
+registry/{component}/component.tsx ← source of truth for component code
        ↓  (pnpm build:registry)
 registry/config.ts                ← declares name, npm deps, tailwindConfig per component
        ↓
-registry.json                     ← auto-generated; embeds full source + cn util inline
+registry.json                     ← auto-generated root manifest
+apps/www/public/registry/*.json   ← auto-generated split docs registry artifacts
+apps/www/components/ui/*.tsx      ← auto-synced docs UI copies
        ↓  (CLI: uniqueui add)
 user's project/components/ui/     ← files written to the end-user's codebase
 ```
@@ -88,15 +90,13 @@ Three config files drive the entire docs site:
 
 ### Adding a New Component
 
-1. Create `registry/{component-name}.tsx`
+1. Create `registry/{component-name}/component.tsx`
 2. Add entry to `registry/config.ts` (name, dependencies, files array, optional `tailwindConfig` for custom keyframes)
-3. Run `pnpm build:registry` from root
-4. Copy to `apps/www/components/ui/{component-name}.tsx`
-5. Add to `apps/www/config/components.ts` (`componentsList`)
-6. Add demo to `apps/www/config/demos.tsx` (`componentDemos`)
-7. Optionally add docs scenarios to `apps/www/config/docs-scenarios.ts`
+3. Add docs metadata to `registry/docs.json`
+4. Add demo to `apps/www/config/demos.tsx` (`componentDemos`)
+5. Run `pnpm build:registry` from root to regenerate `registry.json`, refresh `apps/www/public/registry/*`, sync `apps/www/components/ui/{component-name}.tsx`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
 
-When editing an existing component, always sync **both** `registry/{component}.tsx` and `apps/www/components/ui/{component}.tsx`, then rebuild `registry.json`.
+When editing an existing component, update `registry/{component}/component.tsx` and then run `pnpm build:registry` to refresh the generated docs copies and registry artifacts.
 
 ## Component Design Rules
 

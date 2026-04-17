@@ -434,9 +434,10 @@ uniqueui/
 │               └── list.ts     # `uniqueui list` command
 ├── registry/                   # Component source files + config
 │   ├── config.ts               # Registry configuration (dependencies, files)
-│   └── *.tsx                   # 28 component source files
+│   └── moving-border/          # One folder per component slug
+│       └── component.tsx       # Component source file
 ├── scripts/
-│   └── build-registry.ts      # Generates registry.json from config
+│   └── build-registry.ts      # Builds registry artifacts and syncs docs UI copies
 ├── registry.json               # Generated registry manifest
 ├── pnpm-workspace.yaml         # Workspace configuration
 └── package.json                # Root package.json
@@ -457,7 +458,7 @@ Registry (GitHub)
        └── cn.ts                    ← Shared utility
 ```
 
-1. **Registry** — Each component is defined in `registry/config.ts` with its name, dependencies, and file paths. `build-registry.ts` outputs `registry.json` with embedded source code.
+1. **Registry** — Each component is defined in `registry/config.ts` and points at files like `registry/<slug>/component.tsx`. `build-registry.ts` outputs `registry.json`, split docs registry files, and synced docs UI copies.
 2. **CLI** — Fetches `registry.json` from GitHub, finds the component, writes files to your project, and installs missing npm dependencies.
 3. **Showcase** — The `apps/www` Next.js site serves as marketing landing page and component documentation with live previews and install commands.
 
@@ -505,9 +506,10 @@ node --version  # must be v18 or higher
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/my-component`)
 3. Add your component to `registry/` and update `registry/config.ts`
-4. Add it to `apps/www/components/ui/`, `config/components.ts`, and `config/demos.tsx`
-5. Run `pnpm build` to ensure everything compiles
-6. Submit a pull request
+4. Update `registry/docs.json` for docs metadata and `apps/www/config/demos.tsx` for the live demo
+5. Run `pnpm build:registry` to regenerate `registry.json`, refresh `apps/www/public/registry/*`, sync `apps/www/components/ui/*`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
+6. Run `pnpm build` to ensure everything compiles
+7. Submit a pull request
 
 ## Links
 

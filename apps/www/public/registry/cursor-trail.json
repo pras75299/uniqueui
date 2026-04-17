@@ -1,0 +1,20 @@
+{
+  "name": "cursor-trail",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "cursor-trail/component.tsx",
+      "content": "\"use client\";\n\nimport React, { useEffect, useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\nimport { cn } from \"@/lib/utils\";\n\nexport interface CursorTrailProps {\n  /** The color of the trail particles */\n  color?: string;\n  /** How many particles should exist at once (controls length of the trail) */\n  trailLength?: number;\n  /** Scaling factor for the trail size */\n  size?: number;\n  /** How long it takes for a particle to decay */\n  decayDuration?: number;\n  className?: string;\n  theme?: \"light\" | \"dark\";\n}\n\nexport function CursorTrail({\n  color = \"#a855f7\",\n  trailLength = 20,\n  size = 12,\n  decayDuration = 0.5,\n  className,\n  theme: _theme = \"dark\",\n}: CursorTrailProps) {\n  const [positions, setPositions] = useState<{ id: number; x: number; y: number }[]>([]);\n\n  useEffect(() => {\n    let animationFrameId: number | null = null;\n    let particleId = 0;\n    let pendingPosition: { x: number; y: number } | null = null;\n\n    const updatePositions = () => {\n      if (!pendingPosition) {\n        animationFrameId = null;\n        return;\n      }\n\n      const { x, y } = pendingPosition;\n      pendingPosition = null;\n\n      setPositions((prev) => {\n        const newPositions = [\n          ...prev,\n          { id: particleId++, x, y },\n        ];\n\n        if (newPositions.length > trailLength) {\n          return newPositions.slice(-trailLength);\n        }\n\n        return newPositions;\n      });\n\n      // Schedule another frame only if new mouse positions arrive\n      if (pendingPosition) {\n        animationFrameId = window.requestAnimationFrame(updatePositions);\n      } else {\n        animationFrameId = null;\n      }\n    };\n\n    const handleMouseMove = (e: MouseEvent) => {\n      pendingPosition = { x: e.clientX, y: e.clientY };\n\n      if (animationFrameId === null) {\n        animationFrameId = window.requestAnimationFrame(updatePositions);\n      }\n    };\n\n    window.addEventListener(\"mousemove\", handleMouseMove);\n\n    return () => {\n      window.removeEventListener(\"mousemove\", handleMouseMove);\n      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);\n    };\n  }, [trailLength]);\n\n  return (\n    <div\n      className={cn(\"pointer-events-none fixed inset-0 z-[9999] overflow-hidden\", className)}\n    >\n      <AnimatePresence>\n        {positions.map((pos) => (\n          <motion.div\n            key={pos.id}\n            initial={{ opacity: 1, scale: 1 }}\n            animate={{ opacity: 0, scale: 0 }}\n            exit={{ opacity: 0, scale: 0 }}\n            transition={{ duration: decayDuration, ease: \"easeOut\" }}\n            style={{\n              left: pos.x - size / 2,\n              top: pos.y - size / 2,\n              width: size,\n              height: size,\n              background: color,\n              boxShadow: `0 0 ${size * 1.5}px ${color}`,\n            }}\n            className=\"absolute rounded-full\"\n          />\n        ))}\n      </AnimatePresence>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util"
+    }
+  ]
+}

@@ -4,7 +4,6 @@ import fetch from "node-fetch";
 import path from "path";
 import fs from "fs-extra";
 import chalk from "chalk";
-import os from "os";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
 import { spawnSync } from "child_process";
 import { assertSafeNpmDependencies } from "../npm-dependency-name";
@@ -16,6 +15,15 @@ type RegistryItem = {
     files: Array<{ path: string; type: string; content: string }>;
     tailwindConfig?: Record<string, any>;
 };
+
+type RegistryIndex = {
+    components: string[];
+};
+
+type RegistryLookupResult =
+    | { status: "found"; item: RegistryItem }
+    | { status: "missing" }
+    | { status: "unavailable" };
 
 /** Reject malformed registry JSON before any property access (avoids throws from bad remote/local data). */
 function validateRegistryPayload(data: unknown): RegistryItem[] | null {
@@ -69,6 +77,24 @@ function validateRegistryPayload(data: unknown): RegistryItem[] | null {
     return out;
 }
 
+function validateRegistryItemPayload(data: unknown): RegistryItem | null {
+    const validated = validateRegistryPayload([data]);
+    return validated?.[0] ?? null;
+}
+
+function validateRegistryIndexPayload(data: unknown): RegistryIndex | null {
+    if (data === null || typeof data !== "object" || Array.isArray(data)) {
+        return null;
+    }
+
+    const components = (data as Record<string, unknown>).components;
+    if (!Array.isArray(components) || components.some((entry) => typeof entry !== "string" || entry.length === 0)) {
+        return null;
+    }
+
+    return { components };
+}
+
 /** Local file path (./...) or official registry hosts only. */
 function isTrustedRegistryUrl(url: string): boolean {
     if (url.startsWith(".")) return true;
@@ -89,6 +115,7 @@ function isTrustedRegistryUrl(url: string): boolean {
 
 function warnIfUntrustedRegistry(url: string) {
     if (process.env.UNIQUEUI_SKIP_REGISTRY_WARN) return;
+    if (isLocalRegistrySource(url)) return;
     if (isTrustedRegistryUrl(url)) return;
     console.warn(
         chalk.yellow(
@@ -99,50 +126,244 @@ function warnIfUntrustedRegistry(url: string) {
 
 const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
 
-const CACHE_DIR = path.join(os.homedir(), ".uniqueui");
-const CACHE_FILE = path.join(CACHE_DIR, "registry-cache.json");
-const CACHE_TTL = 3600 * 1000; // 1 hour
-
-type CachedRegistry = {
-    sourceUrl: string;
-    data: RegistryItem[];
-};
-
-async function getCachedRegistry(sourceUrl: string): Promise<RegistryItem[] | null> {
+async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
     try {
-        if (!fs.existsSync(CACHE_FILE)) return null;
-        const stat = await fs.stat(CACHE_FILE);
-        if (Date.now() - stat.mtimeMs > CACHE_TTL) return null;
-        const cached = (await fs.readJson(CACHE_FILE)) as CachedRegistry;
-        if (cached?.sourceUrl !== sourceUrl || !Array.isArray(cached?.data)) return null;
-        return cached.data;
-    } catch {
-        return null;
-    }
-}
-
-async function setCachedRegistry(sourceUrl: string, data: RegistryItem[]) {
-    try {
-        await fs.ensureDir(CACHE_DIR);
-        await fs.writeJson(CACHE_FILE, { sourceUrl, data } satisfies CachedRegistry);
-    } catch {
-        // ignore cache write errors
-    }
-}
-
-async function fetchRegistryFromUrl(baseUrl: string): Promise<RegistryItem[] | null> {
-    try {
-        const normalized = baseUrl.replace(/\/+$/, "");
-        const isDirectEndpoint =
-            normalized.endsWith(".json") || normalized.endsWith("/api/registry");
-        const registryUrl = isDirectEndpoint ? normalized : `${normalized}/registry.json`;
-        const res = await fetch(registryUrl);
+        const res = await fetch(url);
         if (!res.ok) return null;
-        return await res.json() as RegistryItem[];
+        return await res.json();
     } catch (error) {
-        console.error(chalk.yellow(`\nWarning: Failed to fetch from ${baseUrl}:`), error);
+        console.error(chalk.yellow(`\nWarning: Failed to fetch from ${url}:`), error);
         return null;
     }
+}
+
+function getSplitRegistryBases(basePath: string): string[] {
+    if (basePath.endsWith("/index.json")) {
+        return [basePath.slice(0, -"/index.json".length)];
+    }
+
+    return basePath.endsWith("/registry") ? [basePath] : [`${basePath}/registry`, basePath];
+}
+
+function getLegacyRegistryBase(basePath: string): string {
+    if (basePath.endsWith("/registry/index.json")) {
+        return basePath.slice(0, -"/registry/index.json".length);
+    }
+
+    if (basePath.endsWith("/index.json")) {
+        return basePath.slice(0, -"/index.json".length);
+    }
+
+    if (basePath.endsWith("/registry")) {
+        return basePath.slice(0, -"/registry".length);
+    }
+
+    return basePath;
+}
+
+function getLegacyRegistryJsonCandidates(basePath: string): string[] {
+    if (basePath.endsWith("/registry/index.json")) {
+        const registryDir = basePath.slice(0, -"/index.json".length);
+        return [path.join(registryDir, "registry.json"), path.join(getLegacyRegistryBase(basePath), "registry.json")];
+    }
+
+    if (basePath.endsWith("/index.json")) {
+        const registryDir = basePath.slice(0, -"/index.json".length);
+        return [path.join(registryDir, "registry.json")];
+    }
+
+    if (basePath.endsWith("/registry")) {
+        return [path.join(basePath, "registry.json"), path.join(getLegacyRegistryBase(basePath), "registry.json")];
+    }
+
+    if (basePath.endsWith(".json")) {
+        return [basePath];
+    }
+
+    return [path.join(basePath, "registry.json")];
+}
+
+function getLegacyApiCandidates(basePath: string): string[] {
+    if (basePath.endsWith("/registry/index.json")) {
+        const registryDir = basePath.slice(0, -"/index.json".length);
+        return [path.join(registryDir, "api/registry"), path.join(getLegacyRegistryBase(basePath), "api/registry")];
+    }
+
+    if (basePath.endsWith("/registry")) {
+        return [path.join(basePath, "api/registry"), path.join(getLegacyRegistryBase(basePath), "api/registry")];
+    }
+
+    return [path.join(getLegacyRegistryBase(basePath), "api/registry")];
+}
+
+function joinUrlPath(baseUrl: string, suffix: string): string {
+    return `${baseUrl.replace(/\/+$/, "")}/${suffix.replace(/^\/+/, "")}`;
+}
+
+function getRemoteLegacyRegistryJsonCandidates(baseUrl: string): string[] {
+    if (baseUrl.endsWith("/registry/index.json")) {
+        const registryDir = baseUrl.slice(0, -"/index.json".length);
+        return [joinUrlPath(registryDir, "registry.json"), joinUrlPath(getLegacyRegistryBase(baseUrl), "registry.json")];
+    }
+
+    if (baseUrl.endsWith("/index.json")) {
+        const registryDir = baseUrl.slice(0, -"/index.json".length);
+        return [joinUrlPath(registryDir, "registry.json")];
+    }
+
+    if (baseUrl.endsWith("/registry")) {
+        return [joinUrlPath(baseUrl, "registry.json"), joinUrlPath(getLegacyRegistryBase(baseUrl), "registry.json")];
+    }
+
+    if (baseUrl.endsWith(".json")) {
+        return [baseUrl];
+    }
+
+    return [joinUrlPath(baseUrl, "registry.json")];
+}
+
+function getRemoteLegacyApiCandidates(baseUrl: string): string[] {
+    if (baseUrl.endsWith("/registry/index.json")) {
+        const registryDir = baseUrl.slice(0, -"/index.json".length);
+        return [joinUrlPath(registryDir, "api/registry"), joinUrlPath(getLegacyRegistryBase(baseUrl), "api/registry")];
+    }
+
+    if (baseUrl.endsWith("/registry")) {
+        return [joinUrlPath(baseUrl, "api/registry"), joinUrlPath(getLegacyRegistryBase(baseUrl), "api/registry")];
+    }
+
+    return [joinUrlPath(getLegacyRegistryBase(baseUrl), "api/registry")];
+}
+
+function isLocalRegistrySource(source: string): boolean {
+    if (source.startsWith(".") || path.isAbsolute(source)) {
+        return true;
+    }
+
+    try {
+        const parsed = new URL(source);
+        return parsed.protocol === "file:";
+    } catch {
+        return true;
+    }
+}
+
+async function readLocalRegistryItem(basePath: string, componentName: string): Promise<RegistryLookupResult> {
+    if (basePath.endsWith(".json") && !basePath.endsWith("/index.json")) {
+        const payload = await fs.readJson(basePath);
+        const directItem = validateRegistryItemPayload(payload);
+        if (directItem) {
+            return directItem.name === componentName ? { status: "found", item: directItem } : { status: "missing" };
+        }
+
+        const legacyRegistry = validateRegistryPayload(payload);
+        if (!legacyRegistry) {
+            return { status: "unavailable" };
+        }
+
+        const item = legacyRegistry.find((entry) => entry.name === componentName);
+        return item ? { status: "found", item } : { status: "missing" };
+    }
+
+    let loadedRegistry = false;
+    for (const candidateBasePath of getSplitRegistryBases(basePath)) {
+        try {
+            const index = validateRegistryIndexPayload(await fs.readJson(path.join(candidateBasePath, "index.json")));
+            if (!index) {
+                continue;
+            }
+
+            loadedRegistry = true;
+            if (!index?.components.includes(componentName)) {
+                continue;
+            }
+
+            const item = validateRegistryItemPayload(
+                await fs.readJson(path.join(candidateBasePath, `${componentName}.json`)),
+            );
+            if (item) {
+                return { status: "found", item };
+            }
+        } catch {
+            // Try the next candidate base path.
+        }
+    }
+
+    for (const legacyRegistryPath of getLegacyRegistryJsonCandidates(basePath)) {
+        try {
+            const legacyRegistry = validateRegistryPayload(await fs.readJson(legacyRegistryPath));
+            if (!legacyRegistry) {
+                continue;
+            }
+
+            loadedRegistry = true;
+            const item = legacyRegistry.find((entry) => entry.name === componentName);
+            return item ? { status: "found", item } : { status: "missing" };
+        } catch {
+            // Try the next candidate legacy path.
+        }
+    }
+
+    return loadedRegistry ? { status: "missing" } : { status: "unavailable" };
+}
+
+async function fetchRemoteRegistryItem(baseUrl: string, componentName: string): Promise<RegistryLookupResult> {
+    const normalized = baseUrl.replace(/\/+$/, "");
+
+    if (normalized.endsWith(".json") && !normalized.endsWith("/index.json")) {
+        const payload = await fetchJsonFromUrl(normalized);
+        const directItem = validateRegistryItemPayload(payload);
+        if (directItem) {
+            return directItem.name === componentName ? { status: "found", item: directItem } : { status: "missing" };
+        }
+
+        const legacyRegistry = validateRegistryPayload(payload);
+        if (!legacyRegistry) {
+            return { status: "unavailable" };
+        }
+
+        const item = legacyRegistry.find((entry) => entry.name === componentName);
+        return item ? { status: "found", item } : { status: "missing" };
+    }
+
+    let loadedRegistry = false;
+    for (const candidateBaseUrl of getSplitRegistryBases(normalized)) {
+        const index = validateRegistryIndexPayload(await fetchJsonFromUrl(`${candidateBaseUrl}/index.json`));
+        if (!index) {
+            continue;
+        }
+
+        loadedRegistry = true;
+
+        if (index?.components.includes(componentName)) {
+            const item = validateRegistryItemPayload(await fetchJsonFromUrl(`${candidateBaseUrl}/${componentName}.json`));
+            if (item) {
+                return { status: "found", item };
+            }
+        }
+    }
+
+    for (const legacyRegistryUrl of [...new Set(getRemoteLegacyRegistryJsonCandidates(normalized))]) {
+        const legacyRegistry = validateRegistryPayload(await fetchJsonFromUrl(legacyRegistryUrl));
+        if (!legacyRegistry) {
+            continue;
+        }
+
+        loadedRegistry = true;
+        const item = legacyRegistry.find((entry) => entry.name === componentName);
+        return item ? { status: "found", item } : { status: "missing" };
+    }
+
+    for (const apiRegistryUrl of [...new Set(getRemoteLegacyApiCandidates(normalized))]) {
+        const apiRegistry = validateRegistryPayload(await fetchJsonFromUrl(apiRegistryUrl));
+        if (apiRegistry) {
+            loadedRegistry = true;
+            const item = apiRegistry.find((entry) => entry.name === componentName);
+            return item ? { status: "found", item } : { status: "missing" };
+        }
+    }
+
+    return loadedRegistry ? { status: "missing" } : { status: "unavailable" };
 }
 
 export async function add(componentName: string, options: { url: string }) {
@@ -159,73 +380,36 @@ export async function add(componentName: string, options: { url: string }) {
     }
 
     // 2. Fetch registry
-    let registry: RegistryItem[];
+    let lookupResult: RegistryLookupResult = { status: "unavailable" };
+    let sourceLabel = options.url;
 
     try {
-        let raw: unknown;
-        let shouldWriteCache = false;
-
-        // For local testing, if url is a file path, read it
-        if (options.url.startsWith(".")) {
-            raw = await fs.readJson(options.url);
+        if (isLocalRegistrySource(options.url)) {
+            lookupResult = await readLocalRegistryItem(options.url, componentName);
         } else {
-            // Try cache first
-            const cached = await getCachedRegistry(options.url);
-            if (cached) {
-                console.log(chalk.gray("Using cached component registry"));
-                raw = cached;
-            } else {
-                // Try primary URL first
-                let result = await fetchRegistryFromUrl(options.url);
-
-                // Try /api/registry endpoint as alternative
-                if (!result) {
-                    console.log(chalk.yellow(`Could not fetch from ${options.url}/registry.json, trying API endpoint...`));
-                    result = await fetchRegistryFromUrl(`${options.url}/api/registry`);
-                }
-
-                // Try fallback GitHub raw URL
-                if (!result && options.url !== FALLBACK_URL) {
-                    console.log(chalk.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
-                    result = await fetchRegistryFromUrl(FALLBACK_URL);
-                }
-
-                if (!result) {
-                    throw new Error(
-                        `Failed to fetch registry from ${options.url}.\n` +
-                        `  Make sure the registry URL is accessible.\n` +
-                        `  You can specify a custom URL with: uniqueui add <component> --url <url>`
-                    );
-                }
-                raw = result;
-                shouldWriteCache = true;
+            lookupResult = await fetchRemoteRegistryItem(options.url, componentName);
+            if (lookupResult.status !== "found" && options.url !== FALLBACK_URL) {
+                console.log(chalk.yellow(`Trying fallback URL: ${FALLBACK_URL}...`));
+                lookupResult = await fetchRemoteRegistryItem(FALLBACK_URL, componentName);
+                sourceLabel = FALLBACK_URL;
             }
         }
-
-        const validated = validateRegistryPayload(raw);
-        if (validated === null) {
-            console.error(
-                chalk.red(
-                    "Invalid registry.json: expected an array of components. Each item needs a non-empty string name, " +
-                        "a files array of { path, type, content }, and optional dependencies as an array of strings.",
-                ),
-            );
-            process.exit(1);
-        }
-        registry = validated;
-        if (shouldWriteCache) {
-            await setCachedRegistry(options.url, registry);
-        }
     } catch (e) {
-        console.error(chalk.red("Could not fetch registry.json"), e);
+        console.error(chalk.red("Could not fetch registry data"), e);
         process.exit(1);
     }
 
-    const item = registry.find((c) => c.name === componentName);
-    if (!item) {
-        console.error(chalk.red(`Component ${componentName} not found.`));
+    if (lookupResult.status === "unavailable") {
+        console.error(chalk.red(`Could not fetch registry data from ${sourceLabel}.`));
         process.exit(1);
     }
+
+    if (lookupResult.status === "missing") {
+        console.error(chalk.red(`Component ${componentName} not found in registry source ${sourceLabel}.`));
+        process.exit(1);
+    }
+
+    const item = lookupResult.item;
 
     // 3. Install dependencies (validated names + no shell — avoids injection from a malicious registry)
     if (item.dependencies.length) {
@@ -268,7 +452,11 @@ export async function add(componentName: string, options: { url: string }) {
         if (file.type === "registry:ui") {
             const targetDir = path.resolve(config.paths.components || "components/ui");
             await fs.ensureDir(targetDir);
-            const fileName = path.basename(file.path);
+            const sourceFileName = path.basename(file.path);
+            const fileName =
+                sourceFileName.startsWith("component.")
+                    ? `${item.name}${path.extname(sourceFileName)}`
+                    : sourceFileName;
             if (!allowedRegistryFile(fileName)) {
                 console.error(chalk.red(`Refusing to write disallowed file name from registry: ${fileName}`));
                 process.exit(1);
@@ -295,7 +483,7 @@ export async function add(componentName: string, options: { url: string }) {
     }
 }
 
-async function updateTailwindConfig(configPath: string, newConfig: any) {
+export async function updateTailwindConfig(configPath: string, newConfig: any) {
     // Check for config file existence and handle fallback
     let finalConfigPath = configPath;
     if (!fs.existsSync(finalConfigPath)) {
@@ -378,6 +566,13 @@ async function updateTailwindConfig(configPath: string, newConfig: any) {
         return init?.asKind(SyntaxKind.ObjectLiteralExpression);
     };
 
+    const hasProperty = (objectLiteralExpression: any, name: string) =>
+        objectLiteralExpression
+            .getProperties()
+            .some((property: any) =>
+                property.asKind(SyntaxKind.PropertyAssignment)?.getNameNode().getText().replace(/^["']|["']$/g, "") === name,
+            );
+
     if (newConfig.theme?.extend) {
         const themeObj = getOrCreateObjectProperty(objectLiteral, "theme");
         if (themeObj) {
@@ -389,7 +584,7 @@ async function updateTailwindConfig(configPath: string, newConfig: any) {
                     const animObj = getOrCreateObjectProperty(extendObj, "animation");
                     if (animObj) {
                         for (const [key, value] of Object.entries(animations)) {
-                            if (!animObj.getProperty(key)) {
+                            if (!hasProperty(animObj, key)) {
                                 animObj.addPropertyAssignment({ name: `"${key}"`, initializer: `"${value}"` });
                             }
                         }
@@ -402,7 +597,7 @@ async function updateTailwindConfig(configPath: string, newConfig: any) {
                     const keyframesObj = getOrCreateObjectProperty(extendObj, "keyframes");
                     if (keyframesObj) {
                         for (const [key, value] of Object.entries(keyframes)) {
-                            if (!keyframesObj.getProperty(key)) {
+                            if (!hasProperty(keyframesObj, key)) {
                                 // value is an object, strictly JSON stringify might be valid JS valid object literal needed?
                                 // "JSON.stringify(value)" produces valid JSON which is valid JS object literal initializer if keys are quoted.
                                 keyframesObj.addPropertyAssignment({ name: `"${key}"`, initializer: JSON.stringify(value) });

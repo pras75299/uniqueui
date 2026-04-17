@@ -18,7 +18,7 @@ export const registry: Registry = [
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
             {
-                path: "moving-border.tsx",
+                path: "moving-border/component.tsx",
                 type: "registry:ui",
             },
             cnUtilFile,
@@ -44,7 +44,7 @@ export const registry: Registry = [
         name: "typewriter-text",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "typewriter-text.tsx", type: "registry:ui" },
+            { path: "typewriter-text/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -52,7 +52,7 @@ export const registry: Registry = [
         name: "3d-tilt-card",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "3d-tilt-card.tsx", type: "registry:ui" },
+            { path: "3d-tilt-card/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -60,7 +60,7 @@ export const registry: Registry = [
         name: "spotlight-card",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "spotlight-card.tsx", type: "registry:ui" },
+            { path: "spotlight-card/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -68,7 +68,7 @@ export const registry: Registry = [
         name: "aurora-background",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "aurora-background.tsx", type: "registry:ui" },
+            { path: "aurora-background/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -76,7 +76,7 @@ export const registry: Registry = [
         name: "animated-tabs",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "animated-tabs.tsx", type: "registry:ui" },
+            { path: "animated-tabs/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -84,7 +84,7 @@ export const registry: Registry = [
         name: "magnetic-button",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "magnetic-button.tsx", type: "registry:ui" },
+            { path: "magnetic-button/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -92,7 +92,7 @@ export const registry: Registry = [
         name: "infinite-marquee",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "infinite-marquee.tsx", type: "registry:ui" },
+            { path: "infinite-marquee/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -100,7 +100,7 @@ export const registry: Registry = [
         name: "scroll-reveal",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "scroll-reveal.tsx", type: "registry:ui" },
+            { path: "scroll-reveal/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -108,7 +108,7 @@ export const registry: Registry = [
         name: "skeleton-shimmer",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "skeleton-shimmer.tsx", type: "registry:ui" },
+            { path: "skeleton-shimmer/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -116,7 +116,7 @@ export const registry: Registry = [
         name: "morphing-modal",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "morphing-modal.tsx", type: "registry:ui" },
+            { path: "morphing-modal/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -125,7 +125,7 @@ export const registry: Registry = [
         name: "animated-glowing-text-outline",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "animated-glowing-text-outline.tsx", type: "registry:ui" },
+            { path: "animated-glowing-text-outline/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -133,7 +133,7 @@ export const registry: Registry = [
         name: "gradient-text-reveal",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "gradient-text-reveal.tsx", type: "registry:ui" },
+            { path: "gradient-text-reveal/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -141,7 +141,7 @@ export const registry: Registry = [
         name: "scramble-text",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "scramble-text.tsx", type: "registry:ui" },
+            { path: "scramble-text/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -149,7 +149,7 @@ export const registry: Registry = [
         name: "meteors-card",
         dependencies: ["clsx", "tailwind-merge"],
         files: [
-            { path: "meteors-card.tsx", type: "registry:ui" },
+            { path: "meteors-card/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
         tailwindConfig: {
@@ -173,7 +173,7 @@ export const registry: Registry = [
         name: "flip-card",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "flip-card.tsx", type: "registry:ui" },
+            { path: "flip-card/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -181,7 +181,7 @@ export const registry: Registry = [
         name: "dot-grid-background",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "dot-grid-background.tsx", type: "registry:ui" },
+            { path: "dot-grid-background/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -189,7 +189,7 @@ export const registry: Registry = [
         name: "floating-dock",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "floating-dock.tsx", type: "registry:ui" },
+            { path: "floating-dock/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -197,7 +197,7 @@ export const registry: Registry = [
         name: "confetti-burst",
         dependencies: ["clsx", "tailwind-merge"],
         files: [
-            { path: "confetti-burst.tsx", type: "registry:ui" },
+            { path: "confetti-burst/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -205,7 +205,7 @@ export const registry: Registry = [
         name: "drawer-slide",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "drawer-slide.tsx", type: "registry:ui" },
+            { path: "drawer-slide/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -213,7 +213,7 @@ export const registry: Registry = [
         name: "notification-stack",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "notification-stack.tsx", type: "registry:ui" },
+            { path: "notification-stack/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -221,7 +221,7 @@ export const registry: Registry = [
         name: "animated-timeline",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "animated-timeline.tsx", type: "registry:ui" },
+            { path: "animated-timeline/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -229,7 +229,7 @@ export const registry: Registry = [
         name: "nested-comments",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "nested-comments.tsx", type: "registry:ui" },
+            { path: "nested-comments/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -237,7 +237,7 @@ export const registry: Registry = [
         name: "hover-reveal-card",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "hover-reveal-card.tsx", type: "registry:ui" },
+            { path: "hover-reveal-card/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -245,7 +245,7 @@ export const registry: Registry = [
         name: "bento-grid",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "bento-grid.tsx", type: "registry:ui" },
+            { path: "bento-grid/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -253,7 +253,7 @@ export const registry: Registry = [
         name: "horizontal-scroll-gallery",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "horizontal-scroll-gallery.tsx", type: "registry:ui" },
+            { path: "horizontal-scroll-gallery/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -262,7 +262,7 @@ export const registry: Registry = [
         name: "particle-field",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "particle-field.tsx", type: "registry:ui" },
+            { path: "particle-field/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -270,7 +270,7 @@ export const registry: Registry = [
         name: "interactive-cursor",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "interactive-cursor.tsx", type: "registry:ui" },
+            { path: "interactive-cursor/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -278,7 +278,7 @@ export const registry: Registry = [
         name: "radial-menu",
         dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
         files: [
-            { path: "radial-menu.tsx", type: "registry:ui" },
+            { path: "radial-menu/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -286,7 +286,7 @@ export const registry: Registry = [
         name: "cursor-trail",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "cursor-trail.tsx", type: "registry:ui" },
+            { path: "cursor-trail/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -294,7 +294,7 @@ export const registry: Registry = [
         name: "pen-cursor",
         dependencies: ["clsx", "tailwind-merge"],
         files: [
-            { path: "pen-cursor.tsx", type: "registry:ui" },
+            { path: "pen-cursor/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -302,7 +302,7 @@ export const registry: Registry = [
         name: "glow-hero-section",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "glow-hero-section.tsx", type: "registry:ui" },
+            { path: "glow-hero-section/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -311,7 +311,7 @@ export const registry: Registry = [
         dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
         files: [
             {
-                path: "morphing-card-stack.tsx",
+                path: "morphing-card-stack/component.tsx",
                 type: "registry:ui",
             },
             cnUtilFile,
@@ -321,7 +321,7 @@ export const registry: Registry = [
         name: "limelight-nav",
         dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
         files: [
-            { path: "limelight-nav.tsx", type: "registry:ui" },
+            { path: "limelight-nav/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -329,7 +329,7 @@ export const registry: Registry = [
         name: "data-table",
         dependencies: ["lucide-react", "clsx", "tailwind-merge"],
         files: [
-            { path: "data-table.tsx", type: "registry:ui" },
+            { path: "data-table/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -337,7 +337,7 @@ export const registry: Registry = [
         name: "multi-step-auth-card",
         dependencies: ["motion", "lucide-react", "clsx", "tailwind-merge"],
         files: [
-            { path: "multi-step-auth-card.tsx", type: "registry:ui" },
+            { path: "multi-step-auth-card/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -346,7 +346,7 @@ export const registry: Registry = [
         name: "shiny-text",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "shiny-text.tsx", type: "registry:ui" },
+            { path: "shiny-text/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -354,7 +354,7 @@ export const registry: Registry = [
         name: "blur-reveal",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "blur-reveal.tsx", type: "registry:ui" },
+            { path: "blur-reveal/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -362,7 +362,7 @@ export const registry: Registry = [
         name: "count-up",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "count-up.tsx", type: "registry:ui" },
+            { path: "count-up/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -370,7 +370,7 @@ export const registry: Registry = [
         name: "border-beam",
         dependencies: ["clsx", "tailwind-merge"],
         files: [
-            { path: "border-beam.tsx", type: "registry:ui" },
+            { path: "border-beam/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -378,7 +378,7 @@ export const registry: Registry = [
         name: "ripple",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "ripple.tsx", type: "registry:ui" },
+            { path: "ripple/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
@@ -386,7 +386,7 @@ export const registry: Registry = [
         name: "word-rotate",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "word-rotate.tsx", type: "registry:ui" },
+            { path: "word-rotate/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },

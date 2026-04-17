@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "pras75299/initial-feature-setup"
+      - "main"
+      - "chore/**"
+      - "feat/**"
+      - "fix/**"
+  pull_request:
+    branches:
+      - "pras75299/initial-feature-setup"
+      - "main"
+
+jobs:
+  test-and-lint:
+    name: Test, Lint & Type-check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.3.0
+
+      - uses: pnpm/action-setup@v5.0.0
+        with:
+          version: 10.33.0
+
+      - uses: actions/setup-node@v4.0.4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate changeset summary quality (PR only)
+        if: github.event_name == 'pull_request'
+        run: pnpm changeset:quality
+
+      - name: Build CLI
+        run: pnpm --dir packages/cli build
+
+      - name: Run workspace tests
+        run: pnpm test
+
+      - name: Lint docs site
+        run: pnpm --dir apps/www lint
+
+      - name: Type-check CLI
+        run: pnpm --dir packages/cli exec tsc --noEmit
+
+      - name: Type-check docs site
+        run: pnpm --dir apps/www exec tsc --noEmit
+
+      - name: Verify generated registry artifacts are up to date
+        run: |
+          pnpm build:registry
+          git diff --exit-code -- registry.json apps/www/public/registry.json apps/www/public/registry apps/www/components/ui apps/www/config/components.ts apps/www/config/docs-scenarios.ts apps/www/config/demos.tsx || (echo "" && echo "ERROR: generated registry/docs artifacts are out of sync." && echo "Run 'pnpm build:registry' locally and commit the updated generated files." && exit 1)

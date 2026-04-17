@@ -1,0 +1,37 @@
+name: Verify Registry
+
+on:
+  push:
+    branches:
+      - "pras75299/initial-feature-setup"
+      - "main"
+    paths:
+      - "registry/**"
+      - "scripts/build-registry.ts"
+
+jobs:
+  verify-registry:
+    name: Verify generated registry artifacts are not stale
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.3.0
+
+      - uses: pnpm/action-setup@v5.0.0
+        with:
+          version: 10.33.0
+
+      - uses: actions/setup-node@v4.0.4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild registry
+        run: pnpm build:registry
+
+      - name: Check generated registry artifacts are committed
+        run: |
+          git diff --exit-code -- registry.json apps/www/public/registry.json apps/www/public/registry apps/www/components/ui apps/www/config/components.ts apps/www/config/docs-scenarios.ts apps/www/config/demos.tsx || (echo "" && echo "ERROR: generated registry/docs artifacts are out of sync with source files." && echo "Run 'pnpm build:registry' and commit the generated results before merging." && exit 1)

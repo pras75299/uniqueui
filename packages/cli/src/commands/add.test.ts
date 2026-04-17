@@ -20,15 +20,17 @@ vi.mock('child_process', () => ({
     spawnSync: vi.fn(() => ({ status: 0, error: undefined, stdout: '', stderr: '' })),
 }));
 
-const mockRegistry = [
-    {
-        name: 'test-component',
-        dependencies: ['framer-motion'],
-        files: [
-            { type: 'registry:ui', path: 'test-component.tsx', content: 'export const Test = () => <div />;' }
-        ]
-    }
-];
+const mockRegistryItem = {
+    name: 'test-component',
+    dependencies: ['framer-motion'],
+    files: [
+        { type: 'registry:ui', path: 'test-component/component.tsx', content: 'export const Test = () => <div />;' }
+    ]
+};
+
+const mockRegistryIndex = {
+    components: ['test-component']
+};
 
 import { spawnSync } from 'child_process';
 
@@ -49,17 +51,34 @@ describe('CLI: add command', () => {
         });
     });
 
-    it('should fetch from url and write component files', async () => {
-        (fetch as any).mockResolvedValue({
-            ok: true,
-            json: () => Promise.resolve(mockRegistry)
+    it('should fetch remote index first and then fetch the component payload', async () => {
+        (fetch as any).mockImplementation((url: string) => {
+            if (url === 'http://example.com/registry/index.json') {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve(mockRegistryIndex)
+                });
+            }
+
+            if (url === 'http://example.com/registry/test-component.json') {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve(mockRegistryItem)
+                });
+            }
+
+            return Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve(null)
+            });
         });
 
         (fs.existsSync as any).mockReturnValue(false); // Cache miss
 
         await add('test-component', { url: 'http://example.com/registry' });
 
-        expect(fetch).toHaveBeenCalledWith('http://example.com/registry/registry.json');
+        expect(fetch).toHaveBeenNthCalledWith(1, 'http://example.com/registry/index.json');
+        expect(fetch).toHaveBeenNthCalledWith(2, 'http://example.com/registry/test-component.json');
         expect(fs.writeFile).toHaveBeenCalledWith(
             expect.stringContaining('test-component.tsx'),
             'export const Test = () => <div />;'
@@ -71,9 +90,8 @@ describe('CLI: add command', () => {
         );
     });
 
-    it('should fetch registry each time while in-memory cache is disabled in CLI', async () => {
-        (fs.existsSync as any).mockReturnValue(true);
-        (fs.stat as any).mockResolvedValue({ mtimeMs: Date.now() - 1000 });
+    it('should load local directory registries via index.json and component json files', async () => {
+        (fs.existsSync as any).mockReturnValue(false);
         (fs.readJson as any).mockImplementation((path: string) => {
             if (path === 'components.json') {
                 return Promise.resolve({
@@ -81,18 +99,271 @@ describe('CLI: add command', () => {
                     tailwind: { config: 'tailwind.config.js' },
                 });
             }
-            if (path.includes('registry-cache')) return Promise.resolve(mockRegistry);
+            if (path.endsWith('local-registry/index.json')) return Promise.resolve(mockRegistryIndex);
+            if (path.endsWith('local-registry/test-component.json')) return Promise.resolve(mockRegistryItem);
             return Promise.reject(new Error());
         });
 
-        (fetch as any).mockResolvedValue({
-            ok: true,
-            json: () => Promise.resolve(mockRegistry),
+        await add('test-component', { url: './local-registry' });
+
+        expect(fetch).not.toHaveBeenCalled();
+        expect(fs.readJson).toHaveBeenCalledWith(expect.stringContaining('local-registry/index.json'));
+        expect(fs.readJson).toHaveBeenCalledWith(expect.stringContaining('local-registry/test-component.json'));
+        expect(fs.writeFile).toHaveBeenCalled();
+    });
+
+    it('should treat absolute filesystem registry paths as local sources', async () => {
+        (fs.existsSync as any).mockReturnValue(false);
+        (fs.readJson as any).mockImplementation((path: string) => {
+            if (path === 'components.json') {
+                return Promise.resolve({
+                    paths: { components: 'components/ui', lib: 'utils' },
+                    tailwind: { config: 'tailwind.config.js' },
+                });
+            }
+            if (path.endsWith('/tmp/local-registry/index.json')) return Promise.resolve(mockRegistryIndex);
+            if (path.endsWith('/tmp/local-registry/test-component.json')) return Promise.resolve(mockRegistryItem);
+            return Promise.reject(new Error());
         });
 
-        await add('test-component', { url: 'http://example.com/registry' });
+        await add('test-component', { url: '/tmp/local-registry' });
 
-        expect(fetch).toHaveBeenCalled();
-        expect(fs.writeFile).toHaveBeenCalled();
+        expect(fetch).not.toHaveBeenCalled();
+        expect(fs.readJson).toHaveBeenCalledWith('/tmp/local-registry/index.json');
+        expect(fs.readJson).toHaveBeenCalledWith('/tmp/local-registry/test-component.json');
+        expect(fs.writeFile).toHaveBeenCalledWith(
+            expect.stringContaining('test-component.tsx'),
+            'export const Test = () => <div />;'
+        );
+    });
+
+    it('should load local split registries when given index.json directly', async () => {
+        (fs.existsSync as any).mockReturnValue(false);
+        (fs.readJson as any).mockImplementation((path: string) => {
+            if (path === 'components.json') {
+                return Promise.resolve({
+                    paths: { components: 'components/ui', lib: 'utils' },
+                    tailwind: { config: 'tailwind.config.js' },
+                });
+            }
+            if (path.endsWith('/tmp/local-registry/index.json')) return Promise.resolve(mockRegistryIndex);
+            if (path.endsWith('/tmp/local-registry/test-component.json')) return Promise.resolve(mockRegistryItem);
+            return Promise.reject(new Error());
+        });
+
+        await add('test-component', { url: '/tmp/local-registry/index.json' });
+
+        expect(fetch).not.toHaveBeenCalled();
+        expect(fs.readJson).toHaveBeenCalledWith('/tmp/local-registry/index.json');
+        expect(fs.readJson).toHaveBeenCalledWith('/tmp/local-registry/test-component.json');
+    });
+
+    it('should load a direct local component payload json', async () => {
+        (fs.existsSync as any).mockReturnValue(false);
+        (fs.readJson as any).mockImplementation((path: string) => {
+            if (path === 'components.json') {
+                return Promise.resolve({
+                    paths: { components: 'components/ui', lib: 'utils' },
+                    tailwind: { config: 'tailwind.config.js' },
+                });
+            }
+            if (path === '/tmp/local-registry/test-component.json') return Promise.resolve(mockRegistryItem);
+            return Promise.reject(new Error());
+        });
+
+        await add('test-component', { url: '/tmp/local-registry/test-component.json' });
+
+        expect(fetch).not.toHaveBeenCalled();
+        expect(fs.readJson).toHaveBeenCalledWith('/tmp/local-registry/test-component.json');
+        expect(fs.writeFile).toHaveBeenCalledWith(
+            expect.stringContaining('test-component.tsx'),
+            'export const Test = () => <div />;'
+        );
+    });
+
+    it('should fall back to colocated legacy registry.json for local registry directories', async () => {
+        (fs.existsSync as any).mockReturnValue(false);
+        (fs.readJson as any).mockImplementation((path: string) => {
+            if (path === 'components.json') {
+                return Promise.resolve({
+                    paths: { components: 'components/ui', lib: 'utils' },
+                    tailwind: { config: 'tailwind.config.js' },
+                });
+            }
+            if (path.endsWith('/tmp/local-registry/index.json')) return Promise.resolve(null);
+            if (path.endsWith('/tmp/local-registry/registry.json')) return Promise.resolve([mockRegistryItem]);
+            return Promise.reject(new Error());
+        });
+
+        await add('test-component', { url: '/tmp/local-registry' });
+
+        expect(fs.readJson).toHaveBeenCalledWith('/tmp/local-registry/index.json');
+        expect(fs.readJson).toHaveBeenCalledWith('/tmp/local-registry/registry.json');
+        expect(fs.writeFile).toHaveBeenCalledWith(
+            expect.stringContaining('test-component.tsx'),
+            'export const Test = () => <div />;'
+        );
+    });
+
+    it('should try the hosted split registry path before legacy fallbacks', async () => {
+        (fetch as any).mockImplementation((url: string) => {
+            if (url === 'https://uniqueui-platform.vercel.app/registry/index.json') {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve(mockRegistryIndex)
+                });
+            }
+
+            if (url === 'https://uniqueui-platform.vercel.app/registry/test-component.json') {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve(mockRegistryItem)
+                });
+            }
+
+            return Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve(null)
+            });
+        });
+
+        (fs.existsSync as any).mockReturnValue(false);
+
+        await add('test-component', { url: 'https://uniqueui-platform.vercel.app' });
+
+        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json');
+        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/test-component.json');
+        expect(fs.writeFile).toHaveBeenCalledWith(
+            expect.stringContaining('test-component.tsx'),
+            'export const Test = () => <div />;'
+        );
+    });
+
+    it('should fetch remote split registries when given index.json directly', async () => {
+        (fetch as any).mockImplementation((url: string) => {
+            if (url === 'https://uniqueui-platform.vercel.app/registry/index.json') {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve(mockRegistryIndex)
+                });
+            }
+
+            if (url === 'https://uniqueui-platform.vercel.app/registry/test-component.json') {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve(mockRegistryItem)
+                });
+            }
+
+            return Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve(null)
+            });
+        });
+
+        (fs.existsSync as any).mockReturnValue(false);
+
+        await add('test-component', { url: 'https://uniqueui-platform.vercel.app/registry/index.json' });
+
+        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json');
+        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/test-component.json');
+        expect(fs.writeFile).toHaveBeenCalledWith(
+            expect.stringContaining('test-component.tsx'),
+            'export const Test = () => <div />;'
+        );
+    });
+
+    it('should fetch a direct remote component payload json', async () => {
+        (fetch as any).mockImplementation((url: string) => {
+            if (url === 'https://uniqueui-platform.vercel.app/registry/test-component.json') {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve(mockRegistryItem)
+                });
+            }
+
+            return Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve(null)
+            });
+        });
+
+        (fs.existsSync as any).mockReturnValue(false);
+
+        await add('test-component', { url: 'https://uniqueui-platform.vercel.app/registry/test-component.json' });
+
+        expect(fetch).toHaveBeenCalledWith('https://uniqueui-platform.vercel.app/registry/test-component.json');
+        expect(fs.writeFile).toHaveBeenCalledWith(
+            expect.stringContaining('test-component.tsx'),
+            'export const Test = () => <div />;'
+        );
+    });
+
+    it('should fall back to legacy registry.json from direct split endpoints', async () => {
+        (fetch as any).mockImplementation((url: string) => {
+            if (url === 'https://uniqueui-platform.vercel.app/registry/index.json') {
+                return Promise.resolve({
+                    ok: false,
+                    json: () => Promise.resolve(null)
+                });
+            }
+
+            if (url === 'https://uniqueui-platform.vercel.app/registry.json') {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve([mockRegistryItem])
+                });
+            }
+
+            return Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve(null)
+            });
+        });
+
+        (fs.existsSync as any).mockReturnValue(false);
+
+        await add('test-component', { url: 'https://uniqueui-platform.vercel.app/registry/index.json' });
+
+        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json');
+        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/registry.json');
+        expect(fs.writeFile).toHaveBeenCalledWith(
+            expect.stringContaining('test-component.tsx'),
+            'export const Test = () => <div />;'
+        );
+    });
+
+    it('should fall back to directory-scoped legacy registry.json for direct registry URLs', async () => {
+        (fetch as any).mockImplementation((url: string) => {
+            if (url === 'https://uniqueui-platform.vercel.app/registry/index.json') {
+                return Promise.resolve({
+                    ok: false,
+                    json: () => Promise.resolve(null)
+                });
+            }
+
+            if (url === 'https://uniqueui-platform.vercel.app/registry/registry.json') {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve([mockRegistryItem])
+                });
+            }
+
+            return Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve(null)
+            });
+        });
+
+        (fs.existsSync as any).mockReturnValue(false);
+
+        await add('test-component', { url: 'https://uniqueui-platform.vercel.app/registry' });
+
+        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json');
+        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/registry.json');
+        expect(fs.writeFile).toHaveBeenCalledWith(
+            expect.stringContaining('test-component.tsx'),
+            'export const Test = () => <div />;'
+        );
     });
 });
