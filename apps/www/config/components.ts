@@ -407,7 +407,8 @@ const componentDefinitions = [
         "demoKey": "aurora-background/stitch",
         "usageCode": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative text-white\">\n      <AuroraBackground preset=\"stitch\" blur={1.05} className=\"min-h-0 h-full rounded-xl\">\n        <div className=\"text-center z-10 w-full px-4\">\n          <h3 className=\"text-2xl font-bold mb-2 tracking-tight\">Stitch showcase</h3>\n          <p className=\"text-neutral-400 text-sm\">Container tokens in motion</p>\n        </div>\n      </AuroraBackground>\n    </div>\n  );\n}"
       }
-    ]
+    ],
+    "usageCode": "\"use client\";\nimport { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function Example() {\n  return (\n    <AuroraBackground theme=\"dark\" className=\"h-[400px] rounded-xl\">\n      <div className=\"text-center space-y-3 px-4\">\n        <h1 className=\"text-4xl font-bold text-white\">Aurora Background</h1>\n        <p className=\"text-neutral-300\">A beautiful, customisable aurora effect behind any content.</p>\n      </div>\n    </AuroraBackground>\n  );\n}"
   },
   {
     "slug": "animated-tabs",
@@ -1112,7 +1113,8 @@ const componentDefinitions = [
         "demoKey": "animated-timeline/steps",
         "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Install the CLI\",        description: \"Run npx uniqueui init in your project.\",         color: \"#a855f7\" },\n  { id: \"2\", title: \"Add a component\",        description: \"Run npx uniqueui add animated-timeline.\",        color: \"#6366f1\" },\n  { id: \"3\", title: \"Import and customise\",   description: \"Use variant, color, and date props as needed.\",  color: \"#ec4899\" },\n  { id: \"4\", title: \"Ship to production\",     description: \"Zero runtime dependency — fully your code.\",     color: \"#10b981\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-sm mx-auto p-6 w-full\">\n      <AnimatedTimeline items={items} variant=\"steps\" />\n    </div>\n  );\n}"
       }
-    ]
+    ],
+    "usageCode": "\"use client\";\nimport { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Project kickoff\", date: \"Jan 2024\", description: \"Team assembled and roadmap finalised.\", color: \"#6366f1\" },\n  { id: \"2\", title: \"Design phase\", date: \"Feb 2024\", description: \"Wireframes and prototypes approved.\", color: \"#a855f7\" },\n  { id: \"3\", title: \"Development\", date: \"Mar 2024\", description: \"Core features built and tested.\", color: \"#ec4899\" },\n  { id: \"4\", title: \"Launch\", date: \"Apr 2024\", description: \"Version 1.0 shipped to production.\", color: \"#22c55e\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-10 max-w-sm mx-auto\">\n      <AnimatedTimeline items={items} />\n    </div>\n  );\n}"
   },
   {
     "slug": "nested-comments",
@@ -1653,7 +1655,8 @@ const componentDefinitions = [
         "demoKey": "glow-hero-section/no-badge",
         "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      badge={null}\n      heading=\"Build Interfaces That Stand Out\"\n      description=\"Drop-in animated components powered by Motion.dev and Tailwind CSS.\"\n    />\n  );\n}"
       }
-    ]
+    ],
+    "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      heading=\"Build the Future\"\n      description=\"A decentralised toolkit for ambitious teams moving fast.\"\n      badge=\"Open Source · MIT License\"\n      className=\"rounded-2xl\"\n    />\n  );\n}"
   },
   {
     "slug": "limelight-nav",
@@ -1698,7 +1701,8 @@ const componentDefinitions = [
         "demoKey": "limelight-nav/custom",
         "usageCode": "import { LimelightNav } from \"@/components/ui/limelight-nav\";\nimport { Home, Bookmark, PlusCircle, User, Settings } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-12 h-[300px] w-full bg-neutral-950 rounded-xl border border-neutral-800\">\n      <LimelightNav \n        limelightColor=\"#06b6d4\"\n        className=\"bg-neutral-900/50\"\n        items={[\n          { id: '1', icon: <Home />, label: 'Home' },\n          { id: '2', icon: <Bookmark />, label: 'Bookmarks' },\n          { id: '3', icon: <PlusCircle />, label: 'Add' },\n          { id: '4', icon: <User />, label: 'Profile' },\n          { id: '5', icon: <Settings />, label: 'Settings' }\n        ]}\n      />\n    </div>\n  );\n}"
       }
-    ]
+    ],
+    "usageCode": "\"use client\";\nimport type { SVGProps } from \"react\";\nimport { LimelightNav } from \"@/components/ui/limelight-nav\";\n\nconst HomeIcon = (props: SVGProps<SVGSVGElement>) => (\n  <svg {...props} viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\">\n    <path d=\"m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />\n  </svg>\n);\nconst SearchIcon = (props: SVGProps<SVGSVGElement>) => (\n  <svg {...props} viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\">\n    <circle cx=\"11\" cy=\"11\" r=\"8\" /><path d=\"m21 21-4.3-4.3\" />\n  </svg>\n);\nconst UserIcon = (props: SVGProps<SVGSVGElement>) => (\n  <svg {...props} viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\">\n    <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\" /><circle cx=\"12\" cy=\"7\" r=\"4\" />\n  </svg>\n);\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <LimelightNav\n        items={[\n          { id: 1, icon: <HomeIcon className=\"w-6 h-6 text-white\" />, label: \"Home\" },\n          { id: 2, icon: <SearchIcon className=\"w-6 h-6 text-white\" />, label: \"Search\" },\n          { id: 3, icon: <UserIcon className=\"w-6 h-6 text-white\" />, label: \"Profile\" },\n        ]}\n      />\n    </div>\n  );\n}"
   },
   {
     "slug": "data-table",
@@ -1890,7 +1894,8 @@ const componentDefinitions = [
         "overflowVisible": true,
         "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\", sortKey: \"name\" },\n  { key: \"role\", label: \"Role\", sortKey: \"role\" },\n  { key: \"department\", label: \"Dept\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", actions: \"Edit\" },\n  { id: \"2\", name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", actions: \"Edit\" },\n  { id: \"3\", name: \"Sara Chen\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", actions: \"Edit\" },\n  { id: \"4\", name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", actions: \"Edit\" },\n  { id: \"5\", name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", actions: \"Edit\" },\n  { id: \"6\", name: \"Priya Shah\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", actions: \"Edit\" },\n  { id: \"7\", name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", actions: \"Edit\" },\n  { id: \"8\", name: \"Jess Taylor\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", actions: \"Edit\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"left\"\n          freezeLeftCount={1}\n        headerTextColor=\"text-neutral-100\"\n        bodyTextColor=\"text-neutral-300\"\n        headerBackground=\"bg-neutral-800\"\n        bodyBackground=\"bg-neutral-950\"\n        border\n        sortable\n        paginated\n        pageSize={5}\n        pageSizeOptions={[5, 10, 20]}\n        onPageChange={(page, pageSize) =>\n          console.log(\"page changed\", page, \"pageSize\", pageSize)\n        }\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
       }
-    ]
+    ],
+    "usageCode": "\"use client\";\nimport { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\", sortKey: \"name\" },\n  { key: \"role\", label: \"Role\", sortKey: \"role\" },\n  { key: \"status\", label: \"Status\" },\n];\n\nconst data = [\n  { id: \"1\", name: \"Alice Chen\", role: \"Engineer\", status: \"Active\" },\n  { id: \"2\", name: \"Bob Martin\", role: \"Designer\", status: \"Active\" },\n  { id: \"3\", name: \"Carol White\", role: \"Product\", status: \"On leave\" },\n  { id: \"4\", name: \"Dan Brown\", role: \"Engineer\", status: \"Active\" },\n  { id: \"5\", name: \"Eve Davis\", role: \"Marketing\", status: \"Active\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-6\">\n      <DataTable columns={columns} data={data} sortable paginated pageSize={3} theme=\"dark\" />\n    </div>\n  );\n}"
   },
   {
     "slug": "morphing-card-stack",
@@ -1923,7 +1928,8 @@ const componentDefinitions = [
         "demoKey": "morphing-card-stack/default",
         "usageCode": "import { MorphingCardStack } from \"@/components/ui/morphing-card-stack\";\nimport { Layers, Palette, Clock, Sparkles } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-12 min-h-[500px] w-full bg-neutral-950 rounded-xl border border-neutral-800\">\n      <MorphingCardStack \n        cards={[\n          {\n            id: \"1\",\n            title: \"Magnetic Dock\",\n            description: \"Cursor-responsive scaling with smooth spring animations\",\n            icon: <Layers className=\"h-5 w-5\" />,\n          },\n          {\n            id: \"2\",\n            title: \"Gradient Mesh\",\n            description: \"Dynamic animated gradient backgrounds that follow your cursor\",\n            icon: <Palette className=\"h-5 w-5\" />,\n          },\n          {\n            id: \"3\",\n            title: \"Pulse Timeline\",\n            description: \"Interactive timeline with animated pulse nodes\",\n            icon: <Clock className=\"h-5 w-5\" />,\n          },\n          {\n            id: \"4\",\n            title: \"Command Palette\",\n            description: \"Radial command menu with keyboard navigation\",\n            icon: <Sparkles className=\"h-5 w-5\" />,\n          },\n        ]} \n      />\n    </div>\n  );\n}"
       }
-    ]
+    ],
+    "usageCode": "\"use client\";\nimport { MorphingCardStack } from \"@/components/ui/morphing-card-stack\";\n\nconst cards = [\n  { id: \"1\", title: \"Design\", description: \"Craft beautiful interfaces with motion-first components.\", color: \"#6366f120\" },\n  { id: \"2\", title: \"Develop\", description: \"Install via CLI, copy into your codebase, done.\", color: \"#a855f720\" },\n  { id: \"3\", title: \"Ship\", description: \"Production-ready, accessible, and fully typed.\", color: \"#22c55e20\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-10\">\n      <MorphingCardStack cards={cards} />\n    </div>\n  );\n}"
   },
   {
     "slug": "multi-step-auth-card",

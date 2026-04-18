@@ -4,33 +4,58 @@ import path from "path";
 import prompts from "prompts";
 import chalk from "chalk";
 
-export async function init() {
+interface InitOptions {
+    yes?: boolean;
+    dir?: string;
+    typescript?: boolean;
+    tailwindConfig?: string;
+}
+
+const DEFAULTS = {
+    componentsDir: "components/ui",
+    typescript: true,
+    tailwindConfig: "tailwind.config.ts",
+};
+
+export async function init(options: InitOptions = {}) {
     console.log(chalk.bold.green("Initializing UniqueUI..."));
 
     const cwd = process.cwd();
 
-    const response = await prompts([
-        {
-            type: "text",
-            name: "componentsDir",
-            message: "Where would you like to install components?",
-            initial: "components/ui",
-        },
-        {
-            type: "toggle",
-            name: "typescript",
-            message: "Are you using TypeScript?",
-            initial: true,
-            active: "yes",
-            inactive: "no",
-        },
-        {
-            type: "text",
-            name: "tailwindConfig",
-            message: "Where is your tailwind.config.js located?",
-            initial: "tailwind.config.ts",
-        },
-    ]);
+    const nonInteractive = options.yes || !process.stdin.isTTY;
+
+    let response: { componentsDir: string; typescript: boolean; tailwindConfig: string };
+
+    if (nonInteractive) {
+        response = {
+            componentsDir: options.dir ?? DEFAULTS.componentsDir,
+            typescript: options.typescript ?? DEFAULTS.typescript,
+            tailwindConfig: options.tailwindConfig ?? DEFAULTS.tailwindConfig,
+        };
+    } else {
+        response = await prompts([
+            {
+                type: "text",
+                name: "componentsDir",
+                message: "Where would you like to install components?",
+                initial: options.dir ?? DEFAULTS.componentsDir,
+            },
+            {
+                type: "toggle",
+                name: "typescript",
+                message: "Are you using TypeScript?",
+                initial: options.typescript ?? DEFAULTS.typescript,
+                active: "yes",
+                inactive: "no",
+            },
+            {
+                type: "text",
+                name: "tailwindConfig",
+                message: "Where is your Tailwind config located?",
+                initial: options.tailwindConfig ?? DEFAULTS.tailwindConfig,
+            },
+        ]);
+    }
 
     const config = {
         $schema: "https://uniqueui.com/schema.json",
