@@ -134,4 +134,83 @@ describe("Component metadata sync", () => {
       ).toBe(fs.readFileSync(registrySourcePath, "utf-8").trimEnd());
     }
   });
+
+  it("keeps shadcn-compatible /public/r registry aligned with registry slugs and split payloads", () => {
+    const rDir = path.resolve(process.cwd(), "public/r");
+    const manifestPath = path.join(rDir, "registry.json");
+
+    expect(fs.existsSync(manifestPath), "missing public/r/registry.json (run pnpm build:registry)").toBe(
+      true,
+    );
+
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8")) as {
+      $schema: string;
+      items: Array<{
+        name: string;
+        type: string;
+        dependencies: string[];
+        files: Array<{ path: string; type: string; target?: string; content?: string }>;
+        tailwind?: { config: unknown };
+      }>;
+    };
+
+    expect(manifest.$schema).toBe("https://ui.shadcn.com/schema/registry.json");
+    expect(manifest.items.length).toBe(registryComponentSlugs.length);
+
+    const manifestNames = manifest.items.map((i) => i.name).sort();
+    expect(manifestNames).toEqual([...registryComponentSlugs].sort());
+
+    for (const slug of registryComponentSlugs) {
+      const itemPath = path.join(rDir, `${slug}.json`);
+      expect(fs.existsSync(itemPath), `missing public/r/${slug}.json`).toBe(true);
+
+      const fullItem = JSON.parse(fs.readFileSync(itemPath, "utf-8")) as {
+        $schema: string;
+        name: string;
+        type: string;
+        dependencies: string[];
+        files: Array<{ path: string; content: string; type: string; target?: string }>;
+        tailwind?: { config: unknown };
+      };
+
+      expect(fullItem.$schema).toBe("https://ui.shadcn.com/schema/registry-item.json");
+      expect(fullItem.name).toBe(slug);
+      expect(fullItem.type).toBe("registry:ui");
+      expect(fullItem.files.length).toBeGreaterThan(0);
+
+      const ui = fullItem.files[0];
+      const expectedPath = `components/ui/${slug}.tsx`;
+      expect(ui.path).toBe(expectedPath);
+      expect(ui.target).toBe(expectedPath);
+      expect(ui.type).toBe("registry:component");
+      expect(ui.content.trim().length).toBeGreaterThan(0);
+
+      const splitPayloadPath = path.resolve(process.cwd(), "public/registry", `${slug}.json`);
+      const splitPayload = JSON.parse(fs.readFileSync(splitPayloadPath, "utf-8")) as {
+        name: string;
+        files: Array<{ path: string; content: string }>;
+      };
+      const splitUi = splitPayload.files.find((f) => f.path === `${slug}/component.tsx`);
+      expect(splitUi, `split registry missing ${slug}/component.tsx`).toBeDefined();
+      expect(ui.content.trimEnd()).toBe(splitUi!.content.trimEnd());
+
+      const manifestRow = manifest.items.find((i) => i.name === slug);
+      expect(manifestRow).toBeDefined();
+      expect(manifestRow!.dependencies).toEqual(fullItem.dependencies);
+      expect(manifestRow!.type).toBe("registry:ui");
+
+      for (const f of manifestRow!.files) {
+        expect("content" in f && f.content !== undefined).toBe(false);
+      }
+
+      const { content: _omit, ...fileMeta } = fullItem.files[0];
+      expect(manifestRow!.files[0]).toEqual(fileMeta);
+
+      if (fullItem.tailwind) {
+        expect(manifestRow!.tailwind).toEqual(fullItem.tailwind);
+      } else {
+        expect(manifestRow!.tailwind).toBeUndefined();
+      }
+    }
+  });
 });

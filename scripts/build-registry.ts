@@ -249,23 +249,29 @@ async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDo
   // Build a lookup map from slug → docs metadata
   const docsBySlug = new Map(manifest.components.map((c) => [c.slug, c]));
 
-  const shadcnItems: object[] = [];
-
-  await Promise.all(
+  // Use Promise.all over entries.map (not concurrent push) so manifest item order matches registry/config.ts.
+  const shadcnItems = await Promise.all(
     entries.map(async (entry) => {
       const doc = docsBySlug.get(entry.name);
 
       // Map each file to the shadcn registry-item format.
       // - registry:ui  → registry:component, installed at components/ui/{slug}.tsx
       // - registry:util → omitted (shadcn projects already have @/lib/utils from `shadcn init`)
+      const installPath = `components/ui/${entry.name}.tsx`;
       const shadcnFiles = entry.files
         .filter((f) => f.type === "registry:ui")
         .map((f) => ({
-          path: `components/ui/${entry.name}.tsx`,
+          path: installPath,
           content: f.content,
           type: "registry:component" as const,
-          target: `components/ui/${entry.name}.tsx`,
+          target: installPath,
         }));
+
+      if (shadcnFiles.length === 0) {
+        throw new Error(
+          `syncShadcnRegistry: component "${entry.name}" has no registry:ui file; cannot emit shadcn registry item.`,
+        );
+      }
 
       const item: Record<string, unknown> = {
         $schema: "https://ui.shadcn.com/schema/registry-item.json",
@@ -282,15 +288,9 @@ async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDo
         item.tailwind = { config: entry.tailwindConfig };
       }
 
-      // Write individual registry-item file
-      await fs.outputJson(
-        path.join(APP_PUBLIC_SHADCN_DIR, `${entry.name}.json`),
-        item,
-        { spaces: 2 },
-      );
+      await fs.outputJson(path.join(APP_PUBLIC_SHADCN_DIR, `${entry.name}.json`), item, { spaces: 2 });
 
-      // Collect a lightweight manifest entry (no file content)
-      shadcnItems.push({
+      return {
         name: entry.name,
         type: "registry:ui",
         ...(doc?.name ? { title: doc.name } : {}),
@@ -298,11 +298,10 @@ async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDo
         dependencies: entry.dependencies,
         files: shadcnFiles.map(({ content: _content, ...rest }) => rest),
         ...(entry.tailwindConfig ? { tailwind: { config: entry.tailwindConfig } } : {}),
-      });
+      };
     }),
   );
 
-  // Write the full shadcn registry manifest
   await fs.outputJson(
     path.join(APP_PUBLIC_SHADCN_DIR, "registry.json"),
     {

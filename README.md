@@ -402,8 +402,13 @@ cd packages/cli && pnpm build
 # Build the registry (from root)
 pnpm build:registry
 
-# Run component tests
+# Run component E2E (UniqueUI CLI + full page matrix + build)
 npx ts-node scripts/test-all-components.ts
+
+# Run shadcn CLI E2E (install each component from apps/www/public/r/*.json + build)
+pnpm test:e2e:shadcn
+# Smoke (first N only): SHADCN_E2E_LIMIT=3 pnpm test:e2e:shadcn
+# Afterward, `npm run dev` — home lists each component; **Open preview** goes to `/preview/[slug]` (same usageCode as the docs site, importing from `src/components/ui/`).
 ```
 
 ## Project Structure

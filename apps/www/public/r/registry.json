@@ -58,6 +58,42 @@
       ]
     },
     {
+      "name": "3d-tilt-card",
+      "type": "registry:ui",
+      "title": "3D Tilt Card",
+      "description": "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/3d-tilt-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/3d-tilt-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "spotlight-card",
+      "type": "registry:ui",
+      "title": "Spotlight Card",
+      "description": "Card with a radial spotlight that follows the mouse cursor across its surface.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/spotlight-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/spotlight-card.tsx"
+        }
+      ]
+    },
+    {
       "name": "aurora-background",
       "type": "registry:ui",
       "title": "Aurora Background",
@@ -90,24 +126,6 @@
           "path": "components/ui/animated-tabs.tsx",
           "type": "registry:component",
           "target": "components/ui/animated-tabs.tsx"
-        }
-      ]
-    },
-    {
-      "name": "3d-tilt-card",
-      "type": "registry:ui",
-      "title": "3D Tilt Card",
-      "description": "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/3d-tilt-card.tsx",
-          "type": "registry:component",
-          "target": "components/ui/3d-tilt-card.tsx"
         }
       ]
     },
@@ -166,24 +184,6 @@
       ]
     },
     {
-      "name": "spotlight-card",
-      "type": "registry:ui",
-      "title": "Spotlight Card",
-      "description": "Card with a radial spotlight that follows the mouse cursor across its surface.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/spotlight-card.tsx",
-          "type": "registry:component",
-          "target": "components/ui/spotlight-card.tsx"
-        }
-      ]
-    },
-    {
       "name": "skeleton-shimmer",
       "type": "registry:ui",
       "title": "Skeleton Shimmer",
@@ -216,6 +216,42 @@
           "path": "components/ui/morphing-modal.tsx",
           "type": "registry:component",
           "target": "components/ui/morphing-modal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "animated-glowing-text-outline",
+      "type": "registry:ui",
+      "title": "Animated Glowing Text",
+      "description": "Animated SVG drawing trace outline over shimmering text characters.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/animated-glowing-text-outline.tsx",
+          "type": "registry:component",
+          "target": "components/ui/animated-glowing-text-outline.tsx"
+        }
+      ]
+    },
+    {
+      "name": "gradient-text-reveal",
+      "type": "registry:ui",
+      "title": "Gradient Text Reveal",
+      "description": "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/gradient-text-reveal.tsx",
+          "type": "registry:component",
+          "target": "components/ui/gradient-text-reveal.tsx"
         }
       ]
     },
@@ -281,6 +317,24 @@
       }
     },
     {
+      "name": "flip-card",
+      "type": "registry:ui",
+      "title": "Flip Card",
+      "description": "3D card flip with spring physics, supporting hover or click triggers.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/flip-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/flip-card.tsx"
+        }
+      ]
+    },
+    {
       "name": "dot-grid-background",
       "type": "registry:ui",
       "title": "Dot Grid Background",
@@ -295,41 +349,6 @@
           "path": "components/ui/dot-grid-background.tsx",
           "type": "registry:component",
           "target": "components/ui/dot-grid-background.tsx"
-        }
-      ]
-    },
-    {
-      "name": "animated-glowing-text-outline",
-      "type": "registry:ui",
-      "title": "Animated Glowing Text",
-      "description": "Animated SVG drawing trace outline over shimmering text characters.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/animated-glowing-text-outline.tsx",
-          "type": "registry:component",
-          "target": "components/ui/animated-glowing-text-outline.tsx"
-        }
-      ]
-    },
-    {
-      "name": "confetti-burst",
-      "type": "registry:ui",
-      "title": "Confetti Burst",
-      "description": "Click-triggered confetti particle explosion with customizable colors and physics.",
-      "dependencies": [
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/confetti-burst.tsx",
-          "type": "registry:component",
-          "target": "components/ui/confetti-burst.tsx"
         }
       ]
     },
@@ -352,10 +371,27 @@
       ]
     },
     {
-      "name": "animated-timeline",
+      "name": "confetti-burst",
       "type": "registry:ui",
-      "title": "Animated Timeline",
-      "description": "Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps.",
+      "title": "Confetti Burst",
+      "description": "Click-triggered confetti particle explosion with customizable colors and physics.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/confetti-burst.tsx",
+          "type": "registry:component",
+          "target": "components/ui/confetti-burst.tsx"
+        }
+      ]
+    },
+    {
+      "name": "drawer-slide",
+      "type": "registry:ui",
+      "title": "Drawer Slide",
+      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
       "dependencies": [
         "motion",
         "clsx",
@@ -363,9 +399,9 @@
       ],
       "files": [
         {
-          "path": "components/ui/animated-timeline.tsx",
+          "path": "components/ui/drawer-slide.tsx",
           "type": "registry:component",
-          "target": "components/ui/animated-timeline.tsx"
+          "target": "components/ui/drawer-slide.tsx"
         }
       ]
     },
@@ -388,6 +424,24 @@
       ]
     },
     {
+      "name": "animated-timeline",
+      "type": "registry:ui",
+      "title": "Animated Timeline",
+      "description": "Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/animated-timeline.tsx",
+          "type": "registry:component",
+          "target": "components/ui/animated-timeline.tsx"
+        }
+      ]
+    },
+    {
       "name": "nested-comments",
       "type": "registry:ui",
       "title": "Nested Comments",
@@ -406,10 +460,10 @@
       ]
     },
     {
-      "name": "drawer-slide",
+      "name": "hover-reveal-card",
       "type": "registry:ui",
-      "title": "Drawer Slide",
-      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
+      "title": "Hover Reveal Card",
+      "description": "Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations.",
       "dependencies": [
         "motion",
         "clsx",
@@ -417,9 +471,27 @@
       ],
       "files": [
         {
-          "path": "components/ui/drawer-slide.tsx",
+          "path": "components/ui/hover-reveal-card.tsx",
           "type": "registry:component",
-          "target": "components/ui/drawer-slide.tsx"
+          "target": "components/ui/hover-reveal-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "bento-grid",
+      "type": "registry:ui",
+      "title": "Bento Grid",
+      "description": "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/bento-grid.tsx",
+          "type": "registry:component",
+          "target": "components/ui/bento-grid.tsx"
         }
       ]
     },
@@ -460,41 +532,6 @@
       ]
     },
     {
-      "name": "hover-reveal-card",
-      "type": "registry:ui",
-      "title": "Hover Reveal Card",
-      "description": "Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/hover-reveal-card.tsx",
-          "type": "registry:component",
-          "target": "components/ui/hover-reveal-card.tsx"
-        }
-      ]
-    },
-    {
-      "name": "pen-cursor",
-      "type": "registry:ui",
-      "title": "Pen Cursor",
-      "description": "Physics-driven ribbon trail rendered on canvas — a chain of linked points follows the mouse with spring-damping inertia, width scales with speed, and colors interpolate head-to-tail. Inspired by obsidianassembly.com.",
-      "dependencies": [
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/pen-cursor.tsx",
-          "type": "registry:component",
-          "target": "components/ui/pen-cursor.tsx"
-        }
-      ]
-    },
-    {
       "name": "interactive-cursor",
       "type": "registry:ui",
       "title": "Interactive Cursor",
@@ -509,24 +546,6 @@
           "path": "components/ui/interactive-cursor.tsx",
           "type": "registry:component",
           "target": "components/ui/interactive-cursor.tsx"
-        }
-      ]
-    },
-    {
-      "name": "cursor-trail",
-      "type": "registry:ui",
-      "title": "Cursor Trail",
-      "description": "Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/cursor-trail.tsx",
-          "type": "registry:component",
-          "target": "components/ui/cursor-trail.tsx"
         }
       ]
     },
@@ -550,10 +569,10 @@
       ]
     },
     {
-      "name": "flip-card",
+      "name": "cursor-trail",
       "type": "registry:ui",
-      "title": "Flip Card",
-      "description": "3D card flip with spring physics, supporting hover or click triggers.",
+      "title": "Cursor Trail",
+      "description": "Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail.",
       "dependencies": [
         "motion",
         "clsx",
@@ -561,9 +580,44 @@
       ],
       "files": [
         {
-          "path": "components/ui/flip-card.tsx",
+          "path": "components/ui/cursor-trail.tsx",
           "type": "registry:component",
-          "target": "components/ui/flip-card.tsx"
+          "target": "components/ui/cursor-trail.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pen-cursor",
+      "type": "registry:ui",
+      "title": "Pen Cursor",
+      "description": "Physics-driven ribbon trail rendered on canvas — a chain of linked points follows the mouse with spring-damping inertia, width scales with speed, and colors interpolate head-to-tail. Inspired by obsidianassembly.com.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/pen-cursor.tsx",
+          "type": "registry:component",
+          "target": "components/ui/pen-cursor.tsx"
+        }
+      ]
+    },
+    {
+      "name": "glow-hero-section",
+      "type": "registry:ui",
+      "title": "Glow Hero Section",
+      "description": "Physics-driven hero section with an interactive aqueous mesh canvas, spring-based motion text entrance, and fully configurable badge, heading, description, colors, and dimensions.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/glow-hero-section.tsx",
+          "type": "registry:component",
+          "target": "components/ui/glow-hero-section.tsx"
         }
       ]
     },
@@ -587,24 +641,6 @@
       ]
     },
     {
-      "name": "glow-hero-section",
-      "type": "registry:ui",
-      "title": "Glow Hero Section",
-      "description": "Physics-driven hero section with an interactive aqueous mesh canvas, spring-based motion text entrance, and fully configurable badge, heading, description, colors, and dimensions.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/glow-hero-section.tsx",
-          "type": "registry:component",
-          "target": "components/ui/glow-hero-section.tsx"
-        }
-      ]
-    },
-    {
       "name": "limelight-nav",
       "type": "registry:ui",
       "title": "Limelight Nav",
@@ -624,20 +660,20 @@
       ]
     },
     {
-      "name": "blur-reveal",
+      "name": "data-table",
       "type": "registry:ui",
-      "title": "Blur Reveal",
-      "description": "Characters or words materialise from a soft blur — the cinematic text entrance used in top SaaS hero sections.",
+      "title": "Data Table",
+      "description": "Configurable data table with optional column freeze (left/right), customizable header and body colors and backgrounds, optional borders, and optional sortable columns.",
       "dependencies": [
-        "motion",
+        "lucide-react",
         "clsx",
         "tailwind-merge"
       ],
       "files": [
         {
-          "path": "components/ui/blur-reveal.tsx",
+          "path": "components/ui/data-table.tsx",
           "type": "registry:component",
-          "target": "components/ui/blur-reveal.tsx"
+          "target": "components/ui/data-table.tsx"
         }
       ]
     },
@@ -661,19 +697,38 @@
       ]
     },
     {
-      "name": "border-beam",
+      "name": "shiny-text",
       "type": "registry:ui",
-      "title": "Border Beam",
-      "description": "A glowing comet that continuously orbits the border of a container — instantly upgrades cards, code blocks, and feature sections.",
+      "title": "Shiny Text",
+      "description": "A shimmering highlight that continuously sweeps across text — perfect for hero taglines and call-to-action copy.",
       "dependencies": [
+        "motion",
         "clsx",
         "tailwind-merge"
       ],
       "files": [
         {
-          "path": "components/ui/border-beam.tsx",
+          "path": "components/ui/shiny-text.tsx",
           "type": "registry:component",
-          "target": "components/ui/border-beam.tsx"
+          "target": "components/ui/shiny-text.tsx"
+        }
+      ]
+    },
+    {
+      "name": "blur-reveal",
+      "type": "registry:ui",
+      "title": "Blur Reveal",
+      "description": "Characters or words materialise from a soft blur — the cinematic text entrance used in top SaaS hero sections.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/blur-reveal.tsx",
+          "type": "registry:component",
+          "target": "components/ui/blur-reveal.tsx"
         }
       ]
     },
@@ -696,6 +751,23 @@
       ]
     },
     {
+      "name": "border-beam",
+      "type": "registry:ui",
+      "title": "Border Beam",
+      "description": "A glowing comet that continuously orbits the border of a container — instantly upgrades cards, code blocks, and feature sections.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/border-beam.tsx",
+          "type": "registry:component",
+          "target": "components/ui/border-beam.tsx"
+        }
+      ]
+    },
+    {
       "name": "ripple",
       "type": "registry:ui",
       "title": "Ripple",
@@ -714,24 +786,6 @@
       ]
     },
     {
-      "name": "bento-grid",
-      "type": "registry:ui",
-      "title": "Bento Grid",
-      "description": "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/bento-grid.tsx",
-          "type": "registry:component",
-          "target": "components/ui/bento-grid.tsx"
-        }
-      ]
-    },
-    {
       "name": "word-rotate",
       "type": "registry:ui",
       "title": "Word Rotate",
@@ -746,60 +800,6 @@
           "path": "components/ui/word-rotate.tsx",
           "type": "registry:component",
           "target": "components/ui/word-rotate.tsx"
-        }
-      ]
-    },
-    {
-      "name": "gradient-text-reveal",
-      "type": "registry:ui",
-      "title": "Gradient Text Reveal",
-      "description": "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/gradient-text-reveal.tsx",
-          "type": "registry:component",
-          "target": "components/ui/gradient-text-reveal.tsx"
-        }
-      ]
-    },
-    {
-      "name": "data-table",
-      "type": "registry:ui",
-      "title": "Data Table",
-      "description": "Configurable data table with optional column freeze (left/right), customizable header and body colors and backgrounds, optional borders, and optional sortable columns.",
-      "dependencies": [
-        "lucide-react",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/data-table.tsx",
-          "type": "registry:component",
-          "target": "components/ui/data-table.tsx"
-        }
-      ]
-    },
-    {
-      "name": "shiny-text",
-      "type": "registry:ui",
-      "title": "Shiny Text",
-      "description": "A shimmering highlight that continuously sweeps across text — perfect for hero taglines and call-to-action copy.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/shiny-text.tsx",
-          "type": "registry:component",
-          "target": "components/ui/shiny-text.tsx"
         }
       ]
     }
