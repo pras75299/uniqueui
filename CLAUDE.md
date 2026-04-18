@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-UniqueUI is a monorepo for an animated React component library built on a copy-paste model (similar to shadcn/ui). Users install components via `npx uniqueui add <component>` rather than importing a package.
+UniqueUI is a monorepo for an animated React component library built on a copy-paste model (similar to shadcn/ui). Users install components via **`npx uniqueui add <component>`** or via the **shadcn CLI** using published URLs such as `https://uniqueui.com/r/<slug>.json` (generated under `apps/www/public/r/` by `pnpm build:registry`).
 
 **Package manager**: pnpm 10.33.0 with workspaces (`pnpm-workspace.yaml`)
 
@@ -41,6 +41,7 @@ pnpm dev                  # Run CLI directly with ts-node
 # From root:
 npx ts-node scripts/build-registry.ts      # Same as pnpm build:registry
 npx ts-node scripts/test-all-components.ts # Spins up a fresh Next.js app, installs every component via CLI, and does a full build
+pnpm test:e2e:shadcn                       # Same, but shadcn add + preview pages from usageCode + build
 bash scripts/test-cli-e2e.sh               # End-to-end CLI smoke tests
 ```
 
@@ -61,13 +62,14 @@ registry/{component}/component.tsx ← source of truth for component code
 registry/config.ts                ← declares name, npm deps, tailwindConfig per component
        ↓
 registry.json                     ← auto-generated root manifest
-apps/www/public/registry/*.json   ← auto-generated split docs registry artifacts
+apps/www/public/registry/*.json   ← auto-generated split docs registry artifacts (uniqueui add)
+apps/www/public/r/*.json          ← shadcn registry-item JSON (+ r/registry.json manifest)
 apps/www/components/ui/*.tsx      ← auto-synced docs UI copies
-       ↓  (CLI: uniqueui add)
+       ↓  (CLI: uniqueui add or shadcn add …/r/<slug>.json)
 user's project/components/ui/     ← files written to the end-user's codebase
 ```
 
-`registry.json` is also served at `https://uniqueui.com/registry.json` for the CLI to fetch remotely. **Never edit it by hand** — always run `pnpm build:registry`.
+`registry.json` is also served at `https://uniqueui.com/registry.json` for the UniqueUI CLI. **Never edit generated manifests by hand** — always run `pnpm build:registry`.
 
 ### Showcase Site (`apps/www`)
 
@@ -94,7 +96,7 @@ Three config files drive the entire docs site:
 2. Add entry to `registry/config.ts` (name, dependencies, files array, optional `tailwindConfig` for custom keyframes)
 3. Add docs metadata to `registry/docs.json`
 4. Add demo to `apps/www/config/demos.tsx` (`componentDemos`)
-5. Run `pnpm build:registry` from root to regenerate `registry.json`, refresh `apps/www/public/registry/*`, sync `apps/www/components/ui/{component-name}.tsx`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
+5. Run `pnpm build:registry` from root to regenerate `registry.json`, refresh `apps/www/public/registry/*` and **`apps/www/public/r/*`**, sync `apps/www/components/ui/{component-name}.tsx`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
 
 When editing an existing component, update `registry/{component}/component.tsx` and then run `pnpm build:registry` to refresh the generated docs copies and registry artifacts.
 

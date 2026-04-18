@@ -1,5 +1,5 @@
 import { componentsList } from "@/config/components";
-import { getInstallCommand } from "@/config/component-registry";
+import { getInstallCommand, getShadcnInstallCommand } from "@/config/component-registry";
 import ComponentPreview from "@/components/component-preview";
 import { notFound } from "next/navigation";
 import { Terminal } from "lucide-react";
@@ -22,6 +22,7 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
   const params = await props.params;
   const component = componentsList.find((c) => c.slug === params.slug);
   const installCommand = params.slug ? getInstallCommand(params.slug) : "";
+  const shadcnInstallCommand = params.slug ? getShadcnInstallCommand(params.slug) : "";
 
   if (!component) {
     notFound();
@@ -64,13 +65,33 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
           </p>
         </div>
 
-        {/* Install Command */}
-        <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300">
-            <Terminal className="w-4 h-4 text-neutral-500" />
-            <span>{installCommand}</span>
+        {/* Install commands */}
+        <div className="space-y-2">
+          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+            UniqueUI CLI
+          </p>
+          <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300 min-w-0">
+              <Terminal className="w-4 h-4 shrink-0 text-neutral-500" />
+              <span className="break-all">{installCommand}</span>
+            </div>
+            <ClientCopyButton text={installCommand} />
           </div>
-          <ClientCopyButton text={installCommand} />
+          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400 pt-1">
+            shadcn CLI
+          </p>
+          <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300 min-w-0">
+              <Terminal className="w-4 h-4 shrink-0 text-neutral-500" />
+              <span className="break-all">{shadcnInstallCommand}</span>
+            </div>
+            <ClientCopyButton text={shadcnInstallCommand} />
+          </div>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">
+            shadcn path expects <code className="rounded bg-neutral-200 dark:bg-neutral-800 px-1">@/lib/utils</code> (run{" "}
+            <code className="rounded bg-neutral-200 dark:bg-neutral-800 px-1">shadcn init</code> first). Same source file
+            is installed to <code className="rounded bg-neutral-200 dark:bg-neutral-800 px-1">components/ui/</code>.
+          </p>
         </div>
 
         {/* Synced variant switcher — handles both Preview and Usage in one block */}
@@ -109,13 +130,33 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
         </p>
       </div>
 
-      {/* Install Command */}
-      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300">
-            <Terminal className="w-4 h-4 text-neutral-500" />
-            <span>{installCommand}</span>
+      {/* Install commands */}
+      <div className="space-y-2">
+        <p className="text-xs font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+          UniqueUI CLI
+        </p>
+        <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300 min-w-0">
+            <Terminal className="w-4 h-4 shrink-0 text-neutral-500" />
+            <span className="break-all">{installCommand}</span>
+          </div>
+          <ClientCopyButton text={installCommand} />
         </div>
-        <ClientCopyButton text={installCommand} />
+        <p className="text-xs font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400 pt-1">
+          shadcn CLI
+        </p>
+        <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 px-4 py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 font-mono text-sm text-neutral-700 dark:text-neutral-300 min-w-0">
+            <Terminal className="w-4 h-4 shrink-0 text-neutral-500" />
+            <span className="break-all">{shadcnInstallCommand}</span>
+          </div>
+          <ClientCopyButton text={shadcnInstallCommand} />
+        </div>
+        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+          shadcn path expects <code className="rounded bg-neutral-200 dark:bg-neutral-800 px-1">@/lib/utils</code> (run{" "}
+          <code className="rounded bg-neutral-200 dark:bg-neutral-800 px-1">shadcn init</code> first). Same source file
+          is installed to <code className="rounded bg-neutral-200 dark:bg-neutral-800 px-1">components/ui/</code>.
+        </p>
       </div>
 
       {/* Preview */}

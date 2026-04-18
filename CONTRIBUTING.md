@@ -32,7 +32,7 @@ cd apps/www && pnpm dev    # Docs site at localhost:3000
 2. Add an entry to `registry/config.ts` with `name`, `dependencies`, `files`, and optional `tailwindConfig`
 3. Add docs metadata to `registry/docs.json` for the component page and scenarios
 4. Add the live demo mapping to `registry/demos.tsx`
-5. Run `pnpm build:registry` from the root — this regenerates `registry.json`, refreshes `apps/www/public/registry/*`, syncs `apps/www/components/ui/*`, and generates `apps/www/config/components.ts`, `apps/www/config/docs-scenarios.ts`, and `apps/www/config/demos.tsx`
+5. Run `pnpm build:registry` from the root — this regenerates `registry.json`, refreshes `apps/www/public/registry/*` and **`apps/www/public/r/*`** (shadcn registry URLs), syncs `apps/www/components/ui/*`, and generates `apps/www/config/components.ts`, `apps/www/config/docs-scenarios.ts`, and `apps/www/config/demos.tsx`
 6. Test in the docs site: `cd apps/www && pnpm dev`
 
 ### Docs metadata and demos
@@ -44,7 +44,7 @@ cd apps/www && pnpm dev    # Docs site at localhost:3000
 
 - **Policy:** Keep docs metadata authoring centralized in `registry/docs.json` unless a [documented migration](docs/adr/0001-registry-docs-metadata-storage.md) has happened. The ADR lists quantitative **migration triggers** (file size, conflict rate, ownership needs) and qualitative **friction signals** — open a discussion if friction grows, but do not split metadata files until triggers are met.
 - **When the model changes:** If an ADR supersedes 0001 (for example per-component `registry/<slug>/docs.json`), update this section, `BUILD.md`, and any `scripts/build-registry.ts` / CI drift checks in the same change series so contributors have a single coherent story.
-- After any edit to `registry/docs.json` or `registry/demos.tsx`, run `pnpm build:registry` and commit generated files under `apps/www/config/`, `apps/www/components/ui/`, `apps/www/public/registry/`, and root `registry.json` as required by CI.
+- After any edit to `registry/docs.json` or `registry/demos.tsx`, run `pnpm build:registry` and commit generated files under `apps/www/config/`, `apps/www/components/ui/`, `apps/www/public/registry/`, **`apps/www/public/r/`**, and root `registry.json` as required by CI.
 
 ## Component Design Rules
 
