@@ -244,6 +244,15 @@ async function syncDocsConfig(manifest: RegistryDocsManifest) {
 }
 
 async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDocsManifest) {
+  // Validate all entries before clearing the directory to avoid partial state on failure.
+  for (const entry of entries) {
+    if (!entry.files.some((f) => f.type === "registry:ui")) {
+      throw new Error(
+        `syncShadcnRegistry: component "${entry.name}" has no registry:ui file; cannot emit shadcn registry item.`,
+      );
+    }
+  }
+
   await fs.emptyDir(APP_PUBLIC_SHADCN_DIR);
 
   // Build a lookup map from slug → docs metadata
@@ -266,12 +275,6 @@ async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDo
           type: "registry:component" as const,
           target: installPath,
         }));
-
-      if (shadcnFiles.length === 0) {
-        throw new Error(
-          `syncShadcnRegistry: component "${entry.name}" has no registry:ui file; cannot emit shadcn registry item.`,
-        );
-      }
 
       const item: Record<string, unknown> = {
         $schema: "https://ui.shadcn.com/schema/registry-item.json",
