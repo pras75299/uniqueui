@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "shiny-text",
+  "type": "registry:ui",
+  "title": "Shiny Text",
+  "description": "A shimmering highlight that continuously sweeps across text — perfect for hero taglines and call-to-action copy.",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "components/ui/shiny-text.tsx",
+      "content": "\"use client\";\nimport { cn } from \"@/lib/utils\";\nimport { motion } from \"motion/react\";\n\nexport interface ShinyTextProps {\n  text: string;\n  className?: string;\n  /** Duration of one full shimmer pass in seconds */\n  speed?: number;\n  /** Width of the bright band as a percentage of the text */\n  shimmerWidth?: number;\n  theme?: \"light\" | \"dark\";\n}\n\nexport function ShinyText({\n  text,\n  className,\n  speed = 3,\n  shimmerWidth = 40,\n  theme = \"dark\",\n}: ShinyTextProps) {\n  const half = shimmerWidth / 2;\n  const dim =\n    theme === \"dark\" ? \"rgba(255,255,255,0.12)\" : \"rgba(0,0,0,0.22)\";\n  const bright =\n    theme === \"dark\" ? \"rgba(255,255,255,1)\" : \"rgba(0,0,0,1)\";\n\n  return (\n    <motion.span\n      className={cn(\"inline-block\", className)}\n      animate={{ backgroundPosition: [\"200% center\", \"-200% center\"] }}\n      transition={{\n        duration: speed,\n        repeat: Infinity,\n        ease: \"linear\",\n        repeatType: \"loop\",\n      }}\n      style={{\n        background: `linear-gradient(120deg, ${dim} 0%, ${dim} ${50 - half}%, ${bright} 50%, ${dim} ${50 + half}%, ${dim} 100%)`,\n        backgroundSize: \"250% auto\",\n        WebkitBackgroundClip: \"text\",\n        WebkitTextFillColor: \"transparent\",\n        backgroundClip: \"text\",\n      }}\n    >\n      {text}\n    </motion.span>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/ui/shiny-text.tsx"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "flip-card",
+  "type": "registry:ui",
+  "title": "Flip Card",
+  "description": "3D card flip with spring physics, supporting hover or click triggers.",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "components/ui/flip-card.tsx",
+      "content": "\"use client\";\nimport { cn } from \"@/lib/utils\";\nimport React, { useState } from \"react\";\nimport { motion } from \"motion/react\";\n\nexport interface FlipCardProps {\n  front: React.ReactNode;\n  back: React.ReactNode;\n  className?: string;\n  frontClassName?: string;\n  backClassName?: string;\n  trigger?: \"hover\" | \"click\";\n  direction?: \"horizontal\" | \"vertical\";\n  perspective?: number;\n  theme?: \"light\" | \"dark\";\n}\n\nexport function FlipCard({\n  front,\n  back,\n  className,\n  frontClassName,\n  backClassName,\n  trigger = \"hover\",\n  direction = \"horizontal\",\n  perspective = 1000,\n  theme = \"dark\",\n}: FlipCardProps) {\n  const [isFlipped, setIsFlipped] = useState(false);\n\n  const rotateAxis = direction === \"horizontal\" ? \"rotateY\" : \"rotateX\";\n\n  const handlers =\n    trigger === \"hover\"\n      ? {\n          onMouseEnter: () => setIsFlipped(true),\n          onMouseLeave: () => setIsFlipped(false),\n        }\n      : {\n          onClick: () => setIsFlipped((prev) => !prev),\n        };\n\n  return (\n    <div\n      className={cn(\"relative cursor-pointer\", className)}\n      style={{ perspective: `${perspective}px` }}\n      {...handlers}\n    >\n      {/* Front */}\n      <motion.div\n        className={cn(\n          \"w-full h-full rounded-xl border p-6 backface-hidden\",\n          theme === \"dark\" ? \"border-neutral-800 bg-neutral-950\" : \"border-neutral-200 bg-white\",\n          frontClassName\n        )}\n        style={{ backfaceVisibility: \"hidden\" }}\n        animate={{\n          [rotateAxis]: isFlipped ? 180 : 0,\n        }}\n        transition={{ type: \"spring\", stiffness: 300, damping: 25 }}\n      >\n        {front}\n      </motion.div>\n\n      {/* Back */}\n      <motion.div\n        className={cn(\n          \"absolute inset-0 w-full h-full rounded-xl border p-6 backface-hidden\",\n          theme === \"dark\" ? \"border-neutral-700 bg-neutral-900\" : \"border-neutral-300 bg-neutral-100\",\n          backClassName\n        )}\n        style={{\n          backfaceVisibility: \"hidden\",\n          [rotateAxis === \"rotateY\" ? \"rotateY\" : \"rotateX\"]: \"180deg\",\n        }}\n        initial={{ [rotateAxis]: -180 }}\n        animate={{\n          [rotateAxis]: isFlipped ? 0 : -180,\n        }}\n        transition={{ type: \"spring\", stiffness: 300, damping: 25 }}\n      >\n        {back}\n      </motion.div>\n    </div>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/ui/flip-card.tsx"
+    }
+  ]
+}

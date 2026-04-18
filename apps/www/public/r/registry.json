@@ -1,0 +1,807 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "uniqueui",
+  "homepage": "https://uniqueui.com",
+  "items": [
+    {
+      "name": "moving-border",
+      "type": "registry:ui",
+      "title": "Moving Border",
+      "description": "SVG-path-tracing animated border that orbits a button or card.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/moving-border.tsx",
+          "type": "registry:component",
+          "target": "components/ui/moving-border.tsx"
+        }
+      ],
+      "tailwind": {
+        "config": {
+          "theme": {
+            "extend": {
+              "animation": {
+                "border-spin": "border-spin 3s linear infinite"
+              },
+              "keyframes": {
+                "border-spin": {
+                  "100%": {
+                    "transform": "rotate(-360deg)"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "typewriter-text",
+      "type": "registry:ui",
+      "title": "Typewriter Text",
+      "description": "Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/typewriter-text.tsx",
+          "type": "registry:component",
+          "target": "components/ui/typewriter-text.tsx"
+        }
+      ]
+    },
+    {
+      "name": "aurora-background",
+      "type": "registry:ui",
+      "title": "Aurora Background",
+      "description": "A fully customizable, smooth aurora light background mimicking the northern lights. Configurable via exact hex props alongside automatic integration with the current light or dark mode theme. Accessibility: Respects prefers-reduced-motion (drifting pauses smoothly).",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/aurora-background.tsx",
+          "type": "registry:component",
+          "target": "components/ui/aurora-background.tsx"
+        }
+      ]
+    },
+    {
+      "name": "animated-tabs",
+      "type": "registry:ui",
+      "title": "Animated Tabs",
+      "description": "Tab bar with a sliding pill that morphs between active tabs using layout animation.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/animated-tabs.tsx",
+          "type": "registry:component",
+          "target": "components/ui/animated-tabs.tsx"
+        }
+      ]
+    },
+    {
+      "name": "3d-tilt-card",
+      "type": "registry:ui",
+      "title": "3D Tilt Card",
+      "description": "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/3d-tilt-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/3d-tilt-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "magnetic-button",
+      "type": "registry:ui",
+      "title": "Magnetic Button",
+      "description": "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/magnetic-button.tsx",
+          "type": "registry:component",
+          "target": "components/ui/magnetic-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "infinite-marquee",
+      "type": "registry:ui",
+      "title": "Infinite Marquee",
+      "description": "Seamless infinite-scrolling ticker with pause-on-hover and variable speed.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/infinite-marquee.tsx",
+          "type": "registry:component",
+          "target": "components/ui/infinite-marquee.tsx"
+        }
+      ]
+    },
+    {
+      "name": "scroll-reveal",
+      "type": "registry:ui",
+      "title": "Scroll Reveal",
+      "description": "Elements animate into view when they enter the viewport, with 6 animation presets.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/scroll-reveal.tsx",
+          "type": "registry:component",
+          "target": "components/ui/scroll-reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "spotlight-card",
+      "type": "registry:ui",
+      "title": "Spotlight Card",
+      "description": "Card with a radial spotlight that follows the mouse cursor across its surface.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/spotlight-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/spotlight-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "skeleton-shimmer",
+      "type": "registry:ui",
+      "title": "Skeleton Shimmer",
+      "description": "Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/skeleton-shimmer.tsx",
+          "type": "registry:component",
+          "target": "components/ui/skeleton-shimmer.tsx"
+        }
+      ]
+    },
+    {
+      "name": "morphing-modal",
+      "type": "registry:ui",
+      "title": "Morphing Modal",
+      "description": "Modal that expands from the trigger element with spring physics and backdrop blur.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/morphing-modal.tsx",
+          "type": "registry:component",
+          "target": "components/ui/morphing-modal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "scramble-text",
+      "type": "registry:ui",
+      "title": "Scramble Text",
+      "description": "Matrix-style text scramble effect that resolves characters left-to-right.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/scramble-text.tsx",
+          "type": "registry:component",
+          "target": "components/ui/scramble-text.tsx"
+        }
+      ]
+    },
+    {
+      "name": "meteors-card",
+      "type": "registry:ui",
+      "title": "Meteors Card",
+      "description": "Card with animated meteor/shooting star particles falling through the background.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/meteors-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/meteors-card.tsx"
+        }
+      ],
+      "tailwind": {
+        "config": {
+          "theme": {
+            "extend": {
+              "animation": {
+                "meteor": "meteor 5s linear infinite"
+              },
+              "keyframes": {
+                "meteor": {
+                  "0%": {
+                    "transform": "rotate(215deg) translateX(0)",
+                    "opacity": "1"
+                  },
+                  "70%": {
+                    "opacity": "1"
+                  },
+                  "100%": {
+                    "transform": "rotate(215deg) translateX(-500px)",
+                    "opacity": "0"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "dot-grid-background",
+      "type": "registry:ui",
+      "title": "Dot Grid Background",
+      "description": "Interactive dot-grid pattern with a glowing cursor-following effect.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/dot-grid-background.tsx",
+          "type": "registry:component",
+          "target": "components/ui/dot-grid-background.tsx"
+        }
+      ]
+    },
+    {
+      "name": "animated-glowing-text-outline",
+      "type": "registry:ui",
+      "title": "Animated Glowing Text",
+      "description": "Animated SVG drawing trace outline over shimmering text characters.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/animated-glowing-text-outline.tsx",
+          "type": "registry:component",
+          "target": "components/ui/animated-glowing-text-outline.tsx"
+        }
+      ]
+    },
+    {
+      "name": "confetti-burst",
+      "type": "registry:ui",
+      "title": "Confetti Burst",
+      "description": "Click-triggered confetti particle explosion with customizable colors and physics.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/confetti-burst.tsx",
+          "type": "registry:component",
+          "target": "components/ui/confetti-burst.tsx"
+        }
+      ]
+    },
+    {
+      "name": "floating-dock",
+      "type": "registry:ui",
+      "title": "Floating Dock",
+      "description": "macOS-style dock with magnetic scaling, spring physics, and tooltips.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/floating-dock.tsx",
+          "type": "registry:component",
+          "target": "components/ui/floating-dock.tsx"
+        }
+      ]
+    },
+    {
+      "name": "animated-timeline",
+      "type": "registry:ui",
+      "title": "Animated Timeline",
+      "description": "Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/animated-timeline.tsx",
+          "type": "registry:component",
+          "target": "components/ui/animated-timeline.tsx"
+        }
+      ]
+    },
+    {
+      "name": "notification-stack",
+      "type": "registry:ui",
+      "title": "Notification Stack",
+      "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/notification-stack.tsx",
+          "type": "registry:component",
+          "target": "components/ui/notification-stack.tsx"
+        }
+      ]
+    },
+    {
+      "name": "nested-comments",
+      "type": "registry:ui",
+      "title": "Nested Comments",
+      "description": "Threaded comment section with infinite nesting, animated expand/collapse, inline reply composer, and spring-physics like button.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/nested-comments.tsx",
+          "type": "registry:component",
+          "target": "components/ui/nested-comments.tsx"
+        }
+      ]
+    },
+    {
+      "name": "drawer-slide",
+      "type": "registry:ui",
+      "title": "Drawer Slide",
+      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/drawer-slide.tsx",
+          "type": "registry:component",
+          "target": "components/ui/drawer-slide.tsx"
+        }
+      ]
+    },
+    {
+      "name": "horizontal-scroll-gallery",
+      "type": "registry:ui",
+      "title": "Horizontal Scroll Gallery",
+      "description": "Converts vertical scroll into horizontal movement with momentum physics for immersive galleries.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/horizontal-scroll-gallery.tsx",
+          "type": "registry:component",
+          "target": "components/ui/horizontal-scroll-gallery.tsx"
+        }
+      ]
+    },
+    {
+      "name": "particle-field",
+      "type": "registry:ui",
+      "title": "Particle Field",
+      "description": "Canvas-based floating particles with mouse-repulsion physics and responsive connecting lines.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/particle-field.tsx",
+          "type": "registry:component",
+          "target": "components/ui/particle-field.tsx"
+        }
+      ]
+    },
+    {
+      "name": "hover-reveal-card",
+      "type": "registry:ui",
+      "title": "Hover Reveal Card",
+      "description": "Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hover-reveal-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hover-reveal-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pen-cursor",
+      "type": "registry:ui",
+      "title": "Pen Cursor",
+      "description": "Physics-driven ribbon trail rendered on canvas — a chain of linked points follows the mouse with spring-damping inertia, width scales with speed, and colors interpolate head-to-tail. Inspired by obsidianassembly.com.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/pen-cursor.tsx",
+          "type": "registry:component",
+          "target": "components/ui/pen-cursor.tsx"
+        }
+      ]
+    },
+    {
+      "name": "interactive-cursor",
+      "type": "registry:ui",
+      "title": "Interactive Cursor",
+      "description": "Spring-smoothed cursor overlay with magnetic hover states, click ripples, optional particles, and support for full-page or container-scoped interactions.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/interactive-cursor.tsx",
+          "type": "registry:component",
+          "target": "components/ui/interactive-cursor.tsx"
+        }
+      ]
+    },
+    {
+      "name": "cursor-trail",
+      "type": "registry:ui",
+      "title": "Cursor Trail",
+      "description": "Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/cursor-trail.tsx",
+          "type": "registry:component",
+          "target": "components/ui/cursor-trail.tsx"
+        }
+      ]
+    },
+    {
+      "name": "radial-menu",
+      "type": "registry:ui",
+      "title": "Radial Menu",
+      "description": "Circular flyout menu that bursts items outward from a center trigger with staggered spring animation.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/radial-menu.tsx",
+          "type": "registry:component",
+          "target": "components/ui/radial-menu.tsx"
+        }
+      ]
+    },
+    {
+      "name": "flip-card",
+      "type": "registry:ui",
+      "title": "Flip Card",
+      "description": "3D card flip with spring physics, supporting hover or click triggers.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/flip-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/flip-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "morphing-card-stack",
+      "type": "registry:ui",
+      "title": "Morphing Card Stack",
+      "description": "An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using Framer Motion springs.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/morphing-card-stack.tsx",
+          "type": "registry:component",
+          "target": "components/ui/morphing-card-stack.tsx"
+        }
+      ]
+    },
+    {
+      "name": "glow-hero-section",
+      "type": "registry:ui",
+      "title": "Glow Hero Section",
+      "description": "Physics-driven hero section with an interactive aqueous mesh canvas, spring-based motion text entrance, and fully configurable badge, heading, description, colors, and dimensions.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/glow-hero-section.tsx",
+          "type": "registry:component",
+          "target": "components/ui/glow-hero-section.tsx"
+        }
+      ]
+    },
+    {
+      "name": "limelight-nav",
+      "type": "registry:ui",
+      "title": "Limelight Nav",
+      "description": "Adaptive fluid navigation bar with a limelight spotlight and spring-animated tabs.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/limelight-nav.tsx",
+          "type": "registry:component",
+          "target": "components/ui/limelight-nav.tsx"
+        }
+      ]
+    },
+    {
+      "name": "blur-reveal",
+      "type": "registry:ui",
+      "title": "Blur Reveal",
+      "description": "Characters or words materialise from a soft blur — the cinematic text entrance used in top SaaS hero sections.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/blur-reveal.tsx",
+          "type": "registry:component",
+          "target": "components/ui/blur-reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "multi-step-auth-card",
+      "type": "registry:ui",
+      "title": "Multi-Step Auth Card",
+      "description": "Animation-first enterprise auth flow: email discovery, first-time and returning user paths, password create/login, and OTP verification with spring transitions between steps.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/multi-step-auth-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/multi-step-auth-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "border-beam",
+      "type": "registry:ui",
+      "title": "Border Beam",
+      "description": "A glowing comet that continuously orbits the border of a container — instantly upgrades cards, code blocks, and feature sections.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/border-beam.tsx",
+          "type": "registry:component",
+          "target": "components/ui/border-beam.tsx"
+        }
+      ]
+    },
+    {
+      "name": "count-up",
+      "type": "registry:ui",
+      "title": "Count Up",
+      "description": "An animated number that counts from a starting value to a target when scrolled into view — essential for metrics and stats sections.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/count-up.tsx",
+          "type": "registry:component",
+          "target": "components/ui/count-up.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ripple",
+      "type": "registry:ui",
+      "title": "Ripple",
+      "description": "Luminous orbs that drift slowly across the viewport — a liquid nebula hero background with warm, organic colour blooms.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ripple.tsx",
+          "type": "registry:component",
+          "target": "components/ui/ripple.tsx"
+        }
+      ]
+    },
+    {
+      "name": "bento-grid",
+      "type": "registry:ui",
+      "title": "Bento Grid",
+      "description": "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/bento-grid.tsx",
+          "type": "registry:component",
+          "target": "components/ui/bento-grid.tsx"
+        }
+      ]
+    },
+    {
+      "name": "word-rotate",
+      "type": "registry:ui",
+      "title": "Word Rotate",
+      "description": "A list of words that cycle with slide, flip, or fade transitions — the signature hero-headline effect used across modern SaaS sites.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/word-rotate.tsx",
+          "type": "registry:component",
+          "target": "components/ui/word-rotate.tsx"
+        }
+      ]
+    },
+    {
+      "name": "gradient-text-reveal",
+      "type": "registry:ui",
+      "title": "Gradient Text Reveal",
+      "description": "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/gradient-text-reveal.tsx",
+          "type": "registry:component",
+          "target": "components/ui/gradient-text-reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "Data Table",
+      "description": "Configurable data table with optional column freeze (left/right), customizable header and body colors and backgrounds, optional borders, and optional sortable columns.",
+      "dependencies": [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/data-table.tsx",
+          "type": "registry:component",
+          "target": "components/ui/data-table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "shiny-text",
+      "type": "registry:ui",
+      "title": "Shiny Text",
+      "description": "A shimmering highlight that continuously sweeps across text — perfect for hero taglines and call-to-action copy.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/shiny-text.tsx",
+          "type": "registry:component",
+          "target": "components/ui/shiny-text.tsx"
+        }
+      ]
+    }
+  ]
+}
