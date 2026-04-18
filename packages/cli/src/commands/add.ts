@@ -534,7 +534,17 @@ export async function updateTailwindConfig(configPath: string, newConfig: any) {
             // handle: const config = { ... }; export default config;
             // (the pattern create-next-app generates)
             const varDecl = sourceFile.getVariableDeclaration(expr.getText());
-            objectLiteral = varDecl?.getInitializer()?.asKind(SyntaxKind.ObjectLiteralExpression);
+            const initializer = varDecl?.getInitializer();
+            objectLiteral =
+                initializer?.asKind(SyntaxKind.ObjectLiteralExpression) ??
+                initializer
+                    ?.asKind(SyntaxKind.SatisfiesExpression)
+                    ?.getExpression()
+                    .asKind(SyntaxKind.ObjectLiteralExpression) ??
+                initializer
+                    ?.asKind(SyntaxKind.AsExpression)
+                    ?.getExpression()
+                    .asKind(SyntaxKind.ObjectLiteralExpression);
         }
     } else {
         // try module.exports

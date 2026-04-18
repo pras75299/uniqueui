@@ -91,13 +91,16 @@ async function run() {
         let match: RegExpExecArray | null;
         while ((match = slugRegex.exec(content)) !== null) {
             const slug = match[1];
-            const usageMatch = content.slice(match.index).match(/(?:usageCode|"usageCode")\s*:\s*("((?:\\.|[^"\\])*)"|`)/);
+            const searchContent = content.slice(match.index);
+            const usageMatch = searchContent.match(/(?:usageCode|"usageCode")\s*:\s*("((?:\\.|[^"\\])*)"|`)/);
             if (!usageMatch) continue;
 
             let usageCode = '';
             if (usageMatch[1] === '`') {
-                const startTick = content.indexOf('`', match.index);
-                if (startTick === -1) continue;
+                const m = usageMatch as RegExpMatchArray;
+                const tickRel = usageMatch[0].lastIndexOf('`');
+                if (tickRel === -1) continue;
+                const startTick = match.index + (m.index ?? 0) + tickRel;
                 const { raw } = extractTemplateLiteral(content, startTick);
                 usageCode = raw.replace(/\\`/g, '`').replace(/\\\$/g, '$');
             } else {
@@ -176,7 +179,7 @@ async function run() {
                 console.error(`    ❌ Timed out waiting for ${TEST_DIR} to be removed.`);
                 process.exit(1);
             }
-            execSync('sleep 0.1');
+            await new Promise((resolve) => setTimeout(resolve, 100));
         }
     }
 

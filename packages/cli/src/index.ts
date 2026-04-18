@@ -19,7 +19,8 @@ program
     .description("Configure your project for UniqueUI")
     .option("-y, --yes", "Skip prompts and use defaults")
     .option("--dir <path>", "Components install directory")
-    .option("--typescript", "Use TypeScript (default: true)")
+    .option("--typescript", "Use TypeScript", true)
+    .option("--no-typescript", "Generate JavaScript config instead of TypeScript")
     .action((opts) => init({ yes: opts.yes, dir: opts.dir, typescript: opts.typescript }));
 
 program

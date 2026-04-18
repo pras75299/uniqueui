@@ -212,4 +212,31 @@ describe('updateTailwindConfig', () => {
         expect(result).toContain('"slide-in"');
         expect(result).toContain('slideIn 0.3s ease');
     });
+
+    // Test 9: export default config when config uses satisfies (create-next-app style)
+    it('handles export default identifier with satisfies object initializer', async () => {
+        const configPath = path.join(tmpDir, 'tailwind.config.ts');
+        await fs.writeFile(
+            configPath,
+            [
+                "import type { Config } from 'tailwindcss';",
+                '',
+                'const config = {',
+                '  content: [],',
+                '  theme: {},',
+                '  plugins: [],',
+                '} satisfies Config;',
+                '',
+                'export default config;',
+            ].join('\n'),
+        );
+
+        await updateTailwindConfig(configPath, {
+            theme: { extend: { animation: { meteor: 'meteor 5s linear infinite' } } },
+        });
+
+        const result = await fs.readFile(configPath, 'utf-8');
+        expect(result).toContain('"meteor"');
+        expect(result).toContain('meteor 5s linear infinite');
+    });
 });

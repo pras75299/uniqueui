@@ -51,7 +51,7 @@ export async function init(options: InitOptions = {}) {
             {
                 type: "text",
                 name: "tailwindConfig",
-                message: "Where is your tailwind.config.js located?",
+                message: "Where is your Tailwind config located?",
                 initial: options.tailwindConfig ?? DEFAULTS.tailwindConfig,
             },
         ]);
