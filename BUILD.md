@@ -80,11 +80,13 @@ pnpm test -- packages/cli/src/commands/add.test.ts
 pnpm build:registry    # Reads registry/<slug>/component.tsx sources → writes registry.json
                        # Also writes apps/www/public/registry.json
                        # Also splits per-component files into apps/www/public/registry/
+                       # Also writes shadcn-format registry items to apps/www/public/r/
+                       #    (per-component *.json + r/registry.json for https://uniqueui.com/r/)
                        # Also syncs docs copies into apps/www/components/ui/
                        # Also generates apps/www/config/{components,docs-scenarios,demos}.ts*
 ```
 
-Always commit `registry.json` after adding or modifying components.
+Always commit `registry.json` and the generated files under `apps/www/public/r/` (and the rest of the synced paths) after adding or modifying components, as required by your branch / CI.
 
 ### Docs Metadata Storage Decision
 

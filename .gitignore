@@ -4,6 +4,7 @@
 NPM_PUBLISH_GUIDE.md
 /temp-test
 /e2e-components-test
+/e2e-shadcn-components-test
 /docs/repo-ui-audit.local.md
 /docs/repo-ui-audit-current.local.md
 .venv

@@ -9,6 +9,7 @@ const OUTPUT_FILE = path.join(__dirname, "../registry.json");
 const APP_PUBLIC_DIR = path.join(__dirname, "../apps/www/public");
 const APP_PUBLIC_OUTPUT_FILE = path.join(APP_PUBLIC_DIR, "registry.json");
 const APP_PUBLIC_REGISTRY_DIR = path.join(APP_PUBLIC_DIR, "registry");
+const APP_PUBLIC_SHADCN_DIR = path.join(APP_PUBLIC_DIR, "r");
 const APP_COMPONENTS_UI_DIR = path.join(__dirname, "../apps/www/components/ui");
 const APP_CONFIG_DIR = path.join(__dirname, "../apps/www/config");
 const APP_COMPONENTS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "components.ts");
@@ -242,6 +243,80 @@ async function syncDocsConfig(manifest: RegistryDocsManifest) {
   await fs.writeFile(APP_DEMOS_CONFIG_FILE, await renderDemosConfig(manifest));
 }
 
+async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDocsManifest) {
+  // Validate all entries before clearing the directory to avoid partial state on failure.
+  for (const entry of entries) {
+    if (!entry.files.some((f) => f.type === "registry:ui")) {
+      throw new Error(
+        `syncShadcnRegistry: component "${entry.name}" has no registry:ui file; cannot emit shadcn registry item.`,
+      );
+    }
+  }
+
+  await fs.emptyDir(APP_PUBLIC_SHADCN_DIR);
+
+  // Build a lookup map from slug → docs metadata
+  const docsBySlug = new Map(manifest.components.map((c) => [c.slug, c]));
+
+  // Use Promise.all over entries.map (not concurrent push) so manifest item order matches registry/config.ts.
+  const shadcnItems = await Promise.all(
+    entries.map(async (entry) => {
+      const doc = docsBySlug.get(entry.name);
+
+      // Map each file to the shadcn registry-item format.
+      // - registry:ui  → registry:component, installed at components/ui/{slug}.tsx
+      // - registry:util → omitted (shadcn projects already have @/lib/utils from `shadcn init`)
+      const installPath = `components/ui/${entry.name}.tsx`;
+      const shadcnFiles = entry.files
+        .filter((f) => f.type === "registry:ui")
+        .map((f) => ({
+          path: installPath,
+          content: f.content,
+          type: "registry:component" as const,
+          target: installPath,
+        }));
+
+      const item: Record<string, unknown> = {
+        $schema: "https://ui.shadcn.com/schema/registry-item.json",
+        name: entry.name,
+        type: "registry:ui",
+        ...(doc?.name ? { title: doc.name } : {}),
+        ...(doc?.description ? { description: doc.description } : {}),
+        dependencies: entry.dependencies,
+        files: shadcnFiles,
+      };
+
+      // Map tailwindConfig → tailwind.config (shadcn schema key)
+      if (entry.tailwindConfig) {
+        item.tailwind = { config: entry.tailwindConfig };
+      }
+
+      await fs.outputJson(path.join(APP_PUBLIC_SHADCN_DIR, `${entry.name}.json`), item, { spaces: 2 });
+
+      return {
+        name: entry.name,
+        type: "registry:ui",
+        ...(doc?.name ? { title: doc.name } : {}),
+        ...(doc?.description ? { description: doc.description } : {}),
+        dependencies: entry.dependencies,
+        files: shadcnFiles.map(({ content: _content, ...rest }) => rest),
+        ...(entry.tailwindConfig ? { tailwind: { config: entry.tailwindConfig } } : {}),
+      };
+    }),
+  );
+
+  await fs.outputJson(
+    path.join(APP_PUBLIC_SHADCN_DIR, "registry.json"),
+    {
+      $schema: "https://ui.shadcn.com/schema/registry.json",
+      name: "uniqueui",
+      homepage: "https://uniqueui.com",
+      items: shadcnItems,
+    },
+    { spaces: 2 },
+  );
+}
+
 async function buildRegistry() {
   console.log("Building registry...");
 
@@ -286,11 +361,13 @@ async function buildRegistry() {
   await syncDocsRegistryArtifacts(result);
   await syncDocsUiComponents(result);
   await syncDocsConfig(docsManifest);
+  await syncShadcnRegistry(result, docsManifest);
   console.log(`Registry built successfully: ${OUTPUT_FILE}`);
   console.log(`Registry synced to docs public root: ${APP_PUBLIC_OUTPUT_FILE}`);
   console.log(`Registry synced to docs public directory: ${APP_PUBLIC_REGISTRY_DIR}`);
   console.log(`Registry synced to docs ui components: ${APP_COMPONENTS_UI_DIR}`);
   console.log(`Docs config generated from registry source: ${REGISTRY_DOCS_FILE}`);
+  console.log(`shadcn-compatible registry synced to: ${APP_PUBLIC_SHADCN_DIR}`);
 }
 
 buildRegistry().catch((err) => {

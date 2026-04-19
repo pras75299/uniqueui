@@ -59,6 +59,7 @@ export default async function DocsOverview() {
   const installDepsHtml = await hl("npm install motion tailwindcss");
   const initHtml = await hl("npx uniqueui init");
   const addHtml = await hl("npx uniqueui add typewriter-text");
+  const shadcnAddHtml = await hl("npx shadcn@latest add https://uniqueui.com/r/typewriter-text.json -y");
   const usageHtml = await hl(
     `import { TypewriterText } from "@/components/ui/typewriter-text";
 
@@ -187,6 +188,41 @@ export default function Hero() {
         </div>
       </section>
 
+      {/* ── shadcn CLI (same components) ── */}
+      <section
+        id="shadcn-cli"
+        className="scroll-mt-20 animate-fade-in-up animate-delay-225 space-y-6"
+      >
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg border bg-white border-neutral-200 text-purple-600 dark:bg-neutral-900 dark:border-neutral-800 dark:text-purple-400">
+            <Package className="w-5 h-5" />
+          </div>
+          <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">shadcn CLI</h2>
+        </div>
+        <p className="text-base leading-relaxed text-neutral-600 dark:text-neutral-400 max-w-3xl">
+          If your app already uses{" "}
+          <a
+            href="https://ui.shadcn.com"
+            className="text-purple-600 dark:text-purple-400 underline underline-offset-2"
+          >
+            shadcn/ui
+          </a>
+          , install the same UniqueUI files with the official registry format (no{" "}
+          <code className="text-xs font-mono bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">
+            uniqueui init
+          </code>
+          ). You need <code className="text-xs font-mono bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">shadcn init</code>{" "}
+          and <code className="text-xs font-mono bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">@/lib/utils</code>{" "}
+          exporting <code className="text-xs font-mono">cn</code> — snippets import that path. Catalog:{" "}
+          <code className="text-xs font-mono break-all">https://uniqueui.com/r/registry.json</code>.
+        </p>
+        <CodeBlockShell
+          html={shadcnAddHtml}
+          rawCode="npx shadcn@latest add https://uniqueui.com/r/typewriter-text.json -y"
+          label="bash"
+        />
+      </section>
+
       {/* ── CLI Reference ── */}
       <section id="cli" className="scroll-mt-20 animate-fade-in-up animate-delay-250 space-y-6">
         <div className="flex items-center gap-3">
@@ -201,7 +237,10 @@ export default function Hero() {
             { cmd: "npx uniqueui init", desc: "Create config file and set up your project" },
             { cmd: "npx uniqueui add <component>", desc: "Download a component into components/ui" },
             { cmd: "npx uniqueui list", desc: "List all available components" },
-            { cmd: "npx uniqueui add --all", desc: "Add all components at once" },
+            {
+              cmd: "npx shadcn@latest add https://uniqueui.com/r/<slug>.json -y",
+              desc: "Same component via shadcn registry (requires shadcn init + @/lib/utils)",
+            },
           ].map(({ cmd, desc }) => (
             <div
               key={cmd}

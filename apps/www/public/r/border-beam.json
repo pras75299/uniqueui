@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "border-beam",
+  "type": "registry:ui",
+  "title": "Border Beam",
+  "description": "A glowing comet that continuously orbits the border of a container — instantly upgrades cards, code blocks, and feature sections.",
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "components/ui/border-beam.tsx",
+      "content": "\"use client\";\nimport { cn } from \"@/lib/utils\";\nimport { useEffect, useRef } from \"react\";\n\nexport interface BorderBeamProps {\n  children?: React.ReactNode;\n  className?: string;\n  /** Time in seconds for one full orbit */\n  duration?: number;\n  /** Comet colour at the head */\n  colorFrom?: string;\n  /** Comet colour at the tail */\n  colorTo?: string;\n  /** Diameter of the glowing orb in px */\n  size?: number;\n  /** Width of the border ring in px */\n  borderWidth?: number;\n  theme?: \"light\" | \"dark\";\n}\n\nexport function BorderBeam({\n  children,\n  className,\n  duration = 5,\n  colorFrom = \"#a855f7\",\n  colorTo = \"#ec4899\",\n  size = 160,\n  borderWidth = 1.5,\n  theme = \"dark\",\n}: BorderBeamProps) {\n  const containerRef = useRef<HTMLDivElement>(null);\n  const beamRef = useRef<HTMLSpanElement>(null);\n  const progressRef = useRef(0);\n  const rafRef = useRef<number>(0);\n\n  useEffect(() => {\n    const container = containerRef.current;\n    const beam = beamRef.current;\n    if (!container || !beam) return;\n\n    const animate = (_timestamp: number) => {\n      const { width: w, height: h } = container.getBoundingClientRect();\n      const perimeter = 2 * (w + h);\n      const speed = perimeter / (duration * 1000); // px per ms\n\n      progressRef.current =\n        (progressRef.current + speed * (1000 / 60)) % perimeter;\n\n      const d = progressRef.current;\n      let x: number;\n      let y: number;\n\n      if (d < w) {\n        x = d;\n        y = 0;\n      } else if (d < w + h) {\n        x = w;\n        y = d - w;\n      } else if (d < 2 * w + h) {\n        x = w - (d - w - h);\n        y = h;\n      } else {\n        x = 0;\n        y = h - (d - 2 * w - h);\n      }\n\n      beam.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;\n      rafRef.current = requestAnimationFrame(animate);\n    };\n\n    rafRef.current = requestAnimationFrame(animate);\n    return () => cancelAnimationFrame(rafRef.current);\n  }, [duration]);\n\n  const borderColor =\n    theme === \"dark\" ? \"rgba(255,255,255,0.08)\" : \"rgba(0,0,0,0.1)\";\n\n  return (\n    <div\n      ref={containerRef}\n      className={cn(\"relative overflow-hidden rounded-xl\", className)}\n      style={{ border: `${borderWidth}px solid ${borderColor}` }}\n    >\n      {/* Glowing comet */}\n      <span\n        ref={beamRef}\n        aria-hidden=\"true\"\n        className=\"pointer-events-none absolute z-10 rounded-full\"\n        style={{\n          width: size,\n          height: size,\n          background: `radial-gradient(circle at 30% 30%, ${colorFrom}cc, ${colorTo}77, transparent 70%)`,\n          filter: `blur(${size * 0.12}px)`,\n          top: 0,\n          left: 0,\n          willChange: \"transform\",\n        }}\n      />\n      {children}\n    </div>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/ui/border-beam.tsx"
+    }
+  ]
+}

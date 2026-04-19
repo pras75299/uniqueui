@@ -19,6 +19,7 @@ UniqueUI is a collection of **copy-paste animated components** built with React,
   - [init](#init)
   - [add](#add-component)
   - [list](#list)
+- [Installing with the shadcn CLI](#installing-with-the-shadcn-cli)
 - [Project Setup Guide](#project-setup-guide)
   - [Next.js](#nextjs-setup)
   - [Vite + React](#vite--react-setup)
@@ -164,6 +165,22 @@ npx uniqueui add animated-tabs
 # Add from a custom registry
 npx uniqueui add my-component --url https://my-registry.com/components
 ```
+
+---
+
+## Installing with the shadcn CLI
+
+The same components are published in **shadcn registry** format at **`https://uniqueui.com/r/<slug>.json`** (and `https://uniqueui.com/r/registry.json` for the full catalog). Use this if your app already follows the shadcn/ui workflow (`components.json`, `@/lib/utils` with `cn`, Tailwind v3-style config).
+
+```bash
+npx shadcn@latest add https://uniqueui.com/r/moving-border.json -y
+```
+
+- Component snippets import **`@/lib/utils`** — the shadcn registry item does **not** ship a second `cn` file (your project should already have it from `shadcn init`).
+- The CLI writes **`components/ui/<slug>.tsx`** (plus Tailwind merges when the component defines them).
+- **UniqueUI CLI vs shadcn:** `uniqueui add` uses the split registry under `/registry/` and can scaffold `utils/cn.ts`; `shadcn add` uses `/r/*.json` and expects a shadcn-aligned project.
+
+Upstream repo: after `pnpm build:registry`, the same JSON files exist under `apps/www/public/r/` for local testing.
 
 ---
 
@@ -576,20 +593,19 @@ UniqueUI follows the **copy-paste component model** (similar to shadcn/ui):
 ```
 Registry (GitHub)
        │
-       │  npx uniqueui add <component>
-       ▼
-  Your project
-  └── components/
-       └── ui/
-            └── moving-border.tsx   ← You own this file
-  └── utils/
-       └── cn.ts                    ← Shared utility
+       ├── npx uniqueui add <component>
+       │        ▼
+       │   Your project (UniqueUI components.json + utils/cn)
+       │
+       └── npx shadcn add https://uniqueui.com/r/<slug>.json
+                ▼
+            Your project (shadcn components.json + @/lib/utils)
 ```
 
-1. Components live in a public GitHub registry
-2. The CLI fetches the source code at install time
-3. Files are written **directly into your project** — you own and can edit them freely
-4. **No runtime dependency on UniqueUI** — components only depend on `motion`, `clsx`, and `tailwind-merge`
+1. Components live in a public registry; builds also emit **shadcn-compatible** `r/*.json` URLs.
+2. The UniqueUI CLI (or shadcn CLI) fetches the source at install time.
+3. Files are written **directly into your project** — you own and can edit them freely.
+4. **No runtime dependency on UniqueUI** — components only depend on `motion`, `clsx`, and `tailwind-merge` (and whatever your app already uses for icons, etc.).
 
 ---
 

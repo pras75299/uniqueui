@@ -16,6 +16,7 @@
 <p align="center">
   <a href="#components">Components</a> •
   <a href="#installation">Installation</a> •
+  <a href="#installing-with-the-shadcn-cli">shadcn CLI</a> •
   <a href="#commands">Commands</a> •
   <a href="#project-setup-guide">Setup Guide</a> •
   <a href="#usage-examples">Examples</a> •
@@ -34,7 +35,7 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 
 - 🎯 **Copy-paste architecture** — Components live in your codebase, fully customizable
 - 🎨 **28 animated components** — From subtle to spectacular
-- ⚡ **CLI for instant setup** — `npx uniqueui init` → `npx uniqueui add <component>`
+- ⚡ **CLI for instant setup** — `npx uniqueui init` → `npx uniqueui add <component>` (or install via **shadcn CLI** from the published registry)
 - 🧩 **Zero lock-in** — Uses standard React, Motion, and Tailwind CSS
 - 📱 **Dark-first design** — Every component looks great out of the box
 
@@ -117,6 +118,8 @@ npx uniqueui init
 npx uniqueui add spotlight-card
 ```
 
+If you use [shadcn/ui](https://ui.shadcn.com) in your app, you can add the same components with the shadcn CLI instead — see [Installing with the shadcn CLI](#installing-with-the-shadcn-cli).
+
 ```tsx
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 
@@ -170,6 +173,32 @@ What happens:
 3. Merges required Tailwind animations/keyframes into your config
 4. Writes the component `.tsx` file to your configured directory
 5. Writes a `utils/cn.ts` helper file (if not already present)
+
+### Installing with the shadcn CLI
+
+Every component is also published in the [shadcn registry format](https://ui.shadcn.com/docs/registry) when the docs site is built. After `pnpm build:registry`, files appear under `apps/www/public/r/` in this repo; on production they are served from **`https://uniqueui.com/r/`**.
+
+| Artifact | Purpose |
+|----------|---------|
+| `https://uniqueui.com/r/<slug>.json` | Single component ([registry-item](https://ui.shadcn.com/schema/registry-item.json) schema) |
+| `https://uniqueui.com/r/registry.json` | Full catalog ([registry](https://ui.shadcn.com/schema/registry.json) schema) |
+
+**Add one component:**
+
+```bash
+npx shadcn@latest add https://uniqueui.com/r/moving-border.json -y
+```
+
+**Requirements:**
+
+- A project that already matches what the shadcn CLI expects: **`components.json`**, Tailwind v3-style setup, and **`@/lib/utils`** exporting `cn` (UniqueUI source files import `import { cn } from "@/lib/utils"`). Run `npx shadcn@latest init` in a new Next.js app if you do not have this yet.
+- The registry item installs the UI file as **`registry:component`** at `components/ui/<slug>.tsx` (with the `src/` prefix if your app uses the App Router `src/` layout). Tailwind extras from the component are merged into your `tailwind.config` when present.
+- The **`cn` util file is not bundled** in the shadcn item (your app should already have it from `shadcn init`), which matches typical shadcn projects.
+
+**Local / PR verification:** point `shadcn add` at an absolute path to a built file, e.g.  
+`npx shadcn@latest add "/path/to/uniqueui/apps/www/public/r/moving-border.json" -y`.
+
+**Automated check:** from the repo root, `pnpm test:e2e:shadcn` creates a fresh Next app, runs `shadcn add` for every component, writes preview routes from docs `usageCode`, and runs `next build`.
 
 ## Project Setup Guide
 
@@ -402,8 +431,13 @@ cd packages/cli && pnpm build
 # Build the registry (from root)
 pnpm build:registry
 
-# Run component tests
+# Run component E2E (UniqueUI CLI + full page matrix + build)
 npx ts-node scripts/test-all-components.ts
+
+# Run shadcn CLI E2E (install each component from apps/www/public/r/*.json + build)
+pnpm test:e2e:shadcn
+# Smoke (first N only): SHADCN_E2E_LIMIT=3 pnpm test:e2e:shadcn
+# Afterward, `npm run dev` — home lists each component; **Open preview** goes to `/preview/[slug]` (same usageCode as the docs site, importing from `src/components/ui/`).
 ```
 
 ## Project Structure
@@ -420,7 +454,10 @@ uniqueui/
 │       │   ├── layout.tsx      # Root layout
 │       │   └── globals.css     # Global styles & keyframes
 │       ├── components/
-│       │   └── ui/             # All 28 UI components
+│       │   └── ui/             # Synced UI copies (from registry)
+│       ├── public/
+│       │   ├── registry/     # Split registry for uniqueui add (index + per slug)
+│       │   └── r/            # shadcn registry items (*.json) + r/registry.json
 │       └── config/
 │           ├── components.ts   # Component metadata (name, slug, icon, description)
 │           └── demos.tsx       # Component demo configurations
@@ -437,7 +474,9 @@ uniqueui/
 │   └── moving-border/          # One folder per component slug
 │       └── component.tsx       # Component source file
 ├── scripts/
-│   └── build-registry.ts      # Builds registry artifacts and syncs docs UI copies
+│   ├── build-registry.ts      # Builds registry artifacts and syncs docs UI copies
+│   ├── test-all-components.ts # E2E: uniqueui add + generated pages + build
+│   └── test-shadcn-all-components.ts # E2E: shadcn add + previews + build
 ├── registry.json               # Generated registry manifest
 ├── pnpm-workspace.yaml         # Workspace configuration
 └── package.json                # Root package.json
@@ -448,19 +487,19 @@ uniqueui/
 ```
 Registry (GitHub)
        │
-       │  npx uniqueui add <component>
-       ▼
-  Your project
-  └── components/
-       └── ui/
-            └── moving-border.tsx   ← You own this file
-  └── utils/
-       └── cn.ts                    ← Shared utility
+       ├── npx uniqueui add <component>
+       │        ▼
+       │   Your project (components.json paths, utils/cn)
+       │
+       └── npx shadcn add https://uniqueui.com/r/<slug>.json
+                ▼
+            Your project (shadcn components.json, @/lib/utils)
 ```
 
-1. **Registry** — Each component is defined in `registry/config.ts` and points at files like `registry/<slug>/component.tsx`. `build-registry.ts` outputs `registry.json`, split docs registry files, and synced docs UI copies.
-2. **CLI** — Fetches `registry.json` from GitHub, finds the component, writes files to your project, and installs missing npm dependencies.
-3. **Showcase** — The `apps/www` Next.js site serves as marketing landing page and component documentation with live previews and install commands.
+1. **Registry** — Each component is defined in `registry/config.ts` and points at files like `registry/<slug>/component.tsx`. `build-registry.ts` outputs `registry.json`, split files under `apps/www/public/registry/`, **shadcn-format items under `apps/www/public/r/`**, and synced docs UI copies.
+2. **UniqueUI CLI** — Fetches the hosted registry, writes files to your project, and installs npm dependencies (and can add `utils/cn.ts`).
+3. **shadcn CLI** — Consumes the same component source via `public/r/<slug>.json` URLs; expects a standard shadcn project layout and `@/lib/utils` for `cn`.
+4. **Showcase** — The `apps/www` Next.js site serves as marketing landing page and component documentation with live previews and install commands.
 
 ## Troubleshooting
 
@@ -507,7 +546,7 @@ node --version  # must be v18 or higher
 2. Create your feature branch (`git checkout -b feature/my-component`)
 3. Add your component to `registry/` and update `registry/config.ts`
 4. Update `registry/docs.json` for docs metadata and `apps/www/config/demos.tsx` for the live demo
-5. Run `pnpm build:registry` to regenerate `registry.json`, refresh `apps/www/public/registry/*`, sync `apps/www/components/ui/*`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
+5. Run `pnpm build:registry` to regenerate `registry.json`, refresh `apps/www/public/registry/*` and **`apps/www/public/r/*`**, sync `apps/www/components/ui/*`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
 6. Run `pnpm build` to ensure everything compiles
 7. Submit a pull request
 

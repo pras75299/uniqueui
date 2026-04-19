@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build:registry": "ts-node scripts/build-registry.ts",
+    "test:e2e:shadcn": "npx ts-node scripts/test-shadcn-all-components.ts",
     "test": "turbo run test",
     "test:ci": "pnpm --dir packages/cli test && pnpm --dir apps/www test",
     "lint": "pnpm --dir apps/www lint",

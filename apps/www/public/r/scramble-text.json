@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scramble-text",
+  "type": "registry:ui",
+  "title": "Scramble Text",
+  "description": "Matrix-style text scramble effect that resolves characters left-to-right.",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "components/ui/scramble-text.tsx",
+      "content": "\"use client\";\nimport { cn } from \"@/lib/utils\";\nimport React, { useEffect, useState, useCallback, useRef } from \"react\";\nimport { useInView } from \"motion/react\";\n\nconst CHARS = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*\";\n\nexport interface ScrambleTextProps {\n  text: string;\n  className?: string;\n  speed?: number;\n  scrambleDuration?: number;\n  triggerOnView?: boolean;\n  once?: boolean;\n  characterSet?: string;\n  theme?: \"light\" | \"dark\";\n}\n\nexport function ScrambleText({\n  text,\n  className,\n  speed = 30,\n  scrambleDuration = 1500,\n  triggerOnView = true,\n  once = true,\n  characterSet = CHARS,\n  theme: _theme = \"dark\",\n}: ScrambleTextProps) {\n  const [displayText, setDisplayText] = useState(text);\n  const [isScrambling, setIsScrambling] = useState(false);\n  const ref = useRef<HTMLSpanElement>(null);\n  const isInView = useInView(ref, { once, amount: 0.5 });\n  const hasTriggered = useRef(false);\n  const intervalRef = useRef<number | null>(null);\n\n  const scramble = useCallback(() => {\n    if (isScrambling) return;\n    setIsScrambling(true);\n\n    const originalChars = text.split(\"\");\n    const totalSteps = Math.ceil(scrambleDuration / speed);\n    let step = 0;\n\n    if (intervalRef.current !== null) {\n      clearInterval(intervalRef.current);\n      intervalRef.current = null;\n    }\n\n    const intervalId = window.setInterval(() => {\n      step++;\n      const progress = step / totalSteps;\n\n      const newText = originalChars\n        .map((char, i) => {\n          if (char === \" \") return \" \";\n          // Characters resolve left-to-right based on progress\n          if (i / originalChars.length < progress) return char;\n          return characterSet[Math.floor(Math.random() * characterSet.length)];\n        })\n        .join(\"\");\n\n      setDisplayText(newText);\n\n      if (step >= totalSteps) {\n        clearInterval(intervalId);\n        intervalRef.current = null;\n        setDisplayText(text);\n        setIsScrambling(false);\n      }\n    }, speed);\n\n    intervalRef.current = intervalId;\n  }, [text, speed, scrambleDuration, characterSet, isScrambling]);\n\n  useEffect(() => {\n    if (triggerOnView && isInView && !hasTriggered.current) {\n      hasTriggered.current = true;\n      scramble();\n    }\n  }, [isInView, triggerOnView, scramble]);\n\n  useEffect(() => {\n    return () => {\n      if (intervalRef.current !== null) {\n        clearInterval(intervalRef.current);\n      }\n    };\n  }, []);\n\n  return (\n    <span\n      ref={ref}\n      className={cn(\"inline-block font-mono\", className)}\n      onMouseEnter={() => {\n        if (!triggerOnView) scramble();\n      }}\n    >\n      {displayText.split(\"\").map((char, i) => (\n        <span\n          key={i}\n          className={cn(\n            \"inline-block transition-colors duration-150\",\n            isScrambling && char !== text[i]\n              ? \"text-purple-400\"\n              : \"text-current\"\n          )}\n        >\n          {char === \" \" ? \"\\u00A0\" : char}\n        </span>\n      ))}\n    </span>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/ui/scramble-text.tsx"
+    }
+  ]
+}

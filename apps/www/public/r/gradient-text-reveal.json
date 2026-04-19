@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "gradient-text-reveal",
+  "type": "registry:ui",
+  "title": "Gradient Text Reveal",
+  "description": "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "components/ui/gradient-text-reveal.tsx",
+      "content": "\"use client\";\nimport { cn } from \"@/lib/utils\";\nimport React from \"react\";\nimport { motion, useInView } from \"motion/react\";\nimport { useRef } from \"react\";\n\n\nexport interface GradientTextRevealProps {\n  text: string;\n  className?: string;\n  gradientFrom?: string;\n  gradientTo?: string;\n  staggerDelay?: number;\n  duration?: number;\n  once?: boolean;\n  as?: \"h1\" | \"h2\" | \"h3\" | \"h4\" | \"p\" | \"span\";\n}\n\nexport function GradientTextReveal({\n  text,\n  className,\n  gradientFrom = \"#a855f7\",\n  gradientTo = \"#ec4899\",\n  staggerDelay = 0.05,\n  duration = 0.5,\n  once = true,\n  as: Tag = \"p\",\n}: GradientTextRevealProps) {\n  const ref = useRef<HTMLDivElement>(null);\n  const isInView = useInView(ref, { once, amount: 0.3 });\n  const words = text.split(\" \");\n  const Wrapper = Tag === \"span\" ? \"span\" : \"div\";\n\n  return (\n    <Wrapper ref={ref} className={Tag === \"span\" ? \"inline-block\" : undefined}>\n      <Tag className={cn(\"flex flex-wrap gap-x-2 gap-y-1\", className)}>\n        {words.map((word, i) => (\n          <motion.span\n            key={`${word}-${i}`}\n          initial={{ opacity: 0, y: 20, filter: \"blur(8px)\" }}\n          animate={\n            isInView\n              ? { opacity: 1, y: 0, filter: \"blur(0px)\" }\n              : { opacity: 0, y: 20, filter: \"blur(8px)\" }\n          }\n          transition={{\n            duration,\n            delay: i * staggerDelay,\n            type: \"spring\",\n            stiffness: 100,\n            damping: 12,\n          }}\n          style={{\n            background: `linear-gradient(135deg, ${gradientFrom}, ${gradientTo})`,\n            WebkitBackgroundClip: \"text\",\n            WebkitTextFillColor: \"transparent\",\n            backgroundClip: \"text\",\n          }}\n        >\n          {word}\n        </motion.span>\n        ))}\n      </Tag>\n    </Wrapper>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/ui/gradient-text-reveal.tsx"
+    }
+  ]
+}
