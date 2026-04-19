@@ -53,6 +53,7 @@ import { CountUp } from "@/components/ui/count-up";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Ripple } from "@/components/ui/ripple";
 import { WordRotate } from "@/components/ui/word-rotate";
+import { LightSpeed } from "@/components/ui/lightspeed";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -2987,6 +2988,88 @@ export const componentDemos: Record<string, DemoComponent> = {
           </div>
         ))}
       </div>
+    </div>
+  ),
+
+  "lightspeed": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark" ? "border-neutral-800" : "border-neutral-200",
+      )}
+    >
+      <LightSpeed
+        particleCount={280}
+        speed={1}
+        intensity={1}
+        quality="medium"
+        className="h-full"
+      >
+        <div className="text-center px-4 pointer-events-none space-y-2">
+          <p className="text-xs uppercase tracking-[0.35em] text-white/25 font-mono">
+            engaging warp drive
+          </p>
+          <h3 className="text-3xl font-bold text-white tracking-tight drop-shadow-[0_0_24px_rgba(120,180,255,0.5)]">
+            LightSpeed
+          </h3>
+          <p className="text-white/40 text-sm max-w-[220px] mx-auto">
+            Particle warp-speed background
+          </p>
+        </div>
+      </LightSpeed>
+    </div>
+  ),
+
+  "lightspeed/fast": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark" ? "border-neutral-800" : "border-neutral-200",
+      )}
+    >
+      <LightSpeed
+        particleCount={300}
+        speed={3}
+        intensity={1.6}
+        quality="high"
+        className="h-full"
+      >
+        <div className="text-center px-4 pointer-events-none space-y-2">
+          <p className="text-xs uppercase tracking-[0.35em] text-white/25 font-mono">
+            ludicrous speed
+          </p>
+          <h3 className="text-3xl font-bold text-white tracking-tight drop-shadow-[0_0_32px_rgba(255,150,80,0.6)]">
+            Full Power
+          </h3>
+        </div>
+      </LightSpeed>
+    </div>
+  ),
+
+  "lightspeed/gold": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden border h-[400px] w-full relative",
+        theme === "dark" ? "border-neutral-800" : "border-neutral-200",
+      )}
+    >
+      <LightSpeed
+        particleCount={220}
+        speed={0.7}
+        intensity={1.4}
+        tint="#ffbf4d"
+        quality="medium"
+        className="h-full"
+      >
+        <div className="text-center px-4 pointer-events-none space-y-2">
+          <p className="text-xs uppercase tracking-[0.35em] text-amber-400/40 font-mono">
+            solar wind
+          </p>
+          <h3 className="text-3xl font-bold text-amber-200 tracking-tight drop-shadow-[0_0_28px_rgba(255,180,50,0.7)]">
+            Solar Wind
+          </h3>
+        </div>
+      </LightSpeed>
     </div>
   ),
 };

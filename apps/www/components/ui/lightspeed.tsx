@@ -3,24 +3,22 @@
 import React, { useEffect, useLayoutEffect, useRef, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
-export interface LightSpeedProps {
-  className?: string;
-  children?: React.ReactNode;
+export interface LightSpeedProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Animation speed multiplier. Higher = faster streaks. Range: 0.1–5. */
   speed?: number;
   /** Trail length and glow intensity multiplier. Range: 0.1–3. */
   intensity?: number;
-  /** Total number of particles rendered. */
+  /** Total number of particles rendered (capped by quality preset). */
   particleCount?: number;
-  /** Red channel tint applied on top of randomised hues (0–1). */
-  colorR?: number;
-  /** Green channel tint (0–1). */
-  colorG?: number;
-  /** Blue channel tint (0–1). */
-  colorB?: number;
-  /** Performance preset. "low" disables blur; "high" enables 4-layer glow. */
+  /**
+   * CSS colour used to tint the particle palette — accepts #rrggbb, #rgb, or rgb().
+   * Each palette colour's channels are multiplied by the normalised tint values.
+   * Defaults to white (#ffffff), which leaves all palette colours unchanged.
+   */
+  tint?: string;
+  /** Performance preset. "low" disables blur and will-change; "high" enables 4-layer glow. */
   quality?: "low" | "medium" | "high";
-  /** Pause all particle animations. */
+  /** Pause all particle animations without restarting them. */
   paused?: boolean;
 }
 
@@ -29,6 +27,8 @@ interface ParticleConfig {
   angle: number;
   duration: number;
   delay: number;
+  /** Stable spawn-jitter distance from centre (px). Fixed at creation so resizes don't re-randomise origins. */
+  jitter: number;
   r: number;
   g: number;
   b: number;
@@ -70,6 +70,7 @@ function makeParticles(count: number): ParticleConfig[] {
       angle: Math.random() * Math.PI * 2,
       duration: rand(0.4, 2.8),
       delay: rand(0, 2.5),
+      jitter: rand(0, 6),
       r, g, b,
       size: rand(1, 3),
       trailLength: rand(1.5, 9),
@@ -77,35 +78,58 @@ function makeParticles(count: number): ParticleConfig[] {
   });
 }
 
+/**
+ * Parses a CSS colour string (#rrggbb, #rgb, rgb()) into three 0–1 multipliers.
+ * Returns [1, 1, 1] (no-op) for unrecognised formats.
+ */
+function parseTint(tint: string): readonly [number, number, number] {
+  const s = tint.trim();
+  if (/^#[0-9a-f]{6}$/i.test(s)) {
+    return [
+      parseInt(s.slice(1, 3), 16) / 255,
+      parseInt(s.slice(3, 5), 16) / 255,
+      parseInt(s.slice(5, 7), 16) / 255,
+    ];
+  }
+  if (/^#[0-9a-f]{3}$/i.test(s)) {
+    return [
+      parseInt(s[1] + s[1], 16) / 255,
+      parseInt(s[2] + s[2], 16) / 255,
+      parseInt(s[3] + s[3], 16) / 255,
+    ];
+  }
+  const m = s.match(/^rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+  if (m) return [+m[1] / 255, +m[2] / 255, +m[3] / 255];
+  return [1, 1, 1];
+}
+
 export function LightSpeed({
   className,
   children,
+  style,
   speed = 1,
   intensity = 1,
   particleCount = 300,
-  colorR = 1,
-  colorG = 1,
-  colorB = 1,
+  tint = "#ffffff",
   quality = "medium",
   paused = false,
+  ...rest
 }: LightSpeedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const particleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const animationsRef = useRef<Animation[]>([]);
   const pausedRef = useRef(paused);
-  useLayoutEffect(() => { pausedRef.current = paused; });
+  useLayoutEffect(() => { pausedRef.current = paused; }, [paused]);
 
   const capped = capCount(particleCount, quality);
   const particles = useMemo(() => makeParticles(capped), [capped]);
+  const [tintR, tintG, tintB] = useMemo(() => parseTint(tint), [tint]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
 
@@ -114,8 +138,8 @@ export function LightSpeed({
     let lastH = 0;
 
     function launchAll(width: number, height: number) {
-      // Skip re-launch when dimensions haven't changed (prevents double-fire
-      // from the synchronous getBoundingClientRect call + ResizeObserver).
+      // Skip re-launch when dimensions are unchanged — prevents the double-fire
+      // from getBoundingClientRect() + ResizeObserver firing on the same frame.
       if (Math.abs(width - lastW) < 1 && Math.abs(height - lastH) < 1) return;
       lastW = width;
       lastH = height;
@@ -135,46 +159,40 @@ export function LightSpeed({
         const sin = Math.sin(p.angle);
         const half = p.size / 2;
 
-        // Spawn in tight cluster near center with tiny jitter for vortex feel
-        const jitter = rand(0, 6);
-        const sx = cx + cos * jitter - half;
-        const sy = cy + sin * jitter - half;
-        // Midpoint for opacity peak
+        // Use the particle's stable jitter instead of re-randomising on each resize.
+        const sx = cx + cos * p.jitter - half;
+        const sy = cy + sin * p.jitter - half;
         const mx = cx + cos * (maxRadius * 0.5) - half;
         const my = cy + sin * (maxRadius * 0.5) - half;
-        // End: beyond container corner
         const ex = cx + cos * maxRadius - half;
         const ey = cy + sin * maxRadius - half;
 
-        const pr = Math.min(255, Math.round(p.r * colorR));
-        const pg = Math.min(255, Math.round(p.g * colorG));
-        const pb = Math.min(255, Math.round(p.b * colorB));
+        const pr = Math.min(255, Math.round(p.r * tintR));
+        const pg = Math.min(255, Math.round(p.g * tintG));
+        const pb = Math.min(255, Math.round(p.b * tintB));
         const colorCss = `rgb(${pr},${pg},${pb})`;
 
         const effectiveDuration = (p.duration / Math.max(speed, 0.01)) * 1000;
         const effectiveTrail = p.trailLength * Math.max(intensity, 0.1);
-        const gi = intensity;
 
         el.style.backgroundColor = colorCss;
-        el.style.width = `${p.size}px`;
-        el.style.height = `${p.size}px`;
 
         if (quality === "low") {
           el.style.boxShadow = "none";
           el.style.filter = "none";
         } else if (quality === "high") {
           el.style.boxShadow = [
-            `0 0 ${Math.round(2 * gi)}px ${colorCss}`,
-            `0 0 ${Math.round(6 * gi)}px ${colorCss}`,
-            `0 0 ${Math.round(14 * gi)}px ${colorCss}`,
-            `0 0 ${Math.round(28 * gi)}px ${colorCss}`,
+            `0 0 ${Math.round(2 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(6 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(14 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(28 * intensity)}px ${colorCss}`,
           ].join(", ");
           el.style.filter = "blur(0.5px)";
         } else {
           el.style.boxShadow = [
-            `0 0 ${Math.round(2 * gi)}px ${colorCss}`,
-            `0 0 ${Math.round(7 * gi)}px ${colorCss}`,
-            `0 0 ${Math.round(16 * gi)}px ${colorCss}`,
+            `0 0 ${Math.round(2 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(7 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(16 * intensity)}px ${colorCss}`,
           ].join(", ");
           el.style.filter = "blur(0.5px)";
         }
@@ -203,7 +221,6 @@ export function LightSpeed({
             delay: p.delay * 1000,
             iterations: Infinity,
             easing: "ease-in",
-            fill: "forwards",
           }
         );
 
@@ -228,8 +245,9 @@ export function LightSpeed({
     return () => {
       ro.disconnect();
       animations.forEach(a => { try { a.cancel(); } catch {} });
+      animationsRef.current = [];
     };
-  }, [particles, speed, intensity, colorR, colorG, colorB, quality]);
+  }, [particles, tintR, tintG, tintB, speed, intensity, quality]);
 
   useEffect(() => {
     animationsRef.current.forEach(a => {
@@ -244,7 +262,8 @@ export function LightSpeed({
         "relative w-full h-full overflow-hidden select-none",
         className
       )}
-      style={{ background: "#000008" }}
+      style={{ background: "#000008", ...style }}
+      {...rest}
     >
       {/* Layered ambient radial glow: warm core, cool mid-field, deep vignette */}
       <div
@@ -262,7 +281,7 @@ export function LightSpeed({
         }}
       />
 
-      {/* Particle pool */}
+      {/* Particle pool — will-change omitted for quality="low" to save compositor layers */}
       {particles.map((p, i) => (
         <div
           key={p.id}
@@ -275,7 +294,7 @@ export function LightSpeed({
             width: p.size,
             height: p.size,
             borderRadius: "50%",
-            willChange: "transform, opacity",
+            ...(quality !== "low" && { willChange: "transform, opacity" }),
             transformOrigin: "center center",
             pointerEvents: "none",
             opacity: 0,

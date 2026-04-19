@@ -30,6 +30,7 @@ import {
   LucideType,
   LucideWand2,
   LucideWaves,
+  LucideZap,
 } from "lucide-react";
 
 export type ComponentVariant = {
@@ -88,6 +89,7 @@ const iconMap = {
   LucideType,
   LucideWand2,
   LucideWaves,
+  LucideZap,
 } satisfies Record<string, ElementType>;
 
 const componentDefinitions = [
@@ -2322,6 +2324,82 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "\"use client\";\nimport { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function Hero() {\n  return (\n    <h1 className=\"text-5xl font-black text-white\">\n      Build interfaces that are{\" \"}\n      <WordRotate\n        words={[\"faster\", \"smarter\", \"bolder\", \"yours\"]}\n        animation=\"slide-up\"\n        className=\"text-purple-400\"\n      />\n    </h1>\n  );\n}"
+  },
+  {
+    "slug": "lightspeed",
+    "name": "LightSpeed",
+    "description": "A cinematic warp-speed particle background. Hundreds of luminous streaks radiate from a central vanishing point, simulating hyperspace travel. Built on Motion.dev WAAPI — all animations are GPU-composited for smooth 60fps performance.",
+    "icon": "LucideZap",
+    "category": "Backgrounds",
+    "props": [
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "1",
+        "description": "Animation speed multiplier. Higher values shorten each particle's travel duration. Range 0.1–5."
+      },
+      {
+        "name": "intensity",
+        "type": "number",
+        "default": "1",
+        "description": "Trail length and glow strength multiplier. Scales scaleX keyframe and box-shadow blur. Range 0.1–3."
+      },
+      {
+        "name": "particleCount",
+        "type": "number",
+        "default": "300",
+        "description": "Total number of particle elements rendered. Regenerates the particle pool when changed."
+      },
+      {
+        "name": "tint",
+        "type": "string",
+        "default": "\"#ffffff\"",
+        "description": "CSS colour (#rrggbb, #rgb, or rgb()) used to tint the particle palette. Each palette colour's channels are multiplied by the normalised tint values. Defaults to white (no tint)."
+      },
+      {
+        "name": "quality",
+        "type": "\"low\" | \"medium\" | \"high\"",
+        "default": "\"medium\"",
+        "description": "\"low\" caps particles at 100 and disables blur. \"high\" allows up to 1000 and enables 4-layer box-shadow bloom."
+      },
+      {
+        "name": "paused",
+        "type": "boolean",
+        "default": "false",
+        "description": "Calls .pause() or .play() on all stored animation controls without restarting them."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Optional content layered above the particle field at z-index 10."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional classes on the outer container (height, rounding, etc.)."
+      }
+    ],
+    "variants": [
+      {
+        "id": "default",
+        "label": "Warp Drive",
+        "demoKey": "lightspeed",
+        "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={300}\n        speed={1}\n        intensity={1}\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "fast",
+        "label": "Ludicrous Speed",
+        "demoKey": "lightspeed/fast",
+        "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={300}\n        speed={3}\n        intensity={1.6}\n        quality=\"high\"\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "gold",
+        "label": "Solar Wind",
+        "demoKey": "lightspeed/gold",
+        "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={220}\n        speed={0.7}\n        intensity={1.4}\n        tint=\"#ffbf4d\"\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={300}\n        speed={1}\n        intensity={1}\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 
