@@ -390,4 +390,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "lightspeed",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "lightspeed/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];
