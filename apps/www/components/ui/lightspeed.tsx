@@ -3,6 +3,12 @@
 import React, { useEffect, useLayoutEffect, useRef, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
+// On the server useLayoutEffect is a no-op (avoids SSR warning and keeps hydration
+// safe). On the client it runs synchronously before the browser paints, so state
+// updates committed here are visible in the very first frame.
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export interface LightSpeedProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Animation speed multiplier. Higher = faster streaks. Range: 0.1–5. */
   speed?: number;
@@ -122,10 +128,11 @@ export function LightSpeed({
   useLayoutEffect(() => { pausedRef.current = paused; }, [paused]);
 
   const capped = capCount(particleCount, quality);
-  // Particles are generated client-side only: makeParticles() uses Math.random(),
-  // which produces different values on server vs client and causes hydration errors.
+  // Initial state is empty so server HTML and client hydration VDOM both have zero
+  // particle divs — no hydration mismatch. The layout effect then populates particles
+  // synchronously before the first client paint, eliminating the blank-frame flicker.
   const [particles, setParticles] = useState<ParticleConfig[]>([]);
-  useEffect(() => { setParticles(makeParticles(capped)); }, [capped]);
+  useIsomorphicLayoutEffect(() => { setParticles(makeParticles(capped)); }, [capped]);
   const [tintR, tintG, tintB] = useMemo(() => parseTint(tint), [tint]);
 
   useEffect(() => {
