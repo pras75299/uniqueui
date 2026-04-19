@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect, useRef, useMemo } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export interface LightSpeedProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -122,7 +122,10 @@ export function LightSpeed({
   useLayoutEffect(() => { pausedRef.current = paused; }, [paused]);
 
   const capped = capCount(particleCount, quality);
-  const particles = useMemo(() => makeParticles(capped), [capped]);
+  // Particles are generated client-side only: makeParticles() uses Math.random(),
+  // which produces different values on server vs client and causes hydration errors.
+  const [particles, setParticles] = useState<ParticleConfig[]>([]);
+  useEffect(() => { setParticles(makeParticles(capped)); }, [capped]);
   const [tintR, tintG, tintB] = useMemo(() => parseTint(tint), [tint]);
 
   useEffect(() => {
