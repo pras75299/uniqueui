@@ -820,6 +820,24 @@
           "target": "components/ui/lightspeed.tsx"
         }
       ]
+    },
+    {
+      "name": "shooting-stars-grid",
+      "type": "registry:ui",
+      "title": "ShootingStarsGrid",
+      "description": "A cinematic hero-section background: a faint grid bathed in dark-emerald glow, with thin white streaks that race along grid lanes like falling stars. Built on Motion.dev with compositor-only transforms for smooth 60fps.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/shooting-stars-grid.tsx",
+          "type": "registry:component",
+          "target": "components/ui/shooting-stars-grid.tsx"
+        }
+      ]
     }
   ]
 }

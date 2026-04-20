@@ -776,5 +776,36 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function BrandHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <LightSpeed\n        particleCount={250}\n        speed={0.8}\n        intensity={1.5}\n        tint=\"#ffb84d\"\n        quality=\"medium\"\n      >\n        <span className=\"text-sm font-mono uppercase tracking-[0.25em] text-amber-300/70\">\n          Solar Wind\n        </span>\n      </LightSpeed>\n    </div>\n  );\n}"
       }
     ]
+  },
+  "shooting-stars-grid": {
+    "slug": "shooting-stars-grid",
+    "overview": "ShootingStarsGrid renders a full-bleed animated background suitable for hero sections. It stacks four layers: a near-black base (#020808), a subtle 80px grid drawn with two linear-gradients, a radial emerald glow, and a vignette that fades the outer edges to black. Shooting stars are motion.div elements whose positions snap to grid lanes; their animation uses only transform + opacity so they stay on the GPU compositor. Each star picks a hue from the default multi-colour palette (or from a custom colour/array passed via the `color` prop). Respects prefers-reduced-motion by rendering the grid alone.",
+    "scenarios": [
+      {
+        "title": "Hero-section background",
+        "description": "Drop ShootingStarsGrid behind a headline as a full-viewport hero background.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Hero() {\n  return (\n    <div className=\"relative h-screen w-full\">\n      <ShootingStarsGrid className=\"absolute inset-0\" starCount={20}>\n        <div className=\"flex h-full items-center justify-center text-center\">\n          <div>\n            <h1 className=\"text-6xl font-bold text-white tracking-tight\">\n              Ship at the speed of light\n            </h1>\n            <p className=\"mt-4 text-lg text-white/60\">\n              Animated backgrounds, zero configuration.\n            </p>\n          </div>\n        </div>\n      </ShootingStarsGrid>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Monochrome brand shower",
+        "description": "Pass a single colour to lock every streak to your brand hue.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function BrandHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <ShootingStarsGrid\n        starCount={18}\n        color=\"#7fe7ff\"\n        speed={2.2}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Custom palette",
+        "description": "Pass an array of colours to restrict the shower to a specific set of hues.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function PaletteHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <ShootingStarsGrid\n        starCount={20}\n        color={[\"#ff9ecf\", \"#c89bff\", \"#ffffff\"]}\n        speed={2.5}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Horizontal-only streaks",
+        "description": "Restrict streaks to the horizontal axis for a calmer, train-window feel.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function HorizontalHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <ShootingStarsGrid\n        starCount={12}\n        direction=\"horizontal\"\n        speed={3}\n        gridSize={96}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Dense, fast streaks for a launch moment",
+        "description": "Bump starCount and speed for a high-energy loader or splash screen.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Launch() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <ShootingStarsGrid starCount={40} speed={1.4} glowStrength={1.2}>\n        <p className=\"flex h-full items-center justify-center font-mono text-sm tracking-[0.3em] text-white/60\">\n          LAUNCHING…\n        </p>\n      </ShootingStarsGrid>\n    </div>\n  );\n}"
+      }
+    ]
   }
 };

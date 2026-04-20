@@ -398,4 +398,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "shooting-stars-grid",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "shooting-stars-grid/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

@@ -25,6 +25,7 @@ import {
   LucideScrollText,
   LucideShield,
   LucideSparkles,
+  LucideStars,
   LucideTable,
   LucideTerminal,
   LucideType,
@@ -84,6 +85,7 @@ const iconMap = {
   LucideScrollText,
   LucideShield,
   LucideSparkles,
+  LucideStars,
   LucideTable,
   LucideTerminal,
   LucideType,
@@ -2400,6 +2402,61 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "\"use client\";\nimport { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={300}\n        speed={1}\n        intensity={1}\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
+  },
+  {
+    "slug": "shooting-stars-grid",
+    "name": "ShootingStarsGrid",
+    "description": "A cinematic hero-section background: a faint grid bathed in dark-emerald glow, with thin white streaks that race along grid lanes like falling stars. Built on Motion.dev with compositor-only transforms for smooth 60fps.",
+    "icon": "LucideStars",
+    "category": "Backgrounds",
+    "props": [
+      {
+        "name": "starCount",
+        "type": "number",
+        "default": "15",
+        "description": "Number of concurrent shooting-star streaks. Clamped to 1–80."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "2.5",
+        "description": "Base travel duration in seconds. Each star is randomised ±30% around this value."
+      },
+      {
+        "name": "glowStrength",
+        "type": "number",
+        "default": "1",
+        "description": "Multiplier (0–1) applied to the streak's box-shadow intensity."
+      },
+      {
+        "name": "gridSize",
+        "type": "number",
+        "default": "80",
+        "description": "Pixel spacing between grid lines; streaks snap to these lanes."
+      },
+      {
+        "name": "direction",
+        "type": "\"horizontal\" | \"vertical\" | \"both\"",
+        "default": "\"both\"",
+        "description": "Axis streaks travel along. \"both\" picks per star randomly."
+      },
+      {
+        "name": "color",
+        "type": "string | readonly string[]",
+        "description": "Streak colour. Pass a single CSS colour for a monochrome shower, an array of colours to sample from per star, or omit for the built-in multi-hue palette (white, mint, cyan, amber, pink, violet)."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Optional content layered above the background at z-index 10."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional classes merged onto the outer container."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      {/* Default: multi-hue palette (white, mint, cyan, amber, pink, violet) */}\n      <ShootingStarsGrid\n        starCount={18}\n        speed={2.5}\n        gridSize={80}\n      />\n\n      {/* Monochrome — every streak picks up the same hue */}\n      {/* <ShootingStarsGrid starCount={18} color=\"#7fe7ff\" /> */}\n\n      {/* Custom palette — streaks sampled from this set */}\n      {/* <ShootingStarsGrid\n        starCount={20}\n        color={[\"#ff9ecf\", \"#c89bff\", \"#ffffff\"]}\n      /> */}\n    </div>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 
