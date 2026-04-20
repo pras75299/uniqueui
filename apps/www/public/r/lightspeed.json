@@ -5,7 +5,6 @@
   "title": "LightSpeed",
   "description": "A cinematic warp-speed particle background. Hundreds of luminous streaks radiate from a central vanishing point, simulating hyperspace travel. Built on Motion.dev WAAPI — all animations are GPU-composited for smooth 60fps performance.",
   "dependencies": [
-    "motion",
     "clsx",
     "tailwind-merge"
   ],

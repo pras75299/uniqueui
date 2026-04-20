@@ -1,7 +1,6 @@
 {
   "name": "lightspeed",
   "dependencies": [
-    "motion",
     "clsx",
     "tailwind-merge"
   ],

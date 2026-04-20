@@ -147,12 +147,12 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Dashboard content switcher",
         "description": "Switch between weekly, monthly, and yearly data views in a dashboard.",
-        "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\n\nconst ranges = [\n  { id: \"7d\", label: \"7 days\" },\n  { id: \"30d\", label: \"30 days\" },\n  { id: \"90d\", label: \"90 days\" },\n  { id: \"1y\", label: \"1 year\" },\n];\n\nexport default function DateRangeTabs() {\n  const [range, setRange] = useState(\"30d\");\n\n  return (\n    <div>\n      <AnimatedTabs\n        tabs={ranges}\n        defaultTab=\"30d\"\n        onChange={setRange}\n        size=\"sm\"\n      />\n      <p className=\"mt-4 text-sm text-neutral-400\">\n        Showing data for: {range}\n      </p>\n    </div>\n  );\n}"
+        "code": "\"use client\";\nimport { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\n\nconst ranges = [\n  { id: \"7d\", label: \"7 days\" },\n  { id: \"30d\", label: \"30 days\" },\n  { id: \"90d\", label: \"90 days\" },\n  { id: \"1y\", label: \"1 year\" },\n];\n\nexport default function DateRangeTabs() {\n  const [range, setRange] = useState(\"30d\");\n\n  return (\n    <div>\n      <AnimatedTabs\n        tabs={ranges}\n        defaultTab=\"30d\"\n        onChange={setRange}\n        size=\"sm\"\n      />\n      <p className=\"mt-4 text-sm text-neutral-400\">\n        Showing data for: {range}\n      </p>\n    </div>\n  );\n}"
       },
       {
         "title": "Product feature showcase tabs",
         "description": "Let marketing highlight different product features with animated tab transitions.",
-        "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst features = [\n  { id: \"speed\", label: \"Speed\", content: \"Deploy components in seconds with the CLI.\" },\n  { id: \"design\", label: \"Design\", content: \"Motion-first animations out of the box.\" },\n  { id: \"dx\", label: \"DX\", content: \"Single-file components, zero config.\" },\n];\n\nexport default function FeatureTabs() {\n  const [active, setActive] = useState(\"speed\");\n  const feature = features.find(f => f.id === active)!;\n\n  return (\n    <div className=\"space-y-6 max-w-lg\">\n      <AnimatedTabs tabs={features} defaultTab=\"speed\" onChange={setActive} />\n      <AnimatePresence mode=\"wait\">\n        <motion.p\n          key={active}\n          initial={{ opacity: 0, y: 6 }}\n          animate={{ opacity: 1, y: 0 }}\n          exit={{ opacity: 0, y: -6 }}\n          className=\"text-neutral-300\"\n        >\n          {feature.content}\n        </motion.p>\n      </AnimatePresence>\n    </div>\n  );\n}"
+        "code": "\"use client\";\nimport { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst features = [\n  { id: \"speed\", label: \"Speed\", content: \"Deploy components in seconds with the CLI.\" },\n  { id: \"design\", label: \"Design\", content: \"Motion-first animations out of the box.\" },\n  { id: \"dx\", label: \"DX\", content: \"Single-file components, zero config.\" },\n];\n\nexport default function FeatureTabs() {\n  const [active, setActive] = useState(\"speed\");\n  const feature = features.find(f => f.id === active)!;\n\n  return (\n    <div className=\"space-y-6 max-w-lg\">\n      <AnimatedTabs tabs={features} defaultTab=\"speed\" onChange={setActive} />\n      <AnimatePresence mode=\"wait\">\n        <motion.p\n          key={active}\n          initial={{ opacity: 0, y: 6 }}\n          animate={{ opacity: 1, y: 0 }}\n          exit={{ opacity: 0, y: -6 }}\n          className=\"text-neutral-300\"\n        >\n          {feature.content}\n        </motion.p>\n      </AnimatePresence>\n    </div>\n  );\n}"
       }
     ]
   },
@@ -396,7 +396,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Live activity feed",
         "description": "Push real-time events (new users, payments, deployments) into the stack.",
-        "code": "import { NotificationStack } from \"@/components/ui/notification-stack\";\nimport { useState } from \"react\";\n\nconst events = [\n  { id: 1, title: \"New signup\", body: \"prashant@example.com just joined.\" },\n  { id: 2, title: \"Payment received\", body: \"$49 from Stripe · Order #1042\" },\n  { id: 3, title: \"Deploy success\", body: \"main → production in 34s\" },\n];\n\nexport default function ActivityFeed() {\n  const [notifications, setNotifications] = useState(events);\n\n  return (\n    <NotificationStack\n      notifications={notifications}\n      onDismiss={(id) => setNotifications((n) => n.filter((x) => x.id !== id))}\n    />\n  );\n}"
+        "code": "\"use client\";\nimport { NotificationStack } from \"@/components/ui/notification-stack\";\nimport { useState } from \"react\";\n\nconst events = [\n  { id: 1, title: \"New signup\", body: \"prashant@example.com just joined.\" },\n  { id: 2, title: \"Payment received\", body: \"$49 from Stripe · Order #1042\" },\n  { id: 3, title: \"Deploy success\", body: \"main → production in 34s\" },\n];\n\nexport default function ActivityFeed() {\n  const [notifications, setNotifications] = useState(events);\n\n  return (\n    <NotificationStack\n      notifications={notifications}\n      onDismiss={(id) => setNotifications((n) => n.filter((x) => x.id !== id))}\n    />\n  );\n}"
       },
       {
         "title": "Form validation errors",
@@ -721,7 +721,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   },
   "ripple": {
     "slug": "ripple",
-    "overview": "Ripple renders concentric animated rings that pulse outward from a center point. Use it as a background for icons, avatars, or buttons to convey activity, presence, or emphasis.",
+    "overview": "Ripple renders luminous drifting orbs across a dark background for a liquid-nebula hero effect. Tune `mainCircleSize`, `mainCircleOpacity`, `numCircles` (capped at 8), `color`, and `duration` to dial in the atmosphere — works well layered behind hero copy, product stages, and ambient panels.",
     "scenarios": [
       {
         "title": "Live presence indicator",
