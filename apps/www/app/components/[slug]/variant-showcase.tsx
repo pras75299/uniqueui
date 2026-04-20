@@ -105,7 +105,7 @@ export default function VariantShowcase({
             {/* Usage — same visual treatment as the single-demo Usage block */}
             <div
               className={cn(
-                "relative group rounded-lg overflow-hidden border",
+                "relative group rounded-lg overflow-hidden border focus-within:ring-1 focus-within:ring-neutral-500",
                 isDark
                   ? "border-neutral-800 bg-neutral-950"
                   : "border-neutral-200 bg-neutral-900",
@@ -116,7 +116,7 @@ export default function VariantShowcase({
                 style={{ backgroundColor: "#0a0a0a" }}
                 dangerouslySetInnerHTML={{ __html: highlighted }}
               />
-              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+              <div className="absolute top-2 right-2 opacity-0 transition-opacity z-10 group-hover:opacity-100 group-focus-within:opacity-100">
                 <ClientCopyButton text={raw} />
               </div>
             </div>

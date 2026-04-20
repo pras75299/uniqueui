@@ -223,7 +223,7 @@
           {
             "title": "Loading / processing indicator",
             "description": "Use a single looping word to hint that background work is in progress.",
-            "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function ProcessingBadge() {\n  return (\n    <div className=\"flex items-center gap-2 text-sm text-neutral-400\">\n      <span className=\"h-2 w-2 rounded-full bg-green-500 animate-pulse\" />\n      <TypewriterText\n        words={[\"Analyzing\u2026\", \"Optimizing\u2026\", \"Almost done\u2026\"]}\n        typingSpeed={60}\n        deletingSpeed={40}\n        pauseDuration={1200}\n      />\n    </div>\n  );\n}"
+            "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function ProcessingBadge() {\n  return (\n    <div className=\"flex items-center gap-2 text-sm text-neutral-400\">\n      <span className=\"h-2 w-2 rounded-full bg-green-500 animate-pulse\" />\n      <TypewriterText\n        words={[\"Analyzing\u2026\", \"Optimizing\u2026\", \"Almost done\u2026\"]}\n        typingSpeed={60}\n        deletingSpeed={40}\n        delayBetweenWords={1200}\n      />\n    </div>\n  );\n}"
           },
           {
             "title": "Feature tagline in a navbar",
@@ -557,7 +557,7 @@
           {
             "title": "Primary CTA button",
             "description": "Apply the magnetic effect to your hero CTA to make it irresistible to click.",
-            "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function HeroCTA() {\n  return (\n    <div className=\"flex justify-center py-20\">\n      <MagneticButton>\n        <button className=\"px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-neutral-100 transition-colors\">\n          Get started free \u2192\n        </button>\n      </MagneticButton>\n    </div>\n  );\n}"
+            "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function HeroCTA() {\n  return (\n    <div className=\"flex justify-center py-20\">\n      <MagneticButton className=\"px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-neutral-100 transition-colors\">\n        Get started free \u2192\n      </MagneticButton>\n    </div>\n  );\n}"
           },
           {
             "title": "Icon navigation links",
@@ -3020,7 +3020,7 @@
           {
             "title": "Loading / transition screen",
             "description": "Use LightSpeed as a full-screen loader while your app fetches data, with a pause toggle when complete.",
-            "code": "import { useState, useEffect } from \"react\";\nimport { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Loader({ isLoading }: { isLoading: boolean }) {\n  return (\n    <div\n      className=\"fixed inset-0 z-50 transition-opacity duration-700\"\n      style={{ opacity: isLoading ? 1 : 0, pointerEvents: isLoading ? \"auto\" : \"none\" }}\n    >\n      <LightSpeed\n        particleCount={300}\n        speed={2}\n        intensity={1.4}\n        paused={!isLoading}\n        quality=\"medium\"\n      >\n        <p className=\"font-mono text-sm tracking-widest text-white/40\">\n          ENGAGING WARP DRIVE\u2026\n        </p>\n      </LightSpeed>\n    </div>\n  );\n}"
+            "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Loader({ isLoading }: { isLoading: boolean }) {\n  return (\n    <div\n      className=\"fixed inset-0 z-50 transition-opacity duration-700\"\n      style={{ opacity: isLoading ? 1 : 0, pointerEvents: isLoading ? \"auto\" : \"none\" }}\n    >\n      <LightSpeed\n        particleCount={300}\n        speed={2}\n        intensity={1.4}\n        paused={!isLoading}\n        quality=\"medium\"\n      >\n        <p className=\"font-mono text-sm tracking-widest text-white/40\">\n          ENGAGING WARP DRIVE\u2026\n        </p>\n      </LightSpeed>\n    </div>\n  );\n}"
           },
           {
             "title": "Tinted brand variant",
@@ -3110,7 +3110,7 @@
           {
             "title": "Dense, fast streaks for a launch moment",
             "description": "Bump starCount and speed for a high-energy loader or splash screen.",
-            "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Launch() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <ShootingStarsGrid starCount={40} speed={1.4} glowStrength={1.2}>\n        <p className=\"flex h-full items-center justify-center font-mono text-sm tracking-[0.3em] text-white/60\">\n          LAUNCHING\u2026\n        </p>\n      </ShootingStarsGrid>\n    </div>\n  );\n}"
+            "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Launch() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <ShootingStarsGrid starCount={40} speed={1.4} glowStrength={1}>\n        <p className=\"flex h-full items-center justify-center font-mono text-sm tracking-[0.3em] text-white/60\">\n          LAUNCHING\u2026\n        </p>\n      </ShootingStarsGrid>\n    </div>\n  );\n}"
           }
         ]
       },

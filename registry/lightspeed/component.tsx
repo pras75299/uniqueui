@@ -128,7 +128,7 @@ export function LightSpeed({
   const particleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const animationsRef = useRef<Animation[]>([]);
   const pausedRef = useRef(paused);
-  useLayoutEffect(() => { pausedRef.current = paused; }, [paused]);
+  useIsomorphicLayoutEffect(() => { pausedRef.current = paused; }, [paused]);
 
   const capped = capCount(particleCount, quality);
   // Initial state is empty so server HTML and client hydration VDOM both have zero

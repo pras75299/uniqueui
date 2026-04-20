@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export type ShootingStarDirection = "horizontal" | "vertical" | "both";
 
 export interface ShootingStarsGridProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "color"> {
   /** Number of concurrent shooting-star streaks. Range: 1–80. */
   starCount?: number;
   /** Base duration (seconds) per streak. Each star is randomised ±30% around this. */
@@ -122,6 +122,11 @@ export function ShootingStarsGrid({
 
   // Clamp to a sensible range so consumers can't accidentally nuke the GPU.
   const safeCount = Math.max(1, Math.min(starCount, 80));
+  // Guard derived animation inputs against zero/negative/NaN values that would
+  // otherwise produce Infinity lanes, zero-duration loops, or invalid color-mix %.
+  const safeGridSize = Math.max(8, Number.isFinite(gridSize) ? gridSize : 80);
+  const safeSpeed = Math.max(0.1, Number.isFinite(speed) ? speed : 2.5);
+  const safeGlow = Math.max(0, Math.min(Number.isFinite(glowStrength) ? glowStrength : 1, 1));
 
   // Track container size so lane snapping reflects actual width/height.
   // Initial state zero keeps the server render empty → no hydration mismatch.
@@ -146,23 +151,22 @@ export function ShootingStarsGrid({
     return () => ro.disconnect();
   }, []);
 
-  // Consumers passing an inline array literal (`color={["#a", "#b"]}`) will get
-  // a new identity on every parent render — memoise at the call site if that
-  // matters. For a string or omitted prop, identity is stable.
-  const palette = resolvePalette(color);
+  // Memoise the resolved palette so a string or omitted prop keeps stable array
+  // identity — otherwise `stars` regenerates on every parent render.
+  const palette = useMemo(() => resolvePalette(color), [color]);
 
   const stars = useMemo(() => {
     if (size.w === 0 || size.h === 0) return [];
     return makeStars(
       safeCount,
-      gridSize,
-      speed,
+      safeGridSize,
+      safeSpeed,
       direction,
       size.w,
       size.h,
       palette,
     );
-  }, [safeCount, gridSize, speed, direction, size.w, size.h, palette]);
+  }, [safeCount, safeGridSize, safeSpeed, direction, size.w, size.h, palette]);
 
   const gridBackground = useMemo(
     () => ({
@@ -170,16 +174,16 @@ export function ShootingStarsGrid({
         "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px)",
         "linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
       ].join(", "),
-      backgroundSize: `${gridSize}px ${gridSize}px`,
+      backgroundSize: `${safeGridSize}px ${safeGridSize}px`,
     }),
-    [gridSize],
+    [safeGridSize],
   );
 
   // Glow scales with `glowStrength` but the hue is per-star, so shadow is built
   // inside the map below. These alpha values keep the streak ~1px sharp with a
   // soft halo (no `spread` — would inflate the element's footprint).
-  const innerAlpha = 0.55 * glowStrength;
-  const outerAlpha = 0.2 * glowStrength;
+  const innerAlpha = 0.55 * safeGlow;
+  const outerAlpha = 0.2 * safeGlow;
 
   return (
     <div
