@@ -4,7 +4,7 @@ import ComponentPreview from "@/components/component-preview";
 import { notFound } from "next/navigation";
 import { Terminal } from "lucide-react";
 import ClientCopyButton from "./client-copy-button";
-import BentoVariantSwitcher from "./bento-variant-switcher";
+import VariantShowcase from "./variant-showcase";
 import PropsTable from "@/components/props-table";
 import { codeToHtml } from "shiki";
 import { escapeHtml } from "@/lib/escape-html";
@@ -94,8 +94,10 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
           </p>
         </div>
 
-        {/* Synced variant switcher — handles both Preview and Usage in one block */}
-        <BentoVariantSwitcher
+        {/* Stacked variant scenarios — each variant renders its own Preview +
+            Usage pair vertically, no tab-switching, so every scenario is
+            visible on scroll. */}
+        <VariantShowcase
           variants={component.variants}
           highlightedCodes={highlightedCodes}
           rawCodes={rawCodes}
