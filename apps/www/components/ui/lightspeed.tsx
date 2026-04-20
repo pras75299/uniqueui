@@ -130,7 +130,16 @@ export function LightSpeed({
   const pausedRef = useRef(paused);
   useIsomorphicLayoutEffect(() => { pausedRef.current = paused; }, [paused]);
 
-  const capped = capCount(particleCount, quality);
+  // Guard all numeric props against NaN/Infinity/non-positive values before they
+  // reach WAAPI — a single bad duration/trail value would cascade into
+  // Infinity/NaN transforms and silently break the whole particle field.
+  const safeParticleCount = Number.isFinite(particleCount)
+    ? Math.max(0, Math.floor(particleCount))
+    : 300;
+  const safeSpeed = Number.isFinite(speed) && speed > 0 ? speed : 1;
+  const safeIntensity = Number.isFinite(intensity) && intensity > 0 ? intensity : 1;
+
+  const capped = capCount(safeParticleCount, quality);
   // Initial state is empty so server HTML and client hydration VDOM both have zero
   // particle divs — no hydration mismatch. The layout effect then populates particles
   // synchronously before the first client paint, eliminating the blank-frame flicker.
@@ -185,8 +194,8 @@ export function LightSpeed({
         const pb = Math.min(255, Math.round(p.b * tintB));
         const colorCss = `rgb(${pr},${pg},${pb})`;
 
-        const effectiveDuration = (p.duration / Math.max(speed, 0.01)) * 1000;
-        const effectiveTrail = p.trailLength * Math.max(intensity, 0.1);
+        const effectiveDuration = (p.duration / Math.max(safeSpeed, 0.01)) * 1000;
+        const effectiveTrail = p.trailLength * Math.max(safeIntensity, 0.1);
 
         el.style.backgroundColor = colorCss;
 
@@ -201,17 +210,17 @@ export function LightSpeed({
           // in sync with the animation. The multi-radius box-shadow already
           // produces the soft "halo" look; the 0.5px blur was visually negligible.
           el.style.boxShadow = [
-            `0 0 ${Math.round(2 * intensity)}px ${colorCss}`,
-            `0 0 ${Math.round(5 * intensity)}px ${colorCss}`,
-            `0 0 ${Math.round(11 * intensity)}px ${colorCss}`,
-            `0 0 ${Math.round(20 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(2 * safeIntensity)}px ${colorCss}`,
+            `0 0 ${Math.round(5 * safeIntensity)}px ${colorCss}`,
+            `0 0 ${Math.round(11 * safeIntensity)}px ${colorCss}`,
+            `0 0 ${Math.round(20 * safeIntensity)}px ${colorCss}`,
           ].join(", ");
           el.style.filter = "none";
         } else {
           el.style.boxShadow = [
-            `0 0 ${Math.round(2 * intensity)}px ${colorCss}`,
-            `0 0 ${Math.round(7 * intensity)}px ${colorCss}`,
-            `0 0 ${Math.round(16 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(2 * safeIntensity)}px ${colorCss}`,
+            `0 0 ${Math.round(7 * safeIntensity)}px ${colorCss}`,
+            `0 0 ${Math.round(16 * safeIntensity)}px ${colorCss}`,
           ].join(", ");
           el.style.filter = "none";
         }
@@ -268,7 +277,7 @@ export function LightSpeed({
       animations.forEach(a => { try { a.cancel(); } catch {} });
       animationsRef.current = [];
     };
-  }, [particles, tintR, tintG, tintB, speed, intensity, quality]);
+  }, [particles, tintR, tintG, tintB, safeSpeed, safeIntensity, quality]);
 
   useEffect(() => {
     animationsRef.current.forEach(a => {
@@ -280,7 +289,7 @@ export function LightSpeed({
     <div
       ref={containerRef}
       className={cn(
-        "relative w-full h-full overflow-hidden select-none",
+        "relative w-full h-full overflow-hidden",
         className
       )}
       style={{
@@ -310,6 +319,7 @@ export function LightSpeed({
           Position-fixed children of `<LightSpeed>` skip this layer entirely. */}
       <div
         aria-hidden="true"
+        className="select-none"
         style={{
           position: "absolute",
           inset: 0,

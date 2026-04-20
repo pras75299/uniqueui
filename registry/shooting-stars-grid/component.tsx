@@ -84,16 +84,26 @@ function makeStars(
   palette: readonly string[],
 ): Star[] {
   // Snap lanes to interior grid lines so streaks visibly ride the grid.
-  const laneCountH = Math.max(1, Math.floor(height / gridSize) - 1);
-  const laneCountV = Math.max(1, Math.floor(width / gridSize) - 1);
+  // When the container is too small for any interior line, fall back to the
+  // centre so streaks stay on-canvas instead of clipping to lane 0/gridSize.
+  const interiorLanesH = Math.floor(height / gridSize) - 1;
+  const interiorLanesV = Math.floor(width / gridSize) - 1;
   return Array.from({ length: count }, (_, id) => {
     const isHorizontal = pickDirection(direction);
-    const laneIndex = isHorizontal
-      ? 1 + Math.floor(Math.random() * laneCountH)
-      : 1 + Math.floor(Math.random() * laneCountV);
+    const hasInteriorLane = isHorizontal
+      ? interiorLanesH >= 1
+      : interiorLanesV >= 1;
+    const lane = hasInteriorLane
+      ? (1 +
+          Math.floor(
+            Math.random() *
+              (isHorizontal ? interiorLanesH : interiorLanesV),
+          )) *
+        gridSize
+      : (isHorizontal ? height : width) / 2;
     return {
       id,
-      lane: laneIndex * gridSize,
+      lane,
       length: rand(40, 90),
       duration: baseSpeed * rand(0.7, 1.3),
       delay: rand(0, 5),
@@ -121,7 +131,10 @@ export function ShootingStarsGrid({
   const prefersReduced = useReducedMotion();
 
   // Clamp to a sensible range so consumers can't accidentally nuke the GPU.
-  const safeCount = Math.max(1, Math.min(starCount, 80));
+  const safeCount = Math.max(
+    1,
+    Math.min(Number.isFinite(starCount) ? Math.floor(starCount) : 15, 80),
+  );
   // Guard derived animation inputs against zero/negative/NaN values that would
   // otherwise produce Infinity lanes, zero-duration loops, or invalid color-mix %.
   const safeGridSize = Math.max(8, Number.isFinite(gridSize) ? gridSize : 80);
