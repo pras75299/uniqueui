@@ -2390,7 +2390,7 @@ const componentDefinitions = [
         "id": "fast",
         "label": "Ludicrous Speed",
         "demoKey": "lightspeed/fast",
-        "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={300}\n        speed={3}\n        intensity={1.6}\n        quality=\"high\"\n      />\n    </div>\n  );\n}"
+        "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={200}\n        speed={1}\n        intensity={1.4}\n        quality=\"high\"\n      />\n    </div>\n  );\n}"
       },
       {
         "id": "gold",

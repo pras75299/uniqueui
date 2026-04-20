@@ -32,7 +32,10 @@ interface ParticleConfig {
   id: number;
   angle: number;
   duration: number;
-  delay: number;
+  /** Normalised phase offset in [0, 1). Applied as a negative WAAPI delay so the
+   * particle enters mid-cycle — prevents the 0–2.5s warm-up gap where streaks
+   * are still invisible after a (re)launch. */
+  phase: number;
   /** Stable spawn-jitter distance from centre (px). Fixed at creation so resizes don't re-randomise origins. */
   jitter: number;
   r: number;
@@ -75,7 +78,7 @@ function makeParticles(count: number): ParticleConfig[] {
       id,
       angle: Math.random() * Math.PI * 2,
       duration: rand(0.4, 2.8),
-      delay: rand(0, 2.5),
+      phase: Math.random(),
       jitter: rand(0, 6),
       r, g, b,
       size: rand(1, 3),
@@ -191,20 +194,26 @@ export function LightSpeed({
           el.style.boxShadow = "none";
           el.style.filter = "none";
         } else if (quality === "high") {
+          // No `filter` here on purpose. `filter` (even sub-pixel blur) forces each
+          // particle into its own compositor layer + offscreen rasterisation pass.
+          // With hundreds of particles that blows the GPU texture budget, and
+          // eviction churn shows up as the entire Preview/Usage section flickering
+          // in sync with the animation. The multi-radius box-shadow already
+          // produces the soft "halo" look; the 0.5px blur was visually negligible.
           el.style.boxShadow = [
             `0 0 ${Math.round(2 * intensity)}px ${colorCss}`,
-            `0 0 ${Math.round(6 * intensity)}px ${colorCss}`,
-            `0 0 ${Math.round(14 * intensity)}px ${colorCss}`,
-            `0 0 ${Math.round(28 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(5 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(11 * intensity)}px ${colorCss}`,
+            `0 0 ${Math.round(20 * intensity)}px ${colorCss}`,
           ].join(", ");
-          el.style.filter = "blur(0.5px)";
+          el.style.filter = "none";
         } else {
           el.style.boxShadow = [
             `0 0 ${Math.round(2 * intensity)}px ${colorCss}`,
             `0 0 ${Math.round(7 * intensity)}px ${colorCss}`,
             `0 0 ${Math.round(16 * intensity)}px ${colorCss}`,
           ].join(", ");
-          el.style.filter = "blur(0.5px)";
+          el.style.filter = "none";
         }
 
         const angleDeg = p.angle * (180 / Math.PI);
@@ -228,7 +237,9 @@ export function LightSpeed({
           ],
           {
             duration: effectiveDuration,
-            delay: p.delay * 1000,
+            // Negative delay seeds the particle mid-cycle so the sky is "full"
+            // on frame 1 instead of filling in over the first 2–3 seconds.
+            delay: -(p.phase * effectiveDuration),
             iterations: Infinity,
             easing: "ease-in",
           }
@@ -272,45 +283,84 @@ export function LightSpeed({
         "relative w-full h-full overflow-hidden select-none",
         className
       )}
-      style={{ background: "#000008", ...style }}
+      style={{
+        background: "#000008",
+        // The root is intentionally "transparent" to fixed positioning: we set
+        // ONLY `isolation: isolate` here (creates a stacking context but does
+        // NOT establish a containing block). We deliberately do NOT set
+        // `transform`, `will-change: transform`, `contain: layout`, or even
+        // `contain: paint` — per the CSS Containment spec, both `layout` and
+        // `paint` (and any of `transform`, `filter`, `perspective`) turn the
+        // element into the containing block for `position: fixed` descendants,
+        // which would break legitimate uses like `<LightSpeed>` wrapping a
+        // fixed tooltip/drawer/modal. All the heavy compositing isolation
+        // lives on the inner backdrop layer below, which is `aria-hidden` and
+        // never has user-supplied children.
+        isolation: "isolate",
+        ...style,
+      }}
       {...rest}
     >
-      {/* Layered ambient radial glow: warm core, cool mid-field, deep vignette */}
+      {/* Backdrop layer: holds the radial vignette AND every animated particle.
+          This is the single GPU-promoted compositor layer for the entire
+          animation — `will-change: transform` + `translateZ(0)` flatten what
+          would otherwise be hundreds of per-particle layers into one, and
+          `contain: layout paint style` scopes invalidation so the surrounding
+          Preview/Usage sections can no longer be dirtied by particle repaints.
+          Position-fixed children of `<LightSpeed>` skip this layer entirely. */}
       <div
         aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,
-          background: [
-            "radial-gradient(ellipse 28% 28% at 50% 50%, rgba(255,140,20,0.09) 0%, transparent 100%)",
-            "radial-gradient(ellipse 55% 55% at 50% 50%, rgba(20,90,200,0.05) 0%, transparent 100%)",
-            "radial-gradient(ellipse 90% 90% at 50% 50%, rgba(0,0,8,0.4) 40%, rgba(0,0,8,0.85) 100%)",
-          ].join(", "),
           pointerEvents: "none",
           zIndex: 0,
+          willChange: "transform",
+          transform: "translateZ(0)",
+          contain: "layout paint style",
+          isolation: "isolate",
         }}
-      />
-
-      {/* Particle pool — will-change omitted for quality="low" to save compositor layers */}
-      {particles.map((p, i) => (
+      >
+        {/* Layered ambient radial glow: warm core, cool mid-field, deep vignette */}
         <div
-          key={p.id}
-          ref={el => { particleRefs.current[i] = el; }}
           aria-hidden="true"
           style={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            width: p.size,
-            height: p.size,
-            borderRadius: "50%",
-            ...(quality !== "low" && { willChange: "transform, opacity" }),
-            transformOrigin: "center center",
+            inset: 0,
+            background: [
+              "radial-gradient(ellipse 28% 28% at 50% 50%, rgba(255,140,20,0.09) 0%, transparent 100%)",
+              "radial-gradient(ellipse 55% 55% at 50% 50%, rgba(20,90,200,0.05) 0%, transparent 100%)",
+              "radial-gradient(ellipse 90% 90% at 50% 50%, rgba(0,0,8,0.4) 40%, rgba(0,0,8,0.85) 100%)",
+            ].join(", "),
             pointerEvents: "none",
-            opacity: 0,
           }}
         />
-      ))}
+
+        {/* Particle pool — `will-change` deliberately NOT set per-particle.
+            Promoting hundreds of tiny elements to their own compositor layers
+            was the dominant cause of the flicker (GPU layer/texture
+            exhaustion). The parent backdrop layer is GPU-promoted instead, so
+            the WAAPI transform/opacity tweens still run on the compositor
+            thread, just within a single layer. */}
+        {particles.map((p, i) => (
+          <div
+            key={p.id}
+            ref={el => { particleRefs.current[i] = el; }}
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: p.size,
+              height: p.size,
+              borderRadius: "50%",
+              transformOrigin: "center center",
+              pointerEvents: "none",
+              opacity: 0,
+            }}
+          />
+        ))}
+      </div>
 
       {children && (
         <div

@@ -3028,9 +3028,9 @@ export const componentDemos: Record<string, DemoComponent> = {
       )}
     >
       <LightSpeed
-        particleCount={300}
-        speed={3}
-        intensity={1.6}
+        particleCount={200}
+        speed={1}
+        intensity={1.4}
         quality="high"
         className="h-full"
       >
