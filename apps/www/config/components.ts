@@ -25,11 +25,13 @@ import {
   LucideScrollText,
   LucideShield,
   LucideSparkles,
+  LucideStars,
   LucideTable,
   LucideTerminal,
   LucideType,
   LucideWand2,
   LucideWaves,
+  LucideZap,
 } from "lucide-react";
 
 export type ComponentVariant = {
@@ -83,11 +85,13 @@ const iconMap = {
   LucideScrollText,
   LucideShield,
   LucideSparkles,
+  LucideStars,
   LucideTable,
   LucideTerminal,
   LucideType,
   LucideWand2,
   LucideWaves,
+  LucideZap,
 } satisfies Record<string, ElementType>;
 
 const componentDefinitions = [
@@ -1491,7 +1495,7 @@ const componentDefinitions = [
         "description": "Additional classes applied to the overlay root."
       }
     ],
-    "usageCode": "import { useRef } from \"react\";\nimport { InteractiveCursor } from \"@/components/ui/interactive-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n\n  return (\n    <div\n      ref={containerRef}\n      className=\"relative h-[400px] w-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950\"\n    >\n      <div className=\"relative z-10 flex h-full items-center justify-center\">\n        <button\n          type=\"button\"\n          data-magnetic=\"true\"\n          className=\"rounded-full bg-white px-6 py-3 font-semibold text-black\"\n        >\n          Hover me\n        </button>\n      </div>\n\n      <InteractiveCursor\n        containerRef={containerRef}\n        color=\"#a855f7\"\n        clickColor=\"#b280ff\"\n        trailColor=\"rgba(168, 85, 247, 0.35)\"\n      />\n    </div>\n  );\n}"
+    "usageCode": "\"use client\";\nimport { useRef } from \"react\";\nimport { InteractiveCursor } from \"@/components/ui/interactive-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n\n  return (\n    <div\n      ref={containerRef}\n      className=\"relative h-[400px] w-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950\"\n    >\n      <div className=\"relative z-10 flex h-full items-center justify-center\">\n        <button\n          type=\"button\"\n          data-magnetic=\"true\"\n          className=\"rounded-full bg-white px-6 py-3 font-semibold text-black\"\n        >\n          Hover me\n        </button>\n      </div>\n\n      <InteractiveCursor\n        containerRef={containerRef}\n        color=\"#a855f7\"\n        clickColor=\"#b280ff\"\n        trailColor=\"rgba(168, 85, 247, 0.35)\"\n      />\n    </div>\n  );\n}"
   },
   {
     "slug": "pen-cursor",
@@ -1561,7 +1565,7 @@ const componentDefinitions = [
         "description": "Extra classes on the canvas element."
       }
     ],
-    "usageCode": "import { useRef } from \"react\";\nimport { PenCursor } from \"@/components/ui/pen-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n  return (\n    <div\n      ref={containerRef}\n      className=\"h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center\"\n    >\n      <h3 className=\"text-white text-2xl font-bold uppercase tracking-widest pointer-events-none\">\n        Move your mouse\n      </h3>\n      <PenCursor\n        containerRef={containerRef}\n        trailLength={40}\n        maxWidth={1}\n        colorHead=\"159, 175, 155\"\n        colorTail=\"198, 167, 106\"\n        alphaHead={0.95}\n        damping={0.55}\n      />\n    </div>\n  );\n}"
+    "usageCode": "\"use client\";\nimport { useRef } from \"react\";\nimport { PenCursor } from \"@/components/ui/pen-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n  return (\n    <div\n      ref={containerRef}\n      className=\"h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center\"\n    >\n      <h3 className=\"text-white text-2xl font-bold uppercase tracking-widest pointer-events-none\">\n        Move your mouse\n      </h3>\n      <PenCursor\n        containerRef={containerRef}\n        trailLength={40}\n        maxWidth={1}\n        colorHead=\"159, 175, 155\"\n        colorTail=\"198, 167, 106\"\n        alphaHead={0.95}\n        damping={0.55}\n      />\n    </div>\n  );\n}"
   },
   {
     "slug": "glow-hero-section",
@@ -2322,6 +2326,137 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "\"use client\";\nimport { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function Hero() {\n  return (\n    <h1 className=\"text-5xl font-black text-white\">\n      Build interfaces that are{\" \"}\n      <WordRotate\n        words={[\"faster\", \"smarter\", \"bolder\", \"yours\"]}\n        animation=\"slide-up\"\n        className=\"text-purple-400\"\n      />\n    </h1>\n  );\n}"
+  },
+  {
+    "slug": "lightspeed",
+    "name": "LightSpeed",
+    "description": "A cinematic warp-speed particle background. Hundreds of luminous streaks radiate from a central vanishing point, simulating hyperspace travel. Built on Motion.dev WAAPI — all animations are GPU-composited for smooth 60fps performance.",
+    "icon": "LucideZap",
+    "category": "Backgrounds",
+    "props": [
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "1",
+        "description": "Animation speed multiplier. Higher values shorten each particle's travel duration. Range 0.1–5."
+      },
+      {
+        "name": "intensity",
+        "type": "number",
+        "default": "1",
+        "description": "Trail length and glow strength multiplier. Scales scaleX keyframe and box-shadow blur. Range 0.1–3."
+      },
+      {
+        "name": "particleCount",
+        "type": "number",
+        "default": "300",
+        "description": "Total number of particle elements rendered. Regenerates the particle pool when changed."
+      },
+      {
+        "name": "tint",
+        "type": "string",
+        "default": "\"#ffffff\"",
+        "description": "CSS colour (#rrggbb, #rgb, or rgb()) used to tint the particle palette. Each palette colour's channels are multiplied by the normalised tint values. Defaults to white (no tint)."
+      },
+      {
+        "name": "quality",
+        "type": "\"low\" | \"medium\" | \"high\"",
+        "default": "\"medium\"",
+        "description": "\"low\" caps particles at 100 and disables blur. \"high\" allows up to 1000 and enables 4-layer box-shadow bloom."
+      },
+      {
+        "name": "paused",
+        "type": "boolean",
+        "default": "false",
+        "description": "Calls .pause() or .play() on all stored animation controls without restarting them."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Optional content layered above the particle field at z-index 10."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional classes on the outer container (height, rounding, etc.)."
+      }
+    ],
+    "variants": [
+      {
+        "id": "default",
+        "label": "Warp Drive",
+        "demoKey": "lightspeed",
+        "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={300}\n        speed={1}\n        intensity={1}\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "fast",
+        "label": "Ludicrous Speed",
+        "demoKey": "lightspeed/fast",
+        "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={200}\n        speed={1}\n        intensity={1.4}\n        quality=\"high\"\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "gold",
+        "label": "Solar Wind",
+        "demoKey": "lightspeed/gold",
+        "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={220}\n        speed={0.7}\n        intensity={1.4}\n        tint=\"#ffbf4d\"\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={300}\n        speed={1}\n        intensity={1}\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
+  },
+  {
+    "slug": "shooting-stars-grid",
+    "name": "ShootingStarsGrid",
+    "description": "A cinematic hero-section background: a faint grid bathed in dark-emerald glow, with thin white streaks that race along grid lanes like falling stars. Built on Motion.dev with compositor-only transforms for smooth 60fps.",
+    "icon": "LucideStars",
+    "category": "Backgrounds",
+    "props": [
+      {
+        "name": "starCount",
+        "type": "number",
+        "default": "15",
+        "description": "Number of concurrent shooting-star streaks. Clamped to 1–80."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "2.5",
+        "description": "Base travel duration in seconds. Each star is randomised ±30% around this value."
+      },
+      {
+        "name": "glowStrength",
+        "type": "number",
+        "default": "1",
+        "description": "Multiplier (0–1) applied to the streak's box-shadow intensity."
+      },
+      {
+        "name": "gridSize",
+        "type": "number",
+        "default": "80",
+        "description": "Pixel spacing between grid lines; streaks snap to these lanes."
+      },
+      {
+        "name": "direction",
+        "type": "\"horizontal\" | \"vertical\" | \"both\"",
+        "default": "\"both\"",
+        "description": "Axis streaks travel along. \"both\" picks per star randomly."
+      },
+      {
+        "name": "color",
+        "type": "string | readonly string[]",
+        "description": "Streak colour. Pass a single CSS colour for a monochrome shower, an array of colours to sample from per star, or omit for the built-in multi-hue palette (white, mint, cyan, amber, pink, violet)."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Optional content layered above the background at z-index 10."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional classes merged onto the outer container."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      {/* Default: multi-hue palette (white, mint, cyan, amber, pink, violet) */}\n      <ShootingStarsGrid\n        starCount={18}\n        speed={2.5}\n        gridSize={80}\n      />\n\n      {/* Monochrome — every streak picks up the same hue */}\n      {/* <ShootingStarsGrid starCount={18} color=\"#7fe7ff\" /> */}\n\n      {/* Custom palette — streaks sampled from this set */}\n      {/* <ShootingStarsGrid\n        starCount={20}\n        color={[\"#ff9ecf\", \"#c89bff\", \"#ffffff\"]}\n      /> */}\n    </div>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 

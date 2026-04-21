@@ -223,12 +223,12 @@
           {
             "title": "Loading / processing indicator",
             "description": "Use a single looping word to hint that background work is in progress.",
-            "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function ProcessingBadge() {\n  return (\n    <div className=\"flex items-center gap-2 text-sm text-neutral-400\">\n      <span className=\"h-2 w-2 rounded-full bg-green-500 animate-pulse\" />\n      <TypewriterText\n        words={[\"Analyzing…\", \"Optimizing…\", \"Almost done…\"]}\n        typingSpeed={60}\n        deletingSpeed={40}\n        pauseDuration={1200}\n      />\n    </div>\n  );\n}"
+            "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function ProcessingBadge() {\n  return (\n    <div className=\"flex items-center gap-2 text-sm text-neutral-400\">\n      <span className=\"h-2 w-2 rounded-full bg-green-500 animate-pulse\" />\n      <TypewriterText\n        words={[\"Analyzing\u2026\", \"Optimizing\u2026\", \"Almost done\u2026\"]}\n        typingSpeed={60}\n        deletingSpeed={40}\n        delayBetweenWords={1200}\n      />\n    </div>\n  );\n}"
           },
           {
             "title": "Feature tagline in a navbar",
             "description": "Animate a short tagline beside your logo to keep visitors engaged right from the header.",
-            "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function NavTagline() {\n  return (\n    <nav className=\"flex items-center gap-3 px-6 py-4 border-b border-neutral-800\">\n      <span className=\"font-bold text-white\">UniqueUI</span>\n      <span className=\"text-neutral-600\">·</span>\n      <TypewriterText\n        words={[\"Copy-paste components\", \"Zero design system lock-in\", \"Motion-first\"]}\n        className=\"text-xs text-neutral-400 font-mono\"\n        typingSpeed={55}\n      />\n    </nav>\n  );\n}"
+            "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function NavTagline() {\n  return (\n    <nav className=\"flex items-center gap-3 px-6 py-4 border-b border-neutral-800\">\n      <span className=\"font-bold text-white\">UniqueUI</span>\n      <span className=\"text-neutral-600\">\u00b7</span>\n      <TypewriterText\n        words={[\"Copy-paste components\", \"Zero design system lock-in\", \"Motion-first\"]}\n        className=\"text-xs text-neutral-400 font-mono\"\n        typingSpeed={55}\n      />\n    </nav>\n  );\n}"
           }
         ]
       }
@@ -288,7 +288,7 @@
           {
             "title": "Feature highlight card",
             "description": "Wrap a feature card so users instinctively interact with it, naturally exploring the depth effect.",
-            "code": "\"use client\";\nimport { TiltCard } from \"@/components/ui/3d-tilt-card\";\n\nexport default function FeatureCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <TiltCard className=\"p-8 bg-neutral-900 border border-neutral-800 rounded-xl max-w-xs\">\n        <div className=\"w-10 h-10 rounded-lg bg-indigo-500 mb-4 flex items-center justify-center text-white text-xl\">⚡</div>\n        <h3 className=\"text-lg font-bold text-white\">Blazing Fast</h3>\n        <p className=\"text-neutral-400 text-sm mt-2\">Optimised animations that run at 60 fps without layout thrash.</p>\n      </TiltCard>\n    </div>\n  );\n}"
+            "code": "\"use client\";\nimport { TiltCard } from \"@/components/ui/3d-tilt-card\";\n\nexport default function FeatureCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <TiltCard className=\"p-8 bg-neutral-900 border border-neutral-800 rounded-xl max-w-xs\">\n        <div className=\"w-10 h-10 rounded-lg bg-indigo-500 mb-4 flex items-center justify-center text-white text-xl\">\u26a1</div>\n        <h3 className=\"text-lg font-bold text-white\">Blazing Fast</h3>\n        <p className=\"text-neutral-400 text-sm mt-2\">Optimised animations that run at 60 fps without layout thrash.</p>\n      </TiltCard>\n    </div>\n  );\n}"
           },
           {
             "title": "Profile / team member card",
@@ -337,13 +337,13 @@
         "scenarios": [
           {
             "title": "Pricing tier card",
-            "description": "Make pricing options feel tactile and premium — spotlight highlights the selected plan naturally.",
-            "code": "import { SpotlightCard } from \"@/components/ui/spotlight-card\";\n\nexport default function PricingCard() {\n  return (\n    <SpotlightCard theme=\"dark\" className=\"p-8 max-w-sm\">\n      <div className=\"space-y-4\">\n        <span className=\"text-xs font-semibold text-purple-400 uppercase tracking-widest\">\n          Pro\n        </span>\n        <p className=\"text-4xl font-bold text-white\">\n          $29<span className=\"text-lg text-neutral-400\">/mo</span>\n        </p>\n        <ul className=\"space-y-2 text-sm text-neutral-300\">\n          <li>✓ Unlimited components</li>\n          <li>✓ Commercial license</li>\n          <li>✓ Priority support</li>\n        </ul>\n        <button className=\"w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-xl text-white font-semibold transition-colors\">\n          Get started\n        </button>\n      </div>\n    </SpotlightCard>\n  );\n}"
+            "description": "Make pricing options feel tactile and premium \u2014 spotlight highlights the selected plan naturally.",
+            "code": "import { SpotlightCard } from \"@/components/ui/spotlight-card\";\n\nexport default function PricingCard() {\n  return (\n    <SpotlightCard theme=\"dark\" className=\"p-8 max-w-sm\">\n      <div className=\"space-y-4\">\n        <span className=\"text-xs font-semibold text-purple-400 uppercase tracking-widest\">\n          Pro\n        </span>\n        <p className=\"text-4xl font-bold text-white\">\n          $29<span className=\"text-lg text-neutral-400\">/mo</span>\n        </p>\n        <ul className=\"space-y-2 text-sm text-neutral-300\">\n          <li>\u2713 Unlimited components</li>\n          <li>\u2713 Commercial license</li>\n          <li>\u2713 Priority support</li>\n        </ul>\n        <button className=\"w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-xl text-white font-semibold transition-colors\">\n          Get started\n        </button>\n      </div>\n    </SpotlightCard>\n  );\n}"
           },
           {
             "title": "Team member profile card",
             "description": "Spotlight turns a standard team grid into an interactive, warm experience.",
-            "code": "import { SpotlightCard } from \"@/components/ui/spotlight-card\";\n\nexport default function TeamMemberCard() {\n  return (\n    <SpotlightCard theme=\"dark\" className=\"p-6 text-center\">\n      <img\n        src=\"/avatar.jpg\"\n        alt=\"Prashant\"\n        className=\"w-16 h-16 rounded-full mx-auto mb-4 object-cover\"\n      />\n      <h3 className=\"text-white font-semibold text-lg\">Prashant Kumar</h3>\n      <p className=\"text-neutral-400 text-sm\">Founder · Full-stack engineer</p>\n      <div className=\"mt-4 flex justify-center gap-3\">\n        <a href=\"#\" className=\"text-xs text-purple-400 hover:underline\">GitHub</a>\n        <a href=\"#\" className=\"text-xs text-purple-400 hover:underline\">Twitter</a>\n      </div>\n    </SpotlightCard>\n  );\n}"
+            "code": "import { SpotlightCard } from \"@/components/ui/spotlight-card\";\n\nexport default function TeamMemberCard() {\n  return (\n    <SpotlightCard theme=\"dark\" className=\"p-6 text-center\">\n      <img\n        src=\"/avatar.jpg\"\n        alt=\"Prashant\"\n        className=\"w-16 h-16 rounded-full mx-auto mb-4 object-cover\"\n      />\n      <h3 className=\"text-white font-semibold text-lg\">Prashant Kumar</h3>\n      <p className=\"text-neutral-400 text-sm\">Founder \u00b7 Full-stack engineer</p>\n      <div className=\"mt-4 flex justify-center gap-3\">\n        <a href=\"#\" className=\"text-xs text-purple-400 hover:underline\">GitHub</a>\n        <a href=\"#\" className=\"text-xs text-purple-400 hover:underline\">Twitter</a>\n      </div>\n    </SpotlightCard>\n  );\n}"
           },
           {
             "title": "Feature highlight card",
@@ -502,12 +502,12 @@
           {
             "title": "Dashboard content switcher",
             "description": "Switch between weekly, monthly, and yearly data views in a dashboard.",
-            "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\n\nconst ranges = [\n  { id: \"7d\", label: \"7 days\" },\n  { id: \"30d\", label: \"30 days\" },\n  { id: \"90d\", label: \"90 days\" },\n  { id: \"1y\", label: \"1 year\" },\n];\n\nexport default function DateRangeTabs() {\n  const [range, setRange] = useState(\"30d\");\n\n  return (\n    <div>\n      <AnimatedTabs\n        tabs={ranges}\n        defaultTab=\"30d\"\n        onChange={setRange}\n        size=\"sm\"\n      />\n      <p className=\"mt-4 text-sm text-neutral-400\">\n        Showing data for: {range}\n      </p>\n    </div>\n  );\n}"
+            "code": "\"use client\";\nimport { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\n\nconst ranges = [\n  { id: \"7d\", label: \"7 days\" },\n  { id: \"30d\", label: \"30 days\" },\n  { id: \"90d\", label: \"90 days\" },\n  { id: \"1y\", label: \"1 year\" },\n];\n\nexport default function DateRangeTabs() {\n  const [range, setRange] = useState(\"30d\");\n\n  return (\n    <div>\n      <AnimatedTabs\n        tabs={ranges}\n        defaultTab=\"30d\"\n        onChange={setRange}\n        size=\"sm\"\n      />\n      <p className=\"mt-4 text-sm text-neutral-400\">\n        Showing data for: {range}\n      </p>\n    </div>\n  );\n}"
           },
           {
             "title": "Product feature showcase tabs",
             "description": "Let marketing highlight different product features with animated tab transitions.",
-            "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst features = [\n  { id: \"speed\", label: \"Speed\", content: \"Deploy components in seconds with the CLI.\" },\n  { id: \"design\", label: \"Design\", content: \"Motion-first animations out of the box.\" },\n  { id: \"dx\", label: \"DX\", content: \"Single-file components, zero config.\" },\n];\n\nexport default function FeatureTabs() {\n  const [active, setActive] = useState(\"speed\");\n  const feature = features.find(f => f.id === active)!;\n\n  return (\n    <div className=\"space-y-6 max-w-lg\">\n      <AnimatedTabs tabs={features} defaultTab=\"speed\" onChange={setActive} />\n      <AnimatePresence mode=\"wait\">\n        <motion.p\n          key={active}\n          initial={{ opacity: 0, y: 6 }}\n          animate={{ opacity: 1, y: 0 }}\n          exit={{ opacity: 0, y: -6 }}\n          className=\"text-neutral-300\"\n        >\n          {feature.content}\n        </motion.p>\n      </AnimatePresence>\n    </div>\n  );\n}"
+            "code": "\"use client\";\nimport { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst features = [\n  { id: \"speed\", label: \"Speed\", content: \"Deploy components in seconds with the CLI.\" },\n  { id: \"design\", label: \"Design\", content: \"Motion-first animations out of the box.\" },\n  { id: \"dx\", label: \"DX\", content: \"Single-file components, zero config.\" },\n];\n\nexport default function FeatureTabs() {\n  const [active, setActive] = useState(\"speed\");\n  const feature = features.find(f => f.id === active)!;\n\n  return (\n    <div className=\"space-y-6 max-w-lg\">\n      <AnimatedTabs tabs={features} defaultTab=\"speed\" onChange={setActive} />\n      <AnimatePresence mode=\"wait\">\n        <motion.p\n          key={active}\n          initial={{ opacity: 0, y: 6 }}\n          animate={{ opacity: 1, y: 0 }}\n          exit={{ opacity: 0, y: -6 }}\n          className=\"text-neutral-300\"\n        >\n          {feature.content}\n        </motion.p>\n      </AnimatePresence>\n    </div>\n  );\n}"
           }
         ]
       }
@@ -557,7 +557,7 @@
           {
             "title": "Primary CTA button",
             "description": "Apply the magnetic effect to your hero CTA to make it irresistible to click.",
-            "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function HeroCTA() {\n  return (\n    <div className=\"flex justify-center py-20\">\n      <MagneticButton>\n        <button className=\"px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-neutral-100 transition-colors\">\n          Get started free →\n        </button>\n      </MagneticButton>\n    </div>\n  );\n}"
+            "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function HeroCTA() {\n  return (\n    <div className=\"flex justify-center py-20\">\n      <MagneticButton className=\"px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-neutral-100 transition-colors\">\n        Get started free \u2192\n      </MagneticButton>\n    </div>\n  );\n}"
           },
           {
             "title": "Icon navigation links",
@@ -610,7 +610,7 @@
           "description": "Consistent spacing separating each repeated instance loop."
         }
       ],
-      "usageCode": "import { InfiniteMarquee, MarqueeItem } from \"@/components/ui/infinite-marquee\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-6 w-full p-10 overflow-hidden\">\n      <InfiniteMarquee speed={30}>\n        {[\n          \"React\",\n          \"Next.js\",\n          \"TypeScript\",\n          \"Tailwind\",\n          \"Motion\",\n          \"UniqueUI\",\n          \"Vercel\",\n          \"Node.js\",\n        ].map((item) => (\n          <MarqueeItem key={item}>\n            <span className=\"text-sm font-medium text-neutral-300\">{item}</span>\n          </MarqueeItem>\n        ))}\n      </InfiniteMarquee>\n      <InfiniteMarquee speed={20} direction=\"right\">\n        {[\n          \"⚡ Fast\",\n          \"🎨 Beautiful\",\n          \"♿ Accessible\",\n          \"📱 Responsive\",\n          \"🔧 Customizable\",\n          \"🚀 Production Ready\",\n        ].map((item) => (\n          <MarqueeItem key={item} className=\"bg-purple-950/30 border-purple-800/50\">\n            <span className=\"text-sm font-medium text-purple-300\">{item}</span>\n          </MarqueeItem>\n        ))}\n      </InfiniteMarquee>\n    </div>\n  );\n}",
+      "usageCode": "import { InfiniteMarquee, MarqueeItem } from \"@/components/ui/infinite-marquee\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-6 w-full p-10 overflow-hidden\">\n      <InfiniteMarquee speed={30}>\n        {[\n          \"React\",\n          \"Next.js\",\n          \"TypeScript\",\n          \"Tailwind\",\n          \"Motion\",\n          \"UniqueUI\",\n          \"Vercel\",\n          \"Node.js\",\n        ].map((item) => (\n          <MarqueeItem key={item}>\n            <span className=\"text-sm font-medium text-neutral-300\">{item}</span>\n          </MarqueeItem>\n        ))}\n      </InfiniteMarquee>\n      <InfiniteMarquee speed={20} direction=\"right\">\n        {[\n          \"\u26a1 Fast\",\n          \"\ud83c\udfa8 Beautiful\",\n          \"\u267f Accessible\",\n          \"\ud83d\udcf1 Responsive\",\n          \"\ud83d\udd27 Customizable\",\n          \"\ud83d\ude80 Production Ready\",\n        ].map((item) => (\n          <MarqueeItem key={item} className=\"bg-purple-950/30 border-purple-800/50\">\n            <span className=\"text-sm font-medium text-purple-300\">{item}</span>\n          </MarqueeItem>\n        ))}\n      </InfiniteMarquee>\n    </div>\n  );\n}",
       "docs": {
         "overview": "InfiniteMarquee continuously scrolls a row of items horizontally, looping seamlessly. It's commonly used for logo strips, testimonial tickers, and feature highlights.",
         "scenarios": [
@@ -781,7 +781,7 @@
         "scenarios": [
           {
             "title": "Confirmation dialog",
-            "description": "Use the modal for destructive actions — a focused modal prevents accidental clicks better than inline prompts.",
+            "description": "Use the modal for destructive actions \u2014 a focused modal prevents accidental clicks better than inline prompts.",
             "code": "\"use client\";\nimport { MorphingModal } from \"@/components/ui/morphing-modal\";\nimport { useState } from \"react\";\n\nexport default function ConfirmDelete() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <button\n        onClick={() => setOpen(true)}\n        className=\"px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg text-sm\"\n      >\n        Delete project\n      </button>\n\n      <MorphingModal isOpen={open} onClose={() => setOpen(false)}>\n        <div className=\"p-6 space-y-4 max-w-sm\">\n          <h2 className=\"text-lg font-semibold text-white\">Are you sure?</h2>\n          <p className=\"text-sm text-neutral-400\">\n            This will permanently delete the project and all its data. This action cannot be undone.\n          </p>\n          <div className=\"flex gap-3 pt-2\">\n            <button\n              onClick={() => setOpen(false)}\n              className=\"flex-1 py-2 rounded-lg border border-neutral-700 text-neutral-300 text-sm\"\n            >\n              Cancel\n            </button>\n            <button className=\"flex-1 py-2 rounded-lg bg-red-600 text-white text-sm font-medium\">Delete</button>\n          </div>\n        </div>\n      </MorphingModal>\n    </div>\n  );\n}"
           },
           {
@@ -847,7 +847,7 @@
       ],
       "usageCode": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-8 text-center p-10 text-white\">\n      <GradientTextReveal\n        text=\"Build stunning interfaces with UniqueUI\"\n        as=\"h3\"\n        className=\"text-3xl font-bold justify-center\"\n      />\n      <GradientTextReveal\n        text=\"Beautiful animated components for modern web apps\"\n        gradientFrom=\"#6366f1\"\n        gradientTo=\"#06b6d4\"\n        className=\"text-lg justify-center\"\n      />\n    </div>\n  );\n}",
       "docs": {
-        "overview": "GradientTextReveal animates a gradient sweep across text as it enters the viewport — a dramatic way to introduce headlines or key phrases on scroll.",
+        "overview": "GradientTextReveal animates a gradient sweep across text as it enters the viewport \u2014 a dramatic way to introduce headlines or key phrases on scroll.",
         "scenarios": [
           {
             "title": "Section headline reveal",
@@ -857,7 +857,7 @@
           {
             "title": "Pull quote in a blog post",
             "description": "Highlight a key quote mid-article with a gradient sweep to re-engage readers.",
-            "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function PullQuote() {\n  return (\n    <blockquote className=\"my-12 px-8 border-l-2 border-purple-500\">\n      <GradientTextReveal\n        text=\"The best design is invisible — until it moves.\"\n        className=\"text-2xl font-medium italic\"\n        gradient=\"from-neutral-300 via-purple-400 to-neutral-300\"\n        duration={1.4}\n      />\n    </blockquote>\n  );\n}"
+            "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function PullQuote() {\n  return (\n    <blockquote className=\"my-12 px-8 border-l-2 border-purple-500\">\n      <GradientTextReveal\n        text=\"The best design is invisible \u2014 until it moves.\"\n        className=\"text-2xl font-medium italic\"\n        gradient=\"from-neutral-300 via-purple-400 to-neutral-300\"\n        duration={1.4}\n      />\n    </blockquote>\n  );\n}"
           }
         ]
       }
@@ -916,7 +916,7 @@
           },
           {
             "title": "Hover-to-decode nav labels",
-            "description": "Set triggerOnView=false so the effect fires on mouse enter — great for navigation links or interactive badges.",
+            "description": "Set triggerOnView=false so the effect fires on mouse enter \u2014 great for navigation links or interactive badges.",
             "code": "\"use client\";\nimport { ScrambleText } from \"@/components/ui/scramble-text\";\n\nexport default function HoverNav() {\n  return (\n    <div className=\"flex gap-6 p-10\">\n      {[\"Home\", \"Work\", \"About\", \"Contact\"].map((label) => (\n        <ScrambleText\n          key={label}\n          text={label}\n          triggerOnView={false}\n          className=\"text-lg font-medium text-neutral-300 cursor-pointer hover:text-white\"\n          scrambleDuration={600}\n        />\n      ))}\n    </div>\n  );\n}"
           },
           {
@@ -1015,7 +1015,7 @@
           "description": "Z-depth translation simulating three-dimensional depth stretching."
         }
       ],
-      "usageCode": "import { FlipCard } from \"@/components/ui/flip-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-8 items-center justify-center p-10 text-white\">\n      <FlipCard\n        className=\"w-60 h-40\"\n        front={\n          <div className=\"flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800\">\n            <p className=\"text-lg font-bold\">Hover to flip →</p>\n          </div>\n        }\n        back={\n          <div className=\"flex items-center justify-center h-full bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl\">\n            <p className=\"text-lg font-bold text-purple-200\">Back side! ✨</p>\n          </div>\n        }\n      />\n      <FlipCard\n        className=\"w-60 h-40\"\n        trigger=\"click\"\n        front={\n          <div className=\"flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800\">\n            <p className=\"text-lg font-bold\">Click to flip</p>\n          </div>\n        }\n        back={\n          <div className=\"flex items-center justify-center h-full bg-zinc-800 rounded-xl border border-zinc-700\">\n            <p className=\"text-lg font-bold text-green-400\">Click again!</p>\n          </div>\n        }\n      />\n    </div>\n  );\n}",
+      "usageCode": "import { FlipCard } from \"@/components/ui/flip-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-8 items-center justify-center p-10 text-white\">\n      <FlipCard\n        className=\"w-60 h-40\"\n        front={\n          <div className=\"flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800\">\n            <p className=\"text-lg font-bold\">Hover to flip \u2192</p>\n          </div>\n        }\n        back={\n          <div className=\"flex items-center justify-center h-full bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl\">\n            <p className=\"text-lg font-bold text-purple-200\">Back side! \u2728</p>\n          </div>\n        }\n      />\n      <FlipCard\n        className=\"w-60 h-40\"\n        trigger=\"click\"\n        front={\n          <div className=\"flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800\">\n            <p className=\"text-lg font-bold\">Click to flip</p>\n          </div>\n        }\n        back={\n          <div className=\"flex items-center justify-center h-full bg-zinc-800 rounded-xl border border-zinc-700\">\n            <p className=\"text-lg font-bold text-green-400\">Click again!</p>\n          </div>\n        }\n      />\n    </div>\n  );\n}",
       "docs": {
         "overview": "FlipCard reveals a back face on hover or click with a smooth 3D rotation. Supports horizontal and vertical flip axes and can wrap any React content on either face.",
         "scenarios": [
@@ -1027,7 +1027,7 @@
           {
             "title": "Click-to-reveal FAQ card",
             "description": "Use trigger=\"click\" and vertical flip for a fun alternative to a standard accordion.",
-            "code": "\"use client\";\nimport { FlipCard } from \"@/components/ui/flip-card\";\n\nconst front = (\n  <div className=\"flex flex-col items-center justify-center h-full gap-2\">\n    <span className=\"text-2xl\">❓</span>\n    <p className=\"text-white font-medium text-center\">What is UniqueUI?</p>\n    <p className=\"text-neutral-500 text-xs\">Click to reveal</p>\n  </div>\n);\n\nconst back = (\n  <div className=\"flex flex-col justify-center h-full\">\n    <p className=\"text-neutral-300 text-sm leading-relaxed\">\n      UniqueUI is a copy-paste animated React component library. Install components via <code className=\"text-purple-400\">npx uniqueui add</code>.\n    </p>\n  </div>\n);\n\nexport default function FAQFlipCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <FlipCard front={front} back={back} trigger=\"click\" direction=\"vertical\" className=\"w-72 h-40\" />\n    </div>\n  );\n}"
+            "code": "\"use client\";\nimport { FlipCard } from \"@/components/ui/flip-card\";\n\nconst front = (\n  <div className=\"flex flex-col items-center justify-center h-full gap-2\">\n    <span className=\"text-2xl\">\u2753</span>\n    <p className=\"text-white font-medium text-center\">What is UniqueUI?</p>\n    <p className=\"text-neutral-500 text-xs\">Click to reveal</p>\n  </div>\n);\n\nconst back = (\n  <div className=\"flex flex-col justify-center h-full\">\n    <p className=\"text-neutral-300 text-sm leading-relaxed\">\n      UniqueUI is a copy-paste animated React component library. Install components via <code className=\"text-purple-400\">npx uniqueui add</code>.\n    </p>\n  </div>\n);\n\nexport default function FAQFlipCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <FlipCard front={front} back={back} trigger=\"click\" direction=\"vertical\" className=\"w-72 h-40\" />\n    </div>\n  );\n}"
           }
         ]
       }
@@ -1155,7 +1155,7 @@
           "description": "Description coming soon"
         }
       ],
-      "usageCode": "import { FloatingDock } from \"@/components/ui/floating-dock\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-20 text-white\">\n      <FloatingDock\n        items={[\n          { id: \"home\", icon: <span className=\"text-xl\">🏠</span>, label: \"Home\" },\n          { id: \"search\", icon: <span className=\"text-xl\">✨</span>, label: \"Search\" },\n          { id: \"layers\", icon: <span className=\"text-xl\">📚</span>, label: \"Layers\" },\n          { id: \"scroll\", icon: <span className=\"text-xl\">📜</span>, label: \"Scroll\" },\n          { id: \"terminal\", icon: <span className=\"text-xl\">💻</span>, label: \"Terminal\" },\n        ]}\n      />\n    </div>\n  );\n}",
+      "usageCode": "import { FloatingDock } from \"@/components/ui/floating-dock\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-20 text-white\">\n      <FloatingDock\n        items={[\n          { id: \"home\", icon: <span className=\"text-xl\">\ud83c\udfe0</span>, label: \"Home\" },\n          { id: \"search\", icon: <span className=\"text-xl\">\u2728</span>, label: \"Search\" },\n          { id: \"layers\", icon: <span className=\"text-xl\">\ud83d\udcda</span>, label: \"Layers\" },\n          { id: \"scroll\", icon: <span className=\"text-xl\">\ud83d\udcdc</span>, label: \"Scroll\" },\n          { id: \"terminal\", icon: <span className=\"text-xl\">\ud83d\udcbb</span>, label: \"Terminal\" },\n        ]}\n      />\n    </div>\n  );\n}",
       "docs": {
         "overview": "FloatingDock renders a macOS-style icon dock with a magnetic magnification effect. Icons near the cursor scale up smoothly, making navigation feel interactive and playful.",
         "scenarios": [
@@ -1215,19 +1215,19 @@
           "description": "Timer limit capping maximum gravity simulation lifetime."
         }
       ],
-      "usageCode": "import { ConfettiBurst } from \"@/components/ui/confetti-burst\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-20 text-white\">\n      <ConfettiBurst className=\"rounded-xl p-12 border border-neutral-800 bg-neutral-900/50 hover:border-neutral-700 transition-colors cursor-pointer\">\n        <div className=\"text-center\">\n          <h3 className=\"text-xl font-bold mb-2\">🎉 Click me!</h3>\n          <p className=\"text-neutral-400 text-sm\">Click anywhere on this card for confetti</p>\n        </div>\n      </ConfettiBurst>\n    </div>\n  );\n}",
+      "usageCode": "import { ConfettiBurst } from \"@/components/ui/confetti-burst\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-20 text-white\">\n      <ConfettiBurst className=\"rounded-xl p-12 border border-neutral-800 bg-neutral-900/50 hover:border-neutral-700 transition-colors cursor-pointer\">\n        <div className=\"text-center\">\n          <h3 className=\"text-xl font-bold mb-2\">\ud83c\udf89 Click me!</h3>\n          <p className=\"text-neutral-400 text-sm\">Click anywhere on this card for confetti</p>\n        </div>\n      </ConfettiBurst>\n    </div>\n  );\n}",
       "docs": {
-        "overview": "ConfettiBurst fires a particle explosion from a point on screen — perfect for celebrating milestones like a completed form, a successful payment, or an unlocked achievement.",
+        "overview": "ConfettiBurst fires a particle explosion from a point on screen \u2014 perfect for celebrating milestones like a completed form, a successful payment, or an unlocked achievement.",
         "scenarios": [
           {
             "title": "Success after form submission",
             "description": "Trigger a confetti burst when the user completes a sign-up or checkout form.",
-            "code": "\"use client\";\nimport { ConfettiBurst } from \"@/components/ui/confetti-burst\";\nimport { useState } from \"react\";\n\nexport default function SignupForm() {\n  const [submitted, setSubmitted] = useState(false);\n\n  return (\n    <div className=\"w-full max-w-sm mx-auto p-8 space-y-4\">\n      {submitted ? (\n        <div className=\"text-center text-white py-8\">\n          <p className=\"text-2xl font-bold\">You're in! 🎉</p>\n          <p className=\"text-neutral-400 text-sm mt-2\">Check your inbox for next steps.</p>\n        </div>\n      ) : (\n        <>\n          <input type=\"email\" placeholder=\"Your email\" className=\"w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-white\" />\n          <ConfettiBurst className=\"w-full rounded-xl\">\n            <button\n              onClick={() => setSubmitted(true)}\n              className=\"w-full py-3 bg-purple-600 text-white rounded-xl font-semibold\"\n            >\n              Join waitlist\n            </button>\n          </ConfettiBurst>\n        </>\n      )}\n    </div>\n  );\n}"
+            "code": "\"use client\";\nimport { ConfettiBurst } from \"@/components/ui/confetti-burst\";\nimport { useState } from \"react\";\n\nexport default function SignupForm() {\n  const [submitted, setSubmitted] = useState(false);\n\n  return (\n    <div className=\"w-full max-w-sm mx-auto p-8 space-y-4\">\n      {submitted ? (\n        <div className=\"text-center text-white py-8\">\n          <p className=\"text-2xl font-bold\">You're in! \ud83c\udf89</p>\n          <p className=\"text-neutral-400 text-sm mt-2\">Check your inbox for next steps.</p>\n        </div>\n      ) : (\n        <>\n          <input type=\"email\" placeholder=\"Your email\" className=\"w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-white\" />\n          <ConfettiBurst className=\"w-full rounded-xl\">\n            <button\n              onClick={() => setSubmitted(true)}\n              className=\"w-full py-3 bg-purple-600 text-white rounded-xl font-semibold\"\n            >\n              Join waitlist\n            </button>\n          </ConfettiBurst>\n        </>\n      )}\n    </div>\n  );\n}"
           },
           {
             "title": "Achievement unlock",
             "description": "Celebrate when a user reaches a milestone inside a dashboard or onboarding flow.",
-            "code": "\"use client\";\nimport { ConfettiBurst } from \"@/components/ui/confetti-burst\";\nimport { useState } from \"react\";\nimport { Trophy } from \"lucide-react\";\n\nexport default function AchievementCard() {\n  const [unlocked, setUnlocked] = useState(false);\n\n  return (\n    <div className=\"p-6 rounded-2xl border border-neutral-800 bg-neutral-900 text-center space-y-4 max-w-xs mx-auto mt-20\">\n      <Trophy className={`w-10 h-10 mx-auto transition-colors ${unlocked ? \"text-yellow-400\" : \"text-neutral-600\"}`} />\n      <p className=\"text-white font-semibold\">First component added</p>\n      {!unlocked ? (\n        <ConfettiBurst particleCount={80} className=\"inline-block\">\n          <button\n            onClick={() => setUnlocked(true)}\n            className=\"px-5 py-2 bg-purple-600 text-white rounded-xl text-sm font-medium\"\n          >\n            Claim reward\n          </button>\n        </ConfettiBurst>\n      ) : (\n        <p className=\"text-yellow-400 text-sm font-medium\">Achievement unlocked! 🏆</p>\n      )}\n    </div>\n  );\n}"
+            "code": "\"use client\";\nimport { ConfettiBurst } from \"@/components/ui/confetti-burst\";\nimport { useState } from \"react\";\nimport { Trophy } from \"lucide-react\";\n\nexport default function AchievementCard() {\n  const [unlocked, setUnlocked] = useState(false);\n\n  return (\n    <div className=\"p-6 rounded-2xl border border-neutral-800 bg-neutral-900 text-center space-y-4 max-w-xs mx-auto mt-20\">\n      <Trophy className={`w-10 h-10 mx-auto transition-colors ${unlocked ? \"text-yellow-400\" : \"text-neutral-600\"}`} />\n      <p className=\"text-white font-semibold\">First component added</p>\n      {!unlocked ? (\n        <ConfettiBurst particleCount={80} className=\"inline-block\">\n          <button\n            onClick={() => setUnlocked(true)}\n            className=\"px-5 py-2 bg-purple-600 text-white rounded-xl text-sm font-medium\"\n          >\n            Claim reward\n          </button>\n        </ConfettiBurst>\n      ) : (\n        <p className=\"text-yellow-400 text-sm font-medium\">Achievement unlocked! \ud83c\udfc6</p>\n      )}\n    </div>\n  );\n}"
           }
         ]
       }
@@ -1332,7 +1332,7 @@
           {
             "title": "Live activity feed",
             "description": "Push real-time events (new users, payments, deployments) into the stack.",
-            "code": "import { NotificationStack } from \"@/components/ui/notification-stack\";\nimport { useState } from \"react\";\n\nconst events = [\n  { id: 1, title: \"New signup\", body: \"prashant@example.com just joined.\" },\n  { id: 2, title: \"Payment received\", body: \"$49 from Stripe · Order #1042\" },\n  { id: 3, title: \"Deploy success\", body: \"main → production in 34s\" },\n];\n\nexport default function ActivityFeed() {\n  const [notifications, setNotifications] = useState(events);\n\n  return (\n    <NotificationStack\n      notifications={notifications}\n      onDismiss={(id) => setNotifications((n) => n.filter((x) => x.id !== id))}\n    />\n  );\n}"
+            "code": "\"use client\";\nimport { NotificationStack } from \"@/components/ui/notification-stack\";\nimport { useState } from \"react\";\n\nconst events = [\n  { id: 1, title: \"New signup\", body: \"prashant@example.com just joined.\" },\n  { id: 2, title: \"Payment received\", body: \"$49 from Stripe \u00b7 Order #1042\" },\n  { id: 3, title: \"Deploy success\", body: \"main \u2192 production in 34s\" },\n];\n\nexport default function ActivityFeed() {\n  const [notifications, setNotifications] = useState(events);\n\n  return (\n    <NotificationStack\n      notifications={notifications}\n      onDismiss={(id) => setNotifications((n) => n.filter((x) => x.id !== id))}\n    />\n  );\n}"
           },
           {
             "title": "Form validation errors",
@@ -1393,7 +1393,7 @@
           "id": "steps",
           "label": "Steps",
           "demoKey": "animated-timeline/steps",
-          "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Install the CLI\",        description: \"Run npx uniqueui init in your project.\",         color: \"#a855f7\" },\n  { id: \"2\", title: \"Add a component\",        description: \"Run npx uniqueui add animated-timeline.\",        color: \"#6366f1\" },\n  { id: \"3\", title: \"Import and customise\",   description: \"Use variant, color, and date props as needed.\",  color: \"#ec4899\" },\n  { id: \"4\", title: \"Ship to production\",     description: \"Zero runtime dependency — fully your code.\",     color: \"#10b981\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-sm mx-auto p-6 w-full\">\n      <AnimatedTimeline items={items} variant=\"steps\" />\n    </div>\n  );\n}"
+          "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Install the CLI\",        description: \"Run npx uniqueui init in your project.\",         color: \"#a855f7\" },\n  { id: \"2\", title: \"Add a component\",        description: \"Run npx uniqueui add animated-timeline.\",        color: \"#6366f1\" },\n  { id: \"3\", title: \"Import and customise\",   description: \"Use variant, color, and date props as needed.\",  color: \"#ec4899\" },\n  { id: \"4\", title: \"Ship to production\",     description: \"Zero runtime dependency \u2014 fully your code.\",     color: \"#10b981\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-sm mx-auto p-6 w-full\">\n      <AnimatedTimeline items={items} variant=\"steps\" />\n    </div>\n  );\n}"
         }
       ],
       "usageCode": "\"use client\";\nimport { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Project kickoff\", date: \"Jan 2024\", description: \"Team assembled and roadmap finalised.\", color: \"#6366f1\" },\n  { id: \"2\", title: \"Design phase\", date: \"Feb 2024\", description: \"Wireframes and prototypes approved.\", color: \"#a855f7\" },\n  { id: \"3\", title: \"Development\", date: \"Mar 2024\", description: \"Core features built and tested.\", color: \"#ec4899\" },\n  { id: \"4\", title: \"Launch\", date: \"Apr 2024\", description: \"Version 1.0 shipped to production.\", color: \"#22c55e\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-10 max-w-sm mx-auto\">\n      <AnimatedTimeline items={items} />\n    </div>\n  );\n}",
@@ -1403,7 +1403,7 @@
           {
             "title": "Product roadmap",
             "description": "Use the vertical variant with colour-coded dots to visualise upcoming releases at a glance.",
-            "code": "\"use client\";\nimport { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst roadmap = [\n  { id: \"q1\", title: \"v1.0 — Core library\", date: \"Q1 2024\", color: \"#6366f1\", description: \"10 foundational components shipped.\" },\n  { id: \"q2\", title: \"v1.5 — Motion system\", date: \"Q2 2024\", color: \"#a855f7\", description: \"Spring physics and scroll triggers.\" },\n  { id: \"q3\", title: \"v2.0 — CLI & registry\", date: \"Q3 2024\", color: \"#22c55e\", description: \"npx uniqueui add for all 42 components.\" },\n];\n\nexport default function Roadmap() {\n  return (\n    <div className=\"p-10 max-w-xs\">\n      <AnimatedTimeline items={roadmap} />\n    </div>\n  );\n}"
+            "code": "\"use client\";\nimport { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst roadmap = [\n  { id: \"q1\", title: \"v1.0 \u2014 Core library\", date: \"Q1 2024\", color: \"#6366f1\", description: \"10 foundational components shipped.\" },\n  { id: \"q2\", title: \"v1.5 \u2014 Motion system\", date: \"Q2 2024\", color: \"#a855f7\", description: \"Spring physics and scroll triggers.\" },\n  { id: \"q3\", title: \"v2.0 \u2014 CLI & registry\", date: \"Q3 2024\", color: \"#22c55e\", description: \"npx uniqueui add for all 42 components.\" },\n];\n\nexport default function Roadmap() {\n  return (\n    <div className=\"p-10 max-w-xs\">\n      <AnimatedTimeline items={roadmap} />\n    </div>\n  );\n}"
           },
           {
             "title": "Onboarding steps",
@@ -1538,19 +1538,19 @@
           "description": "Pixel height reserved for the image section before the content area."
         }
       ],
-      "usageCode": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-6 items-start justify-center p-10\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80\"\n        imageAlt=\"People at a conference table\"\n        tag=\"AI\"\n        title=\"AI for inclusive growth: Leadership lessons from Davos\"\n        subtitle=\"Article\"\n        description=\"What are the practical ways to ensure AI expands opportunity, strengthens resilience and supports a more inclusive, equitable future?\"\n        ctaText=\"Read the article →\"\n        accentColor=\"#6366f1\"\n        imageHeight={220}\n        className=\"w-72\"\n      />\n    </div>\n  );\n}",
+      "usageCode": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-6 items-start justify-center p-10\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80\"\n        imageAlt=\"People at a conference table\"\n        tag=\"AI\"\n        title=\"AI for inclusive growth: Leadership lessons from Davos\"\n        subtitle=\"Article\"\n        description=\"What are the practical ways to ensure AI expands opportunity, strengthens resilience and supports a more inclusive, equitable future?\"\n        ctaText=\"Read the article \u2192\"\n        accentColor=\"#6366f1\"\n        imageHeight={220}\n        className=\"w-72\"\n      />\n    </div>\n  );\n}",
       "docs": {
         "overview": "HoverRevealCard slides a rich content panel up from the bottom of an image card on hover, replacing the static caption with a description, CTA, and accent glow. Great for portfolio grids and blog previews.",
         "scenarios": [
           {
             "title": "Portfolio project grid",
             "description": "Display project thumbnails that reveal a description and link when hovered.",
-            "code": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function PortfolioGrid() {\n  return (\n    <div className=\"grid grid-cols-2 gap-4 p-6 max-w-2xl\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400\"\n        tag=\"Case Study\"\n        title=\"Redesigning the checkout flow\"\n        description=\"How we cut drop-off by 32% with micro-interactions and clear progress indicators.\"\n        ctaText=\"Read case study →\"\n        accentColor=\"#6366f1\"\n      />\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1547658719-da2b51169166?w=400\"\n        tag=\"Design System\"\n        title=\"Building a token-first design system\"\n        description=\"A deep dive into semantic tokens, component primitives, and dark mode support.\"\n        ctaText=\"Explore →\"\n        accentColor=\"#a855f7\"\n      />\n    </div>\n  );\n}"
+            "code": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function PortfolioGrid() {\n  return (\n    <div className=\"grid grid-cols-2 gap-4 p-6 max-w-2xl\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400\"\n        tag=\"Case Study\"\n        title=\"Redesigning the checkout flow\"\n        description=\"How we cut drop-off by 32% with micro-interactions and clear progress indicators.\"\n        ctaText=\"Read case study \u2192\"\n        accentColor=\"#6366f1\"\n      />\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1547658719-da2b51169166?w=400\"\n        tag=\"Design System\"\n        title=\"Building a token-first design system\"\n        description=\"A deep dive into semantic tokens, component primitives, and dark mode support.\"\n        ctaText=\"Explore \u2192\"\n        accentColor=\"#a855f7\"\n      />\n    </div>\n  );\n}"
           },
           {
             "title": "Blog post preview cards",
             "description": "Turn a simple blog listing into an interactive card grid with article descriptions on hover.",
-            "code": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function BlogPreview() {\n  return (\n    <div className=\"p-6 max-w-md\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400\"\n        tag=\"Engineering\"\n        title=\"Why we chose motion/react over framer-motion\"\n        subtitle=\"April 18, 2026\"\n        description=\"A technical deep dive into bundle size, API surface, and ecosystem compatibility.\"\n        ctaText=\"Read more →\"\n        accentColor=\"#22c55e\"\n        imageHeight={200}\n      />\n    </div>\n  );\n}"
+            "code": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function BlogPreview() {\n  return (\n    <div className=\"p-6 max-w-md\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400\"\n        tag=\"Engineering\"\n        title=\"Why we chose motion/react over framer-motion\"\n        subtitle=\"April 18, 2026\"\n        description=\"A technical deep dive into bundle size, API surface, and ecosystem compatibility.\"\n        ctaText=\"Read more \u2192\"\n        accentColor=\"#22c55e\"\n        imageHeight={200}\n      />\n    </div>\n  );\n}"
           }
         ]
       }
@@ -1605,7 +1605,7 @@
         {
           "name": "spinBorderColors",
           "type": "[string, string]",
-          "description": "Two hex/CSS color values for the conic gradient. Defaults to [\"#E2CBFF\", \"#393BB2\"] (purple–indigo)."
+          "description": "Two hex/CSS color values for the conic gradient. Defaults to [\"#E2CBFF\", \"#393BB2\"] (purple\u2013indigo)."
         }
       ],
       "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\nimport { Sparkles, Zap, Shield, Globe } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"max-w-3xl mx-auto\">\n        <BentoCard\n          icon={<Sparkles className=\"w-5 h-5\" />}\n          title=\"Beautiful animations\"\n          description=\"Every interaction is crafted with spring-physics Motion.dev animations for a premium feel.\"\n          cta=\"Explore components\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          icon={<Zap className=\"w-5 h-5\" />}\n          title=\"Lightning fast\"\n          description=\"Copy-paste components with zero runtime overhead.\"\n        />\n        <BentoCard\n          icon={<Shield className=\"w-5 h-5\" />}\n          title=\"Type safe\"\n          description=\"Built with TypeScript and fully typed props.\"\n        />\n        <BentoCard\n          icon={<Globe className=\"w-5 h-5\" />}\n          title=\"Zero lock-in\"\n          description=\"You own the code. No external runtime dependency.\"\n          cta=\"Get started\"\n          className=\"col-span-2\"\n        />\n      </BentoGrid>\n    </div>\n  );\n}",
@@ -1626,7 +1626,7 @@
           "id": "stats",
           "label": "Stats",
           "demoKey": "bento-grid/stats",
-          "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"auto-rows-[160px]\">\n        <BentoCard\n          title=\"Components\"\n          description=\"Production-ready animated components\"\n          background={\n            <div className=\"absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none\">24</div>\n          }\n          icon={<span className=\"text-2xl font-black text-violet-400\">24</span>}\n        />\n        <BentoCard\n          title=\"Zero dependencies\"\n          description=\"No UniqueUI runtime in your bundle\"\n          background={\n            <div className=\"absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none\">0</div>\n          }\n          icon={<span className=\"text-2xl font-black text-emerald-400\">0</span>}\n        />\n        <BentoCard\n          title=\"Install time\"\n          description=\"Seconds from CLI to working component\"\n          icon={<span className=\"text-2xl font-black text-sky-400\">~3s</span>}\n        />\n        <BentoCard\n          title=\"MIT License\"\n          description=\"Open source forever. Fork it, extend it, ship it.\"\n          cta=\"View on GitHub\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          title=\"Tailwind compatible\"\n          description=\"v3 and v4 supported\"\n          icon={<span className=\"text-2xl font-black text-cyan-400\">✓</span>}\n        />\n      </BentoGrid>\n    </div>\n  );\n}"
+          "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"auto-rows-[160px]\">\n        <BentoCard\n          title=\"Components\"\n          description=\"Production-ready animated components\"\n          background={\n            <div className=\"absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none\">24</div>\n          }\n          icon={<span className=\"text-2xl font-black text-violet-400\">24</span>}\n        />\n        <BentoCard\n          title=\"Zero dependencies\"\n          description=\"No UniqueUI runtime in your bundle\"\n          background={\n            <div className=\"absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none\">0</div>\n          }\n          icon={<span className=\"text-2xl font-black text-emerald-400\">0</span>}\n        />\n        <BentoCard\n          title=\"Install time\"\n          description=\"Seconds from CLI to working component\"\n          icon={<span className=\"text-2xl font-black text-sky-400\">~3s</span>}\n        />\n        <BentoCard\n          title=\"MIT License\"\n          description=\"Open source forever. Fork it, extend it, ship it.\"\n          cta=\"View on GitHub\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          title=\"Tailwind compatible\"\n          description=\"v3 and v4 supported\"\n          icon={<span className=\"text-2xl font-black text-cyan-400\">\u2713</span>}\n        />\n      </BentoGrid>\n    </div>\n  );\n}"
         },
         {
           "id": "team",
@@ -1646,7 +1646,7 @@
           {
             "title": "Personal portfolio grid",
             "description": "Display projects, skills, and social links in an editorial bento layout.",
-            "code": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function PortfolioGrid() {\n  return (\n    <BentoGrid className=\"max-w-4xl mx-auto\">\n      <BentoCard\n        title=\"UniqueUI\"\n        description=\"An open-source animated component library.\"\n        className=\"col-span-2 row-span-2\"\n      />\n      <BentoCard title=\"React\" description=\"5 years\" />\n      <BentoCard title=\"Next.js\" description=\"3 years\" />\n      <BentoCard\n        title=\"Open to work\"\n        description=\"Based in India · Remote-friendly\"\n        className=\"col-span-2\"\n      />\n    </BentoGrid>\n  );\n}"
+            "code": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function PortfolioGrid() {\n  return (\n    <BentoGrid className=\"max-w-4xl mx-auto\">\n      <BentoCard\n        title=\"UniqueUI\"\n        description=\"An open-source animated component library.\"\n        className=\"col-span-2 row-span-2\"\n      />\n      <BentoCard title=\"React\" description=\"5 years\" />\n      <BentoCard title=\"Next.js\" description=\"3 years\" />\n      <BentoCard\n        title=\"Open to work\"\n        description=\"Based in India \u00b7 Remote-friendly\"\n        className=\"col-span-2\"\n      />\n    </BentoGrid>\n  );\n}"
           }
         ]
       }
@@ -1898,7 +1898,7 @@
           "description": "Additional classes applied to the overlay root."
         }
       ],
-      "usageCode": "import { useRef } from \"react\";\nimport { InteractiveCursor } from \"@/components/ui/interactive-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n\n  return (\n    <div\n      ref={containerRef}\n      className=\"relative h-[400px] w-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950\"\n    >\n      <div className=\"relative z-10 flex h-full items-center justify-center\">\n        <button\n          type=\"button\"\n          data-magnetic=\"true\"\n          className=\"rounded-full bg-white px-6 py-3 font-semibold text-black\"\n        >\n          Hover me\n        </button>\n      </div>\n\n      <InteractiveCursor\n        containerRef={containerRef}\n        color=\"#a855f7\"\n        clickColor=\"#b280ff\"\n        trailColor=\"rgba(168, 85, 247, 0.35)\"\n      />\n    </div>\n  );\n}",
+      "usageCode": "\"use client\";\nimport { useRef } from \"react\";\nimport { InteractiveCursor } from \"@/components/ui/interactive-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n\n  return (\n    <div\n      ref={containerRef}\n      className=\"relative h-[400px] w-full overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950\"\n    >\n      <div className=\"relative z-10 flex h-full items-center justify-center\">\n        <button\n          type=\"button\"\n          data-magnetic=\"true\"\n          className=\"rounded-full bg-white px-6 py-3 font-semibold text-black\"\n        >\n          Hover me\n        </button>\n      </div>\n\n      <InteractiveCursor\n        containerRef={containerRef}\n        color=\"#a855f7\"\n        clickColor=\"#b280ff\"\n        trailColor=\"rgba(168, 85, 247, 0.35)\"\n      />\n    </div>\n  );\n}",
       "docs": {
         "overview": "InteractiveCursor replaces the native cursor with a custom animated dot and ring that react to clicks with particle bursts and ripple rings. Uses a React portal so it renders above all other layers.",
         "scenarios": [
@@ -1918,7 +1918,7 @@
     {
       "slug": "pen-cursor",
       "name": "Pen Cursor",
-      "description": "Physics-driven ribbon trail rendered on canvas — a chain of linked points follows the mouse with spring-damping inertia, width scales with speed, and colors interpolate head-to-tail. Inspired by obsidianassembly.com.",
+      "description": "Physics-driven ribbon trail rendered on canvas \u2014 a chain of linked points follows the mouse with spring-damping inertia, width scales with speed, and colors interpolate head-to-tail. Inspired by obsidianassembly.com.",
       "icon": "Edit2",
       "category": "Cursor Effects",
       "props": [
@@ -1940,12 +1940,12 @@
         {
           "name": "damping",
           "type": "number",
-          "description": "Spring damping for the head point (0–1). Default 0.6."
+          "description": "Spring damping for the head point (0\u20131). Default 0.6."
         },
         {
           "name": "speedInfluence",
           "type": "number",
-          "description": "How much mouse speed widens the ribbon (0–1). Default 0.9."
+          "description": "How much mouse speed widens the ribbon (0\u20131). Default 0.9."
         },
         {
           "name": "colorHead",
@@ -1960,12 +1960,12 @@
         {
           "name": "alphaHead",
           "type": "number",
-          "description": "Opacity at the ribbon head (0–1). Default 0.9."
+          "description": "Opacity at the ribbon head (0\u20131). Default 0.9."
         },
         {
           "name": "alphaTail",
           "type": "number",
-          "description": "Opacity at the ribbon tail (0–1). Default 0."
+          "description": "Opacity at the ribbon tail (0\u20131). Default 0."
         },
         {
           "name": "hideSystemCursor",
@@ -1983,7 +1983,7 @@
           "description": "Extra classes on the canvas element."
         }
       ],
-      "usageCode": "import { useRef } from \"react\";\nimport { PenCursor } from \"@/components/ui/pen-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n  return (\n    <div\n      ref={containerRef}\n      className=\"h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center\"\n    >\n      <h3 className=\"text-white text-2xl font-bold uppercase tracking-widest pointer-events-none\">\n        Move your mouse\n      </h3>\n      <PenCursor\n        containerRef={containerRef}\n        trailLength={40}\n        maxWidth={1}\n        colorHead=\"159, 175, 155\"\n        colorTail=\"198, 167, 106\"\n        alphaHead={0.95}\n        damping={0.55}\n      />\n    </div>\n  );\n}",
+      "usageCode": "\"use client\";\nimport { useRef } from \"react\";\nimport { PenCursor } from \"@/components/ui/pen-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n  return (\n    <div\n      ref={containerRef}\n      className=\"h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center\"\n    >\n      <h3 className=\"text-white text-2xl font-bold uppercase tracking-widest pointer-events-none\">\n        Move your mouse\n      </h3>\n      <PenCursor\n        containerRef={containerRef}\n        trailLength={40}\n        maxWidth={1}\n        colorHead=\"159, 175, 155\"\n        colorTail=\"198, 167, 106\"\n        alphaHead={0.95}\n        damping={0.55}\n      />\n    </div>\n  );\n}",
       "docs": {
         "overview": "PenCursor draws a ribbon-like ink trail that follows the mouse with spring-driven inertia, tapering from a thick head to a thin tail. Renders on a fullscreen canvas overlay positioned above page content.",
         "scenarios": [
@@ -2021,7 +2021,7 @@
         {
           "name": "badge",
           "type": "string | null",
-          "default": "\"Decentralized · Environmental · Protocol\"",
+          "default": "\"Decentralized \u00b7 Environmental \u00b7 Protocol\"",
           "description": "Text shown in the badge above the heading. Pass null to hide the badge entirely."
         },
         {
@@ -2058,7 +2058,7 @@
           "name": "meshOpacity",
           "type": "number",
           "default": "0.6",
-          "description": "Overall opacity of the mesh canvas layer (0–1)."
+          "description": "Overall opacity of the mesh canvas layer (0\u20131)."
         },
         {
           "name": "gridSize",
@@ -2078,13 +2078,13 @@
           "id": "default",
           "label": "Default",
           "demoKey": "glow-hero-section/default",
-          "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      height=\"h-[520px]\"\n      badge=\"Decentralized · Environmental · Protocol\"\n      heading=\"The Gaia Protocol\"\n      description=\"A decentralized framework for global environmental synthesis, powered by a living, self-organizing data network.\"\n      backgroundColor=\"#f0f4f0\"\n      meshColorStart=\"rgba(255, 122, 0, 0.45)\"\n      meshColorEnd=\"rgba(50, 205, 50, 0.45)\"\n      meshOpacity={0.6}\n      gridSize={30}\n      mouseRadius={150}\n    />\n  );\n}"
+          "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      height=\"h-[520px]\"\n      badge=\"Decentralized \u00b7 Environmental \u00b7 Protocol\"\n      heading=\"The Gaia Protocol\"\n      description=\"A decentralized framework for global environmental synthesis, powered by a living, self-organizing data network.\"\n      backgroundColor=\"#f0f4f0\"\n      meshColorStart=\"rgba(255, 122, 0, 0.45)\"\n      meshColorEnd=\"rgba(50, 205, 50, 0.45)\"\n      meshOpacity={0.6}\n      gridSize={30}\n      mouseRadius={150}\n    />\n  );\n}"
         },
         {
           "id": "dark",
           "label": "Dark Theme",
           "demoKey": "glow-hero-section/dark",
-          "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      backgroundColor=\"#0a0a0f\"\n      meshColorStart=\"rgba(139, 92, 246, 0.5)\"\n      meshColorEnd=\"rgba(6, 182, 212, 0.5)\"\n      badge=\"Next-Gen · Web · Components\"\n      heading=\"UniqueUI\"\n      description=\"Premium animated React components, copy-paste ready.\"\n      gridSize={40}\n      mouseRadius={200}\n    />\n  );\n}"
+          "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      backgroundColor=\"#0a0a0f\"\n      meshColorStart=\"rgba(139, 92, 246, 0.5)\"\n      meshColorEnd=\"rgba(6, 182, 212, 0.5)\"\n      badge=\"Next-Gen \u00b7 Web \u00b7 Components\"\n      heading=\"UniqueUI\"\n      description=\"Premium animated React components, copy-paste ready.\"\n      gridSize={40}\n      mouseRadius={200}\n    />\n  );\n}"
         },
         {
           "id": "no-badge",
@@ -2098,7 +2098,7 @@
         "scenarios": [
           {
             "title": "SaaS product landing hero",
-            "description": "The most common pattern — headline, subheadline, and two CTA buttons over a dark glowing background.",
+            "description": "The most common pattern \u2014 headline, subheadline, and two CTA buttons over a dark glowing background.",
             "code": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\nimport Link from \"next/link\";\n\nexport default function LandingHero() {\n  return (\n    <GlowHeroSection\n      badge=\"Now in public beta\"\n      title=\"Ship cinematic UI in minutes\"\n      subtitle=\"Copy-paste animated React components powered by motion.dev and Tailwind CSS.\"\n      glowColor=\"purple\"\n    >\n      <div className=\"flex gap-4 justify-center mt-8\">\n        <Link href=\"/components\" className=\"px-7 py-3.5 bg-white text-black rounded-full font-semibold\">\n          Browse components\n        </Link>\n        <a href=\"https://github.com/pras75299/uniqueui\" className=\"px-7 py-3.5 border border-neutral-700 text-white rounded-full\">\n          Star on GitHub\n        </a>\n      </div>\n    </GlowHeroSection>\n  );\n}"
           },
           {
@@ -2108,7 +2108,7 @@
           }
         ]
       },
-      "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      heading=\"Build the Future\"\n      description=\"A decentralised toolkit for ambitious teams moving fast.\"\n      badge=\"Open Source · MIT License\"\n      className=\"rounded-2xl\"\n    />\n  );\n}"
+      "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      heading=\"Build the Future\"\n      description=\"A decentralised toolkit for ambitious teams moving fast.\"\n      badge=\"Open Source \u00b7 MIT License\"\n      className=\"rounded-2xl\"\n    />\n  );\n}"
     },
     {
       "slug": "limelight-nav",
@@ -2317,21 +2317,21 @@
           "label": "Freeze left",
           "demoKey": "data-table/freeze-left",
           "overflowVisible": true,
-          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Alex Kim\", email: \"alex@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"2\", name: \"Sara Chen\", email: \"sara@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"3\", name: \"Jordan Lee\", email: \"jordan@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"4\", name: \"Maya Patel\", email: \"maya@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"5\", name: \"Ryan Wu\", email: \"ryan@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"6\", name: \"Priya Shah\", email: \"priya@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"7\", name: \"Sam Rivera\", email: \"sam@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"8\", name: \"Jess Taylor\", email: \"jess@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", status: \"Active\", actions: \"Edit · View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"left\"\n          freezeLeftCount={2}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Alex Kim\", email: \"alex@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"2\", name: \"Sara Chen\", email: \"sara@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"3\", name: \"Jordan Lee\", email: \"jordan@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", status: \"Away\", actions: \"Edit \u00b7 View\" },\n  { id: \"4\", name: \"Maya Patel\", email: \"maya@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"5\", name: \"Ryan Wu\", email: \"ryan@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", status: \"Away\", actions: \"Edit \u00b7 View\" },\n  { id: \"6\", name: \"Priya Shah\", email: \"priya@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"7\", name: \"Sam Rivera\", email: \"sam@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"8\", name: \"Jess Taylor\", email: \"jess@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"left\"\n          freezeLeftCount={2}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
         },
         {
           "id": "freeze-right",
           "label": "Freeze right",
           "demoKey": "data-table/freeze-right",
           "overflowVisible": true,
-          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"lastActive\", label: \"Last active\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"alex@example.com\", joined: \"2023-01\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Sara Chen\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Active\", email: \"sara@example.com\", joined: \"2023-03\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", region: \"Central\", status: \"Away\", email: \"jordan@example.com\", joined: \"2023-06\", lastActive: \"2024-02\", actions: \"Edit · View\" },\n  { name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"maya@example.com\", joined: \"2024-01\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Away\", email: \"ryan@example.com\", joined: \"2024-02\", lastActive: \"2024-01\", actions: \"Edit · View\" },\n  { name: \"Priya Shah\", role: \"PM\", department: \"Growth\", region: \"Central\", status: \"Active\", email: \"priya@example.com\", joined: \"2024-04\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"sam@example.com\", joined: \"2024-05\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Jess Taylor\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Active\", email: \"jess@example.com\", joined: \"2024-06\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"right\"\n          freezeRightCount={1}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"lastActive\", label: \"Last active\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"alex@example.com\", joined: \"2023-01\", lastActive: \"2024-03\", actions: \"Edit \u00b7 View\" },\n  { name: \"Sara Chen\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Active\", email: \"sara@example.com\", joined: \"2023-03\", lastActive: \"2024-03\", actions: \"Edit \u00b7 View\" },\n  { name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", region: \"Central\", status: \"Away\", email: \"jordan@example.com\", joined: \"2023-06\", lastActive: \"2024-02\", actions: \"Edit \u00b7 View\" },\n  { name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"maya@example.com\", joined: \"2024-01\", lastActive: \"2024-03\", actions: \"Edit \u00b7 View\" },\n  { name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Away\", email: \"ryan@example.com\", joined: \"2024-02\", lastActive: \"2024-01\", actions: \"Edit \u00b7 View\" },\n  { name: \"Priya Shah\", role: \"PM\", department: \"Growth\", region: \"Central\", status: \"Active\", email: \"priya@example.com\", joined: \"2024-04\", lastActive: \"2024-03\", actions: \"Edit \u00b7 View\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"sam@example.com\", joined: \"2024-05\", lastActive: \"2024-03\", actions: \"Edit \u00b7 View\" },\n  { name: \"Jess Taylor\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Active\", email: \"jess@example.com\", joined: \"2024-06\", lastActive: \"2024-03\", actions: \"Edit \u00b7 View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"right\"\n          freezeRightCount={1}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
         },
         {
           "id": "freeze-both",
           "label": "Freeze both",
           "demoKey": "data-table/freeze-both",
           "overflowVisible": true,
-          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Alex Kim\", email: \"alex@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"2\", name: \"Sara Chen\", email: \"sara@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"3\", name: \"Jordan Lee\", email: \"jordan@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"4\", name: \"Maya Patel\", email: \"maya@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"5\", name: \"Ryan Wu\", email: \"ryan@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"6\", name: \"Priya Shah\", email: \"priya@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"7\", name: \"Sam Rivera\", email: \"sam@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"8\", name: \"Jess Taylor\", email: \"jess@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", status: \"Active\", actions: \"Edit · View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"both\"\n          freezeLeftCount={2}\n          freezeRightCount={1}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+          "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Alex Kim\", email: \"alex@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"2\", name: \"Sara Chen\", email: \"sara@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"3\", name: \"Jordan Lee\", email: \"jordan@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", status: \"Away\", actions: \"Edit \u00b7 View\" },\n  { id: \"4\", name: \"Maya Patel\", email: \"maya@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"5\", name: \"Ryan Wu\", email: \"ryan@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", status: \"Away\", actions: \"Edit \u00b7 View\" },\n  { id: \"6\", name: \"Priya Shah\", email: \"priya@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"7\", name: \"Sam Rivera\", email: \"sam@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n  { id: \"8\", name: \"Jess Taylor\", email: \"jess@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", status: \"Active\", actions: \"Edit \u00b7 View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"both\"\n          freezeLeftCount={2}\n          freezeRightCount={1}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
         },
         {
           "id": "bordered",
@@ -2530,7 +2530,7 @@
         "scenarios": [
           {
             "title": "Standalone sign-in page",
-            "description": "Drop in as a standalone auth card in a centred layout — the component handles all state transitions internally.",
+            "description": "Drop in as a standalone auth card in a centred layout \u2014 the component handles all state transitions internally.",
             "code": "\"use client\";\nimport { MultiStepAuthCard } from \"@/components/ui/multi-step-auth-card\";\n\nexport default function SignInPage() {\n  return (\n    <div className=\"min-h-screen bg-neutral-950 flex items-center justify-center p-4\">\n      <MultiStepAuthCard\n        onAuthenticated={(email) => console.log(\"Signed in:\", email)}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
           },
           {
@@ -2544,7 +2544,7 @@
     {
       "slug": "shiny-text",
       "name": "Shiny Text",
-      "description": "A shimmering highlight that continuously sweeps across text — perfect for hero taglines and call-to-action copy.",
+      "description": "A shimmering highlight that continuously sweeps across text \u2014 perfect for hero taglines and call-to-action copy.",
       "icon": "LucideWand2",
       "category": "Text",
       "props": [
@@ -2589,12 +2589,12 @@
           {
             "title": "Premium badge label",
             "description": "Use a smaller shimmer span inside a pill badge to signal a paid or featured tier.",
-            "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function PremiumBadge() {\n  return (\n    <span className=\"inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-xs font-semibold\">\n      ✦ <ShinyText text=\"PRO\" speed={4} className=\"text-yellow-400\" />\n    </span>\n  );\n}"
+            "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function PremiumBadge() {\n  return (\n    <span className=\"inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-xs font-semibold\">\n      \u2726 <ShinyText text=\"PRO\" speed={4} className=\"text-yellow-400\" />\n    </span>\n  );\n}"
           },
           {
             "title": "CTA button text",
             "description": "Give a call-to-action button a shimmering label to make it pop on dark landing pages.",
-            "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function ShinyButton() {\n  return (\n    <button className=\"px-6 py-3 rounded-xl bg-neutral-800 border border-neutral-700 hover:border-purple-500 transition-colors\">\n      <ShinyText text=\"Get started for free →\" speed={3} className=\"text-white\" />\n    </button>\n  );\n}"
+            "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function ShinyButton() {\n  return (\n    <button className=\"px-6 py-3 rounded-xl bg-neutral-800 border border-neutral-700 hover:border-purple-500 transition-colors\">\n      <ShinyText text=\"Get started for free \u2192\" speed={3} className=\"text-white\" />\n    </button>\n  );\n}"
           }
         ]
       }
@@ -2602,7 +2602,7 @@
     {
       "slug": "blur-reveal",
       "name": "Blur Reveal",
-      "description": "Characters or words materialise from a soft blur — the cinematic text entrance used in top SaaS hero sections.",
+      "description": "Characters or words materialise from a soft blur \u2014 the cinematic text entrance used in top SaaS hero sections.",
       "icon": "LucideScanLine",
       "category": "Text",
       "props": [
@@ -2667,7 +2667,7 @@
     {
       "slug": "count-up",
       "name": "Count Up",
-      "description": "An animated number that counts from a starting value to a target when scrolled into view — essential for metrics and stats sections.",
+      "description": "An animated number that counts from a starting value to a target when scrolled into view \u2014 essential for metrics and stats sections.",
       "icon": "Hash",
       "category": "Text",
       "props": [
@@ -2732,7 +2732,7 @@
       ],
       "usageCode": "\"use client\";\nimport { CountUp } from \"@/components/ui/count-up\";\n\nexport default function Stats() {\n  return (\n    <div className=\"flex gap-12\">\n      <div className=\"text-center\">\n        <p className=\"text-5xl font-black text-white\">\n          <CountUp to={12400} suffix=\"+\" duration={2.5} />\n        </p>\n        <p className=\"text-neutral-400 mt-1\">Stars on GitHub</p>\n      </div>\n      <div className=\"text-center\">\n        <p className=\"text-5xl font-black text-white\">\n          <CountUp to={99.9} decimals={1} suffix=\"%\" duration={2} />\n        </p>\n        <p className=\"text-neutral-400 mt-1\">Uptime SLA</p>\n      </div>\n    </div>\n  );\n}",
       "docs": {
-        "overview": "CountUp animates a number from a starting value to a target value as it enters the viewport. It supports decimals, prefixes, suffixes, and thousands separators — perfect for stats and metrics sections.",
+        "overview": "CountUp animates a number from a starting value to a target value as it enters the viewport. It supports decimals, prefixes, suffixes, and thousands separators \u2014 perfect for stats and metrics sections.",
         "scenarios": [
           {
             "title": "Stats row",
@@ -2750,7 +2750,7 @@
     {
       "slug": "border-beam",
       "name": "Border Beam",
-      "description": "A glowing comet that continuously orbits the border of a container — instantly upgrades cards, code blocks, and feature sections.",
+      "description": "A glowing comet that continuously orbits the border of a container \u2014 instantly upgrades cards, code blocks, and feature sections.",
       "icon": "Flame",
       "category": "Effects & Animations",
       "props": [
@@ -2821,7 +2821,7 @@
     {
       "slug": "ripple",
       "name": "Ripple",
-      "description": "Luminous orbs that drift slowly across the viewport — a liquid nebula hero background with warm, organic colour blooms.",
+      "description": "Luminous orbs that drift slowly across the viewport \u2014 a liquid nebula hero background with warm, organic colour blooms.",
       "icon": "LucideWaves",
       "category": "Backgrounds",
       "props": [
@@ -2829,13 +2829,13 @@
           "name": "mainCircleSize",
           "type": "number",
           "default": "120",
-          "description": "Controls orb diameter — each orb renders at mainCircleSize × 4.5 px."
+          "description": "Controls orb diameter \u2014 each orb renders at mainCircleSize \u00d7 4.5 px."
         },
         {
           "name": "mainCircleOpacity",
           "type": "number",
           "default": "0.6",
-          "description": "Peak opacity for every orb (0–1). Individual orbs shimmer around this value."
+          "description": "Peak opacity for every orb (0\u20131). Individual orbs shimmer around this value."
         },
         {
           "name": "numCircles",
@@ -2860,9 +2860,9 @@
           "description": "Extra classes on the wrapper div."
         }
       ],
-      "usageCode": "\"use client\";\nimport { Ripple } from \"@/components/ui/ripple\";\n\nexport default function Hero() {\n  return (\n    <section className=\"relative h-[500px] w-full flex items-center justify-center overflow-hidden bg-[#0c0608]\">\n      {/* Animated nebula background */}\n      <Ripple mainCircleSize={90} mainCircleOpacity={0.55} numCircles={7} duration={10} />\n\n      {/* Radial vignette so centre text stays readable */}\n      <div\n        className=\"absolute inset-0 pointer-events-none\"\n        style={{\n          background:\n            \"radial-gradient(ellipse 55% 60% at 50% 50%, transparent 0%, rgba(12,6,8,0.75) 60%, rgba(12,6,8,0.97) 100%)\",\n        }}\n      />\n\n      {/* Hero content sits above the orbs */}\n      <div className=\"relative z-10 flex flex-col items-center gap-4 px-6 text-center max-w-sm\">\n        <p className=\"text-[10px] uppercase tracking-[0.35em] text-rose-300/70\">\n          Maison de Parfum\n        </p>\n        <h1 className=\"text-6xl font-light italic text-white\" style={{ fontFamily: \"Georgia, serif\" }}>\n          Aurore.\n        </h1>\n        <p className=\"text-xs leading-relaxed tracking-wide text-stone-400\">\n          A scent composed at the edge of dawn — rose, oud, and amber woven into silence.\n        </p>\n        <button className=\"mt-1 border border-rose-300/30 px-7 py-2.5 text-xs tracking-[0.18em] uppercase text-rose-200/80 transition-colors hover:border-rose-300/70 hover:text-rose-100\">\n          Discover the collection\n        </button>\n      </div>\n    </section>\n  );\n}",
+      "usageCode": "\"use client\";\nimport { Ripple } from \"@/components/ui/ripple\";\n\nexport default function Hero() {\n  return (\n    <section className=\"relative h-[500px] w-full flex items-center justify-center overflow-hidden bg-[#0c0608]\">\n      {/* Animated nebula background */}\n      <Ripple mainCircleSize={90} mainCircleOpacity={0.55} numCircles={7} duration={10} />\n\n      {/* Radial vignette so centre text stays readable */}\n      <div\n        className=\"absolute inset-0 pointer-events-none\"\n        style={{\n          background:\n            \"radial-gradient(ellipse 55% 60% at 50% 50%, transparent 0%, rgba(12,6,8,0.75) 60%, rgba(12,6,8,0.97) 100%)\",\n        }}\n      />\n\n      {/* Hero content sits above the orbs */}\n      <div className=\"relative z-10 flex flex-col items-center gap-4 px-6 text-center max-w-sm\">\n        <p className=\"text-[10px] uppercase tracking-[0.35em] text-rose-300/70\">\n          Maison de Parfum\n        </p>\n        <h1 className=\"text-6xl font-light italic text-white\" style={{ fontFamily: \"Georgia, serif\" }}>\n          Aurore.\n        </h1>\n        <p className=\"text-xs leading-relaxed tracking-wide text-stone-400\">\n          A scent composed at the edge of dawn \u2014 rose, oud, and amber woven into silence.\n        </p>\n        <button className=\"mt-1 border border-rose-300/30 px-7 py-2.5 text-xs tracking-[0.18em] uppercase text-rose-200/80 transition-colors hover:border-rose-300/70 hover:text-rose-100\">\n          Discover the collection\n        </button>\n      </div>\n    </section>\n  );\n}",
       "docs": {
-        "overview": "Ripple renders concentric animated rings that pulse outward from a center point. Use it as a background for icons, avatars, or buttons to convey activity, presence, or emphasis.",
+        "overview": "Ripple renders luminous drifting orbs across a dark background for a liquid-nebula hero effect. Tune `mainCircleSize`, `mainCircleOpacity`, `numCircles` (capped at 8), `color`, and `duration` to dial in the atmosphere \u2014 works well layered behind hero copy, product stages, and ambient panels.",
         "scenarios": [
           {
             "title": "Live presence indicator",
@@ -2880,7 +2880,7 @@
     {
       "slug": "word-rotate",
       "name": "Word Rotate",
-      "description": "A list of words that cycle with slide, flip, or fade transitions — the signature hero-headline effect used across modern SaaS sites.",
+      "description": "A list of words that cycle with slide, flip, or fade transitions \u2014 the signature hero-headline effect used across modern SaaS sites.",
       "icon": "LucideRefreshCw",
       "category": "Text",
       "props": [
@@ -2915,7 +2915,7 @@
       ],
       "usageCode": "\"use client\";\nimport { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function Hero() {\n  return (\n    <h1 className=\"text-5xl font-black text-white\">\n      Build interfaces that are{\" \"}\n      <WordRotate\n        words={[\"faster\", \"smarter\", \"bolder\", \"yours\"]}\n        animation=\"slide-up\"\n        className=\"text-purple-400\"\n      />\n    </h1>\n  );\n}",
       "docs": {
-        "overview": "WordRotate cycles through an array of words with configurable entrance and exit animations — slide, flip, or fade. Drop it inline within headings to convey multiple ideas without extra layout space.",
+        "overview": "WordRotate cycles through an array of words with configurable entrance and exit animations \u2014 slide, flip, or fade. Drop it inline within headings to convey multiple ideas without extra layout space.",
         "scenarios": [
           {
             "title": "Hero headline value rotator",
@@ -2934,6 +2934,187 @@
           }
         ]
       }
+    },
+    {
+      "slug": "lightspeed",
+      "name": "LightSpeed",
+      "description": "A cinematic warp-speed particle background. Hundreds of luminous streaks radiate from a central vanishing point, simulating hyperspace travel. Built on Motion.dev WAAPI \u2014 all animations are GPU-composited for smooth 60fps performance.",
+      "icon": "LucideZap",
+      "category": "Backgrounds",
+      "props": [
+        {
+          "name": "speed",
+          "type": "number",
+          "default": "1",
+          "description": "Animation speed multiplier. Higher values shorten each particle's travel duration. Range 0.1\u20135."
+        },
+        {
+          "name": "intensity",
+          "type": "number",
+          "default": "1",
+          "description": "Trail length and glow strength multiplier. Scales scaleX keyframe and box-shadow blur. Range 0.1\u20133."
+        },
+        {
+          "name": "particleCount",
+          "type": "number",
+          "default": "300",
+          "description": "Total number of particle elements rendered. Regenerates the particle pool when changed."
+        },
+        {
+          "name": "tint",
+          "type": "string",
+          "default": "\"#ffffff\"",
+          "description": "CSS colour (#rrggbb, #rgb, or rgb()) used to tint the particle palette. Each palette colour's channels are multiplied by the normalised tint values. Defaults to white (no tint)."
+        },
+        {
+          "name": "quality",
+          "type": "\"low\" | \"medium\" | \"high\"",
+          "default": "\"medium\"",
+          "description": "\"low\" caps particles at 100 and disables blur. \"high\" allows up to 1000 and enables 4-layer box-shadow bloom."
+        },
+        {
+          "name": "paused",
+          "type": "boolean",
+          "default": "false",
+          "description": "Calls .pause() or .play() on all stored animation controls without restarting them."
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Optional content layered above the particle field at z-index 10."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional classes on the outer container (height, rounding, etc.)."
+        }
+      ],
+      "variants": [
+        {
+          "id": "default",
+          "label": "Warp Drive",
+          "demoKey": "lightspeed",
+          "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={300}\n        speed={1}\n        intensity={1}\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "fast",
+          "label": "Ludicrous Speed",
+          "demoKey": "lightspeed/fast",
+          "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={200}\n        speed={1}\n        intensity={1.4}\n        quality=\"high\"\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "id": "gold",
+          "label": "Solar Wind",
+          "demoKey": "lightspeed/gold",
+          "usageCode": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={220}\n        speed={0.7}\n        intensity={1.4}\n        tint=\"#ffbf4d\"\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
+        }
+      ],
+      "docs": {
+        "overview": "LightSpeed renders a warp-speed hyperspace tunnel using Motion.dev's imperative animate() API. Each particle is a <div> element that uses the Web Animations API (WAAPI) under the hood \u2014 transform and opacity run off the main thread for near-GPU performance. A ResizeObserver recomputes start/end positions on container resize so the vanishing point always stays centred. Respects prefers-reduced-motion.",
+        "scenarios": [
+          {
+            "title": "Full-page hero background",
+            "description": "Drop LightSpeed behind a hero headline for an immediate cinematic impact on landing pages.",
+            "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Hero() {\n  return (\n    <div className=\"relative h-screen w-full\">\n      <LightSpeed\n        particleCount={350}\n        speed={1.2}\n        intensity={1.1}\n        quality=\"high\"\n        className=\"absolute inset-0\"\n      />\n      <div className=\"relative z-10 flex h-full items-center justify-center text-center\">\n        <div>\n          <h1 className=\"text-6xl font-bold text-white tracking-tight\">\n            Beyond Light Speed\n          </h1>\n          <p className=\"mt-4 text-lg text-white/60\">\n            The fastest way to ship beautiful products.\n          </p>\n          <button className=\"mt-8 rounded-full bg-white px-8 py-3 text-sm font-semibold text-black\">\n            Launch now\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Loading / transition screen",
+            "description": "Use LightSpeed as a full-screen loader while your app fetches data, with a pause toggle when complete.",
+            "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Loader({ isLoading }: { isLoading: boolean }) {\n  return (\n    <div\n      className=\"fixed inset-0 z-50 transition-opacity duration-700\"\n      style={{ opacity: isLoading ? 1 : 0, pointerEvents: isLoading ? \"auto\" : \"none\" }}\n    >\n      <LightSpeed\n        particleCount={300}\n        speed={2}\n        intensity={1.4}\n        paused={!isLoading}\n        quality=\"medium\"\n      >\n        <p className=\"font-mono text-sm tracking-widest text-white/40\">\n          ENGAGING WARP DRIVE\u2026\n        </p>\n      </LightSpeed>\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Tinted brand variant",
+            "description": "Tint all particles toward your brand colour by passing a hex value to the tint prop.",
+            "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function BrandHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <LightSpeed\n        particleCount={250}\n        speed={0.8}\n        intensity={1.5}\n        tint=\"#ffb84d\"\n        quality=\"medium\"\n      >\n        <span className=\"text-sm font-mono uppercase tracking-[0.25em] text-amber-300/70\">\n          Solar Wind\n        </span>\n      </LightSpeed>\n    </div>\n  );\n}"
+          }
+        ]
+      },
+      "usageCode": "\"use client\";\nimport { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <LightSpeed\n        particleCount={300}\n        speed={1}\n        intensity={1}\n        quality=\"medium\"\n      />\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "shooting-stars-grid",
+      "name": "ShootingStarsGrid",
+      "description": "A cinematic hero-section background: a faint grid bathed in dark-emerald glow, with thin white streaks that race along grid lanes like falling stars. Built on Motion.dev with compositor-only transforms for smooth 60fps.",
+      "icon": "LucideStars",
+      "category": "Backgrounds",
+      "props": [
+        {
+          "name": "starCount",
+          "type": "number",
+          "default": "15",
+          "description": "Number of concurrent shooting-star streaks. Clamped to 1\u201380."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "default": "2.5",
+          "description": "Base travel duration in seconds. Each star is randomised \u00b130% around this value."
+        },
+        {
+          "name": "glowStrength",
+          "type": "number",
+          "default": "1",
+          "description": "Multiplier (0\u20131) applied to the streak's box-shadow intensity."
+        },
+        {
+          "name": "gridSize",
+          "type": "number",
+          "default": "80",
+          "description": "Pixel spacing between grid lines; streaks snap to these lanes."
+        },
+        {
+          "name": "direction",
+          "type": "\"horizontal\" | \"vertical\" | \"both\"",
+          "default": "\"both\"",
+          "description": "Axis streaks travel along. \"both\" picks per star randomly."
+        },
+        {
+          "name": "color",
+          "type": "string | readonly string[]",
+          "description": "Streak colour. Pass a single CSS colour for a monochrome shower, an array of colours to sample from per star, or omit for the built-in multi-hue palette (white, mint, cyan, amber, pink, violet)."
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Optional content layered above the background at z-index 10."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional classes merged onto the outer container."
+        }
+      ],
+      "docs": {
+        "overview": "ShootingStarsGrid renders a full-bleed animated background suitable for hero sections. It stacks four layers: a near-black base (#020808), a subtle 80px grid drawn with two linear-gradients, a radial emerald glow, and a vignette that fades the outer edges to black. Shooting stars are motion.div elements whose positions snap to grid lanes; their animation uses only transform + opacity so they stay on the GPU compositor. Each star picks a hue from the default multi-colour palette (or from a custom colour/array passed via the `color` prop). Respects prefers-reduced-motion by rendering the grid alone.",
+        "scenarios": [
+          {
+            "title": "Hero-section background",
+            "description": "Drop ShootingStarsGrid behind a headline as a full-viewport hero background.",
+            "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Hero() {\n  return (\n    <div className=\"relative h-screen w-full\">\n      <ShootingStarsGrid className=\"absolute inset-0\" starCount={20}>\n        <div className=\"flex h-full items-center justify-center text-center\">\n          <div>\n            <h1 className=\"text-6xl font-bold text-white tracking-tight\">\n              Ship at the speed of light\n            </h1>\n            <p className=\"mt-4 text-lg text-white/60\">\n              Animated backgrounds, zero configuration.\n            </p>\n          </div>\n        </div>\n      </ShootingStarsGrid>\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Monochrome brand shower",
+            "description": "Pass a single colour to lock every streak to your brand hue.",
+            "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function BrandHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <ShootingStarsGrid\n        starCount={18}\n        color=\"#7fe7ff\"\n        speed={2.2}\n      />\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Custom palette",
+            "description": "Pass an array of colours to restrict the shower to a specific set of hues.",
+            "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function PaletteHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <ShootingStarsGrid\n        starCount={20}\n        color={[\"#ff9ecf\", \"#c89bff\", \"#ffffff\"]}\n        speed={2.5}\n      />\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Horizontal-only streaks",
+            "description": "Restrict streaks to the horizontal axis for a calmer, train-window feel.",
+            "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function HorizontalHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <ShootingStarsGrid\n        starCount={12}\n        direction=\"horizontal\"\n        speed={3}\n        gridSize={96}\n      />\n    </div>\n  );\n}"
+          },
+          {
+            "title": "Dense, fast streaks for a launch moment",
+            "description": "Bump starCount and speed for a high-energy loader or splash screen.",
+            "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Launch() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <ShootingStarsGrid starCount={40} speed={1.4} glowStrength={1}>\n        <p className=\"flex h-full items-center justify-center font-mono text-sm tracking-[0.3em] text-white/60\">\n          LAUNCHING\u2026\n        </p>\n      </ShootingStarsGrid>\n    </div>\n  );\n}"
+          }
+        ]
+      },
+      "usageCode": "\"use client\";\nimport { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      {/* Default: multi-hue palette (white, mint, cyan, amber, pink, violet) */}\n      <ShootingStarsGrid\n        starCount={18}\n        speed={2.5}\n        gridSize={80}\n      />\n\n      {/* Monochrome — every streak picks up the same hue */}\n      {/* <ShootingStarsGrid starCount={18} color=\"#7fe7ff\" /> */}\n\n      {/* Custom palette — streaks sampled from this set */}\n      {/* <ShootingStarsGrid\n        starCount={20}\n        color={[\"#ff9ecf\", \"#c89bff\", \"#ffffff\"]}\n      /> */}\n    </div>\n  );\n}"
     }
   ]
 }

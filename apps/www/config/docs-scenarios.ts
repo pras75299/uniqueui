@@ -63,7 +63,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Loading / processing indicator",
         "description": "Use a single looping word to hint that background work is in progress.",
-        "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function ProcessingBadge() {\n  return (\n    <div className=\"flex items-center gap-2 text-sm text-neutral-400\">\n      <span className=\"h-2 w-2 rounded-full bg-green-500 animate-pulse\" />\n      <TypewriterText\n        words={[\"Analyzing…\", \"Optimizing…\", \"Almost done…\"]}\n        typingSpeed={60}\n        deletingSpeed={40}\n        pauseDuration={1200}\n      />\n    </div>\n  );\n}"
+        "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function ProcessingBadge() {\n  return (\n    <div className=\"flex items-center gap-2 text-sm text-neutral-400\">\n      <span className=\"h-2 w-2 rounded-full bg-green-500 animate-pulse\" />\n      <TypewriterText\n        words={[\"Analyzing…\", \"Optimizing…\", \"Almost done…\"]}\n        typingSpeed={60}\n        deletingSpeed={40}\n        delayBetweenWords={1200}\n      />\n    </div>\n  );\n}"
       },
       {
         "title": "Feature tagline in a navbar",
@@ -147,12 +147,12 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Dashboard content switcher",
         "description": "Switch between weekly, monthly, and yearly data views in a dashboard.",
-        "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\n\nconst ranges = [\n  { id: \"7d\", label: \"7 days\" },\n  { id: \"30d\", label: \"30 days\" },\n  { id: \"90d\", label: \"90 days\" },\n  { id: \"1y\", label: \"1 year\" },\n];\n\nexport default function DateRangeTabs() {\n  const [range, setRange] = useState(\"30d\");\n\n  return (\n    <div>\n      <AnimatedTabs\n        tabs={ranges}\n        defaultTab=\"30d\"\n        onChange={setRange}\n        size=\"sm\"\n      />\n      <p className=\"mt-4 text-sm text-neutral-400\">\n        Showing data for: {range}\n      </p>\n    </div>\n  );\n}"
+        "code": "\"use client\";\nimport { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\n\nconst ranges = [\n  { id: \"7d\", label: \"7 days\" },\n  { id: \"30d\", label: \"30 days\" },\n  { id: \"90d\", label: \"90 days\" },\n  { id: \"1y\", label: \"1 year\" },\n];\n\nexport default function DateRangeTabs() {\n  const [range, setRange] = useState(\"30d\");\n\n  return (\n    <div>\n      <AnimatedTabs\n        tabs={ranges}\n        defaultTab=\"30d\"\n        onChange={setRange}\n        size=\"sm\"\n      />\n      <p className=\"mt-4 text-sm text-neutral-400\">\n        Showing data for: {range}\n      </p>\n    </div>\n  );\n}"
       },
       {
         "title": "Product feature showcase tabs",
         "description": "Let marketing highlight different product features with animated tab transitions.",
-        "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst features = [\n  { id: \"speed\", label: \"Speed\", content: \"Deploy components in seconds with the CLI.\" },\n  { id: \"design\", label: \"Design\", content: \"Motion-first animations out of the box.\" },\n  { id: \"dx\", label: \"DX\", content: \"Single-file components, zero config.\" },\n];\n\nexport default function FeatureTabs() {\n  const [active, setActive] = useState(\"speed\");\n  const feature = features.find(f => f.id === active)!;\n\n  return (\n    <div className=\"space-y-6 max-w-lg\">\n      <AnimatedTabs tabs={features} defaultTab=\"speed\" onChange={setActive} />\n      <AnimatePresence mode=\"wait\">\n        <motion.p\n          key={active}\n          initial={{ opacity: 0, y: 6 }}\n          animate={{ opacity: 1, y: 0 }}\n          exit={{ opacity: 0, y: -6 }}\n          className=\"text-neutral-300\"\n        >\n          {feature.content}\n        </motion.p>\n      </AnimatePresence>\n    </div>\n  );\n}"
+        "code": "\"use client\";\nimport { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst features = [\n  { id: \"speed\", label: \"Speed\", content: \"Deploy components in seconds with the CLI.\" },\n  { id: \"design\", label: \"Design\", content: \"Motion-first animations out of the box.\" },\n  { id: \"dx\", label: \"DX\", content: \"Single-file components, zero config.\" },\n];\n\nexport default function FeatureTabs() {\n  const [active, setActive] = useState(\"speed\");\n  const feature = features.find(f => f.id === active)!;\n\n  return (\n    <div className=\"space-y-6 max-w-lg\">\n      <AnimatedTabs tabs={features} defaultTab=\"speed\" onChange={setActive} />\n      <AnimatePresence mode=\"wait\">\n        <motion.p\n          key={active}\n          initial={{ opacity: 0, y: 6 }}\n          animate={{ opacity: 1, y: 0 }}\n          exit={{ opacity: 0, y: -6 }}\n          className=\"text-neutral-300\"\n        >\n          {feature.content}\n        </motion.p>\n      </AnimatePresence>\n    </div>\n  );\n}"
       }
     ]
   },
@@ -163,7 +163,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Primary CTA button",
         "description": "Apply the magnetic effect to your hero CTA to make it irresistible to click.",
-        "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function HeroCTA() {\n  return (\n    <div className=\"flex justify-center py-20\">\n      <MagneticButton>\n        <button className=\"px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-neutral-100 transition-colors\">\n          Get started free →\n        </button>\n      </MagneticButton>\n    </div>\n  );\n}"
+        "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function HeroCTA() {\n  return (\n    <div className=\"flex justify-center py-20\">\n      <MagneticButton className=\"px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-neutral-100 transition-colors\">\n        Get started free →\n      </MagneticButton>\n    </div>\n  );\n}"
       },
       {
         "title": "Icon navigation links",
@@ -396,7 +396,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Live activity feed",
         "description": "Push real-time events (new users, payments, deployments) into the stack.",
-        "code": "import { NotificationStack } from \"@/components/ui/notification-stack\";\nimport { useState } from \"react\";\n\nconst events = [\n  { id: 1, title: \"New signup\", body: \"prashant@example.com just joined.\" },\n  { id: 2, title: \"Payment received\", body: \"$49 from Stripe · Order #1042\" },\n  { id: 3, title: \"Deploy success\", body: \"main → production in 34s\" },\n];\n\nexport default function ActivityFeed() {\n  const [notifications, setNotifications] = useState(events);\n\n  return (\n    <NotificationStack\n      notifications={notifications}\n      onDismiss={(id) => setNotifications((n) => n.filter((x) => x.id !== id))}\n    />\n  );\n}"
+        "code": "\"use client\";\nimport { NotificationStack } from \"@/components/ui/notification-stack\";\nimport { useState } from \"react\";\n\nconst events = [\n  { id: 1, title: \"New signup\", body: \"prashant@example.com just joined.\" },\n  { id: 2, title: \"Payment received\", body: \"$49 from Stripe · Order #1042\" },\n  { id: 3, title: \"Deploy success\", body: \"main → production in 34s\" },\n];\n\nexport default function ActivityFeed() {\n  const [notifications, setNotifications] = useState(events);\n\n  return (\n    <NotificationStack\n      notifications={notifications}\n      onDismiss={(id) => setNotifications((n) => n.filter((x) => x.id !== id))}\n    />\n  );\n}"
       },
       {
         "title": "Form validation errors",
@@ -721,7 +721,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   },
   "ripple": {
     "slug": "ripple",
-    "overview": "Ripple renders concentric animated rings that pulse outward from a center point. Use it as a background for icons, avatars, or buttons to convey activity, presence, or emphasis.",
+    "overview": "Ripple renders luminous drifting orbs across a dark background for a liquid-nebula hero effect. Tune `mainCircleSize`, `mainCircleOpacity`, `numCircles` (capped at 8), `color`, and `duration` to dial in the atmosphere — works well layered behind hero copy, product stages, and ambient panels.",
     "scenarios": [
       {
         "title": "Live presence indicator",
@@ -753,6 +753,58 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "title": "Subtle fade rotator in body copy",
         "description": "Use the fade animation for a soft, unobtrusive rotation inside a paragraph.",
         "code": "import { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function FadeRotator() {\n  return (\n    <p className=\"text-base text-neutral-400\">\n      Perfect for{\" \"}\n      <WordRotate\n        words={[\"landing pages\", \"SaaS apps\", \"portfolios\", \"dashboards\"]}\n        animation=\"fade\"\n        interval={3000}\n        className=\"text-white font-medium\"\n      />\n    </p>\n  );\n}"
+      }
+    ]
+  },
+  "lightspeed": {
+    "slug": "lightspeed",
+    "overview": "LightSpeed renders a warp-speed hyperspace tunnel using Motion.dev's imperative animate() API. Each particle is a <div> element that uses the Web Animations API (WAAPI) under the hood — transform and opacity run off the main thread for near-GPU performance. A ResizeObserver recomputes start/end positions on container resize so the vanishing point always stays centred. Respects prefers-reduced-motion.",
+    "scenarios": [
+      {
+        "title": "Full-page hero background",
+        "description": "Drop LightSpeed behind a hero headline for an immediate cinematic impact on landing pages.",
+        "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Hero() {\n  return (\n    <div className=\"relative h-screen w-full\">\n      <LightSpeed\n        particleCount={350}\n        speed={1.2}\n        intensity={1.1}\n        quality=\"high\"\n        className=\"absolute inset-0\"\n      />\n      <div className=\"relative z-10 flex h-full items-center justify-center text-center\">\n        <div>\n          <h1 className=\"text-6xl font-bold text-white tracking-tight\">\n            Beyond Light Speed\n          </h1>\n          <p className=\"mt-4 text-lg text-white/60\">\n            The fastest way to ship beautiful products.\n          </p>\n          <button className=\"mt-8 rounded-full bg-white px-8 py-3 text-sm font-semibold text-black\">\n            Launch now\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Loading / transition screen",
+        "description": "Use LightSpeed as a full-screen loader while your app fetches data, with a pause toggle when complete.",
+        "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Loader({ isLoading }: { isLoading: boolean }) {\n  return (\n    <div\n      className=\"fixed inset-0 z-50 transition-opacity duration-700\"\n      style={{ opacity: isLoading ? 1 : 0, pointerEvents: isLoading ? \"auto\" : \"none\" }}\n    >\n      <LightSpeed\n        particleCount={300}\n        speed={2}\n        intensity={1.4}\n        paused={!isLoading}\n        quality=\"medium\"\n      >\n        <p className=\"font-mono text-sm tracking-widest text-white/40\">\n          ENGAGING WARP DRIVE…\n        </p>\n      </LightSpeed>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Tinted brand variant",
+        "description": "Tint all particles toward your brand colour by passing a hex value to the tint prop.",
+        "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function BrandHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <LightSpeed\n        particleCount={250}\n        speed={0.8}\n        intensity={1.5}\n        tint=\"#ffb84d\"\n        quality=\"medium\"\n      >\n        <span className=\"text-sm font-mono uppercase tracking-[0.25em] text-amber-300/70\">\n          Solar Wind\n        </span>\n      </LightSpeed>\n    </div>\n  );\n}"
+      }
+    ]
+  },
+  "shooting-stars-grid": {
+    "slug": "shooting-stars-grid",
+    "overview": "ShootingStarsGrid renders a full-bleed animated background suitable for hero sections. It stacks four layers: a near-black base (#020808), a subtle 80px grid drawn with two linear-gradients, a radial emerald glow, and a vignette that fades the outer edges to black. Shooting stars are motion.div elements whose positions snap to grid lanes; their animation uses only transform + opacity so they stay on the GPU compositor. Each star picks a hue from the default multi-colour palette (or from a custom colour/array passed via the `color` prop). Respects prefers-reduced-motion by rendering the grid alone.",
+    "scenarios": [
+      {
+        "title": "Hero-section background",
+        "description": "Drop ShootingStarsGrid behind a headline as a full-viewport hero background.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Hero() {\n  return (\n    <div className=\"relative h-screen w-full\">\n      <ShootingStarsGrid className=\"absolute inset-0\" starCount={20}>\n        <div className=\"flex h-full items-center justify-center text-center\">\n          <div>\n            <h1 className=\"text-6xl font-bold text-white tracking-tight\">\n              Ship at the speed of light\n            </h1>\n            <p className=\"mt-4 text-lg text-white/60\">\n              Animated backgrounds, zero configuration.\n            </p>\n          </div>\n        </div>\n      </ShootingStarsGrid>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Monochrome brand shower",
+        "description": "Pass a single colour to lock every streak to your brand hue.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function BrandHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <ShootingStarsGrid\n        starCount={18}\n        color=\"#7fe7ff\"\n        speed={2.2}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Custom palette",
+        "description": "Pass an array of colours to restrict the shower to a specific set of hues.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function PaletteHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <ShootingStarsGrid\n        starCount={20}\n        color={[\"#ff9ecf\", \"#c89bff\", \"#ffffff\"]}\n        speed={2.5}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Horizontal-only streaks",
+        "description": "Restrict streaks to the horizontal axis for a calmer, train-window feel.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function HorizontalHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <ShootingStarsGrid\n        starCount={12}\n        direction=\"horizontal\"\n        speed={3}\n        gridSize={96}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Dense, fast streaks for a launch moment",
+        "description": "Bump starCount and speed for a high-energy loader or splash screen.",
+        "code": "import { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Launch() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      <ShootingStarsGrid starCount={40} speed={1.4} glowStrength={1}>\n        <p className=\"flex h-full items-center justify-center font-mono text-sm tracking-[0.3em] text-white/60\">\n          LAUNCHING…\n        </p>\n      </ShootingStarsGrid>\n    </div>\n  );\n}"
       }
     ]
   }
