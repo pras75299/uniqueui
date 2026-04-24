@@ -391,14 +391,6 @@ export const registry: Registry = [
         ],
     },
     {
-        name: "lightspeed",
-        dependencies: ["clsx", "tailwind-merge"],
-        files: [
-            { path: "lightspeed/component.tsx", type: "registry:ui" },
-            cnUtilFile,
-        ],
-    },
-    {
         name: "shooting-stars-grid",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [

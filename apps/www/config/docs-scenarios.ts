@@ -756,27 +756,6 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       }
     ]
   },
-  "lightspeed": {
-    "slug": "lightspeed",
-    "overview": "LightSpeed renders a warp-speed hyperspace tunnel using Motion.dev's imperative animate() API. Each particle is a <div> element that uses the Web Animations API (WAAPI) under the hood — transform and opacity run off the main thread for near-GPU performance. A ResizeObserver recomputes start/end positions on container resize so the vanishing point always stays centred. Respects prefers-reduced-motion.",
-    "scenarios": [
-      {
-        "title": "Full-page hero background",
-        "description": "Drop LightSpeed behind a hero headline for an immediate cinematic impact on landing pages.",
-        "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Hero() {\n  return (\n    <div className=\"relative h-screen w-full\">\n      <LightSpeed\n        particleCount={350}\n        speed={1.2}\n        intensity={1.1}\n        quality=\"high\"\n        className=\"absolute inset-0\"\n      />\n      <div className=\"relative z-10 flex h-full items-center justify-center text-center\">\n        <div>\n          <h1 className=\"text-6xl font-bold text-white tracking-tight\">\n            Beyond Light Speed\n          </h1>\n          <p className=\"mt-4 text-lg text-white/60\">\n            The fastest way to ship beautiful products.\n          </p>\n          <button className=\"mt-8 rounded-full bg-white px-8 py-3 text-sm font-semibold text-black\">\n            Launch now\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n}"
-      },
-      {
-        "title": "Loading / transition screen",
-        "description": "Use LightSpeed as a full-screen loader while your app fetches data, with a pause toggle when complete.",
-        "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function Loader({ isLoading }: { isLoading: boolean }) {\n  return (\n    <div\n      className=\"fixed inset-0 z-50 transition-opacity duration-700\"\n      style={{ opacity: isLoading ? 1 : 0, pointerEvents: isLoading ? \"auto\" : \"none\" }}\n    >\n      <LightSpeed\n        particleCount={300}\n        speed={2}\n        intensity={1.4}\n        paused={!isLoading}\n        quality=\"medium\"\n      >\n        <p className=\"font-mono text-sm tracking-widest text-white/40\">\n          ENGAGING WARP DRIVE…\n        </p>\n      </LightSpeed>\n    </div>\n  );\n}"
-      },
-      {
-        "title": "Tinted brand variant",
-        "description": "Tint all particles toward your brand colour by passing a hex value to the tint prop.",
-        "code": "import { LightSpeed } from \"@/components/ui/lightspeed\";\n\nexport default function BrandHero() {\n  return (\n    <div className=\"h-[480px] w-full rounded-2xl overflow-hidden\">\n      <LightSpeed\n        particleCount={250}\n        speed={0.8}\n        intensity={1.5}\n        tint=\"#ffb84d\"\n        quality=\"medium\"\n      >\n        <span className=\"text-sm font-mono uppercase tracking-[0.25em] text-amber-300/70\">\n          Solar Wind\n        </span>\n      </LightSpeed>\n    </div>\n  );\n}"
-      }
-    ]
-  },
   "shooting-stars-grid": {
     "slug": "shooting-stars-grid",
     "overview": "ShootingStarsGrid renders a full-bleed animated background suitable for hero sections. It stacks four layers: a near-black base (#020808), a subtle 80px grid drawn with two linear-gradients, a radial emerald glow, and a vignette that fades the outer edges to black. Shooting stars are motion.div elements whose positions snap to grid lanes; their animation uses only transform + opacity so they stay on the GPU compositor. Each star picks a hue from the default multi-colour palette (or from a custom colour/array passed via the `color` prop). Respects prefers-reduced-motion by rendering the grid alone.",
