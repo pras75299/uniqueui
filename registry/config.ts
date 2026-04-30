@@ -398,4 +398,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "dynamic-info",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "dynamic-info/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

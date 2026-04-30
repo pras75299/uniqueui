@@ -3019,6 +3019,142 @@
         ]
       },
       "usageCode": "\"use client\";\nimport { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      {/* Default: multi-hue palette (white, mint, cyan, amber, pink, violet) */}\n      <ShootingStarsGrid\n        starCount={18}\n        speed={2.5}\n        gridSize={80}\n      />\n\n      {/* Monochrome — every streak picks up the same hue */}\n      {/* <ShootingStarsGrid starCount={18} color=\"#7fe7ff\" /> */}\n\n      {/* Custom palette — streaks sampled from this set */}\n      {/* <ShootingStarsGrid\n        starCount={20}\n        color={[\"#ff9ecf\", \"#c89bff\", \"#ffffff\"]}\n      /> */}\n    </div>\n  );\n}"
+    },
+    {
+      "slug": "dynamic-info",
+      "name": "DynamicInfo",
+      "description": "An interactive profile pill that shows avatar, name, role, and a live ticking clock. Click to reveal social links and a status indicator. Drop-in floatable via the position prop.",
+      "icon": "LucideUserCircle2",
+      "category": "Components",
+      "props": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Display name shown next to the avatar."
+        },
+        {
+          "name": "role",
+          "type": "string",
+          "description": "Subtitle rendered under the name (e.g. \"Designer\")."
+        },
+        {
+          "name": "avatar",
+          "type": "string",
+          "description": "Image URL for the avatar. Falls back to initials when omitted."
+        },
+        {
+          "name": "fallback",
+          "type": "string",
+          "description": "Override the auto-generated initials shown when no avatar is provided."
+        },
+        {
+          "name": "position",
+          "type": "\"top-left\" | \"top-right\" | \"top-center\" | \"bottom-left\" | \"bottom-right\" | \"bottom-center\" | \"static\"",
+          "default": "\"static\"",
+          "description": "Pin the card to a screen edge with fixed positioning, or render inline with \"static\"."
+        },
+        {
+          "name": "mergeEdge",
+          "type": "\"top\" | \"bottom\" | \"none\"",
+          "description": "Which edge of the card melts into the surrounding background with a full-width merge bar and concave corner notches. Auto-derived from position (top-* → \"top\", bottom-* → \"bottom\", static → \"none\") but can be overridden."
+        },
+        {
+          "name": "cornerSize",
+          "type": "number",
+          "default": "24",
+          "description": "Pixel radius of the concave corner notches that flow out from the merged edge."
+        },
+        {
+          "name": "socials",
+          "type": "{ id: string; icon: ReactNode; label?: string; href?: string; onClick?: () => void }[]",
+          "description": "Social links revealed when the card expands."
+        },
+        {
+          "name": "status",
+          "type": "{ label: string; color?: string }",
+          "description": "Status pill shown when expanded. The dot pulses softly using the supplied color."
+        },
+        {
+          "name": "showTime",
+          "type": "boolean",
+          "default": "true",
+          "description": "Show the live ticking clock on the right of the header."
+        },
+        {
+          "name": "timeFormat",
+          "type": "\"12h\" | \"24h\"",
+          "default": "\"12h\"",
+          "description": "Clock format."
+        },
+        {
+          "name": "expanded",
+          "type": "boolean",
+          "description": "Controlled expansion state. When omitted, the component manages its own state."
+        },
+        {
+          "name": "defaultExpanded",
+          "type": "boolean",
+          "default": "false",
+          "description": "Initial expansion state when uncontrolled."
+        },
+        {
+          "name": "onExpandedChange",
+          "type": "(expanded: boolean) => void",
+          "description": "Fires when the card expands or collapses."
+        },
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\" | \"system\" | DynamicInfoCustomTheme",
+          "default": "\"dark\"",
+          "description": "Color scheme. Pass \"system\" to follow prefers-color-scheme, or an object with any of background, foreground, mutedForeground, border, avatarBackground, socialBackground, socialForeground, socialHoverBackground, socialHoverForeground, statusBackground for a fully custom palette."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional classes merged onto the outer container."
+        }
+      ],
+      "docs": {
+        "overview": "DynamicInfo is a compact profile pill that renders an avatar, name, role, and a real-time clock that updates every second. Clicking the card smoothly expands it to reveal a row of social links and a pulsing status indicator. Layout transitions are driven by motion's layout animations with a spring (stiffness 380, damping 30) so the height changes feel organic. The position prop pins the card to any screen edge using fixed positioning. When the card meets an edge (top or bottom), it paints a full-width merge bar behind the pill and renders concave notches outside its corners — every piece uses the card's own background color, so the surface dissolves smoothly into the surrounding UI like a Dynamic Island. Use mergeEdge to force the notch direction (auto-derived from position by default, or pass \"none\" to disable). Theme accepts \"light\", \"dark\", \"system\" (auto-follows prefers-color-scheme), or a custom palette object to recolor every surface — including the merge bar and notches, since they read from the same palette.",
+        "scenarios": [
+          {
+            "title": "Hangs flush from the top edge",
+            "description": "Pin to a top position and the full-width merge bar plus flattened top corners make the card feel like it's dropping out of the viewport edge — like a Dynamic Island.",
+            "code": "import { DynamicInfo } from \"@/components/ui/dynamic-info\";\n\nexport default function FloatingHeader() {\n  return (\n    <DynamicInfo\n      position=\"top-center\"\n      name=\"James Doe\"\n      role=\"Designer\"\n      avatar=\"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160&h=160&fit=crop\"\n    />\n  );\n}"
+          },
+          {
+            "title": "Expanded with socials and status",
+            "description": "Reveal social links and a live availability indicator on click.",
+            "code": "import { DynamicInfo } from \"@/components/ui/dynamic-info\";\nimport { Github, Linkedin, Twitter } from \"lucide-react\";\n\nexport default function Profile() {\n  return (\n    <DynamicInfo\n      name=\"James Doe\"\n      role=\"Designer\"\n      avatar=\"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160&h=160&fit=crop\"\n      defaultExpanded\n      socials={[\n        { id: \"x\", icon: <Twitter size={14} />, href: \"https://x.com\" },\n        { id: \"in\", icon: <Linkedin size={14} />, href: \"https://linkedin.com\" },\n        { id: \"gh\", icon: <Github size={14} />, href: \"https://github.com\" },\n      ]}\n      status={{ label: \"Available\", color: \"#22c55e\" }}\n    />\n  );\n}"
+          },
+          {
+            "title": "Light theme, inline",
+            "description": "Render inline with the light surface for sidebars and toolbars.",
+            "code": "import { DynamicInfo } from \"@/components/ui/dynamic-info\";\n\nexport default function InlineProfile() {\n  return (\n    <DynamicInfo\n      theme=\"light\"\n      name=\"Ada Lovelace\"\n      role=\"Engineer\"\n      timeFormat=\"24h\"\n    />\n  );\n}"
+          },
+          {
+            "title": "Auto-follow system theme",
+            "description": "Pass \"system\" to track prefers-color-scheme and switch palettes when the user toggles light/dark.",
+            "code": "import { DynamicInfo } from \"@/components/ui/dynamic-info\";\n\nexport default function SystemThemed() {\n  return (\n    <DynamicInfo\n      theme=\"system\"\n      name=\"Linus Pauling\"\n      role=\"Chemist\"\n    />\n  );\n}"
+          },
+          {
+            "title": "Custom brand palette",
+            "description": "Pass a colors object to fully recolor every surface — background, borders, social chips, status pill.",
+            "code": "import { DynamicInfo } from \"@/components/ui/dynamic-info\";\nimport { Github, Linkedin } from \"lucide-react\";\n\nexport default function BrandedProfile() {\n  return (\n    <DynamicInfo\n      name=\"James Doe\"\n      role=\"Designer\"\n      avatar=\"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160&h=160&fit=crop\"\n      defaultExpanded\n      theme={{\n        background: \"#1e1b4b\",\n        foreground: \"#ffffff\",\n        mutedForeground: \"#a5b4fc\",\n        border: \"#312e81\",\n        avatarBackground: \"#312e81\",\n        socialBackground: \"#312e81\",\n        socialForeground: \"#c7d2fe\",\n        socialHoverBackground: \"#4338ca\",\n        socialHoverForeground: \"#ffffff\",\n        statusBackground: \"#312e81\",\n      }}\n      socials={[\n        { id: \"in\", icon: <Linkedin size={14} />, href: \"https://linkedin.com\" },\n        { id: \"gh\", icon: <Github size={14} />, href: \"https://github.com\" },\n      ]}\n      status={{ label: \"Available\", color: \"#a78bfa\" }}\n    />\n  );\n}"
+          },
+          {
+            "title": "Initials fallback",
+            "description": "Skip the avatar URL to render auto-generated initials instead.",
+            "code": "import { DynamicInfo } from \"@/components/ui/dynamic-info\";\n\nexport default function InitialsCard() {\n  return (\n    <DynamicInfo\n      name=\"Mira Patel\"\n      role=\"Product Manager\"\n      status={{ label: \"In a meeting\", color: \"#f59e0b\" }}\n      defaultExpanded\n    />\n  );\n}"
+          },
+          {
+            "title": "Controlled expansion",
+            "description": "Drive the open state from outside — useful when sync'ing with a sidebar toggle.",
+            "code": "\"use client\";\nimport { useState } from \"react\";\nimport { DynamicInfo } from \"@/components/ui/dynamic-info\";\n\nexport default function ControlledProfile() {\n  const [open, setOpen] = useState(false);\n  return (\n    <DynamicInfo\n      name=\"James Doe\"\n      role=\"Designer\"\n      expanded={open}\n      onExpandedChange={setOpen}\n      status={{ label: \"Available\" }}\n    />\n  );\n}"
+          }
+        ]
+      },
+      "usageCode": "\"use client\";\nimport { DynamicInfo } from \"@/components/ui/dynamic-info\";\nimport { Github, Linkedin, Twitter } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <DynamicInfo\n      name=\"James Doe\"\n      role=\"Designer\"\n      avatar=\"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160&h=160&fit=crop\"\n      defaultExpanded\n      socials={[\n        { id: \"x\", icon: <Twitter size={14} />, href: \"https://x.com\" },\n        { id: \"in\", icon: <Linkedin size={14} />, href: \"https://linkedin.com\" },\n        { id: \"gh\", icon: <Github size={14} />, href: \"https://github.com\" },\n      ]}\n      status={{ label: \"Available\", color: \"#22c55e\" }}\n    />\n  );\n}"
     }
   ]
 }
