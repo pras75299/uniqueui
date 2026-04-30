@@ -824,7 +824,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Controlled expansion",
         "description": "Drive the open state from outside — useful when sync'ing with a sidebar toggle.",
-        "code": "import { useState } from \"react\";\nimport { DynamicInfo } from \"@/components/ui/dynamic-info\";\n\nexport default function ControlledProfile() {\n  const [open, setOpen] = useState(false);\n  return (\n    <DynamicInfo\n      name=\"James Doe\"\n      role=\"Designer\"\n      expanded={open}\n      onExpandedChange={setOpen}\n      status={{ label: \"Available\" }}\n    />\n  );\n}"
+        "code": "\"use client\";\nimport { useState } from \"react\";\nimport { DynamicInfo } from \"@/components/ui/dynamic-info\";\n\nexport default function ControlledProfile() {\n  const [open, setOpen] = useState(false);\n  return (\n    <DynamicInfo\n      name=\"James Doe\"\n      role=\"Designer\"\n      expanded={open}\n      onExpandedChange={setOpen}\n      status={{ label: \"Available\" }}\n    />\n  );\n}"
       }
     ]
   }

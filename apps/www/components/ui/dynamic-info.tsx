@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, type HTMLMotionProps } from "motion/react";
 
 export type DynamicInfoPosition =
   | "top-left"
@@ -46,7 +46,8 @@ export type DynamicInfoTheme =
   | "system"
   | DynamicInfoCustomTheme;
 
-export interface DynamicInfoProps {
+export interface DynamicInfoProps
+  extends Omit<HTMLMotionProps<"div">, "onClick" | "onKeyDown"> {
   name: string;
   role?: string;
   avatar?: string;
@@ -62,7 +63,6 @@ export interface DynamicInfoProps {
   defaultExpanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
   theme?: DynamicInfoTheme;
-  className?: string;
 }
 
 const positionClasses: Record<DynamicInfoPosition, string> = {
@@ -291,6 +291,7 @@ export function DynamicInfo({
   onExpandedChange,
   theme = "dark",
   className,
+  ...rest
 }: DynamicInfoProps) {
   const isControlled = expanded !== undefined;
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
@@ -332,21 +333,13 @@ export function DynamicInfo({
   const radiusStyle = getRadiusStyle(edge, cornerSize);
   const mergeBarHeight = Math.max(6, Math.round(cornerSize * 0.5));
 
+  const extrasId = React.useId();
+
   return (
     <motion.div
+      {...rest}
       layout
       transition={spring}
-      onClick={toggle}
-      role={hasExtras ? "button" : undefined}
-      aria-expanded={hasExtras ? isExpanded : undefined}
-      tabIndex={hasExtras ? 0 : -1}
-      onKeyDown={(e) => {
-        if (!hasExtras) return;
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          toggle();
-        }
-      }}
       style={{
         backgroundColor: palette.background,
         color: palette.foreground,
@@ -355,7 +348,6 @@ export function DynamicInfo({
       }}
       className={cn(
         "relative inline-flex flex-col select-none shadow-lg",
-        hasExtras && "cursor-pointer",
         positionClasses[position],
         className,
       )}
@@ -382,9 +374,19 @@ export function DynamicInfo({
         </>
       )}
 
-      <motion.div
+      <motion.button
+        type="button"
         layout
-        className="relative z-10 flex items-center gap-3 px-3 py-2.5 border-0"
+        onClick={hasExtras ? toggle : undefined}
+        aria-expanded={hasExtras ? isExpanded : undefined}
+        aria-controls={hasExtras ? extrasId : undefined}
+        disabled={!hasExtras}
+        className={cn(
+          "relative z-10 flex w-full items-center gap-3 px-3 py-2.5 border-0 bg-transparent text-left appearance-none",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-current",
+          hasExtras ? "cursor-pointer" : "cursor-default",
+        )}
+        style={{ color: "inherit", borderRadius: "inherit" }}
       >
         <motion.div
           layout
@@ -429,11 +431,13 @@ export function DynamicInfo({
             {timeLabel || " "}
           </motion.span>
         )}
-      </motion.div>
+      </motion.button>
 
       <AnimatePresence initial={false}>
         {isExpanded && hasExtras && (
           <motion.div
+            id={extrasId}
+            role="region"
             key="extras"
             layout
             initial={{ opacity: 0, height: 0 }}
@@ -486,6 +490,15 @@ export function DynamicInfo({
   );
 }
 
+function isExternalHttpUrl(href: string) {
+  try {
+    const parsed = new URL(href, "https://uniqueui.local");
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function SocialButton({
   social,
   palette,
@@ -495,6 +508,7 @@ function SocialButton({
 }) {
   const [hovered, setHovered] = useState(false);
   const safeHref = getSafeHref(social.href);
+  const openInNewTab = !!safeHref && isExternalHttpUrl(safeHref);
 
   const content = (
     <motion.span
@@ -526,7 +540,13 @@ function SocialButton({
   };
 
   return safeHref ? (
-    <a href={safeHref} target="_blank" rel="noopener noreferrer" {...shared}>
+    <a
+      href={safeHref}
+      {...(openInNewTab
+        ? { target: "_blank", rel: "noopener noreferrer" }
+        : {})}
+      {...shared}
+    >
       {content}
     </a>
   ) : (
