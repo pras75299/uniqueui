@@ -29,6 +29,7 @@ import {
   LucideTable,
   LucideTerminal,
   LucideType,
+  LucideUserCircle2,
   LucideWand2,
   LucideWaves,
 } from "lucide-react";
@@ -88,6 +89,7 @@ const iconMap = {
   LucideTable,
   LucideTerminal,
   LucideType,
+  LucideUserCircle2,
   LucideWand2,
   LucideWaves,
 } satisfies Record<string, ElementType>;
@@ -2379,6 +2381,102 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "\"use client\";\nimport { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      {/* Default: multi-hue palette (white, mint, cyan, amber, pink, violet) */}\n      <ShootingStarsGrid\n        starCount={18}\n        speed={2.5}\n        gridSize={80}\n      />\n\n      {/* Monochrome — every streak picks up the same hue */}\n      {/* <ShootingStarsGrid starCount={18} color=\"#7fe7ff\" /> */}\n\n      {/* Custom palette — streaks sampled from this set */}\n      {/* <ShootingStarsGrid\n        starCount={20}\n        color={[\"#ff9ecf\", \"#c89bff\", \"#ffffff\"]}\n      /> */}\n    </div>\n  );\n}"
+  },
+  {
+    "slug": "dynamic-info",
+    "name": "DynamicInfo",
+    "description": "An interactive profile pill that shows avatar, name, role, and a live ticking clock. Click to reveal social links and a status indicator. Drop-in floatable via the position prop.",
+    "icon": "LucideUserCircle2",
+    "category": "Components",
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Display name shown next to the avatar."
+      },
+      {
+        "name": "role",
+        "type": "string",
+        "description": "Subtitle rendered under the name (e.g. \"Designer\")."
+      },
+      {
+        "name": "avatar",
+        "type": "string",
+        "description": "Image URL for the avatar. Falls back to initials when omitted."
+      },
+      {
+        "name": "fallback",
+        "type": "string",
+        "description": "Override the auto-generated initials shown when no avatar is provided."
+      },
+      {
+        "name": "position",
+        "type": "\"top-left\" | \"top-right\" | \"top-center\" | \"bottom-left\" | \"bottom-right\" | \"bottom-center\" | \"static\"",
+        "default": "\"static\"",
+        "description": "Pin the card to a screen edge with fixed positioning, or render inline with \"static\"."
+      },
+      {
+        "name": "mergeEdge",
+        "type": "\"top\" | \"bottom\" | \"none\"",
+        "description": "Which edge of the card melts into the surrounding background with a full-width merge bar and concave corner notches. Auto-derived from position (top-* → \"top\", bottom-* → \"bottom\", static → \"none\") but can be overridden."
+      },
+      {
+        "name": "cornerSize",
+        "type": "number",
+        "default": "24",
+        "description": "Pixel radius of the concave corner notches that flow out from the merged edge."
+      },
+      {
+        "name": "socials",
+        "type": "{ id: string; icon: ReactNode; label?: string; href?: string; onClick?: () => void }[]",
+        "description": "Social links revealed when the card expands."
+      },
+      {
+        "name": "status",
+        "type": "{ label: string; color?: string }",
+        "description": "Status pill shown when expanded. The dot pulses softly using the supplied color."
+      },
+      {
+        "name": "showTime",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show the live ticking clock on the right of the header."
+      },
+      {
+        "name": "timeFormat",
+        "type": "\"12h\" | \"24h\"",
+        "default": "\"12h\"",
+        "description": "Clock format."
+      },
+      {
+        "name": "expanded",
+        "type": "boolean",
+        "description": "Controlled expansion state. When omitted, the component manages its own state."
+      },
+      {
+        "name": "defaultExpanded",
+        "type": "boolean",
+        "default": "false",
+        "description": "Initial expansion state when uncontrolled."
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(expanded: boolean) => void",
+        "description": "Fires when the card expands or collapses."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\" | \"system\" | DynamicInfoCustomTheme",
+        "default": "\"dark\"",
+        "description": "Color scheme. Pass \"system\" to follow prefers-color-scheme, or an object with any of background, foreground, mutedForeground, border, avatarBackground, socialBackground, socialForeground, socialHoverBackground, socialHoverForeground, statusBackground for a fully custom palette."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional classes merged onto the outer container."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { DynamicInfo } from \"@/components/ui/dynamic-info\";\nimport { Github, Linkedin, Twitter } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <DynamicInfo\n      name=\"James Doe\"\n      role=\"Designer\"\n      avatar=\"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160&h=160&fit=crop\"\n      defaultExpanded\n      socials={[\n        { id: \"x\", icon: <Twitter size={14} />, href: \"https://x.com\" },\n        { id: \"in\", icon: <Linkedin size={14} />, href: \"https://linkedin.com\" },\n        { id: \"gh\", icon: <Github size={14} />, href: \"https://github.com\" },\n      ]}\n      status={{ label: \"Available\", color: \"#22c55e\" }}\n    />\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 
