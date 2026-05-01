@@ -129,13 +129,16 @@ export interface MultiStepAuthCardProps {
 const cardVariants = {
   hidden: { opacity: 0, y: 10, scale: 0.98 },
   visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 300, damping: 24 } },
-  exit: { opacity: 0, y: -10, scale: 0.98, transition: { duration: 0.15 } },
+  exit: { opacity: 0, y: -6, scale: 0.98, transition: { duration: 0.15 } },
 };
 
 const errorAlertClass =
   "bg-red-50 dark:bg-red-500/10 border border-red-300 dark:border-red-500/30 text-red-600 dark:text-red-400 text-sm px-3 py-2 rounded-lg flex items-center gap-2 overflow-hidden";
 
 const consentLinkClass = "underline hover:text-neutral-800 dark:hover:text-neutral-200";
+const stepHeaderSpacingClass = "mb-8";
+const stepFieldSpacingClass = "space-y-5";
+const stepActionSpacingClass = "mt-8";
 
 function AuthErrorAlert({ message }: { message: string }) {
   return (
@@ -156,28 +159,28 @@ function AuthErrorAlert({ message }: { message: string }) {
 }
 
 const backBtnClass =
-  "w-8 h-8 rounded-full flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0";
+  "w-10 h-10 rounded-full flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shrink-0";
 
 function StepHeader({ onBack, title, detail }: { onBack: () => void; title: string; detail?: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3 mb-8">
+    <div className={cn("flex items-center gap-3", stepHeaderSpacingClass)}>
       <button type="button" onClick={onBack} aria-label="Go back" className={backBtnClass}>
         <ArrowLeft className="w-4 h-4" />
       </button>
       {detail !== undefined ? (
         <div className="min-w-0 flex-1">
-          <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight">{title}</h2>
+          <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight text-balance">{title}</h2>
           {detail}
         </div>
       ) : (
-        <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight">{title}</h2>
+        <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight text-balance">{title}</h2>
       )}
     </div>
   );
 }
 
 const baseInputClass =
-  "w-full py-3 bg-white dark:bg-neutral-950/80 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:focus:border-indigo-400 outline-none transition-all text-sm dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-neutral-600";
+  "w-full py-3 bg-white dark:bg-neutral-950/80 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:focus:border-indigo-400 outline-none transition-[border-color,box-shadow,background-color,color] text-sm dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-neutral-600";
 
 interface PasswordInputRowProps {
   id: string;
@@ -227,9 +230,36 @@ function PasswordInputRow({
         type="button"
         onClick={onToggleShow}
         aria-label={show ? "Hide password" : "Show password"}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+        className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 flex items-center justify-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
       >
-        {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        <span className="relative h-4 w-4">
+          <motion.span
+            className="absolute inset-0 flex items-center justify-center"
+            initial={false}
+            animate={{
+              opacity: show ? 0 : 1,
+              scale: show ? 0.25 : 1,
+              filter: show ? "blur(4px)" : "blur(0px)",
+            }}
+            transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+            aria-hidden={show}
+          >
+            <Eye className="w-4 h-4" />
+          </motion.span>
+          <motion.span
+            className="absolute inset-0 flex items-center justify-center"
+            initial={false}
+            animate={{
+              opacity: show ? 1 : 0,
+              scale: show ? 1 : 0.25,
+              filter: show ? "blur(0px)" : "blur(4px)",
+            }}
+            transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+            aria-hidden={!show}
+          >
+            <EyeOff className="w-4 h-4" />
+          </motion.span>
+        </span>
       </button>
     </div>
   );
@@ -361,12 +391,12 @@ export function MultiStepAuthCard({
   };
 
   return (
-    <div className={cn("w-full max-w-md mx-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.06)] dark:shadow-[0_12px_40px_rgb(0,0,0,0.25)] overflow-hidden", className)}>
+    <div className={cn("w-full max-w-md mx-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-[0_1px_0_rgba(255,255,255,0.35),0_16px_40px_rgba(2,6,23,0.12)] dark:shadow-[0_1px_0_rgba(255,255,255,0.08),0_18px_42px_rgba(0,0,0,0.32)] overflow-hidden antialiased", className)}>
       <div className="h-0.5 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500" />
       <div className="px-8 py-8 relative min-h-[360px]">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           {authState === "email" && (
-            <motion.div key="email" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+            <motion.div key="email" variants={cardVariants} initial="hidden" animate="visible" exit="exit" className="will-change-transform">
               <EmailStep
                 str={str}
                 mode="sign-in"
@@ -392,7 +422,7 @@ export function MultiStepAuthCard({
             </motion.div>
           )}
           {authState === "unregistered" && (
-            <motion.div key="unreg" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+            <motion.div key="unreg" variants={cardVariants} initial="hidden" animate="visible" exit="exit" className="will-change-transform">
               <EmailStep
                 str={str}
                 mode="unregistered"
@@ -410,7 +440,7 @@ export function MultiStepAuthCard({
             </motion.div>
           )}
           {authState === "first-time" && (
-            <motion.div key="first" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+            <motion.div key="first" variants={cardVariants} initial="hidden" animate="visible" exit="exit" className="will-change-transform">
               <EmailStep
                 str={str}
                 mode="first-time"
@@ -427,7 +457,7 @@ export function MultiStepAuthCard({
             </motion.div>
           )}
           {authState === "create-password" && (
-            <motion.div key="create-pw" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+            <motion.div key="create-pw" variants={cardVariants} initial="hidden" animate="visible" exit="exit" className="will-change-transform">
               <CreatePasswordStep
                 str={str}
                 fieldIds={{ password: `${formId}-create-pw`, confirm: `${formId}-confirm-pw` }}
@@ -449,7 +479,7 @@ export function MultiStepAuthCard({
             </motion.div>
           )}
           {authState === "password-login" && (
-            <motion.div key="pw-login" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+            <motion.div key="pw-login" variants={cardVariants} initial="hidden" animate="visible" exit="exit" className="will-change-transform">
               <PasswordLoginStep
                 str={str}
                 passwordId={`${formId}-login-pw`}
@@ -472,7 +502,7 @@ export function MultiStepAuthCard({
             </motion.div>
           )}
           {authState === "otp" && (
-            <motion.div key="otp" variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+            <motion.div key="otp" variants={cardVariants} initial="hidden" animate="visible" exit="exit" className="will-change-transform">
               <OTPStep
                 str={str}
                 formId={formId}
@@ -524,14 +554,14 @@ function EmailStep({ str, mode, emailId, consentId, termsConsent, email, setEmai
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col">
-      <div className="mb-7">
-        <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight">{title}</h2>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1.5">{subtitle}</p>
+      <div className={stepHeaderSpacingClass}>
+        <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight text-balance">{title}</h2>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1.5 text-pretty">{subtitle}</p>
       </div>
       <AuthErrorAlert message={error ?? ""} />
-      <div className="space-y-6">
+      <div className={stepFieldSpacingClass}>
         <div className="space-y-3">
-          <label htmlFor={emailId} className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          <label htmlFor={emailId} className="block pb-1 text-sm font-medium text-neutral-700 dark:text-neutral-300">
             {str.email.fieldLabel}
           </label>
           <div className="relative">
@@ -581,7 +611,7 @@ function EmailStep({ str, mode, emailId, consentId, termsConsent, email, setEmai
           </div>
         )}
       </div>
-      <div className="mt-7 flex flex-col gap-3">
+      <div className={cn(stepActionSpacingClass, "flex flex-col gap-3")}>
         {isUnregistered ? (
           <AuthButton type="button" onClick={onRetry} variant="secondary">
             {str.unregistered.retry}
@@ -646,7 +676,7 @@ function CreatePasswordStep({ str, fieldIds, onBack, onSubmit, isLoading, error,
     >
       <StepHeader onBack={onBack} title={str.createPassword.title} />
       <AuthErrorAlert message={error ?? ""} />
-      <div className="space-y-4">
+      <div className={stepFieldSpacingClass}>
         <div className="space-y-3">
           <label htmlFor={fieldIds.password} className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
             {str.createPassword.newPasswordLabel}
@@ -714,7 +744,7 @@ function CreatePasswordStep({ str, fieldIds, onBack, onSubmit, isLoading, error,
           </AnimatePresence>
         </div>
       </div>
-      <div className="mt-7">
+      <div className={stepActionSpacingClass}>
         <AuthButton type="submit" disabled={!valid} isLoading={isLoading}>
           {str.createPassword.submit}
         </AuthButton>
@@ -757,7 +787,7 @@ function PasswordLoginStep({ str, passwordId, email, onBack, onSubmit, isLoading
         }
       />
       <AuthErrorAlert message={error ?? ""} />
-      <div className="space-y-4">
+      <div className={stepFieldSpacingClass}>
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <label htmlFor={passwordId} className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
@@ -788,7 +818,7 @@ function PasswordLoginStep({ str, passwordId, email, onBack, onSubmit, isLoading
           />
         </div>
       </div>
-      <div className="mt-7">
+      <div className={stepActionSpacingClass}>
         <AuthButton type="submit" disabled={!pw} isLoading={isLoading}>
           {str.passwordLogin.submit}
         </AuthButton>
@@ -951,13 +981,13 @@ function OTPStep({
               onKeyDown={(e) => handleKeyDown(i, e)}
               onPaste={(e) => handlePaste(i, e)}
               disabled={isLoading}
-              className="w-10 sm:w-14 h-14 text-center text-xl sm:text-2xl font-semibold bg-white dark:bg-neutral-950/80 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 dark:focus:border-indigo-400 outline-none transition-all dark:text-neutral-100 placeholder:text-neutral-300 dark:placeholder:text-neutral-600"
+              className="w-10 sm:w-14 h-14 text-center text-xl sm:text-2xl font-semibold bg-white dark:bg-neutral-950/80 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 dark:focus:border-indigo-400 outline-none transition-[border-color,box-shadow,background-color,color] dark:text-neutral-100 placeholder:text-neutral-300 dark:placeholder:text-neutral-600"
               placeholder="‒"
             />
           ))}
         </div>
       </fieldset>
-      <div className="mt-7 flex flex-col gap-4">
+      <div className={cn(stepActionSpacingClass, "flex flex-col gap-4")}>
         <AuthButton type="submit" disabled={otp.join("").length < 6} isLoading={isLoading}>
           {str.otp.verify}
         </AuthButton>
@@ -1003,10 +1033,10 @@ function AuthButton({ className, variant = "primary", isLoading, disabled, child
   return (
     <motion.button
       whileHover={disabled ? undefined : { scale: 1.01 }}
-      whileTap={disabled ? undefined : { scale: 0.98 }}
+      whileTap={disabled ? undefined : { scale: 0.96 }}
       disabled={disabled || isLoading}
       className={cn(
-        "relative w-full py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer",
+        "relative w-full py-3 rounded-xl font-semibold text-sm transition-[transform,opacity,background-color,box-shadow,color] flex items-center justify-center gap-2 cursor-pointer",
         p
           ? "bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-md shadow-indigo-500/20 dark:shadow-indigo-500/10"
           : "bg-white hover:bg-neutral-50 text-neutral-700 border border-neutral-200 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800/50",
