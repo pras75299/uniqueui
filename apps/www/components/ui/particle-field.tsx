@@ -81,6 +81,75 @@ function parseColor(color: string, element: HTMLElement): [number, number, numbe
   return parseResolvedColor(resolvedColor) ?? [255, 255, 255];
 }
 
+type ParticleData = {
+  x: number;
+  y: number;
+  size: number;
+  vx: number;
+  vy: number;
+  density: number;
+  color: [number, number, number];
+};
+
+function createParticle(
+  canvasWidth: number,
+  canvasHeight: number,
+  particleColors: [number, number, number][],
+  particleSize: { min: number; max: number },
+  speed: number
+): ParticleData {
+  const color =
+    particleColors[Math.floor(Math.random() * particleColors.length)] ?? [255, 255, 255];
+  return {
+    x: Math.random() * canvasWidth,
+    y: Math.random() * canvasHeight,
+    size: Math.random() * (particleSize.max - particleSize.min) + particleSize.min,
+    vx: (Math.random() - 0.5) * speed,
+    vy: (Math.random() - 0.5) * speed,
+    density: Math.random() * 30 + 10,
+    color,
+  };
+}
+
+function drawParticle(
+  ctx: CanvasRenderingContext2D,
+  particle: ParticleData,
+  maxSize: number
+) {
+  ctx.fillStyle = `rgba(${particle.color.join(", ")}, ${particle.size / maxSize})`;
+  ctx.beginPath();
+  ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function updateParticle(
+  particle: ParticleData,
+  canvasWidth: number,
+  canvasHeight: number,
+  mouse: { x: number; y: number },
+  interactionRadius: number
+) {
+  particle.x += particle.vx;
+  particle.y += particle.vy;
+
+  if (particle.x < 0 || particle.x > canvasWidth) particle.vx *= -1;
+  if (particle.y < 0 || particle.y > canvasHeight) particle.vy *= -1;
+
+  if (mouse.x === -1000 || mouse.y === -1000) return;
+
+  const dx = mouse.x - particle.x;
+  const dy = mouse.y - particle.y;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  if (distance <= 0 || distance >= interactionRadius) return;
+
+  const forceDirectionX = dx / distance;
+  const forceDirectionY = dy / distance;
+  const force = (interactionRadius - distance) / interactionRadius;
+  particle.x -= forceDirectionX * force * particle.density;
+  particle.y -= forceDirectionY * force * particle.density;
+}
+
 export function ParticleField({
   className,
   particleCount = 100,
@@ -106,7 +175,7 @@ export function ParticleField({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let particles: Particle[] = [];
+    let particles: ParticleData[] = [];
     let animationFrameId: number;
     let rect = container.getBoundingClientRect();
     let dpr = window.devicePixelRatio || 1;
@@ -119,78 +188,6 @@ export function ParticleField({
       x: -1000,
       y: -1000,
     };
-
-    // eslint-disable-next-line react-hooks/unsupported-syntax
-    class Particle {
-      x: number;
-      y: number;
-      size: number;
-      baseX: number;
-      baseY: number;
-      vx: number;
-      vy: number;
-      density: number;
-      color: [number, number, number];
-
-      constructor(canvasWidth: number, canvasHeight: number) {
-        const color =
-          particleColors[Math.floor(Math.random() * particleColors.length)] ??
-          [255, 255, 255];
-        this.x = Math.random() * canvasWidth;
-        this.y = Math.random() * canvasHeight;
-        this.baseX = this.x;
-        this.baseY = this.y;
-        this.size =
-          Math.random() * (particleSize.max - particleSize.min) +
-          particleSize.min;
-        this.vx = (Math.random() - 0.5) * speed;
-        this.vy = (Math.random() - 0.5) * speed;
-        this.density = Math.random() * 30 + 10;
-        this.color = color;
-      }
-
-      draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = `rgba(${this.color.join(", ")}, ${
-          this.size / particleSize.max
-        })`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.fill();
-      }
-
-      update(canvasWidth: number, canvasHeight: number) {
-        // Natural drifting
-        this.x += this.vx;
-        this.y += this.vy;
-
-        // Bounce off walls
-        if (this.x < 0 || this.x > canvasWidth) this.vx *= -1;
-        if (this.y < 0 || this.y > canvasHeight) this.vy *= -1;
-
-        // Interactive mouse physics (Repulsion)
-        if (mouse.x !== -1000 && mouse.y !== -1000) {
-            const dx = mouse.x - this.x;
-            const dy = mouse.y - this.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance < interactionRadius) {
-                const forceDirectionX = dx / distance;
-                const forceDirectionY = dy / distance;
-                
-                // Max distance, past that the force is 0
-                const force = (interactionRadius - distance) / interactionRadius;
-                
-                // Repulse direction
-                const directionX = (forceDirectionX * force * this.density) * -1;
-                const directionY = (forceDirectionY * force * this.density) * -1;
-                
-                this.x += directionX;
-                this.y += directionY;
-            }
-        }
-      }
-    }
 
     const setupCanvas = () => {
       rect = container.getBoundingClientRect();
@@ -205,11 +202,18 @@ export function ParticleField({
       canvas.style.height = `${rect.height}px`;
       particles = [];
       for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle(rect.width, rect.height));
+        particles.push(
+          createParticle(rect.width, rect.height, particleColors, { min: particleSize.min, max: particleSize.max }, speed)
+        );
       }
     };
 
     const animate = () => {
+      const currentDpr = window.devicePixelRatio || 1;
+      if (currentDpr !== dpr) {
+        setupCanvas();
+      }
+
       ctx.clearRect(0, 0, rect.width, rect.height);
 
       // Limit line drawing complexity for large particle counts
@@ -239,8 +243,8 @@ export function ParticleField({
       }
 
       particles.forEach((particle) => {
-        particle.update(rect.width, rect.height);
-        particle.draw(ctx);
+        updateParticle(particle, rect.width, rect.height, mouse, interactionRadius);
+        drawParticle(ctx, particle, particleSize.max);
       });
 
       animationFrameId = requestAnimationFrame(animate);
@@ -251,8 +255,9 @@ export function ParticleField({
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouse.x = e.offsetX;
-      mouse.y = e.offsetY;
+      const bounds = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - bounds.left;
+      mouse.y = e.clientY - bounds.top;
     };
     
     const handleMouseLeave = () => {
@@ -262,6 +267,7 @@ export function ParticleField({
 
     // Event listeners
     window.addEventListener("resize", handleResize);
+    window.addEventListener("focus", handleResize);
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseleave", handleMouseLeave);
 
@@ -271,6 +277,7 @@ export function ParticleField({
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("focus", handleResize);
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);

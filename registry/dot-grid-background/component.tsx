@@ -48,6 +48,15 @@ export function DotGridBackground({
   const dotsRef       = useRef<Dot[]>([]);
   const rafRef        = useRef(0);
   const lastNowRef    = useRef<number | null>(null);
+  const dotSizeRef = useRef(dotSize);
+  const hoverRadiusRef = useRef(hoverRadius);
+  const hoverScaleRef = useRef(hoverScale);
+  const dprRef = useRef(1);
+  const themeRef = useRef(theme);
+  const colorTableRef = useRef<string[]>([]);
+  const baseAlphaRef = useRef(0.12);
+  const pulseAmpRef = useRef(0.05);
+  const accentColorRef = useRef<[number, number, number]>([80, 200, 255]);
 
   const buildDots = useCallback((w: number, h: number) => {
     // Guard against non-finite or non-positive gap to prevent infinite loop
@@ -68,6 +77,66 @@ export function DotGridBackground({
   }, [gap]);
 
   useEffect(() => {
+    dotSizeRef.current = dotSize;
+  }, [dotSize]);
+
+  useEffect(() => {
+    hoverRadiusRef.current = hoverRadius;
+  }, [hoverRadius]);
+
+  useEffect(() => {
+    hoverScaleRef.current = hoverScale;
+  }, [hoverScale]);
+
+  useEffect(() => {
+    themeRef.current = theme;
+  }, [theme]);
+
+  useEffect(() => {
+    const isDark = theme === "dark";
+    let baseR = isDark ? 255 : 15;
+    let baseG = isDark ? 255 : 15;
+    let baseB = isDark ? 255 : 20;
+
+    if (dotColor) {
+      let resolved = false;
+      try {
+        const probe = document.createElement("div");
+        probe.style.color = dotColor;
+        document.body.appendChild(probe);
+        const computed = getComputedStyle(probe).color;
+        document.body.removeChild(probe);
+        const m = computed.match(/[\d.]+/g);
+        if (m && m.length >= 3) {
+          baseR = parseInt(m[0]);
+          baseG = parseInt(m[1]);
+          baseB = parseInt(m[2]);
+          resolved = true;
+        }
+      } catch {
+        // Keep fallback values.
+      }
+      if (!resolved) {
+        const m = dotColor.match(/[\d.]+/g);
+        if (m && m.length >= 3) {
+          baseR = parseInt(m[0]);
+          baseG = parseInt(m[1]);
+          baseB = parseInt(m[2]);
+        }
+      }
+    }
+
+    const [accR, accG, accB] = isDark ? [80, 200, 255] : [99, 91, 255];
+    accentColorRef.current = [accR, accG, accB];
+    colorTableRef.current = Array.from({ length: COLOR_STEPS }, (_, i) => {
+      const t = i / (COLOR_STEPS - 1);
+      return `rgb(${Math.round(baseR + (accR - baseR) * t)},${Math.round(baseG + (accG - baseG) * t)},${Math.round(baseB + (accB - baseB) * t)})`;
+    });
+    baseAlphaRef.current = isDark ? 0.12 : 0.16;
+    pulseAmpRef.current = isDark ? 0.05 : 0.06;
+  }, [theme, dotColor]);
+
+  useEffect(() => {
     const container = containerRef.current;
     const canvas    = canvasRef.current;
     if (!container || !canvas) return;
@@ -75,6 +144,7 @@ export function DotGridBackground({
     const resize = () => {
       const { width, height } = container.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
+      dprRef.current = dpr;
       canvas.width        = width  * dpr;
       canvas.height       = height * dpr;
       canvas.style.width  = `${width}px`;
@@ -94,63 +164,20 @@ export function DotGridBackground({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const isDark = theme === "dark";
-    const dpr    = window.devicePixelRatio || 1;
-
-    let baseR = isDark ? 255 : 15;
-    let baseG = isDark ? 255 : 15;
-    let baseB = isDark ? 255 : 20;
-
-    if (dotColor) {
-      // Robust color probe: use the browser's CSS engine to resolve any valid color string
-      let resolved = false;
-      if (typeof window !== "undefined") {
-        try {
-          const probe = document.createElement("div");
-          probe.style.color = dotColor;
-          // color must be set for getComputedStyle to return a value
-          document.body.appendChild(probe);
-          const computed = getComputedStyle(probe).color; // returns "rgb(r, g, b)" or ""
-          document.body.removeChild(probe);
-          const m = computed.match(/[\d.]+/g);
-          if (m && m.length >= 3) {
-            baseR = parseInt(m[0]);
-            baseG = parseInt(m[1]);
-            baseB = parseInt(m[2]);
-            resolved = true;
-          }
-        } catch {
-          // fall through to legacy path
-        }
-      }
-      // Legacy numeric-extraction fallback (e.g., SSR or probe failure)
-      if (!resolved) {
-        const m = dotColor.match(/[\d.]+/g);
-        if (m && m.length >= 3) {
-          baseR = parseInt(m[0]);
-          baseG = parseInt(m[1]);
-          baseB = parseInt(m[2]);
-        }
-      }
-    }
-
-    const [accR, accG, accB] = isDark ? [80, 200, 255] : [99, 91, 255];
-
-    // Pre-build colour strings once so the hot loop does table lookups, not allocations
-    const colorTable = Array.from({ length: COLOR_STEPS }, (_, i) => {
-      const t = i / (COLOR_STEPS - 1);
-      return `rgb(${Math.round(baseR + (accR - baseR) * t)},${Math.round(baseG + (accG - baseG) * t)},${Math.round(baseB + (accB - baseB) * t)})`;
-    });
-
-    const BASE_ALPHA    = isDark ? 0.12 : 0.16;
-    const PULSE_AMP     = isDark ? 0.05 : 0.06;
-    const hoverRadiusSq = hoverRadius * hoverRadius; // avoid sqrt for out-of-range dots
-
     const frame = (now: number) => {
       // Derive logical dimensions from the canvas physical size — avoids a
       // getBoundingClientRect reflow on every animation frame.
+      const dpr = dprRef.current || 1;
       const width  = canvas.width  / dpr;
       const height = canvas.height / dpr;
+      const hoverRadiusNow = hoverRadiusRef.current;
+      const hoverRadiusSq = hoverRadiusNow * hoverRadiusNow;
+      const hoverScaleNow = hoverScaleRef.current;
+      const dotSizeNow = dotSizeRef.current;
+      const BASE_ALPHA = baseAlphaRef.current;
+      const PULSE_AMP = pulseAmpRef.current;
+      const colorTable = colorTableRef.current;
+      const [accR, accG, accB] = accentColorRef.current;
 
       if (width === 0 || height === 0) {
         lastNowRef.current = now;
@@ -177,12 +204,12 @@ export function DotGridBackground({
       const my = mouseRef.current.y;
 
       if (mx > 0 && mx < width && my > 0 && my < height) {
-        const grad = ctx.createRadialGradient(mx, my, 0, mx, my, hoverRadius * 1.3);
-        grad.addColorStop(0, `rgba(${accR},${accG},${accB},${isDark ? 0.05 : 0.035})`);
+        const grad = ctx.createRadialGradient(mx, my, 0, mx, my, hoverRadiusNow * 1.3);
+        grad.addColorStop(0, `rgba(${accR},${accG},${accB},${themeRef.current === "dark" ? 0.05 : 0.035})`);
         grad.addColorStop(1, `rgba(${accR},${accG},${accB},0)`);
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(mx, my, hoverRadius * 1.3, 0, Math.PI * 2);
+        ctx.arc(mx, my, hoverRadiusNow * 1.3, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -200,7 +227,7 @@ export function DotGridBackground({
         // Squared-distance guard skips sqrt for the majority of dots outside hover radius
         let cursorT = 0;
         if (distSq < hoverRadiusSq) {
-          const t = 1 - Math.sqrt(distSq) / hoverRadius;
+          const t = 1 - Math.sqrt(distSq) / hoverRadiusNow;
           cursorT  = t * t * t * 0.85;
         }
 
@@ -225,7 +252,7 @@ export function DotGridBackground({
         const wakeBoost  = dot.glow * 0.32;
         const totalAlpha = Math.min(1, idle + cursorT * 0.72 + ringT * 0.88 + wakeBoost);
         const activation = Math.max(cursorT, ringT + wakeBoost * 0.4);
-        const radius     = (dotSize / 2) * (1 + activation * (hoverScale - 1));
+        const radius     = (dotSizeNow / 2) * (1 + activation * (hoverScaleNow - 1));
 
         const colorIdx   = Math.min(COLOR_STEPS - 1, Math.floor(Math.min(1, activation * 1.5) * (COLOR_STEPS - 1)));
         ctx.fillStyle    = colorTable[colorIdx];
@@ -243,7 +270,7 @@ export function DotGridBackground({
     lastNowRef.current = null;
     rafRef.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [theme, dotSize, hoverRadius, hoverScale, dotColor]);
+  }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const rect = containerRef.current?.getBoundingClientRect();

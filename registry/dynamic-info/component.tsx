@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, type HTMLMotionProps } from "motion/react";
 
 export type DynamicInfoPosition =
@@ -193,6 +193,18 @@ function getSafeHref(href?: string) {
   }
 }
 
+function getSafeAvatarSrc(src?: string) {
+  if (!src) return null;
+  if (src.startsWith("/")) return src;
+  try {
+    const parsed = new URL(src);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") return src;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 function InvertedCorner({
   edge,
   side,
@@ -307,17 +319,20 @@ export function DynamicInfo({
   };
 
   const [now, setNow] = useState<Date | null>(null);
+  const intervalRef = useRef<number | null>(null);
   useEffect(() => {
     if (!showTime) return;
-    let interval = 0;
     const tick = () => setNow(new Date());
     const start = window.setTimeout(() => {
       tick();
-      interval = window.setInterval(tick, 1000);
+      intervalRef.current = window.setInterval(tick, 1000);
     }, 0);
     return () => {
       window.clearTimeout(start);
-      window.clearInterval(interval);
+      if (intervalRef.current !== null) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
   }, [showTime]);
 
@@ -332,6 +347,7 @@ export function DynamicInfo({
   const edge = mergeEdge ?? deriveMergeEdge(position);
   const radiusStyle = getRadiusStyle(edge, cornerSize);
   const mergeBarHeight = Math.max(6, Math.round(cornerSize * 0.5));
+  const safeAvatarSrc = getSafeAvatarSrc(avatar);
 
   const extrasId = React.useId();
 
@@ -397,10 +413,10 @@ export function DynamicInfo({
             backgroundColor: palette.avatarBackground,
           }}
         >
-          {avatar ? (
+          {safeAvatarSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={avatar}
+              src={safeAvatarSrc}
               alt={name}
               className="h-full w-full object-cover"
               draggable={false}
@@ -490,15 +506,6 @@ export function DynamicInfo({
   );
 }
 
-function isExternalHttpUrl(href: string) {
-  try {
-    const parsed = new URL(href, "https://uniqueui.local");
-    return parsed.protocol === "http:" || parsed.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
-
 function SocialButton({
   social,
   palette,
@@ -508,7 +515,7 @@ function SocialButton({
 }) {
   const [hovered, setHovered] = useState(false);
   const safeHref = getSafeHref(social.href);
-  const openInNewTab = !!safeHref && isExternalHttpUrl(safeHref);
+  const openInNewTab = !!safeHref && (safeHref.startsWith("http://") || safeHref.startsWith("https://"));
 
   const content = (
     <motion.span
