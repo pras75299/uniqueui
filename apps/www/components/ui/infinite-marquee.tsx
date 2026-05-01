@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useAnimationControls } from "motion/react";
 
 export interface InfiniteMarqueeProps {
   children: React.ReactNode;
@@ -23,17 +23,65 @@ export function InfiniteMarquee({
   theme: _theme = "dark",
 }: InfiniteMarqueeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [contentWidth, setContentWidth] = useState(0);
+  const segmentRef = useRef<HTMLDivElement>(null);
+  const [segmentWidth, setSegmentWidth] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const controls = useAnimationControls();
 
   useEffect(() => {
-    if (scrollRef.current) {
-      setContentWidth(scrollRef.current.scrollWidth / 2);
-    }
-  }, [children]);
+    const segment = segmentRef.current;
+    const container = containerRef.current;
+    if (!segment || !container) return;
 
-  const duration = contentWidth / speed;
+    const measure = () => {
+      const nextSegmentWidth = segment.getBoundingClientRect().width;
+      const nextContainerWidth = container.getBoundingClientRect().width;
+      setSegmentWidth(nextSegmentWidth > 0 ? nextSegmentWidth : 0);
+      setContainerWidth(nextContainerWidth > 0 ? nextContainerWidth : 0);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(segment);
+    observer.observe(container);
+    window.addEventListener("resize", measure);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [children, gap]);
+
+  const duration = segmentWidth / speed;
+  const startX = direction === "left" ? 0 : -segmentWidth;
+  const endX = direction === "left" ? -segmentWidth : 0;
+  const repeatCount =
+    segmentWidth > 0 ? Math.max(2, Math.ceil(containerWidth / segmentWidth) + 1) : 2;
+
+  useEffect(() => {
+    if (!segmentWidth) return;
+    controls.set({ x: startX });
+  }, [controls, startX, segmentWidth]);
+
+  useEffect(() => {
+    if (!segmentWidth) return;
+
+    if (isPaused) {
+      controls.stop();
+      return;
+    }
+
+    controls.start({
+      x: endX,
+      transition: {
+        duration: duration || 20,
+        repeat: Infinity,
+        repeatType: "loop",
+        ease: "linear",
+      },
+    });
+  }, [controls, direction, duration, endX, isPaused, segmentWidth]);
 
   return (
     <div
@@ -43,32 +91,28 @@ export function InfiniteMarquee({
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
     >
       <motion.div
-        ref={scrollRef}
         className="flex w-max"
-        style={{ gap: `${gap}px` }}
-        animate={{
-          x: direction === "left" ? [0, -contentWidth - gap] : [-contentWidth - gap, 0],
-        }}
-        transition={{
-          x: {
-            duration: duration || 20,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "linear",
-          },
-        }}
-        {...(isPaused && {
-          style: { animationPlayState: "paused", gap: `${gap}px` },
-        })}
+        style={{ x: startX }}
+        animate={controls}
       >
-        {/* Original content */}
-        <div className="flex shrink-0 items-center" style={{ gap: `${gap}px` }}>
+        {/* Measured original segment */}
+        <div
+          ref={segmentRef}
+          className="flex shrink-0 items-center"
+          style={{ gap: `${gap}px`, paddingRight: `${gap}px` }}
+        >
           {children}
         </div>
-        {/* Duplicated content for seamless loop */}
-        <div className="flex shrink-0 items-center" style={{ gap: `${gap}px` }}>
-          {children}
-        </div>
+        {/* Additional repeated segments to guarantee viewport coverage */}
+        {Array.from({ length: repeatCount - 1 }).map((_, idx) => (
+          <div
+            key={idx}
+            className="flex shrink-0 items-center"
+            style={{ gap: `${gap}px`, paddingRight: `${gap}px` }}
+          >
+            {children}
+          </div>
+        ))}
       </motion.div>
     </div>
   );
