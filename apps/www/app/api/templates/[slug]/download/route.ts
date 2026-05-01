@@ -1,12 +1,5 @@
 import { NextResponse } from "next/server";
-import {
-  readFileSync,
-  existsSync,
-  readdirSync,
-  statSync,
-  lstatSync,
-  realpathSync,
-} from "fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "fs";
 import { join, relative } from "path";
 import JSZip from "jszip";
 import { TEMPLATES } from "@/config/templates";
@@ -403,48 +396,34 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  if (!/^[a-z0-9-]+$/.test(slug)) {
-    return NextResponse.json({ error: "Invalid template slug" }, { status: 400 });
-  }
 
   const template = TEMPLATES.find((t) => t.id === slug && t.status === "available");
   if (!template) {
     return NextResponse.json({ error: "Template not found" }, { status: 404 });
   }
-  const templateId = template.id;
 
   const cwd = process.cwd(); // apps/www
 
   // ── Read template source files (single .tsx or folder with index.tsx) ───
   const templateFiles: Record<string, string> = {};
 
-  const templatesRoot = realpathSync(join(cwd, "templates"));
-  const folderPath = join(cwd, "templates", templateId);
-  const singleFilePath = join(cwd, "templates", `${templateId}.tsx`);
-  const folderRealPath = existsSync(folderPath) ? realpathSync(folderPath) : null;
+  const folderPath = join(cwd, "templates", slug);
+  const singleFilePath = join(cwd, "templates", `${slug}.tsx`);
 
-  if (folderRealPath && statSync(folderPath).isDirectory()) {
-    if (!folderRealPath.startsWith(`${templatesRoot}/`)) {
-      return NextResponse.json({ error: "Invalid template path" }, { status: 400 });
-    }
+  if (existsSync(folderPath) && statSync(folderPath).isDirectory()) {
     // Folder-based template: read all .tsx files recursively
     function collectFiles(dir: string) {
       for (const entry of readdirSync(dir, { withFileTypes: true })) {
         const fullPath = join(dir, entry.name);
-        const entryLstat = lstatSync(fullPath);
-        if (entryLstat.isSymbolicLink()) continue;
-        const resolvedPath = realpathSync(fullPath);
-        if (!resolvedPath.startsWith(`${folderRealPath}/`)) continue;
-
         if (entry.isDirectory()) {
-          collectFiles(resolvedPath);
+          collectFiles(fullPath);
         } else if (entry.name.endsWith(".tsx") || entry.name.endsWith(".ts")) {
-          const relPath = relative(folderRealPath, resolvedPath);
-          templateFiles[relPath] = readFileSync(resolvedPath, "utf-8");
+          const relPath = relative(folderPath, fullPath);
+          templateFiles[relPath] = readFileSync(fullPath, "utf-8");
         }
       }
     }
-    collectFiles(folderRealPath);
+    collectFiles(folderPath);
   } else if (existsSync(singleFilePath)) {
     // Write single-file template as index.tsx so the folder import resolves correctly
     templateFiles["index.tsx"] = readFileSync(singleFilePath, "utf-8");
@@ -455,41 +434,37 @@ export async function GET(
   // ── Read required UI component files ────────────────────────────────────
   const componentFiles = template.componentFiles ?? [];
   const componentSources: Record<string, string> = {};
-  const componentsUiRoot = realpathSync(join(cwd, "components", "ui"));
   for (const file of componentFiles) {
-    if (!/^[a-z0-9-]+$/.test(file)) continue;
     const filePath = join(cwd, "components", "ui", `${file}.tsx`);
-    if (existsSync(filePath) && lstatSync(filePath).isFile()) {
-      const resolvedPath = realpathSync(filePath);
-      if (!resolvedPath.startsWith(`${componentsUiRoot}/`)) continue;
-      componentSources[file] = readFileSync(resolvedPath, "utf-8");
+    if (existsSync(filePath)) {
+      componentSources[file] = readFileSync(filePath, "utf-8");
     }
   }
 
   // ── Build ZIP ────────────────────────────────────────────────────────────
   const zip = new JSZip();
-  const root = zip.folder(`${templateId}-template`)!;
+  const root = zip.folder(`${slug}-template`)!;
 
   // Config files
-  root.file("package.json", makePackageJson(templateId));
+  root.file("package.json", makePackageJson(slug));
   root.file("next.config.ts", NEXT_CONFIG);
   root.file("tsconfig.json", TSCONFIG);
   root.file("postcss.config.mjs", POSTCSS_CONFIG);
   root.file("eslint.config.mjs", ESLINT_CONFIG);
-  root.file("README.md", README(template.name, templateId));
+  root.file("README.md", README(template.name, slug));
   root.file("components.json", COMPONENTS_JSON);
 
   // App directory
   const app = root.folder("app")!;
   app.file("layout.tsx", makeRootLayout(template.name));
-  app.file("page.tsx", makePageTsx(templateId));
+  app.file("page.tsx", makePageTsx(slug));
   app.file("globals.css", GLOBALS_CSS);
 
   // lib/utils.ts
   root.folder("lib")!.file("utils.ts", LIB_UTILS);
 
   // Template files (folder structure preserved under templates/{slug}/)
-  const templatesFolder = root.folder("templates")!.folder(templateId)!;
+  const templatesFolder = root.folder("templates")!.folder(slug)!;
   for (const [relPath, source] of Object.entries(templateFiles)) {
     templatesFolder.file(relPath, source);
   }
@@ -511,9 +486,7 @@ export async function GET(
     status: 200,
     headers: {
       "Content-Type": "application/zip",
-      "Content-Disposition": `attachment; filename="${templateId}-template.zip"; filename*=UTF-8''${encodeURIComponent(
-        `${templateId}-template.zip`
-      )}`,
+      "Content-Disposition": `attachment; filename="${slug}-template.zip"`,
       "Content-Length": String(zipBuffer.byteLength),
     },
   });

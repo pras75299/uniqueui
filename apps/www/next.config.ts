@@ -17,7 +17,7 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'sha256-xCfqQI16dMbRG5JxRw/siqAUJy12Eg5vEBtZJiUS0fA='",
+      "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://images.unsplash.com",
       "font-src 'self'",

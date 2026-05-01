@@ -21,13 +21,12 @@ export const dynamicParams = true;
 export default async function ComponentPage(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
   const component = componentsList.find((c) => c.slug === params.slug);
+  const installCommand = params.slug ? getInstallCommand(params.slug) : "";
+  const shadcnInstallCommand = params.slug ? getShadcnInstallCommand(params.slug) : "";
 
   if (!component) {
     notFound();
   }
-
-  const installCommand = getInstallCommand(component.slug);
-  const shadcnInstallCommand = getShadcnInstallCommand(component.slug);
 
   // ── Shared highlight helper ────────────────────────────────────────────────
   async function highlight(code: string): Promise<string> {
