@@ -1793,10 +1793,10 @@ export const componentDemos: Record<string, DemoComponent> = {
   "limelight-nav/default": ({ theme = "dark" }) => (
     <div
       className={cn(
-        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl border",
+        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl",
         theme === "dark"
-          ? "bg-neutral-950 border-neutral-800"
-          : "bg-neutral-100 border-neutral-200",
+          ? "bg-neutral-950"
+          : "bg-neutral-100",
       )}
     >
       <LimelightNav
@@ -1813,10 +1813,10 @@ export const componentDemos: Record<string, DemoComponent> = {
   "limelight-nav/custom": ({ theme = "dark" }) => (
     <div
       className={cn(
-        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl border",
+        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl",
         theme === "dark"
-          ? "bg-neutral-950 border-neutral-800"
-          : "bg-neutral-100 border-neutral-200",
+          ? "bg-neutral-950"
+          : "bg-neutral-100",
       )}
     >
       <LimelightNav
