@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { motion, useScroll, useTransform, useSpring, HTMLMotionProps } from "motion/react";
+import { motion, useScroll, useTransform, HTMLMotionProps } from "motion/react";
 
 export interface HorizontalScrollGalleryProps
   extends Omit<HTMLMotionProps<"div">, "onAnimationStart" | "onDragStart" | "onDragEnd" | "onDrag"> {
@@ -21,6 +21,7 @@ export function HorizontalScrollGallery({
   ...props
 }: HorizontalScrollGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   // Store the computed max scroll offset in a ref to avoid re-renders
   const maxOffset = useRef(0);
@@ -31,21 +32,14 @@ export function HorizontalScrollGallery({
     offset: ["start start", "end end"],
   });
 
-  // Apply a spring to the scroll progress for natural momentum
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 250,
-    damping: 30,
-    mass: 0.1,
-  });
-
   // Measure the track width after mount and on resize so we translate by exact pixels.
   // This avoids the calc(−100% + 100vw) approach which breaks when items don't fill
   // the viewport and also avoids the MotionValue<string> type incompatibility.
   useEffect(() => {
     const measure = () => {
-      if (!trackRef.current) return;
+      if (!trackRef.current || !viewportRef.current) return;
       const trackWidth = trackRef.current.scrollWidth;
-      const viewportWidth = window.innerWidth;
+      const viewportWidth = viewportRef.current.clientWidth;
       maxOffset.current = Math.max(0, trackWidth - viewportWidth);
     };
     measure();
@@ -54,7 +48,7 @@ export function HorizontalScrollGallery({
   }, []);
 
   // Derive a pixel-based x translation from the spring progress
-  const x = useTransform(smoothProgress, (value) => {
+  const x = useTransform(scrollYProgress, (value) => {
     const offset = maxOffset.current;
     return direction === "left" ? -value * offset : -(1 - value) * offset;
   });
@@ -65,7 +59,10 @@ export function HorizontalScrollGallery({
       ref={containerRef}
       className={cn("relative h-[300vh] w-full", className)}
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center">
+      <div
+        ref={viewportRef}
+        className="sticky top-0 h-screen w-full overflow-hidden flex items-center"
+      >
         <motion.div
           ref={trackRef}
           style={{ x }}
@@ -75,7 +72,7 @@ export function HorizontalScrollGallery({
             <div
               key={index}
               className={cn(
-                "relative flex-shrink-0 mx-4 h-[60vh] w-[80vw] sm:w-[50vw] md:w-[40vw] lg:w-[30vw] xl:w-[25vw] rounded-2xl overflow-hidden",
+                "relative shrink-0 mx-4 h-[60vh] w-[80vw] sm:w-[50vw] md:w-[40vw] lg:w-[30vw] xl:w-[25vw] rounded-2xl overflow-hidden",
                 itemClassName
               )}
             >
