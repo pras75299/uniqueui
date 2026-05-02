@@ -1042,7 +1042,7 @@ const componentDefinitions = [
   {
     "slug": "notification-stack",
     "name": "Notification Stack",
-    "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
+    "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types. Renders through a portal above page chrome by default.",
     "icon": "Bell",
     "category": "Navigation & Overlays",
     "props": [
@@ -1060,6 +1060,11 @@ const componentDefinitions = [
         "name": "maxVisible",
         "type": "number",
         "description": "Limit quantity threshold managing physical screen stack instances."
+      },
+      {
+        "name": "usePortal",
+        "type": "boolean",
+        "description": "When true (default), portals the stack to document.body with a high z-index so it clears sticky headers and overflow-hidden ancestors."
       }
     ],
     "usageCode": "\"use client\";\nimport { NotificationStack, useNotifications } from \"@/components/ui/notification-stack\";\n\nexport default function Example() {\n  const { notifications, addNotification, removeNotification } = useNotifications();\n  return (\n    <div className=\"flex flex-col items-center gap-4 w-full p-20\">\n      <div className=\"flex flex-wrap gap-3 items-center justify-center\">\n        {([\"success\", \"error\", \"warning\", \"info\"] as const).map((type) => (\n          <button\n            key={type}\n            onClick={() =>\n              addNotification({\n                title: `${type.charAt(0).toUpperCase() + type.slice(1)} notification`,\n                description: \"This is a demo notification that auto-dismisses.\",\n                type,\n                duration: 4000,\n              })\n            }\n            className=\"px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize text-white bg-neutral-800 hover:bg-neutral-700\"\n          >\n            {type}\n          </button>\n        ))}\n      </div>\n      <NotificationStack notifications={notifications} onRemove={removeNotification} />\n    </div>\n  );\n}"

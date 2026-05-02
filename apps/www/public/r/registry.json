@@ -409,7 +409,7 @@
       "name": "notification-stack",
       "type": "registry:ui",
       "title": "Notification Stack",
-      "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
+      "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types. Renders through a portal above page chrome by default.",
       "dependencies": [
         "motion",
         "clsx",
