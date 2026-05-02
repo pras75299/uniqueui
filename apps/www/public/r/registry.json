@@ -481,7 +481,7 @@
       "name": "bento-grid",
       "type": "registry:ui",
       "title": "Bento Grid",
-      "description": "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
+      "description": "Responsive masonry-style grid with staggered scroll-reveal, pointer-follow spotlight, hover lift and shadows, optional spin borders, and spring micro-interactions per cell.",
       "dependencies": [
         "motion",
         "clsx",

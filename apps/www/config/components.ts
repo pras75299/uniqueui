@@ -1230,7 +1230,7 @@ const componentDefinitions = [
   {
     "slug": "bento-grid",
     "name": "Bento Grid",
-    "description": "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
+    "description": "Responsive masonry-style grid with staggered scroll-reveal, pointer-follow spotlight, hover lift and shadows, optional spin borders, and spring micro-interactions per cell.",
     "icon": "LayoutGrid",
     "category": "Cards",
     "props": [
@@ -1278,6 +1278,16 @@ const componentDefinitions = [
         "name": "spinBorderColors",
         "type": "[string, string]",
         "description": "Two hex/CSS color values for the conic gradient. Defaults to [\"#E2CBFF\", \"#393BB2\"] (purple–indigo)."
+      },
+      {
+        "name": "interactiveSpotlight",
+        "type": "boolean",
+        "description": "When true (default), a violet radial highlight follows the pointer inside the card on fine-pointer hover."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "description": "Surface and text colors; injected by BentoGrid on each child."
       }
     ],
     "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\nimport { Sparkles, Zap, Shield, Globe } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"max-w-3xl mx-auto\">\n        <BentoCard\n          icon={<Sparkles className=\"w-5 h-5\" />}\n          title=\"Beautiful animations\"\n          description=\"Every interaction is crafted with spring-physics Motion.dev animations for a premium feel.\"\n          cta=\"Explore components\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          icon={<Zap className=\"w-5 h-5\" />}\n          title=\"Lightning fast\"\n          description=\"Copy-paste components with zero runtime overhead.\"\n        />\n        <BentoCard\n          icon={<Shield className=\"w-5 h-5\" />}\n          title=\"Type safe\"\n          description=\"Built with TypeScript and fully typed props.\"\n        />\n        <BentoCard\n          icon={<Globe className=\"w-5 h-5\" />}\n          title=\"Zero lock-in\"\n          description=\"You own the code. No external runtime dependency.\"\n          cta=\"Get started\"\n          className=\"col-span-2\"\n        />\n      </BentoGrid>\n    </div>\n  );\n}",
