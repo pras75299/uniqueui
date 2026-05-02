@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+msg_file="$1"
+tmp=$(mktemp)
+grep -viE '^Co-authored-by:[[:space:]]*.*(cursor|claude)' "$msg_file" >"$tmp" || cp "$msg_file" "$tmp"
+mv "$tmp" "$msg_file"
