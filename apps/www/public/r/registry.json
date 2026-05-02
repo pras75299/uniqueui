@@ -391,7 +391,7 @@
       "name": "drawer-slide",
       "type": "registry:ui",
       "title": "Drawer Slide",
-      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
+      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur. Portals above page chrome by default.",
       "dependencies": [
         "motion",
         "clsx",

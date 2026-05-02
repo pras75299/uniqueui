@@ -1,6 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 
 export type DrawerPosition = "left" | "right" | "top" | "bottom";
@@ -17,6 +18,11 @@ export interface DrawerSlideProps {
   dragToClose?: boolean;
   theme?: "light" | "dark";
   ariaLabel?: string;
+  /**
+   * When true (default), portals overlay + panel to document.body with a high z-index so they sit
+   * above sticky headers and overflow-hidden preview wrappers.
+   */
+  usePortal?: boolean;
 }
 
 const positionStyles: Record<
@@ -76,9 +82,11 @@ export function DrawerSlide({
   dragToClose = true,
   theme = "dark",
   ariaLabel,
+  usePortal = true,
 }: DrawerSlideProps) {
   const config = positionStyles[position];
   const isHorizontal = position === "left" || position === "right";
+  const canUseDom = typeof document !== "undefined";
 
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -98,25 +106,25 @@ export function DrawerSlide({
     };
   }, [isOpen, handleEscape]);
 
-  return (
+  const layer = (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Overlay */}
           <motion.div
+            key="drawer-slide-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
             className={cn(
-              "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm",
+              "fixed inset-0 z-[1000] bg-black/50 backdrop-blur-sm",
               overlayClassName
             )}
           />
 
-          {/* Drawer */}
           <motion.div
+            key="drawer-slide-panel"
             role="dialog"
             aria-modal="true"
             aria-label={ariaLabel}
@@ -138,7 +146,7 @@ export function DrawerSlide({
               if (shouldClose) onClose();
             }}
             className={cn(
-              "fixed z-50 shadow-2xl",
+              "fixed z-[1001] shadow-2xl",
               theme === "dark" ? "border-neutral-800 bg-neutral-950" : "border-neutral-200 bg-white",
               config.container,
               isHorizontal ? "border-l" : "border-t",
@@ -149,7 +157,6 @@ export function DrawerSlide({
               height: !isHorizontal ? height : undefined,
             }}
           >
-            {/* Drag handle */}
             {dragToClose && (
               <div
                 className={cn(
@@ -179,4 +186,14 @@ export function DrawerSlide({
       )}
     </AnimatePresence>
   );
+
+  if (!usePortal) {
+    return layer;
+  }
+
+  if (!canUseDom) {
+    return null;
+  }
+
+  return createPortal(layer, document.body);
 }

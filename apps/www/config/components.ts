@@ -987,7 +987,7 @@ const componentDefinitions = [
   {
     "slug": "drawer-slide",
     "name": "Drawer Slide",
-    "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
+    "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur. Portals above page chrome by default.",
     "icon": "LucidePanelRight",
     "category": "Navigation & Overlays",
     "props": [
@@ -1035,6 +1035,11 @@ const componentDefinitions = [
         "name": "dragToClose",
         "type": "boolean",
         "description": "Map touch swiping events onto gesture recognizers supporting drag dismiss."
+      },
+      {
+        "name": "usePortal",
+        "type": "boolean",
+        "description": "When true (default), portals overlay and panel to document.body with z-index above sticky headers."
       }
     ],
     "usageCode": "\"use client\";\nimport { useState } from \"react\";\nimport { DrawerSlide } from \"@/components/ui/drawer-slide\";\n\nexport default function Example() {\n  const [drawerOpen, setDrawerOpen] = useState(false);\n  return (\n    <>\n      <div className=\"flex items-center justify-center p-20\">\n        <button\n          onClick={() => setDrawerOpen(true)}\n          className=\"px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors font-medium\"\n        >\n          Open Drawer\n        </button>\n      </div>\n      <DrawerSlide isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}>\n        <h3 className=\"text-xl font-bold mb-4 text-white\">Drawer Content</h3>\n        <p className=\"text-neutral-400 mb-4\">\n          This drawer slides in from the right with spring physics. You can drag it to dismiss.\n        </p>\n        <button\n          onClick={() => setDrawerOpen(false)}\n          className=\"px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors text-sm\"\n        >\n          Close Drawer\n        </button>\n      </DrawerSlide>\n    </>\n  );\n}"
