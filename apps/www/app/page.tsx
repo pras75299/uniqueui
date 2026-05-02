@@ -137,10 +137,10 @@ export default function Home() {
             <Link
               href="/components"
               className={cn(
-                "font-semibold transition-colors",
+                "transition-colors",
                 isDark
-                  ? "text-white hover:text-purple-400"
-                  : "text-neutral-900 hover:text-purple-600",
+                  ? "text-neutral-400 hover:text-white"
+                  : "text-neutral-600 hover:text-neutral-900",
               )}
             >
               Components
