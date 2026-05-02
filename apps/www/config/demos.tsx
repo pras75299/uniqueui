@@ -513,6 +513,25 @@ function withDemoLocation<T extends Record<string, unknown>>(rows: T[]): (T & { 
   });
 }
 
+/** Extra wide columns for data-table freeze demos so horizontal scroll is obvious in previews. */
+const DATA_TABLE_FREEZE_EXTRA_FIELDS = [
+  { project: "Orion", division: "Platform core", site: "SF-01", timezone: "PT", costCenter: "CC-4100" },
+  { project: "Nova", division: "Product design", site: "NYC-04", timezone: "ET", costCenter: "CC-2200" },
+  { project: "Atlas", division: "Growth GTM", site: "CHI-02", timezone: "CT", costCenter: "CC-1800" },
+  { project: "Pulse", division: "Platform core", site: "SEA-01", timezone: "PT", costCenter: "CC-4100" },
+  { project: "Vertex", division: "Product design", site: "AUS-01", timezone: "CT", costCenter: "CC-3300" },
+  { project: "Helix", division: "Growth GTM", site: "DEN-01", timezone: "MT", costCenter: "CC-5200" },
+  { project: "Quark", division: "Platform core", site: "PDX-02", timezone: "PT", costCenter: "CC-4100" },
+  { project: "Echo", division: "Product design", site: "BOS-03", timezone: "ET", costCenter: "CC-2200" },
+] as const;
+
+function withDemoFreezeExtras<T extends Record<string, unknown>>(rows: T[]) {
+  return rows.map((row, index) => ({
+    ...row,
+    ...DATA_TABLE_FREEZE_EXTRA_FIELDS[index % DATA_TABLE_FREEZE_EXTRA_FIELDS.length],
+  }));
+}
+
 export const componentDemos: Record<string, DemoComponent> = {
   "animated-glowing-text-outline": () => (
     <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-background gap-16 border border-border rounded-xl overflow-hidden relative">
@@ -2008,6 +2027,11 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "department", label: "Department" },
       { key: "region", label: "Region" },
       { key: "location", label: "Location" },
+      { key: "project", label: "Project" },
+      { key: "division", label: "Division" },
+      { key: "site", label: "Site" },
+      { key: "timezone", label: "TZ" },
+      { key: "costCenter", label: "Cost ctr" },
       { key: "joined", label: "Joined" },
       { key: "status", label: "Status" },
       { key: "actions", label: "Actions" },
@@ -2106,7 +2130,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={withDemoLocation(data)}
+          data={withDemoLocation(withDemoFreezeExtras(data))}
           freezeColumns="left"
           freezeLeftCount={2}
           paginated
@@ -2122,6 +2146,11 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "department", label: "Department" },
       { key: "region", label: "Region" },
+      { key: "project", label: "Project" },
+      { key: "division", label: "Division" },
+      { key: "site", label: "Site" },
+      { key: "timezone", label: "TZ" },
+      { key: "costCenter", label: "Cost ctr" },
       { key: "location", label: "Location" },
       { key: "status", label: "Status" },
       { key: "email", label: "Email" },
@@ -2223,7 +2252,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={withDemoLocation(data)}
+          data={withDemoLocation(withDemoFreezeExtras(data))}
           freezeColumns="right"
           freezeRightCount={1}
           paginated
@@ -2242,6 +2271,11 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "department", label: "Department" },
       { key: "region", label: "Region" },
       { key: "location", label: "Location" },
+      { key: "project", label: "Project" },
+      { key: "division", label: "Division" },
+      { key: "site", label: "Site" },
+      { key: "timezone", label: "TZ" },
+      { key: "costCenter", label: "Cost ctr" },
       { key: "joined", label: "Joined" },
       { key: "status", label: "Status" },
       { key: "actions", label: "Actions" },
@@ -2340,7 +2374,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={withDemoLocation(data)}
+          data={withDemoLocation(withDemoFreezeExtras(data))}
           freezeColumns="both"
           freezeLeftCount={2}
           freezeRightCount={1}
@@ -2621,6 +2655,11 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "department", label: "Dept" },
       { key: "region", label: "Region" },
       { key: "location", label: "Location" },
+      { key: "project", label: "Project" },
+      { key: "division", label: "Division" },
+      { key: "site", label: "Site" },
+      { key: "timezone", label: "TZ" },
+      { key: "costCenter", label: "Cost ctr" },
       { key: "joined", label: "Joined" },
       { key: "actions", label: "Actions" },
     ];
@@ -2702,7 +2741,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={withDemoLocation(data)}
+          data={withDemoLocation(withDemoFreezeExtras(data))}
           freezeColumns="left"
           freezeLeftCount={1}
           headerTextColor="text-neutral-100"
