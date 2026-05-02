@@ -485,6 +485,30 @@ function NestedCommentsDemo({ theme = "dark" }: DemoThemeProps) {
   );
 }
 
+const DATA_TABLE_DEMO_LOCATIONS = [
+  "San Francisco",
+  "New York",
+  "Chicago",
+  "Seattle",
+  "Austin",
+  "Boston",
+  "Denver",
+  "Miami",
+];
+
+function withDemoLocation<T extends Record<string, unknown>>(rows: T[]): (T & { location: string })[] {
+  return rows.map((row, index) => {
+    const existing = (row as { location?: unknown }).location;
+    return {
+      ...row,
+      location:
+        typeof existing === "string"
+          ? existing
+          : DATA_TABLE_DEMO_LOCATIONS[index % DATA_TABLE_DEMO_LOCATIONS.length]!,
+    };
+  });
+}
+
 export const componentDemos: Record<string, DemoComponent> = {
   "animated-glowing-text-outline": () => (
     <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-background gap-16 border border-border rounded-xl overflow-hidden relative">
@@ -1889,6 +1913,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "email", label: "Email" },
       { key: "department", label: "Department" },
+      { key: "location", label: "Location" },
       { key: "status", label: "Status" },
       { key: "joined", label: "Joined" },
     ];
@@ -1962,7 +1987,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           paginated
           pageSize={5}
           theme={theme}
@@ -1978,6 +2003,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "department", label: "Department" },
       { key: "region", label: "Region" },
+      { key: "location", label: "Location" },
       { key: "joined", label: "Joined" },
       { key: "status", label: "Status" },
       { key: "actions", label: "Actions" },
@@ -2076,7 +2102,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           freezeColumns="left"
           freezeLeftCount={2}
           paginated
@@ -2092,6 +2118,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "department", label: "Department" },
       { key: "region", label: "Region" },
+      { key: "location", label: "Location" },
       { key: "status", label: "Status" },
       { key: "email", label: "Email" },
       { key: "joined", label: "Joined" },
@@ -2192,7 +2219,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           freezeColumns="right"
           freezeRightCount={1}
           paginated
@@ -2210,6 +2237,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "department", label: "Department" },
       { key: "region", label: "Region" },
+      { key: "location", label: "Location" },
       { key: "joined", label: "Joined" },
       { key: "status", label: "Status" },
       { key: "actions", label: "Actions" },
@@ -2308,7 +2336,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           freezeColumns="both"
           freezeLeftCount={2}
           freezeRightCount={1}
@@ -2325,6 +2353,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "email", label: "Email" },
       { key: "department", label: "Department" },
+      { key: "location", label: "Location" },
       { key: "status", label: "Status" },
       { key: "joined", label: "Joined" },
     ];
@@ -2398,7 +2427,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           border
           paginated
           pageSize={5}
@@ -2412,6 +2441,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "name", label: "Name", sortKey: "name" },
       { key: "role", label: "Role", sortKey: "role" },
       { key: "department", label: "Department", sortKey: "department" },
+      { key: "location", label: "Location", sortKey: "location" },
       { key: "joined", label: "Joined", sortKey: "joined" },
       { key: "status", label: "Status", sortKey: "status" },
     ];
@@ -2477,7 +2507,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           sortable
           paginated
           pageSize={5}
@@ -2492,6 +2522,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "email", label: "Email" },
       { key: "department", label: "Department" },
+      { key: "location", label: "Location" },
       { key: "status", label: "Status" },
       { key: "joined", label: "Joined" },
     ];
@@ -2565,7 +2596,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           headerTextColor="text-purple-900"
           bodyTextColor="text-neutral-800"
           headerBackground="bg-purple-100"
@@ -2585,6 +2616,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role", sortKey: "role" },
       { key: "department", label: "Dept" },
       { key: "region", label: "Region" },
+      { key: "location", label: "Location" },
       { key: "joined", label: "Joined" },
       { key: "actions", label: "Actions" },
     ];
@@ -2666,7 +2698,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           freezeColumns="left"
           freezeLeftCount={1}
           headerTextColor="text-neutral-100"
