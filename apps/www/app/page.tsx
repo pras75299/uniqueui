@@ -4,7 +4,7 @@ import { motion, useReducedMotion, Variants } from "motion/react";
 import { TypewriterText } from "@/components/ui/typewriter-text";
 import { TiltCard } from "@/components/ui/3d-tilt-card";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { SiteHeader } from "@/components/site-header";
 import { useTheme } from "@/contexts/theme-context";
 import { useRef, useState } from "react";
 import {
@@ -106,109 +106,31 @@ export default function Home() {
   };
 
   return (
-    <motion.main
-      className={cn(
-        "flex min-h-screen flex-col items-center selection:bg-purple-500/30 overflow-x-hidden",
-        isDark ? "text-white" : "text-neutral-900",
-      )}
-      initial={false}
-      animate={{
-        backgroundColor: isDark ? "#0a0a0a" : "#f5f3ff",
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-    >
-      {/* Background Gradient */}
-      <div
+    <>
+      <SiteHeader />
+      <motion.main
         className={cn(
-          "fixed inset-0 z-0 h-full w-full items-center px-5 py-24 pointer-events-none",
-          isDark
-            ? "[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20"
-            : "[background:radial-gradient(120%_160%_at_0%_0%,#e0f2fe_0%,#eef2ff_35%,#fdf2ff_70%,#f5f3ff_100%)] opacity-70",
+          "flex min-h-screen flex-col items-center selection:bg-purple-500/30 overflow-x-clip",
+          isDark ? "text-white" : "text-neutral-900",
         )}
-      />
-
-      {/* Header */}
-      <div className="z-10 w-full max-w-6xl items-center justify-between font-mono text-sm lg:flex p-4 md:p-8 pt-8 relative">
-        <p
-          className={cn(
-            "fixed left-0 top-0 flex w-full justify-center border-b backdrop-blur-md pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:border lg:p-4 z-50 lg:z-auto",
-            isDark
-              ? "border-neutral-800 bg-neutral-950/50 text-neutral-400 lg:bg-neutral-900/30"
-              : "border-purple-100 bg-white/80 text-neutral-600 lg:bg-white/80 shadow-sm",
-          )}
-        >
-          UniqueUI &nbsp;
-          <span
-            className={cn(
-              "font-normal",
-              isDark ? "text-neutral-500" : "text-neutral-600",
-            )}
-          >
-            v1.0.0
-          </span>
-        </p>
+        initial={false}
+        animate={{
+          backgroundColor: isDark ? "#0a0a0a" : "#f5f3ff",
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
+        {/* Background Gradient */}
         <div
           className={cn(
-            "fixed bottom-0 left-0 flex h-48 w-full items-end justify-center lg:static lg:h-auto lg:w-auto lg:bg-none z-50 lg:z-auto pointer-events-none lg:pointer-events-auto",
+            "fixed inset-0 z-0 h-full w-full items-center px-5 py-24 pointer-events-none",
             isDark
-              ? "bg-linear-to-t from-black via-black"
-              : "bg-linear-to-t from-white via-purple-100/40",
+              ? "[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20"
+              : "[background:radial-gradient(120%_160%_at_0%_0%,#e0f2fe_0%,#eef2ff_35%,#fdf2ff_70%,#f5f3ff_100%)] opacity-70",
           )}
-        >
-          <div className="pointer-events-auto flex items-center gap-5 p-8 lg:p-0">
-            <ThemeToggle className="shrink-0" />
-            <Link
-              href="/components"
-              className={cn(
-                "transition-colors",
-                isDark
-                  ? "text-neutral-400 hover:text-white"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-            >
-              Components
-            </Link>
-            <Link
-              href="/docs"
-              className={cn(
-                "transition-colors",
-                isDark
-                  ? "text-neutral-400 hover:text-white"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-            >
-              Docs
-            </Link>
-            <Link
-              href="/templates"
-              className={cn(
-                "transition-colors",
-                isDark
-                  ? "text-neutral-400 hover:text-white"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-            >
-              Templates
-            </Link>
-            <a
-              className={cn(
-                "flex place-items-center gap-2 transition-colors",
-                isDark
-                  ? "text-neutral-400 hover:text-white"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-              href="https://github.com/pras75299/uniqueui"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
-      </div>
+        />
 
-      {/* Hero */}
-      <section className="relative z-10 mt-28 lg:mt-20 px-4 w-full max-w-6xl mx-auto">
+        {/* Hero */}
+      <section className="relative z-10 mx-auto mt-6 w-full max-w-6xl px-4 pt-6 md:mt-8 md:pt-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">
           {/* Hero copy + CTAs */}
           <motion.div
@@ -1001,6 +923,7 @@ export default function Home() {
         </footer>
         </div>
       </div>
-    </motion.main>
+      </motion.main>
+    </>
   );
 }

@@ -4,11 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { componentsList } from "@/config/components";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
-import { SECTION_NAV } from "@/config/navigation";
-import { ArrowLeft, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { motion } from "motion/react";
+import { SiteHeader } from "@/components/site-header";
 import { useState, useEffect, useRef } from "react";
 
 export default function ComponentsLayout({
@@ -34,110 +33,32 @@ export default function ComponentsLayout({
     }
   }, [pathname]);
 
-  // ── Shared top header ──────────────────────────────────────────────────────
   const topHeader = (
-    <header
-      className={cn(
-        "sticky top-0 z-50 border-b backdrop-blur-md",
-        isDark
-          ? "border-neutral-800 bg-neutral-950/80"
-          : "border-neutral-200 bg-white/80",
-      )}
-    >
-      <div className="max-w-[1600px] mx-auto px-3 h-14 flex items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/"
+    <SiteHeader
+      trailing={
+        !isOverview ? (
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={
+              isMobileMenuOpen
+                ? "Close components menu"
+                : "Open components menu"
+            }
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="components-sidebar"
             className={cn(
-              "hidden sm:flex items-center gap-1.5 text-sm transition-colors",
+              "rounded-lg p-2 lg:hidden",
               isDark
-                ? "text-neutral-500 hover:text-white"
-                : "text-neutral-500 hover:text-neutral-900",
+                ? "text-neutral-400 hover:bg-neutral-800/50 hover:text-white"
+                : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
             )}
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Home
-          </Link>
-          <span
-            className={cn(
-              "hidden sm:block h-4 w-px",
-              isDark ? "bg-neutral-800" : "bg-neutral-200",
-            )}
-          />
-          <Link
-            href="/"
-            className={cn(
-              "font-bold text-lg tracking-tight",
-              isDark ? "text-white" : "text-neutral-900",
-            )}
-          >
-            UniqueUI
-          </Link>
-        </div>
-
-        <nav className="flex items-center gap-1">
-          {SECTION_NAV.map(({ label, href, icon: Icon }) => {
-            const isActive =
-              pathname === href || pathname.startsWith(href + "/");
-            return (
-              <Link
-                key={href}
-                href={href}
-                aria-current={isActive ? "page" : undefined}
-                className={cn(
-                  "relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                  isActive
-                    ? "text-white"
-                    : isDark
-                      ? "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
-                      : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100",
-                )}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="componentsNavPill"
-                    className="absolute inset-0 rounded-lg bg-purple-600"
-                    transition={{
-                      type: "spring",
-                      bounce: 0.2,
-                      duration: 0.4,
-                    }}
-                  />
-                )}
-                <Icon className="w-3.5 h-3.5 relative z-10" />
-                <span className="relative z-10">{label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          {/* Mobile sidebar toggle — only on detail pages */}
-          {!isOverview && (
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label={
-                isMobileMenuOpen
-                  ? "Close components menu"
-                  : "Open components menu"
-              }
-              aria-expanded={isMobileMenuOpen}
-              aria-controls="components-sidebar"
-              className={cn(
-                "lg:hidden p-2",
-                isDark
-                  ? "text-neutral-400 hover:text-white"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-            >
-              {isMobileMenuOpen ? <X /> : <Menu />}
-            </button>
-          )}
-        </div>
-      </div>
-    </header>
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        ) : null
+      }
+    />
   );
 
   // ── Overview page: top-nav + full-width content ────────────────────────────
