@@ -317,6 +317,24 @@
       }
     },
     {
+      "name": "mini-mac-keyboard",
+      "type": "registry:ui",
+      "title": "Mini Mac Keyboard",
+      "description": "Pure CSS decorative compact Mac-style keyboard with subtle spring entrance from motion.dev — ideal for hero device mockups.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/mini-mac-keyboard.tsx",
+          "type": "registry:component",
+          "target": "components/ui/mini-mac-keyboard.tsx"
+        }
+      ]
+    },
+    {
       "name": "flip-card",
       "type": "registry:ui",
       "title": "Flip Card",

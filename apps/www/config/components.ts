@@ -790,6 +790,41 @@ const componentDefinitions = [
     "usageCode": "import { MeteorsCard } from \"@/components/ui/meteors-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6 p-10 text-white\">\n      <MeteorsCard className=\"h-full\">\n        <h3 className=\"text-xl font-bold mb-2\">Meteors Effect</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Watch the shooting stars fall through this card's background.\n        </p>\n      </MeteorsCard>\n      <MeteorsCard meteorColor=\"#a855f7\" meteorCount={30} className=\"h-full\">\n        <h3 className=\"text-xl font-bold mb-2 text-purple-200\">Purple Meteors</h3>\n        <p className=\"text-purple-300/60 text-sm\">Custom colored meteors with extra density.</p>\n      </MeteorsCard>\n    </div>\n  );\n}"
   },
   {
+    "slug": "mini-mac-keyboard",
+    "name": "Mini Mac Keyboard",
+    "description": "Pure CSS decorative compact Mac-style keyboard with subtle spring entrance from motion.dev — ideal for hero device mockups.",
+    "icon": "LayoutGrid",
+    "category": "Effects & Animations",
+    "props": [
+      {
+        "name": "wrapperClassName",
+        "type": "string",
+        "description": "Classes on the transform layer inside the motion wrapper (placement, scale, translate). Include responsive translate resets (e.g. md:translate-y-0) if you override base position and the default uses md: breakpoints."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes merged onto the keyboard bezel container (chassis shell, border, padding)."
+      },
+      {
+        "name": "keysClassName",
+        "type": "string",
+        "description": "Classes merged onto every key cap after the defaults — background, text, and ring overrides for a custom palette."
+      },
+      {
+        "name": "indicatorRingClassName",
+        "type": "string",
+        "description": "Classes merged onto the power-indicator gradient ring in the F12 key."
+      },
+      {
+        "name": "indicatorDotClassName",
+        "type": "string",
+        "description": "Classes merged onto the inner dot of the power indicator."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { MiniMacKeyboard } from \"@/components/ui/mini-mac-keyboard\";\n\nexport default function HeroDevices() {\n  return (\n    <div className=\"flex justify-center p-12\">\n      <MiniMacKeyboard\n        wrapperClassName=\"translate-x-0 translate-y-0 md:translate-y-0 scale-125\"\n        keysClassName=\"bg-stone-200 text-stone-800 dark:bg-stone-800 dark:text-stone-100\"\n      />\n    </div>\n  );\n}\n"
+  },
+  {
     "slug": "flip-card",
     "name": "Flip Card",
     "description": "3D card flip with spring physics, supporting hover or click triggers.",

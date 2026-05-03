@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/morphing-card-stack";
 import { PenCursor } from "@/components/ui/pen-cursor";
 import { OutlinedMegaMark } from "@/components/ui/outlined-mega-mark";
+import { MiniMacKeyboard } from "@/components/ui/mini-mac-keyboard";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -295,6 +296,10 @@ export default function Home() {
                   theme={isDark ? "dark" : "light"}
                   className="mx-auto"
                 />
+
+                <div className="pointer-events-auto relative z-10 mt-6 flex justify-center overflow-visible">
+                  <MiniMacKeyboard />
+                </div>
 
                 <div
                   className={cn(

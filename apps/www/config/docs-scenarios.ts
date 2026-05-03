@@ -299,6 +299,27 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       }
     ]
   },
+  "mini-mac-keyboard": {
+    "slug": "mini-mac-keyboard",
+    "overview": "MiniMacKeyboard renders a tiny faux keyboard using stacked key caps with light/dark Tailwind styling and a short spring entrance. It is decorative only (aria-label on the wrapper). Use wrapperClassName for scale and position; keysClassName recolors all caps; className styles the outer bezel. Overall width is controlled with scale on the wrapper (native layout is fixed for the key grid).",
+    "scenarios": [
+      {
+        "title": "Hero beside a laptop frame",
+        "description": "Reset transforms for a centered marketing hero so the board reads at a readable size.",
+        "code": "import { MiniMacKeyboard } from \"@/components/ui/mini-mac-keyboard\";\n\nexport default function Hero() {\n  return (\n    <MiniMacKeyboard\n      wrapperClassName=\"mx-auto scale-125 translate-x-0 translate-y-4 sm:scale-150\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Reduced footprint in a card",
+        "description": "Shrink with Tailwind scale utilities on the wrapper inside a tight card.",
+        "code": "import { MiniMacKeyboard } from \"@/components/ui/mini-mac-keyboard\";\n\nexport default function CardAccent() {\n  return (\n    <div className=\"rounded-2xl border border-neutral-800 bg-neutral-950 p-6\">\n      <MiniMacKeyboard wrapperClassName=\"scale-90 translate-x-0 translate-y-0 md:translate-y-0\" />\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Custom keys and indicator",
+        "description": "Tint every cap with keysClassName and tweak the power dot with indicator props; bezel uses className.",
+        "code": "import { MiniMacKeyboard } from \"@/components/ui/mini-mac-keyboard\";\n\nexport default function CustomBoard() {\n  return (\n    <MiniMacKeyboard\n      wrapperClassName=\"translate-x-0 translate-y-0 md:translate-y-0 scale-150\"\n      className=\"ring-violet-500/30 dark:ring-violet-400/25\"\n      keysClassName=\"bg-violet-100 text-violet-950 dark:bg-violet-950 dark:text-violet-100\"\n      indicatorRingClassName=\"from-emerald-400 via-emerald-500 to-emerald-400\"\n      indicatorDotClassName=\"bg-emerald-300 dark:bg-emerald-700\"\n    />\n  );\n}"
+      }
+    ]
+  },
   "flip-card": {
     "slug": "flip-card",
     "overview": "FlipCard reveals a back face on hover or click with a smooth 3D rotation. Supports horizontal and vertical flip axes and can wrap any React content on either face.",

@@ -48,6 +48,7 @@ import { InteractiveCursor } from "@/components/ui/interactive-cursor";
 import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { LimelightNav } from "@/components/ui/limelight-nav";
 import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
+import { MiniMacKeyboard } from "@/components/ui/mini-mac-keyboard";
 import { MultiStepAuthCard } from "@/components/ui/multi-step-auth-card";
 import { DataTable } from "@/components/ui/data-table";
 import GlowingTextOutline from "@/components/ui/animated-glowing-text-outline";
@@ -1069,6 +1070,13 @@ export const componentDemos: Record<string, DemoComponent> = {
           Custom colored meteors with extra density.
         </p>
       </MeteorsCard>
+    </div>
+  ),
+  "mini-mac-keyboard": () => (
+    <div className="flex min-h-[280px] w-full items-center justify-center overflow-visible px-4 py-8">
+      <MiniMacKeyboard
+        wrapperClassName="translate-x-0 translate-y-0 md:translate-y-0 scale-[2.35] sm:scale-[2.75] md:scale-[3.2]"
+      />
     </div>
   ),
   "flip-card": ({ theme = "dark" }) => (
