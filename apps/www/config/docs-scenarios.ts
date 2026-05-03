@@ -671,6 +671,22 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       }
     ]
   },
+  "outlined-mega-mark": {
+    "slug": "outlined-mega-mark",
+    "overview": "OutlinedMegaMark renders your label twice: once for light mode and once for dark mode, each with a configurable WebKit text stroke (width and colour per theme) and transparent fill. Font size and letter-spacing are plain CSS strings so you can use clamp() for responsive footers or fixed sizes in previews.",
+    "scenarios": [
+      {
+        "title": "Landing page footer",
+        "description": "Place the mark below legal or link columns as a wide typographic signature without opaque fills.",
+        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Footer() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark>UniqueUI</OutlinedMegaMark>\n    </footer>\n  );\n}"
+      },
+      {
+        "title": "Custom stroke and scale",
+        "description": "Tune stroke width and colours for contrast on tinted backgrounds, or shrink fontSize for dense layouts.",
+        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function CustomMark() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2rem, 8vw, 4rem)\"\n      strokeWidth={2}\n      lightStrokeColor=\"rgb(147 51 234)\"\n      darkStrokeColor=\"rgb(196 181 253)\"\n      containerClassName=\"pt-4\"\n    >\n      Ship slower\n    </OutlinedMegaMark>\n  );\n}"
+      }
+    ]
+  },
   "blur-reveal": {
     "slug": "blur-reveal",
     "overview": "BlurReveal staggers a blur-fade-in animation across each character or word as the element enters the viewport. It creates an elegant reveal effect perfect for hero text and section headings.",

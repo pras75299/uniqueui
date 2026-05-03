@@ -2092,6 +2092,61 @@ const componentDefinitions = [
     "usageCode": "\"use client\";\nimport { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function Hero() {\n  return (\n    <h1 className=\"text-5xl font-black\">\n      <ShinyText\n        text=\"Build something brilliant.\"\n        speed={3}\n        shimmerWidth={45}\n        className=\"text-5xl font-black\"\n      />\n    </h1>\n  );\n}"
   },
   {
+    "slug": "outlined-mega-mark",
+    "name": "Outlined Mega Mark",
+    "description": "Full-width responsive outlined headline with transparent fill and separate stroke colors for light and dark backgrounds — ideal for landing footers.",
+    "icon": "LucideType",
+    "category": "Text",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Text or nodes rendered in both light and dark stroke layers."
+      },
+      {
+        "name": "fontSize",
+        "type": "string",
+        "default": "\"clamp(11.25rem, 10vw, 14.25rem)\"",
+        "description": "Any valid CSS font-size (clamp, rem, px, etc.)."
+      },
+      {
+        "name": "letterSpacing",
+        "type": "string",
+        "default": "\"-0.02em\"",
+        "description": "CSS letter-spacing for the headline."
+      },
+      {
+        "name": "lightStrokeColor",
+        "type": "string",
+        "default": "\"var(--color-neutral-300)\"",
+        "description": "Outline colour when the page is in light mode."
+      },
+      {
+        "name": "darkStrokeColor",
+        "type": "string",
+        "default": "\"var(--color-neutral-700)\"",
+        "description": "Outline colour when the page is in dark mode."
+      },
+      {
+        "name": "strokeWidth",
+        "type": "number | string",
+        "default": "1",
+        "description": "Outline width; numbers become px (e.g. 2 → 2px). Use a string for units like rem."
+      },
+      {
+        "name": "containerClassName",
+        "type": "string",
+        "description": "Optional Tailwind classes for the outer wrapper."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Optional Tailwind classes for the inner paragraph."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function LandingFooter() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(11.25rem, 10vw, 14.25rem)\"\n      strokeWidth={1}\n      lightStrokeColor=\"var(--color-neutral-300)\"\n      darkStrokeColor=\"var(--color-neutral-700)\"\n      letterSpacing=\"-0.02em\"\n    >\n      UniqueUI\n    </OutlinedMegaMark>\n  );\n}\n"
+  },
+  {
     "slug": "blur-reveal",
     "name": "Blur Reveal",
     "description": "Characters or words materialise from a soft blur — the cinematic text entrance used in top SaaS hero sections.",

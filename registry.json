@@ -781,6 +781,25 @@
     ]
   },
   {
+    "name": "outlined-mega-mark",
+    "dependencies": [
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "outlined-mega-mark/component.tsx",
+        "content": "import type {\n  ComponentPropsWithoutRef,\n  CSSProperties,\n  ReactNode,\n} from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/** Responsive mega type: floor 6rem, cap 14.25rem, `10vw` active across typical viewports. */\nconst DEFAULT_FONT_SIZE = \"clamp(6rem, 10vw, 14.25rem)\";\nconst DEFAULT_LETTER_SPACING = \"-0.02em\";\nconst DEFAULT_LIGHT_STROKE = \"var(--color-neutral-300)\";\nconst DEFAULT_DARK_STROKE = \"var(--color-neutral-700)\";\nconst DEFAULT_STROKE_WIDTH = 1;\n\nfunction strokeStyle(\n  width: number | string,\n  color: string,\n): Pick<CSSProperties, \"WebkitTextStroke\"> {\n  const w = typeof width === \"number\" ? `${width}px` : width;\n  return { WebkitTextStroke: `${w} ${color}` };\n}\n\nexport type OutlinedMegaMarkProps = Omit<\n  ComponentPropsWithoutRef<\"div\">,\n  \"children\" | \"className\"\n> & {\n  /** Same content is rendered for light and dark stroke layers (must be text-friendly). */\n  children: ReactNode;\n  /** Any valid CSS `font-size` (e.g. `clamp(...)`, `rem`, `px`). */\n  fontSize?: string;\n  /** CSS `letter-spacing` value. */\n  letterSpacing?: string;\n  /** Stroke colour when the site is in light mode. */\n  lightStrokeColor?: string;\n  /** Stroke colour when the site is in dark mode. */\n  darkStrokeColor?: string;\n  /** Outline width: number → `px`; string passes through (e.g. `2px`, `0.125rem`). */\n  strokeWidth?: number | string;\n  /** Extra classes on the outer wrapper (layout, padding). */\n  containerClassName?: string;\n  /** Extra classes on the inner `<p>` (typography overrides). */\n  className?: string;\n};\n\n/**\n * Huge responsive outlined headline (transparent fill + `-webkit-text-stroke`),\n * with configurable size, stroke width, and light / dark stroke colours.\n */\nexport function OutlinedMegaMark({\n  children,\n  fontSize = DEFAULT_FONT_SIZE,\n  letterSpacing = DEFAULT_LETTER_SPACING,\n  lightStrokeColor = DEFAULT_LIGHT_STROKE,\n  darkStrokeColor = DEFAULT_DARK_STROKE,\n  strokeWidth = DEFAULT_STROKE_WIDTH,\n  containerClassName,\n  className,\n  ...rest\n}: OutlinedMegaMarkProps) {\n  const paragraphStyle: CSSProperties = {\n    fontSize,\n    letterSpacing,\n  };\n\n  return (\n    <div\n      {...rest}\n      className={cn(\"w-full shrink-0 px-2 pt-8 md:pt-10\", containerClassName)}\n    >\n      <p\n        className={cn(\n          \"w-full text-center font-bold leading-[1.05] text-transparent\",\n          className,\n        )}\n        style={paragraphStyle}\n      >\n        <span\n          className=\"dark:hidden\"\n          style={strokeStyle(strokeWidth, lightStrokeColor)}\n        >\n          {children}\n        </span>\n        <span\n          className=\"hidden dark:inline\"\n          style={strokeStyle(strokeWidth, darkStrokeColor)}\n        >\n          {children}\n        </span>\n      </p>\n    </div>\n  );\n}\n",
+        "type": "registry:ui"
+      },
+      {
+        "path": "utils/cn.ts",
+        "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+        "type": "registry:util"
+      }
+    ]
+  },
+  {
     "name": "blur-reveal",
     "dependencies": [
       "motion",
