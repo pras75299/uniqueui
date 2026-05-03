@@ -1,11 +1,13 @@
-"use client";
-
-import type { CSSProperties, ReactNode } from "react";
+import type {
+  ComponentPropsWithoutRef,
+  CSSProperties,
+  ReactNode,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Responsive mega type: floor ~11.25rem, cap ~14.25rem, `10vw` in between (min/max ordered for valid `clamp`). */
-const DEFAULT_FONT_SIZE = "clamp(11.25rem, 10vw, 14.25rem)";
+/** Responsive mega type: floor 6rem, cap 14.25rem, `10vw` active across typical viewports. */
+const DEFAULT_FONT_SIZE = "clamp(6rem, 10vw, 14.25rem)";
 const DEFAULT_LETTER_SPACING = "-0.02em";
 const DEFAULT_LIGHT_STROKE = "var(--color-neutral-300)";
 const DEFAULT_DARK_STROKE = "var(--color-neutral-700)";
@@ -19,7 +21,10 @@ function strokeStyle(
   return { WebkitTextStroke: `${w} ${color}` };
 }
 
-export type OutlinedMegaMarkProps = {
+export type OutlinedMegaMarkProps = Omit<
+  ComponentPropsWithoutRef<"div">,
+  "children" | "className"
+> & {
   /** Same content is rendered for light and dark stroke layers (must be text-friendly). */
   children: ReactNode;
   /** Any valid CSS `font-size` (e.g. `clamp(...)`, `rem`, `px`). */
@@ -51,6 +56,7 @@ export function OutlinedMegaMark({
   strokeWidth = DEFAULT_STROKE_WIDTH,
   containerClassName,
   className,
+  ...rest
 }: OutlinedMegaMarkProps) {
   const paragraphStyle: CSSProperties = {
     fontSize,
@@ -59,6 +65,7 @@ export function OutlinedMegaMark({
 
   return (
     <div
+      {...rest}
       className={cn("w-full shrink-0 px-2 pt-8 md:pt-10", containerClassName)}
     >
       <p

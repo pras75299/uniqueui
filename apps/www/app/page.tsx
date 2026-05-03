@@ -764,7 +764,7 @@ export default function Home() {
                       )}
                     >
                       <th className="px-4 py-3 font-medium text-neutral-500">
-                        {" "}
+                        <span className="sr-only">Comparison criteria</span>
                       </th>
                       <th className="px-4 py-3 font-medium text-neutral-500">
                         Hand-rolled
@@ -813,14 +813,15 @@ export default function Home() {
                         key={String(label)}
                         className={isDark ? "bg-neutral-950/30" : "bg-white"}
                       >
-                        <td
+                        <th
+                          scope="row"
                           className={cn(
                             "px-4 py-3 font-medium",
                             isDark ? "text-neutral-300" : "text-neutral-800",
                           )}
                         >
                           {label}
-                        </td>
+                        </th>
                         <td className="px-4 py-3 text-neutral-500">{a}</td>
                         <td className="px-4 py-3 text-neutral-500">{b}</td>
                         <td
@@ -1070,7 +1071,7 @@ export default function Home() {
             </footer>
           </div>
 
-          <OutlinedMegaMark>Uniqueui</OutlinedMegaMark>
+          <OutlinedMegaMark aria-hidden>UniqueUI</OutlinedMegaMark>
         </div>
       </motion.main>
     </>
