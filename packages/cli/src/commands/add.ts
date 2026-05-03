@@ -147,12 +147,12 @@ function isObjectRecord(value: unknown): value is Record<string, unknown> {
 }
 
 async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
-    let timeoutHandle: NodeJS.Timeout | undefined;
+    const controller = new AbortController();
+    const timeoutHandle = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     try {
-        const timeoutPromise = new Promise<never>((_, reject) => {
-            timeoutHandle = setTimeout(() => reject(new Error("Request timed out")), FETCH_TIMEOUT_MS);
-        });
-        const res = (await Promise.race([fetch(url), timeoutPromise])) as Awaited<ReturnType<typeof fetch>>;
+        const res = (await fetch(url, { signal: controller.signal })) as Awaited<
+            ReturnType<typeof fetch>
+        >;
         if (!res.ok) return null;
         const contentLengthHeader =
             typeof (res as { headers?: { get?: (name: string) => string | null } }).headers?.get === "function"
@@ -164,6 +164,37 @@ async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
                 throw new Error(`Registry response exceeds ${MAX_REGISTRY_RESPONSE_BYTES} bytes`);
             }
         }
+
+        const body = (res as unknown as {
+            body?: { getReader?: () => {
+                read: () => Promise<{ done: boolean; value?: Uint8Array }>;
+                cancel: () => Promise<void>;
+            } } | null;
+        }).body;
+        if (body && typeof body.getReader === "function") {
+            const reader = body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let received = 0;
+            let bodyText = "";
+            for (;;) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                if (!value) continue;
+                received += value.byteLength;
+                if (received > MAX_REGISTRY_RESPONSE_BYTES) {
+                    try {
+                        await reader.cancel();
+                    } catch {
+                        // best-effort cancel
+                    }
+                    throw new Error(`Registry response exceeds ${MAX_REGISTRY_RESPONSE_BYTES} bytes`);
+                }
+                bodyText += decoder.decode(value, { stream: true });
+            }
+            bodyText += decoder.decode();
+            return JSON.parse(bodyText);
+        }
+
         if (typeof (res as { text?: () => Promise<string> }).text !== "function") {
             throw new Error("Registry response body is unreadable");
         }
@@ -176,9 +207,7 @@ async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
         console.error(chalk.yellow(`\nWarning: Failed to fetch from ${url}:`), error);
         return null;
     } finally {
-        if (timeoutHandle) {
-            clearTimeout(timeoutHandle);
-        }
+        clearTimeout(timeoutHandle);
     }
 }
 

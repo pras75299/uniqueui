@@ -229,8 +229,14 @@ function PasswordInputRow({
       <button
         type="button"
         onClick={onToggleShow}
+        disabled={disabled}
+        aria-disabled={disabled || undefined}
+        aria-pressed={show}
         aria-label={show ? "Hide password" : "Show password"}
-        className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 flex items-center justify-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+        className={cn(
+          "absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 flex items-center justify-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors",
+          disabled && "pointer-events-none opacity-50",
+        )}
       >
         <span className="relative h-4 w-4">
           <motion.span
@@ -1030,11 +1036,12 @@ interface AuthButtonProps {
 
 function AuthButton({ className, variant = "primary", isLoading, disabled, children, ...rest }: AuthButtonProps) {
   const p = variant === "primary";
+  const inactive = disabled || isLoading;
   return (
     <motion.button
-      whileHover={disabled ? undefined : { scale: 1.01 }}
-      whileTap={disabled ? undefined : { scale: 0.96 }}
-      disabled={disabled || isLoading}
+      whileHover={inactive ? undefined : { scale: 1.01 }}
+      whileTap={inactive ? undefined : { scale: 0.96 }}
+      disabled={inactive}
       className={cn(
         "relative w-full py-3 rounded-xl font-semibold text-sm transition-[transform,opacity,background-color,box-shadow,color] flex items-center justify-center gap-2 cursor-pointer",
         p

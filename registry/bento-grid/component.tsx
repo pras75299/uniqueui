@@ -104,20 +104,24 @@ export function BentoCard({
 
   const spotlightBackground = useMotionTemplate`radial-gradient(${SPOTLIGHT_SIZE}px circle at ${spotlightTrack}px ${spotlightTrackY}px, ${spotlightColor}, transparent 72%)`;
 
+  const spotlightActive =
+    interactiveSpotlight && !prefersReducedMotion;
+
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      if (!interactiveSpotlight || !surfaceRef.current) return;
+      if (!spotlightActive || e.pointerType === "touch" || !surfaceRef.current) return;
       const rect = surfaceRef.current.getBoundingClientRect();
       mouseX.set(e.clientX - rect.left);
       mouseY.set(e.clientY - rect.top);
     },
-    [interactiveSpotlight, mouseX, mouseY]
+    [spotlightActive, mouseX, mouseY]
   );
 
   const handlePointerLeave = useCallback(() => {
+    if (!spotlightActive) return;
     mouseX.set(-SPOTLIGHT_SIZE);
     mouseY.set(-SPOTLIGHT_SIZE);
-  }, [mouseX, mouseY]);
+  }, [spotlightActive, mouseX, mouseY]);
 
   const Tag = href ? "a" : "div";
   const linkProps = href
@@ -266,6 +270,7 @@ export function BentoCard({
                       "inline-flex translate-y-2 items-center gap-1 text-xs font-medium opacity-0 transition-[transform,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
                       theme === "dark" ? "text-violet-400" : "text-violet-600",
                       "[@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-y-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100",
+                      "group-focus-within:translate-y-0 group-focus-within:opacity-100",
                       "motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none"
                     )}
                   >

@@ -38,6 +38,7 @@ describe('CLI: add command', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         process.env.UNIQUEUI_SKIP_REGISTRY_WARN = '1';
+        process.env.NODE_ENV = 'test';
 
         // Mock components.json
         (fs.readJson as any).mockImplementation((path: string) => {
@@ -77,8 +78,8 @@ describe('CLI: add command', () => {
 
         await add('test-component', { url: 'http://example.com/registry' });
 
-        expect(fetch).toHaveBeenNthCalledWith(1, 'http://example.com/registry/index.json');
-        expect(fetch).toHaveBeenNthCalledWith(2, 'http://example.com/registry/test-component.json');
+        expect(fetch).toHaveBeenNthCalledWith(1, 'http://example.com/registry/index.json', expect.objectContaining({ signal: expect.anything() }));
+        expect(fetch).toHaveBeenNthCalledWith(2, 'http://example.com/registry/test-component.json', expect.objectContaining({ signal: expect.anything() }));
         expect(fs.writeFile).toHaveBeenCalledWith(
             expect.stringContaining('test-component.tsx'),
             'export const Test = () => <div />;'
@@ -231,8 +232,8 @@ describe('CLI: add command', () => {
 
         await add('test-component', { url: 'https://uniqueui-platform.vercel.app' });
 
-        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json');
-        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/test-component.json');
+        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json', expect.objectContaining({ signal: expect.anything() }));
+        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/test-component.json', expect.objectContaining({ signal: expect.anything() }));
         expect(fs.writeFile).toHaveBeenCalledWith(
             expect.stringContaining('test-component.tsx'),
             'export const Test = () => <div />;'
@@ -265,8 +266,8 @@ describe('CLI: add command', () => {
 
         await add('test-component', { url: 'https://uniqueui-platform.vercel.app/registry/index.json' });
 
-        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json');
-        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/test-component.json');
+        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json', expect.objectContaining({ signal: expect.anything() }));
+        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/test-component.json', expect.objectContaining({ signal: expect.anything() }));
         expect(fs.writeFile).toHaveBeenCalledWith(
             expect.stringContaining('test-component.tsx'),
             'export const Test = () => <div />;'
@@ -292,7 +293,7 @@ describe('CLI: add command', () => {
 
         await add('test-component', { url: 'https://uniqueui-platform.vercel.app/registry/test-component.json' });
 
-        expect(fetch).toHaveBeenCalledWith('https://uniqueui-platform.vercel.app/registry/test-component.json');
+        expect(fetch).toHaveBeenCalledWith('https://uniqueui-platform.vercel.app/registry/test-component.json', expect.objectContaining({ signal: expect.anything() }));
         expect(fs.writeFile).toHaveBeenCalledWith(
             expect.stringContaining('test-component.tsx'),
             'export const Test = () => <div />;'
@@ -325,8 +326,8 @@ describe('CLI: add command', () => {
 
         await add('test-component', { url: 'https://uniqueui-platform.vercel.app/registry/index.json' });
 
-        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json');
-        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/registry.json');
+        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json', expect.objectContaining({ signal: expect.anything() }));
+        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/registry.json', expect.objectContaining({ signal: expect.anything() }));
         expect(fs.writeFile).toHaveBeenCalledWith(
             expect.stringContaining('test-component.tsx'),
             'export const Test = () => <div />;'
@@ -359,8 +360,8 @@ describe('CLI: add command', () => {
 
         await add('test-component', { url: 'https://uniqueui-platform.vercel.app/registry' });
 
-        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json');
-        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/registry.json');
+        expect(fetch).toHaveBeenNthCalledWith(1, 'https://uniqueui-platform.vercel.app/registry/index.json', expect.objectContaining({ signal: expect.anything() }));
+        expect(fetch).toHaveBeenNthCalledWith(2, 'https://uniqueui-platform.vercel.app/registry/registry.json', expect.objectContaining({ signal: expect.anything() }));
         expect(fs.writeFile).toHaveBeenCalledWith(
             expect.stringContaining('test-component.tsx'),
             'export const Test = () => <div />;'
