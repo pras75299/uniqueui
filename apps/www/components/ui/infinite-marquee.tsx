@@ -45,11 +45,9 @@ export function InfiniteMarquee({
     const observer = new ResizeObserver(measure);
     observer.observe(segment);
     observer.observe(container);
-    window.addEventListener("resize", measure);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("resize", measure);
     };
   }, [children, gap]);
 
@@ -72,6 +70,7 @@ export function InfiniteMarquee({
       return;
     }
 
+    controls.set({ x: startX });
     controls.start({
       x: endX,
       transition: {
@@ -81,7 +80,7 @@ export function InfiniteMarquee({
         ease: "linear",
       },
     });
-  }, [controls, direction, duration, endX, isPaused, segmentWidth]);
+  }, [controls, direction, duration, endX, isPaused, segmentWidth, startX]);
 
   return (
     <div

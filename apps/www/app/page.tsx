@@ -49,7 +49,7 @@ export default function Home() {
   } satisfies Variants;
 
   const heroVariants: Variants = {
-    hidden: { opacity: 0, y: 24 },
+    hidden: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
     visible: {
       opacity: 1,
       y: 0,
@@ -58,7 +58,7 @@ export default function Home() {
   };
 
   const playgroundVariants: Variants = {
-    hidden: { opacity: 0, y: 32 },
+    hidden: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
     visible: {
       opacity: 1,
       y: 0,
@@ -94,7 +94,7 @@ export default function Home() {
   ];
 
   const copyCommand = () => {
-    navigator.clipboard.writeText("npx uniqueui init");
+    navigator.clipboard.writeText("npx uniqueui add hero");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -890,19 +890,6 @@ export default function Home() {
                       rel="noopener noreferrer"
                     >
                       GitHub
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://twitter.com"
-                      className={cn(
-                        "transition-colors duration-200 ease-out",
-                        isDark ? "text-neutral-300 hover:text-white" : "text-neutral-700 hover:text-neutral-950",
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Twitter
                     </a>
                   </li>
                 </ul>

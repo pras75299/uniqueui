@@ -91,7 +91,7 @@ function DockItem({
   theme?: "light" | "dark";
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const centerXRef = useRef<number | null>(null);
+  const centerX = useMotionValue<number>(Number.NaN);
   const prefersReducedMotion = useReducedMotion();
 
   useLayoutEffect(() => {
@@ -100,7 +100,7 @@ function DockItem({
 
     const updateBounds = () => {
       const bounds = el.getBoundingClientRect();
-      centerXRef.current = bounds.left + bounds.width / 2;
+      centerX.set(bounds.left + bounds.width / 2);
     };
 
     updateBounds();
@@ -115,15 +115,17 @@ function DockItem({
       window.removeEventListener("resize", updateBounds);
       window.removeEventListener("scroll", updateBounds, true);
     };
-  }, []);
+  }, [centerX]);
 
-  const distance = useTransform(mouseX, (val: number) => {
-    const centerX = centerXRef.current;
-    if (centerX == null) {
-      return Number.POSITIVE_INFINITY;
-    }
-    return val - centerX;
-  });
+  const distance = useTransform<number, number>(
+    [mouseX, centerX],
+    ([mx, cx]) => {
+      if (!Number.isFinite(cx)) {
+        return Number.POSITIVE_INFINITY;
+      }
+      return mx - cx;
+    },
+  );
 
   const springConfig = prefersReducedMotion
     ? { stiffness: 900, damping: 52, mass: 0.18 }

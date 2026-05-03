@@ -54,7 +54,11 @@ export default function ComponentsLayout({
                 : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
             )}
           >
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isMobileMenuOpen ? (
+              <X aria-hidden="true" className="h-5 w-5" />
+            ) : (
+              <Menu aria-hidden="true" className="h-5 w-5" />
+            )}
           </button>
         ) : null
       }

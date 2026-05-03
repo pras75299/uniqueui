@@ -164,21 +164,14 @@ async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
                 throw new Error(`Registry response exceeds ${MAX_REGISTRY_RESPONSE_BYTES} bytes`);
             }
         }
-        if (typeof (res as { text?: () => Promise<string> }).text === "function") {
-            const bodyText = await res.text();
-            if (Buffer.byteLength(bodyText, "utf8") > MAX_REGISTRY_RESPONSE_BYTES) {
-                throw new Error(`Registry response exceeds ${MAX_REGISTRY_RESPONSE_BYTES} bytes`);
-            }
-            return JSON.parse(bodyText);
+        if (typeof (res as { text?: () => Promise<string> }).text !== "function") {
+            throw new Error("Registry response body is unreadable");
         }
-        if (typeof (res as { json?: () => Promise<unknown> }).json === "function") {
-            const body = await res.json();
-            if (Buffer.byteLength(JSON.stringify(body), "utf8") > MAX_REGISTRY_RESPONSE_BYTES) {
-                throw new Error(`Registry response exceeds ${MAX_REGISTRY_RESPONSE_BYTES} bytes`);
-            }
-            return body;
+        const bodyText = await res.text();
+        if (Buffer.byteLength(bodyText, "utf8") > MAX_REGISTRY_RESPONSE_BYTES) {
+            throw new Error(`Registry response exceeds ${MAX_REGISTRY_RESPONSE_BYTES} bytes`);
         }
-        throw new Error("Registry response body is unreadable");
+        return JSON.parse(bodyText);
     } catch (error) {
         console.error(chalk.yellow(`\nWarning: Failed to fetch from ${url}:`), error);
         return null;

@@ -135,15 +135,25 @@ export function BentoCard({
   return (
     <motion.div
       ref={inViewRef}
-      initial={{ opacity: 0, y: 28 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-      transition={{
-        type: "spring",
-        stiffness: 70,
-        damping: 20,
-        mass: 0.55,
-        delay: prefersReducedMotion ? 0 : index * 0.06,
-      }}
+      initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+      animate={
+        prefersReducedMotion
+          ? { opacity: 1, y: 0 }
+          : isInView
+            ? { opacity: 1, y: 0 }
+            : { opacity: 0, y: 28 }
+      }
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : {
+              type: "spring",
+              stiffness: 70,
+              damping: 20,
+              mass: 0.55,
+              delay: index * 0.06,
+            }
+      }
       className={cn("group relative h-full", className)}
       whileHover={hoverLift}
       whileTap={tapScale}

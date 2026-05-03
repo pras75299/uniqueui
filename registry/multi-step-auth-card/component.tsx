@@ -129,7 +129,7 @@ export interface MultiStepAuthCardProps {
 const cardVariants = {
   hidden: { opacity: 0, y: 10, scale: 0.98 },
   visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 300, damping: 24 } },
-  exit: { opacity: 0, y: -6, scale: 0.98, transition: { duration: 0.15 } },
+  exit: { opacity: 0, y: -6, scale: 0.98, transition: { type: "spring" as const, stiffness: 300, damping: 24 } },
 };
 
 const errorAlertClass =
@@ -242,7 +242,7 @@ function PasswordInputRow({
               filter: show ? "blur(4px)" : "blur(0px)",
             }}
             transition={{ type: "spring", duration: 0.3, bounce: 0 }}
-            aria-hidden={show}
+            aria-hidden
           >
             <Eye className="w-4 h-4" />
           </motion.span>
@@ -255,7 +255,7 @@ function PasswordInputRow({
               filter: show ? "blur(0px)" : "blur(4px)",
             }}
             transition={{ type: "spring", duration: 0.3, bounce: 0 }}
-            aria-hidden={!show}
+            aria-hidden
           >
             <EyeOff className="w-4 h-4" />
           </motion.span>

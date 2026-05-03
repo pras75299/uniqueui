@@ -74,12 +74,7 @@ export function SiteHeader({ trailing, className }: SiteHeaderProps) {
           >
             <span className="truncate">UniqueUI</span>
             {isHome ? (
-              <span
-                className={cn(
-                  "shrink-0 font-mono text-[10px] font-normal tracking-normal sm:text-xs",
-                  isDark ? "text-neutral-500" : "text-neutral-500",
-                )}
-              >
+              <span className="shrink-0 font-mono text-[10px] font-normal tracking-normal text-neutral-500 sm:text-xs">
                 v1.0.0
               </span>
             ) : null}

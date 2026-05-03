@@ -1436,7 +1436,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           title="Beautiful animations"
           description="Every interaction is crafted with spring-physics Motion.dev animations for a premium feel."
           cta="Explore components"
-          href="https://motion.dev"
+          href="#"
           className="col-span-2"
           spinBorder
           spinBorderColors={["#E2CBFF", "#393BB2"]}
@@ -1463,7 +1463,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           title="Zero lock-in"
           description="You own the code. No external runtime dependency."
           cta="Get started"
-          href="https://uniqueui.com"
+          href="#"
           className="col-span-2"
           spinBorder
           spinBorderColors={["#fda4af", "#9f1239"]}
@@ -1482,7 +1482,7 @@ export const componentDemos: Record<string, DemoComponent> = {
             <div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse motion-reduce:animate-none" />
           }
           cta="View component"
-          href="https://uniqueui.com"
+          href="#"
           className="col-span-2"
         />
         <BentoCard
@@ -1509,7 +1509,7 @@ export const componentDemos: Record<string, DemoComponent> = {
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20" />
           }
           cta="Try it"
-          href="https://uniqueui.com"
+          href="#"
           className="col-span-2"
         />
       </BentoGrid>

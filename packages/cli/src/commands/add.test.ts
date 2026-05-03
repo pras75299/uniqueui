@@ -56,20 +56,20 @@ describe('CLI: add command', () => {
             if (url === 'http://example.com/registry/index.json') {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve(mockRegistryIndex)
+                    text: () => Promise.resolve(JSON.stringify(mockRegistryIndex))
                 });
             }
 
             if (url === 'http://example.com/registry/test-component.json') {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve(mockRegistryItem)
+                    text: () => Promise.resolve(JSON.stringify(mockRegistryItem))
                 });
             }
 
             return Promise.resolve({
                 ok: false,
-                json: () => Promise.resolve(null)
+                text: () => Promise.resolve(JSON.stringify(null))
             });
         });
 
@@ -210,20 +210,20 @@ describe('CLI: add command', () => {
             if (url === 'https://uniqueui-platform.vercel.app/registry/index.json') {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve(mockRegistryIndex)
+                    text: () => Promise.resolve(JSON.stringify(mockRegistryIndex))
                 });
             }
 
             if (url === 'https://uniqueui-platform.vercel.app/registry/test-component.json') {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve(mockRegistryItem)
+                    text: () => Promise.resolve(JSON.stringify(mockRegistryItem))
                 });
             }
 
             return Promise.resolve({
                 ok: false,
-                json: () => Promise.resolve(null)
+                text: () => Promise.resolve(JSON.stringify(null))
             });
         });
 
@@ -244,20 +244,20 @@ describe('CLI: add command', () => {
             if (url === 'https://uniqueui-platform.vercel.app/registry/index.json') {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve(mockRegistryIndex)
+                    text: () => Promise.resolve(JSON.stringify(mockRegistryIndex))
                 });
             }
 
             if (url === 'https://uniqueui-platform.vercel.app/registry/test-component.json') {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve(mockRegistryItem)
+                    text: () => Promise.resolve(JSON.stringify(mockRegistryItem))
                 });
             }
 
             return Promise.resolve({
                 ok: false,
-                json: () => Promise.resolve(null)
+                text: () => Promise.resolve(JSON.stringify(null))
             });
         });
 
@@ -278,13 +278,13 @@ describe('CLI: add command', () => {
             if (url === 'https://uniqueui-platform.vercel.app/registry/test-component.json') {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve(mockRegistryItem)
+                    text: () => Promise.resolve(JSON.stringify(mockRegistryItem))
                 });
             }
 
             return Promise.resolve({
                 ok: false,
-                json: () => Promise.resolve(null)
+                text: () => Promise.resolve(JSON.stringify(null))
             });
         });
 
@@ -304,20 +304,20 @@ describe('CLI: add command', () => {
             if (url === 'https://uniqueui-platform.vercel.app/registry/index.json') {
                 return Promise.resolve({
                     ok: false,
-                    json: () => Promise.resolve(null)
+                    text: () => Promise.resolve(JSON.stringify(null))
                 });
             }
 
             if (url === 'https://uniqueui-platform.vercel.app/registry.json') {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve([mockRegistryItem])
+                    text: () => Promise.resolve(JSON.stringify([mockRegistryItem]))
                 });
             }
 
             return Promise.resolve({
                 ok: false,
-                json: () => Promise.resolve(null)
+                text: () => Promise.resolve(JSON.stringify(null))
             });
         });
 
@@ -338,20 +338,20 @@ describe('CLI: add command', () => {
             if (url === 'https://uniqueui-platform.vercel.app/registry/index.json') {
                 return Promise.resolve({
                     ok: false,
-                    json: () => Promise.resolve(null)
+                    text: () => Promise.resolve(JSON.stringify(null))
                 });
             }
 
             if (url === 'https://uniqueui-platform.vercel.app/registry/registry.json') {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve([mockRegistryItem])
+                    text: () => Promise.resolve(JSON.stringify([mockRegistryItem]))
                 });
             }
 
             return Promise.resolve({
                 ok: false,
-                json: () => Promise.resolve(null)
+                text: () => Promise.resolve(JSON.stringify(null))
             });
         });
 

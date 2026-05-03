@@ -1,8 +1,14 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { motion, useScroll, useTransform, HTMLMotionProps } from "motion/react";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  HTMLMotionProps,
+} from "motion/react";
 
 export interface HorizontalScrollGalleryProps
   extends Omit<HTMLMotionProps<"div">, "onAnimationStart" | "onDragStart" | "onDragEnd" | "onDrag"> {
@@ -23,35 +29,47 @@ export function HorizontalScrollGallery({
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  // Store the computed max scroll offset in a ref to avoid re-renders
-  const maxOffset = useRef(0);
+  const [maxOffset, setMaxOffset] = useState(0);
 
-  // Track the scroll progress of the large container (300vh)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 140,
+    damping: 24,
+    mass: 0.35,
+  });
 
-  // Measure the track width after mount and on resize so we translate by exact pixels.
-  // This avoids the calc(−100% + 100vw) approach which breaks when items don't fill
-  // the viewport and also avoids the MotionValue<string> type incompatibility.
   useEffect(() => {
+    const track = trackRef.current;
+    const viewport = viewportRef.current;
+    if (!track || !viewport) return;
     const measure = () => {
-      if (!trackRef.current || !viewportRef.current) return;
-      const trackWidth = trackRef.current.scrollWidth;
-      const viewportWidth = viewportRef.current.clientWidth;
-      maxOffset.current = Math.max(0, trackWidth - viewportWidth);
+      const trackWidth = track.scrollWidth;
+      const viewportWidth = viewport.clientWidth;
+      setMaxOffset((prev) => {
+        const next = Math.max(0, trackWidth - viewportWidth);
+        return next === prev ? prev : next;
+      });
     };
     measure();
+    const RO = typeof ResizeObserver !== "undefined" ? ResizeObserver : null;
+    const ro = RO ? new RO(measure) : null;
+    if (ro) {
+      ro.observe(track);
+      ro.observe(viewport);
+    }
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, []);
 
-  // Derive a pixel-based x translation from the spring progress
-  const x = useTransform(scrollYProgress, (value) => {
-    const offset = maxOffset.current;
-    return direction === "left" ? -value * offset : -(1 - value) * offset;
-  });
+  const x = useTransform(smoothProgress, (value) =>
+    direction === "left" ? -value * maxOffset : -(1 - value) * maxOffset,
+  );
 
   return (
     <motion.div
