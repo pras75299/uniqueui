@@ -28,6 +28,7 @@ import {
   type CardData,
 } from "@/components/ui/morphing-card-stack";
 import { PenCursor } from "@/components/ui/pen-cursor";
+import { OutlinedMegaMark } from "@/components/ui/outlined-mega-mark";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -1069,28 +1070,7 @@ export default function Home() {
             </footer>
           </div>
 
-          <div className="w-full shrink-0 px-2 pt-8 md:pt-10">
-            <p
-              className="w-full text-center font-bold leading-[1.05] tracking-tight text-transparent"
-              style={{
-                fontSize: "clamp(3rem, 18vw, 20rem)",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              <span
-                className="dark:hidden"
-                style={{ WebkitTextStroke: "1px var(--color-neutral-300)" }}
-              >
-                Uniqueui
-              </span>
-              <span
-                className="hidden dark:inline"
-                style={{ WebkitTextStroke: "1px var(--color-neutral-700)" }}
-              >
-                Uniqueui
-              </span>
-            </p>
-          </div>
+          <OutlinedMegaMark>Uniqueui</OutlinedMegaMark>
         </div>
       </motion.main>
     </>

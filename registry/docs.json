@@ -2620,6 +2620,76 @@
       }
     },
     {
+      "slug": "outlined-mega-mark",
+      "name": "Outlined Mega Mark",
+      "description": "Full-width responsive outlined headline with transparent fill and separate stroke colors for light and dark backgrounds \u2014 ideal for landing footers.",
+      "icon": "LucideType",
+      "category": "Text",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Text or nodes rendered in both light and dark stroke layers."
+        },
+        {
+          "name": "fontSize",
+          "type": "string",
+          "default": "\"clamp(11.25rem, 10vw, 14.25rem)\"",
+          "description": "Any valid CSS font-size (clamp, rem, px, etc.)."
+        },
+        {
+          "name": "letterSpacing",
+          "type": "string",
+          "default": "\"-0.02em\"",
+          "description": "CSS letter-spacing for the headline."
+        },
+        {
+          "name": "lightStrokeColor",
+          "type": "string",
+          "default": "\"var(--color-neutral-300)\"",
+          "description": "Outline colour when the page is in light mode."
+        },
+        {
+          "name": "darkStrokeColor",
+          "type": "string",
+          "default": "\"var(--color-neutral-700)\"",
+          "description": "Outline colour when the page is in dark mode."
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number | string",
+          "default": "1",
+          "description": "Outline width; numbers become px (e.g. 2 → 2px). Use a string for units like rem."
+        },
+        {
+          "name": "containerClassName",
+          "type": "string",
+          "description": "Optional Tailwind classes for the outer wrapper."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Optional Tailwind classes for the inner paragraph."
+        }
+      ],
+      "usageCode": "\"use client\";\nimport { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function LandingFooter() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(11.25rem, 10vw, 14.25rem)\"\n      strokeWidth={1}\n      lightStrokeColor=\"var(--color-neutral-300)\"\n      darkStrokeColor=\"var(--color-neutral-700)\"\n      letterSpacing=\"-0.02em\"\n    >\n      UniqueUI\n    </OutlinedMegaMark>\n  );\n}\n",
+      "docs": {
+        "overview": "OutlinedMegaMark renders your label twice: once for light mode and once for dark mode, each with a configurable WebKit text stroke (width and colour per theme) and transparent fill. Font size and letter-spacing are plain CSS strings so you can use clamp() for responsive footers or fixed sizes in previews.",
+        "scenarios": [
+          {
+            "title": "Landing page footer",
+            "description": "Place the mark below legal or link columns as a wide typographic signature without opaque fills.",
+            "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Footer() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark>UniqueUI</OutlinedMegaMark>\n    </footer>\n  );\n}"
+          },
+          {
+            "title": "Custom stroke and scale",
+            "description": "Tune stroke width and colours for contrast on tinted backgrounds, or shrink fontSize for dense layouts.",
+            "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function CustomMark() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2rem, 8vw, 4rem)\"\n      strokeWidth={2}\n      lightStrokeColor=\"rgb(147 51 234)\"\n      darkStrokeColor=\"rgb(196 181 253)\"\n      containerClassName=\"pt-4\"\n    >\n      Ship slower\n    </OutlinedMegaMark>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
       "slug": "blur-reveal",
       "name": "Blur Reveal",
       "description": "Characters or words materialise from a soft blur \u2014 the cinematic text entrance used in top SaaS hero sections.",

@@ -715,6 +715,23 @@
       ]
     },
     {
+      "name": "outlined-mega-mark",
+      "type": "registry:ui",
+      "title": "Outlined Mega Mark",
+      "description": "Full-width responsive outlined headline with transparent fill and separate stroke colors for light and dark backgrounds — ideal for landing footers.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/outlined-mega-mark.tsx",
+          "type": "registry:component",
+          "target": "components/ui/outlined-mega-mark.tsx"
+        }
+      ]
+    },
+    {
       "name": "blur-reveal",
       "type": "registry:ui",
       "title": "Blur Reveal",

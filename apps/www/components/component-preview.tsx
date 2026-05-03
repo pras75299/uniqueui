@@ -17,13 +17,19 @@ export default function ComponentPreview({ slug }: { slug: string }) {
     );
   }
 
-  const hasOverflowHidden = slug !== "horizontal-scroll-gallery";
+  const hasOverflowHidden =
+    slug !== "horizontal-scroll-gallery" && slug !== "outlined-mega-mark";
   const isDark = theme === "dark";
+
+  const isOutlinedMegaMark = slug === "outlined-mega-mark";
 
   return (
     <motion.div
       className={cn(
-        "w-full rounded-xl border relative min-h-[300px] flex items-center justify-center",
+        "w-full rounded-xl border relative flex",
+        isOutlinedMegaMark
+          ? "min-h-[460px] flex-col items-stretch"
+          : "min-h-[300px] items-center justify-center",
         hasOverflowHidden && "overflow-hidden",
         isDark ? "border-neutral-800 bg-neutral-950/50" : "border-neutral-200 bg-neutral-50/80"
       )}
@@ -43,7 +49,12 @@ export default function ComponentPreview({ slug }: { slug: string }) {
             : "[background-image:linear-gradient(to_right,#d4d4d4_1px,transparent_1px),linear-gradient(to_bottom,#d4d4d4_1px,transparent_1px)]"
         )}
       />
-      <div className="relative z-10 w-full">
+      <div
+        className={cn(
+          "relative z-10 w-full",
+          isOutlinedMegaMark && "flex min-h-0 flex-1 flex-col",
+        )}
+      >
         <Demo theme={theme} />
       </div>
     </motion.div>

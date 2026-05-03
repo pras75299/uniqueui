@@ -351,6 +351,14 @@ export const registry: Registry = [
         ],
     },
     {
+        name: "outlined-mega-mark",
+        dependencies: ["clsx", "tailwind-merge"],
+        files: [
+            { path: "outlined-mega-mark/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "blur-reveal",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [

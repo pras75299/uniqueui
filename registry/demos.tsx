@@ -48,6 +48,7 @@ import { MultiStepAuthCard } from "@/components/ui/multi-step-auth-card";
 import { DataTable } from "@/components/ui/data-table";
 import GlowingTextOutline from "@/components/ui/animated-glowing-text-outline";
 import { ShinyText } from "@/components/ui/shiny-text";
+import { OutlinedMegaMark } from "@/components/ui/outlined-mega-mark";
 import { BlurReveal } from "@/components/ui/blur-reveal";
 import { CountUp } from "@/components/ui/count-up";
 import { BorderBeam } from "@/components/ui/border-beam";
@@ -2794,6 +2795,19 @@ export const componentDemos: Record<string, DemoComponent> = {
         className="text-lg font-medium"
       />
     </div>
+  ),
+
+  "outlined-mega-mark": () => (
+    <OutlinedMegaMark
+      containerClassName="flex min-h-full w-full flex-1 flex-col items-center justify-center px-3 pt-0 pb-2 md:pb-4"
+      fontSize="clamp(7rem, 26vw, 14rem)"
+      letterSpacing="-0.02em"
+      strokeWidth={1}
+      lightStrokeColor="var(--color-neutral-400)"
+      darkStrokeColor="var(--color-neutral-500)"
+    >
+      UniqueUI
+    </OutlinedMegaMark>
   ),
 
   "blur-reveal": ({ theme = "dark" }) => (
