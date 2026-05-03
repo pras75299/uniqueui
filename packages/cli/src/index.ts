@@ -28,6 +28,7 @@ program
     .description("Add a component to your project")
     .argument("<component>", "the component to add")
     .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
+    .option("-y, --yes", "Skip dependency install confirmation prompt")
     .action(add);
 
 program.parse();

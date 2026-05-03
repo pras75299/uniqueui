@@ -21,7 +21,7 @@
  * approach as a typical Tailwind v3 + shadcn project.
  */
 
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -79,7 +79,7 @@ async function run() {
     // ── 2. Ensure registry + shadcn JSON artifacts exist ───────────────────────
     console.log('🔨  Running build:registry (generates apps/www/public/r/*.json)...');
     try {
-        execSync(`npx ts-node ${path.join(__dirname, 'build-registry.ts')}`, {
+        execFileSync('npx', ['ts-node', path.join(__dirname, 'build-registry.ts')], {
             cwd: ROOT_DIR,
             stdio: 'pipe',
         });
@@ -115,8 +115,21 @@ async function run() {
 
     console.log('🚀  Creating fresh Next.js app...');
     try {
-        execSync(
-            `echo "\\n" | npx create-next-app@14 ${TEST_DIR_NAME} --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm --yes`,
+        execFileSync(
+            'npx',
+            [
+                'create-next-app@14',
+                TEST_DIR_NAME,
+                '--typescript',
+                '--tailwind',
+                '--eslint',
+                '--app',
+                '--src-dir',
+                '--import-alias',
+                '@/*',
+                '--use-npm',
+                '--yes',
+            ],
             { cwd: ROOT_DIR, stdio: 'pipe' },
         );
         console.log('    ✅ Next.js app created.\n');
@@ -164,7 +177,7 @@ export function cn(...inputs: ClassValue[]) {
     fs.writeFileSync(path.join(TEST_DIR, 'components.json'), JSON.stringify(componentsJson, null, 2) + '\n', 'utf-8');
 
     try {
-        execSync('npm install clsx tailwind-merge lucide-react motion --save', {
+        execFileSync('npm', ['install', 'clsx', 'tailwind-merge', 'lucide-react', 'motion', '--save'], {
             cwd: TEST_DIR,
             stdio: 'pipe',
         });
@@ -203,10 +216,9 @@ export function cn(...inputs: ClassValue[]) {
 
     for (const slug of slugs) {
         const itemPath = path.join(SHADCN_R_DIR, `${slug}.json`);
-        const quoted = JSON.stringify(itemPath);
         process.stdout.write(`    ${slug.padEnd(36)} `);
         try {
-            execSync(`npx shadcn@latest add ${quoted} -y`, {
+            execFileSync('npx', ['shadcn@latest', 'add', itemPath, '-y'], {
                 cwd: TEST_DIR,
                 stdio: 'pipe',
                 env: { ...process.env, CI: '1' },
@@ -311,9 +323,10 @@ export default function Home() {
     // ── 8. Production build ─────────────────────────────────────────────────────
     console.log('🏗   npm run build (verifies project still compiles)...\n');
     try {
-        execSync(`CI=1 NEXT_TELEMETRY_DISABLED=1 npm run build`, {
+        execFileSync('npm', ['run', 'build'], {
             cwd: TEST_DIR,
             stdio: 'inherit',
+            env: { ...process.env, CI: '1', NEXT_TELEMETRY_DISABLED: '1' },
         });
         console.log('\n' + '═'.repeat(60));
         console.log('✅  shadcn E2E PASSED');

@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+msg_file="$1"
+tmp=$(mktemp "$(dirname "$msg_file")/commit-msg.XXXXXX") || exit 1
+trap 'rm -f "$tmp"' EXIT
+grep -viE '^Co-authored-by:[[:space:]]*.*(cursor|claude)' "$msg_file" >"$tmp"
+rc=$?
+if [ "$rc" -gt 1 ]; then
+  cp "$msg_file" "$tmp"
+fi
+mv "$tmp" "$msg_file"

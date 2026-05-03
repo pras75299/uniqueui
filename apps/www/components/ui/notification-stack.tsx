@@ -1,6 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 
 export type NotificationType = "success" | "error" | "warning" | "info";
@@ -18,6 +19,11 @@ export interface NotificationStackProps {
   position?: "top-right" | "top-left" | "bottom-right" | "bottom-left";
   maxVisible?: number;
   theme?: "light" | "dark";
+  /**
+   * When true (default), renders the stack with `createPortal` on `document.body` so it sits above
+   * app chrome (headers, overflow-hidden previews). Set false only for special embed cases.
+   */
+  usePortal?: boolean;
 }
 
 const typeStyles: Record<NotificationType, string> = {
@@ -77,6 +83,7 @@ export function NotificationStack({
   position = "top-right",
   maxVisible = 5,
   theme = "dark",
+  usePortal = true,
   notifications,
   onRemove,
 }: NotificationStackProps & {
@@ -85,11 +92,12 @@ export function NotificationStack({
 }) {
   const visible = notifications.slice(-maxVisible);
   const isBottom = position.startsWith("bottom");
+  const canUseDom = typeof document !== "undefined";
 
-  return (
+  const stack = (
     <div
       className={cn(
-        "fixed z-[100] flex flex-col gap-2 w-[380px] max-w-[calc(100vw-2rem)]",
+        "fixed z-[1000] flex flex-col gap-2 w-[380px] max-w-[calc(100vw-2rem)] pointer-events-none",
         positionStyles[position],
         isBottom && "flex-col-reverse",
         className
@@ -108,6 +116,16 @@ export function NotificationStack({
       </AnimatePresence>
     </div>
   );
+
+  if (!usePortal) {
+    return stack;
+  }
+
+  if (!canUseDom) {
+    return null;
+  }
+
+  return createPortal(stack, document.body);
 }
 
 function NotificationItem({
@@ -168,7 +186,7 @@ function NotificationItem({
       }}
       role="status"
       className={cn(
-        "relative overflow-hidden rounded-lg border backdrop-blur-md p-4 shadow-2xl",
+        "pointer-events-auto relative overflow-hidden rounded-lg border backdrop-blur-md p-4 shadow-2xl",
         typeStyles[type]
       )}
     >

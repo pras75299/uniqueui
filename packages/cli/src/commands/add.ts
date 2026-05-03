@@ -6,6 +6,7 @@ import fs from "fs-extra";
 import chalk from "chalk";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
 import { spawnSync } from "child_process";
+import { createInterface } from "readline/promises";
 import { assertSafeNpmDependencies } from "../npm-dependency-name";
 
 // Type definition for Registry (matching what we built)
@@ -124,16 +125,123 @@ function warnIfUntrustedRegistry(url: string) {
     );
 }
 
-const FALLBACK_URL = "https://raw.githubusercontent.com/pras75299/uniqueui/main";
+const FALLBACK_URL = "https://uniqueui-platform.vercel.app/registry";
+const FETCH_TIMEOUT_MS = 15_000;
+const MAX_REGISTRY_RESPONSE_BYTES = 2 * 1024 * 1024; // 2MB
+const SAFE_FILE_SEGMENT_REGEX = /^[a-z0-9-]+$/;
+const SAFE_TAILWIND_TOKEN_REGEX = /^[a-zA-Z0-9_-]+$/;
+
+function isSafeFileSegment(value: string): boolean {
+    return SAFE_FILE_SEGMENT_REGEX.test(value);
+}
+
+function assertPathWithin(targetDir: string, targetPath: string): void {
+    const relativePath = path.relative(targetDir, targetPath);
+    if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
+        throw new Error(`Refusing to write outside target directory: ${targetPath}`);
+    }
+}
+
+function isObjectRecord(value: unknown): value is Record<string, unknown> {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+}
 
 async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
+    const controller = new AbortController();
+    const timeoutHandle = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     try {
-        const res = await fetch(url);
+        const res = (await fetch(url, { signal: controller.signal })) as Awaited<
+            ReturnType<typeof fetch>
+        >;
         if (!res.ok) return null;
-        return await res.json();
+        const contentLengthHeader =
+            typeof (res as { headers?: { get?: (name: string) => string | null } }).headers?.get === "function"
+                ? res.headers.get("content-length")
+                : null;
+        if (contentLengthHeader) {
+            const contentLength = Number(contentLengthHeader);
+            if (Number.isFinite(contentLength) && contentLength > MAX_REGISTRY_RESPONSE_BYTES) {
+                throw new Error(`Registry response exceeds ${MAX_REGISTRY_RESPONSE_BYTES} bytes`);
+            }
+        }
+
+        const body = (res as unknown as {
+            body?: { getReader?: () => {
+                read: () => Promise<{ done: boolean; value?: Uint8Array }>;
+                cancel: () => Promise<void>;
+            } } | null;
+        }).body;
+        if (body && typeof body.getReader === "function") {
+            const reader = body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let received = 0;
+            let bodyText = "";
+            for (;;) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                if (!value) continue;
+                received += value.byteLength;
+                if (received > MAX_REGISTRY_RESPONSE_BYTES) {
+                    try {
+                        await reader.cancel();
+                    } catch {
+                        // best-effort cancel
+                    }
+                    throw new Error(`Registry response exceeds ${MAX_REGISTRY_RESPONSE_BYTES} bytes`);
+                }
+                bodyText += decoder.decode(value, { stream: true });
+            }
+            bodyText += decoder.decode();
+            return JSON.parse(bodyText);
+        }
+
+        if (typeof (res as { text?: () => Promise<string> }).text !== "function") {
+            throw new Error("Registry response body is unreadable");
+        }
+        const bodyText = await res.text();
+        if (Buffer.byteLength(bodyText, "utf8") > MAX_REGISTRY_RESPONSE_BYTES) {
+            throw new Error(`Registry response exceeds ${MAX_REGISTRY_RESPONSE_BYTES} bytes`);
+        }
+        return JSON.parse(bodyText);
     } catch (error) {
         console.error(chalk.yellow(`\nWarning: Failed to fetch from ${url}:`), error);
         return null;
+    } finally {
+        clearTimeout(timeoutHandle);
+    }
+}
+
+async function confirmDependencyInstall(
+    dependencies: string[],
+    options: { yes?: boolean },
+): Promise<boolean> {
+    if (options.yes || process.env.CI === "true" || process.env.UNIQUEUI_ASSUME_YES === "1") {
+        return true;
+    }
+    if (process.env.NODE_ENV === "test") {
+        return true;
+    }
+
+    if (!process.stdin.isTTY || !process.stdout.isTTY) {
+        console.warn(
+            chalk.yellow(
+                "Non-interactive terminal detected: skipping automatic dependency install. Re-run with --yes to allow auto-install.",
+            ),
+        );
+        return false;
+    }
+
+    const rl = createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
+
+    try {
+        console.log(chalk.cyan(`Dependencies requested by registry: ${dependencies.join(", ")}`));
+        const answer = (await rl.question(chalk.cyan("Install these dependencies now? [y/N]: "))).trim().toLowerCase();
+        return answer === "y" || answer === "yes";
+    } finally {
+        rl.close();
     }
 }
 
@@ -366,7 +474,7 @@ async function fetchRemoteRegistryItem(baseUrl: string, componentName: string): 
     return loadedRegistry ? { status: "missing" } : { status: "unavailable" };
 }
 
-export async function add(componentName: string, options: { url: string }) {
+export async function add(componentName: string, options: { url: string; yes?: boolean }) {
     console.log(`Fetching ${componentName} from ${options.url}...`);
     warnIfUntrustedRegistry(options.url);
 
@@ -422,20 +530,31 @@ export async function add(componentName: string, options: { url: string }) {
             );
             process.exit(1);
         }
+        const shouldInstall = await confirmDependencyInstall(item.dependencies, options);
+        if (!shouldInstall) {
+            console.log(
+                chalk.yellow(
+                    `Skipping dependency installation. Install manually: ${
+                        item.dependencies.join(" ")
+                    }`,
+                ),
+            );
+        } else {
         console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
-        try {
-            const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
-            const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
-            const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
-            if (result.error) throw result.error;
-            if (result.signal) {
-                throw new Error(`package manager terminated by signal ${result.signal}`);
+            try {
+                const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
+                const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
+                const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
+                if (result.error) throw result.error;
+                if (result.signal) {
+                    throw new Error(`package manager terminated by signal ${result.signal}`);
+                }
+                if (result.status !== 0) {
+                    throw new Error(`package manager exited with code ${result.status}`);
+                }
+            } catch (e) {
+                console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
             }
-            if (result.status !== 0) {
-                throw new Error(`package manager exited with code ${result.status}`);
-            }
-        } catch (e) {
-            console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
         }
     }
 
@@ -454,14 +573,24 @@ export async function add(componentName: string, options: { url: string }) {
             await fs.ensureDir(targetDir);
             const sourceFileName = path.basename(file.path);
             const fileName =
-                sourceFileName.startsWith("component.")
+                /^component\.(tsx|ts|jsx|js)$/i.test(sourceFileName)
                     ? `${item.name}${path.extname(sourceFileName)}`
                     : sourceFileName;
+            if (!isSafeFileSegment(item.name)) {
+                console.error(chalk.red(`Refusing unsafe component name from registry: ${item.name}`));
+                process.exit(1);
+            }
             if (!allowedRegistryFile(fileName)) {
                 console.error(chalk.red(`Refusing to write disallowed file name from registry: ${fileName}`));
                 process.exit(1);
             }
             const targetPath = path.join(targetDir, fileName);
+            try {
+                assertPathWithin(targetDir, targetPath);
+            } catch (error) {
+                console.error(chalk.red(String(error)));
+                process.exit(1);
+            }
             await fs.writeFile(targetPath, file.content);
             console.log(chalk.green(`Created ${fileName}`));
         } else if (file.type === "registry:util") {
@@ -473,6 +602,12 @@ export async function add(componentName: string, options: { url: string }) {
                 process.exit(1);
             }
             const targetPath = path.join(targetDir, fileName);
+            try {
+                assertPathWithin(targetDir, targetPath);
+            } catch (error) {
+                console.error(chalk.red(String(error)));
+                process.exit(1);
+            }
 
             // Only create util if it doesn't exist
             if (!fs.existsSync(targetPath)) {
@@ -598,12 +733,21 @@ export async function updateTailwindConfig(configPath: string, newConfig: any) {
             if (extendObj) {
                 // Merge animations
                 const animations = newConfig.theme.extend.animation;
-                if (animations) {
+                if (isObjectRecord(animations)) {
                     const animObj = getOrCreateObjectProperty(extendObj, "animation");
                     if (animObj) {
                         for (const [key, value] of Object.entries(animations)) {
+                            if (!SAFE_TAILWIND_TOKEN_REGEX.test(key)) {
+                                continue;
+                            }
+                            if (typeof value !== "string") {
+                                continue;
+                            }
                             if (!hasProperty(animObj, key)) {
-                                animObj.addPropertyAssignment({ name: `"${key}"`, initializer: `"${value}"` });
+                                animObj.addPropertyAssignment({
+                                    name: JSON.stringify(key),
+                                    initializer: JSON.stringify(value),
+                                });
                             }
                         }
                     }
@@ -611,14 +755,21 @@ export async function updateTailwindConfig(configPath: string, newConfig: any) {
 
                 // Merge keyframes
                 const keyframes = newConfig.theme.extend.keyframes;
-                if (keyframes) {
+                if (isObjectRecord(keyframes)) {
                     const keyframesObj = getOrCreateObjectProperty(extendObj, "keyframes");
                     if (keyframesObj) {
                         for (const [key, value] of Object.entries(keyframes)) {
+                            if (!SAFE_TAILWIND_TOKEN_REGEX.test(key)) {
+                                continue;
+                            }
+                            if (!isObjectRecord(value)) {
+                                continue;
+                            }
                             if (!hasProperty(keyframesObj, key)) {
-                                // value is an object, strictly JSON stringify might be valid JS valid object literal needed?
-                                // "JSON.stringify(value)" produces valid JSON which is valid JS object literal initializer if keys are quoted.
-                                keyframesObj.addPropertyAssignment({ name: `"${key}"`, initializer: JSON.stringify(value) });
+                                keyframesObj.addPropertyAssignment({
+                                    name: JSON.stringify(key),
+                                    initializer: JSON.stringify(value),
+                                });
                             }
                         }
                     }

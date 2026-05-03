@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -152,7 +152,7 @@ async function run() {
     // ── 4. Rebuild registry.json so it always reflects the current registry ───
     console.log('🔨  Rebuilding registry.json...');
     try {
-        execSync(`npx ts-node ${path.join(__dirname, 'build-registry.ts')}`, {
+        execFileSync('npx', ['ts-node', path.join(__dirname, 'build-registry.ts')], {
             cwd: ROOT_DIR,
             stdio: 'pipe',
         });
@@ -185,8 +185,21 @@ async function run() {
 
     console.log('🚀  Creating fresh Next.js app...');
     try {
-        execSync(
-            `echo "\\n" | npx create-next-app@14 e2e-components-test --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm --yes`,
+        execFileSync(
+            'npx',
+            [
+                'create-next-app@14',
+                'e2e-components-test',
+                '--typescript',
+                '--tailwind',
+                '--eslint',
+                '--app',
+                '--src-dir',
+                '--import-alias',
+                '@/*',
+                '--use-npm',
+                '--yes',
+            ],
             { cwd: ROOT_DIR, stdio: 'pipe' }
         );
         console.log('    ✅ Next.js app created.\n');
@@ -235,7 +248,7 @@ async function run() {
     // Install runtime dependencies
     console.log('    Installing lucide-react + motion...');
     try {
-        execSync('npm install lucide-react motion --save', { cwd: TEST_DIR, stdio: 'pipe' });
+        execFileSync('npm', ['install', 'lucide-react', 'motion', '--save'], { cwd: TEST_DIR, stdio: 'pipe' });
         console.log('    ✅ Dependencies installed.\n');
     } catch (e: any) {
         console.warn('    ⚠️  Dependency install warning:', e.stdout?.toString());
@@ -250,8 +263,9 @@ async function run() {
     for (const comp of components) {
         process.stdout.write(`    Adding ${comp.slug}... `);
         try {
-            execSync(
-                `npx ts-node ../packages/cli/src/index.ts add ${comp.slug} --url ../registry.json`,
+            execFileSync(
+                'npx',
+                ['ts-node', '../packages/cli/src/index.ts', 'add', comp.slug, '--url', '../registry.json', '--yes'],
                 { cwd: TEST_DIR, stdio: 'pipe' }
             );
             console.log('✅');
@@ -427,7 +441,11 @@ async function run() {
     // ── 10. Build verification ─────────────────────────────────────────────────
     console.log('🏗   Building Next.js app (this verifies every page compiles)...\n');
     try {
-        execSync(`CI=1 NEXT_TELEMETRY_DISABLED=1 npm run build`, { cwd: TEST_DIR, stdio: 'inherit' });
+        execFileSync('npm', ['run', 'build'], {
+            cwd: TEST_DIR,
+            stdio: 'inherit',
+            env: { ...process.env, CI: '1', NEXT_TELEMETRY_DISABLED: '1' },
+        });
 
         console.log('\n' + '═'.repeat(60));
         console.log('✅  E2E Test PASSED');

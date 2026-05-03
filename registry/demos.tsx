@@ -485,6 +485,49 @@ function NestedCommentsDemo({ theme = "dark" }: DemoThemeProps) {
   );
 }
 
+const DATA_TABLE_DEMO_LOCATIONS = [
+  "San Francisco",
+  "New York",
+  "Chicago",
+  "Seattle",
+  "Austin",
+  "Boston",
+  "Denver",
+  "Miami",
+];
+
+function withDemoLocation<T extends Record<string, unknown>>(rows: T[]): (T & { location: string })[] {
+  return rows.map((row, index) => {
+    const existing = (row as { location?: unknown }).location;
+    return {
+      ...row,
+      location:
+        typeof existing === "string"
+          ? existing
+          : DATA_TABLE_DEMO_LOCATIONS[index % DATA_TABLE_DEMO_LOCATIONS.length]!,
+    };
+  });
+}
+
+/** Extra wide columns for data-table freeze demos so horizontal scroll is obvious in previews. */
+const DATA_TABLE_FREEZE_EXTRA_FIELDS = [
+  { project: "Orion", division: "Platform core", site: "SF-01", timezone: "PT", costCenter: "CC-4100" },
+  { project: "Nova", division: "Product design", site: "NYC-04", timezone: "ET", costCenter: "CC-2200" },
+  { project: "Atlas", division: "Growth GTM", site: "CHI-02", timezone: "CT", costCenter: "CC-1800" },
+  { project: "Pulse", division: "Platform core", site: "SEA-01", timezone: "PT", costCenter: "CC-4100" },
+  { project: "Vertex", division: "Product design", site: "AUS-01", timezone: "CT", costCenter: "CC-3300" },
+  { project: "Helix", division: "Growth GTM", site: "DEN-01", timezone: "MT", costCenter: "CC-5200" },
+  { project: "Quark", division: "Platform core", site: "PDX-02", timezone: "PT", costCenter: "CC-4100" },
+  { project: "Echo", division: "Product design", site: "BOS-03", timezone: "ET", costCenter: "CC-2200" },
+] as const;
+
+function withDemoFreezeExtras<T extends Record<string, unknown>>(rows: T[]) {
+  return rows.map((row, index) => ({
+    ...row,
+    ...DATA_TABLE_FREEZE_EXTRA_FIELDS[index % DATA_TABLE_FREEZE_EXTRA_FIELDS.length],
+  }));
+}
+
 export const componentDemos: Record<string, DemoComponent> = {
   "animated-glowing-text-outline": () => (
     <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-background gap-16 border border-border rounded-xl overflow-hidden relative">
@@ -1389,6 +1432,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           title="Beautiful animations"
           description="Every interaction is crafted with spring-physics Motion.dev animations for a premium feel."
           cta="Explore components"
+          href="#"
           className="col-span-2"
           spinBorder
           spinBorderColors={["#E2CBFF", "#393BB2"]}
@@ -1415,6 +1459,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           title="Zero lock-in"
           description="You own the code. No external runtime dependency."
           cta="Get started"
+          href="#"
           className="col-span-2"
           spinBorder
           spinBorderColors={["#fda4af", "#9f1239"]}
@@ -1430,9 +1475,10 @@ export const componentDemos: Record<string, DemoComponent> = {
           title="Aurora vibes"
           description="Layered animated gradients that feel alive."
           background={
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse" />
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse motion-reduce:animate-none" />
           }
           cta="View component"
+          href="#"
           className="col-span-2"
         />
         <BentoCard
@@ -1459,6 +1505,7 @@ export const componentDemos: Record<string, DemoComponent> = {
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20" />
           }
           cta="Try it"
+          href="#"
           className="col-span-2"
         />
       </BentoGrid>
@@ -1510,6 +1557,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           title="MIT License"
           description="Open source forever. Fork it, extend it, ship it."
           cta="View on GitHub"
+          href="https://github.com"
           className="col-span-2"
         />
         <BentoCard
@@ -1789,10 +1837,10 @@ export const componentDemos: Record<string, DemoComponent> = {
   "limelight-nav/default": ({ theme = "dark" }) => (
     <div
       className={cn(
-        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl border",
+        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl",
         theme === "dark"
-          ? "bg-neutral-950 border-neutral-800"
-          : "bg-neutral-100 border-neutral-200",
+          ? "bg-neutral-950"
+          : "bg-neutral-100",
       )}
     >
       <LimelightNav
@@ -1809,10 +1857,10 @@ export const componentDemos: Record<string, DemoComponent> = {
   "limelight-nav/custom": ({ theme = "dark" }) => (
     <div
       className={cn(
-        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl border",
+        "flex items-center justify-center p-12 h-[300px] w-full rounded-xl",
         theme === "dark"
-          ? "bg-neutral-950 border-neutral-800"
-          : "bg-neutral-100 border-neutral-200",
+          ? "bg-neutral-950"
+          : "bg-neutral-100",
       )}
     >
       <LimelightNav
@@ -1889,6 +1937,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "email", label: "Email" },
       { key: "department", label: "Department" },
+      { key: "location", label: "Location" },
       { key: "status", label: "Status" },
       { key: "joined", label: "Joined" },
     ];
@@ -1962,7 +2011,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           paginated
           pageSize={5}
           theme={theme}
@@ -1978,6 +2027,12 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "department", label: "Department" },
       { key: "region", label: "Region" },
+      { key: "location", label: "Location" },
+      { key: "project", label: "Project" },
+      { key: "division", label: "Division" },
+      { key: "site", label: "Site" },
+      { key: "timezone", label: "TZ" },
+      { key: "costCenter", label: "Cost ctr" },
       { key: "joined", label: "Joined" },
       { key: "status", label: "Status" },
       { key: "actions", label: "Actions" },
@@ -2076,7 +2131,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(withDemoFreezeExtras(data))}
           freezeColumns="left"
           freezeLeftCount={2}
           paginated
@@ -2092,6 +2147,12 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "department", label: "Department" },
       { key: "region", label: "Region" },
+      { key: "project", label: "Project" },
+      { key: "division", label: "Division" },
+      { key: "site", label: "Site" },
+      { key: "timezone", label: "TZ" },
+      { key: "costCenter", label: "Cost ctr" },
+      { key: "location", label: "Location" },
       { key: "status", label: "Status" },
       { key: "email", label: "Email" },
       { key: "joined", label: "Joined" },
@@ -2192,7 +2253,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(withDemoFreezeExtras(data))}
           freezeColumns="right"
           freezeRightCount={1}
           paginated
@@ -2210,6 +2271,12 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "department", label: "Department" },
       { key: "region", label: "Region" },
+      { key: "location", label: "Location" },
+      { key: "project", label: "Project" },
+      { key: "division", label: "Division" },
+      { key: "site", label: "Site" },
+      { key: "timezone", label: "TZ" },
+      { key: "costCenter", label: "Cost ctr" },
       { key: "joined", label: "Joined" },
       { key: "status", label: "Status" },
       { key: "actions", label: "Actions" },
@@ -2308,7 +2375,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(withDemoFreezeExtras(data))}
           freezeColumns="both"
           freezeLeftCount={2}
           freezeRightCount={1}
@@ -2325,6 +2392,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "email", label: "Email" },
       { key: "department", label: "Department" },
+      { key: "location", label: "Location" },
       { key: "status", label: "Status" },
       { key: "joined", label: "Joined" },
     ];
@@ -2398,7 +2466,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           border
           paginated
           pageSize={5}
@@ -2412,6 +2480,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "name", label: "Name", sortKey: "name" },
       { key: "role", label: "Role", sortKey: "role" },
       { key: "department", label: "Department", sortKey: "department" },
+      { key: "location", label: "Location", sortKey: "location" },
       { key: "joined", label: "Joined", sortKey: "joined" },
       { key: "status", label: "Status", sortKey: "status" },
     ];
@@ -2477,7 +2546,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           sortable
           paginated
           pageSize={5}
@@ -2492,6 +2561,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role" },
       { key: "email", label: "Email" },
       { key: "department", label: "Department" },
+      { key: "location", label: "Location" },
       { key: "status", label: "Status" },
       { key: "joined", label: "Joined" },
     ];
@@ -2565,7 +2635,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(data)}
           headerTextColor="text-purple-900"
           bodyTextColor="text-neutral-800"
           headerBackground="bg-purple-100"
@@ -2585,6 +2655,12 @@ export const componentDemos: Record<string, DemoComponent> = {
       { key: "role", label: "Role", sortKey: "role" },
       { key: "department", label: "Dept" },
       { key: "region", label: "Region" },
+      { key: "location", label: "Location" },
+      { key: "project", label: "Project" },
+      { key: "division", label: "Division" },
+      { key: "site", label: "Site" },
+      { key: "timezone", label: "TZ" },
+      { key: "costCenter", label: "Cost ctr" },
       { key: "joined", label: "Joined" },
       { key: "actions", label: "Actions" },
     ];
@@ -2666,7 +2742,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <div className="w-full p-6">
         <DataTable
           columns={columns}
-          data={data}
+          data={withDemoLocation(withDemoFreezeExtras(data))}
           freezeColumns="left"
           freezeLeftCount={1}
           headerTextColor="text-neutral-100"

@@ -391,7 +391,7 @@
       "name": "drawer-slide",
       "type": "registry:ui",
       "title": "Drawer Slide",
-      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
+      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur. Portals above page chrome by default.",
       "dependencies": [
         "motion",
         "clsx",
@@ -409,7 +409,7 @@
       "name": "notification-stack",
       "type": "registry:ui",
       "title": "Notification Stack",
-      "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
+      "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types. Renders through a portal above page chrome by default.",
       "dependencies": [
         "motion",
         "clsx",
@@ -481,7 +481,7 @@
       "name": "bento-grid",
       "type": "registry:ui",
       "title": "Bento Grid",
-      "description": "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
+      "description": "Responsive masonry-style grid with staggered scroll-reveal, pointer-follow spotlight, hover lift and shadows, optional spin borders, and spring micro-interactions per cell.",
       "dependencies": [
         "motion",
         "clsx",

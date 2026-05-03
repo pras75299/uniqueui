@@ -1235,7 +1235,7 @@
     {
       "slug": "drawer-slide",
       "name": "Drawer Slide",
-      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur.",
+      "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur. Portals above page chrome by default.",
       "icon": "LucidePanelRight",
       "category": "Navigation & Overlays",
       "props": [
@@ -1283,6 +1283,11 @@
           "name": "dragToClose",
           "type": "boolean",
           "description": "Map touch swiping events onto gesture recognizers supporting drag dismiss."
+        },
+        {
+          "name": "usePortal",
+          "type": "boolean",
+          "description": "When true (default), portals overlay and panel to document.body with z-index above sticky headers."
         }
       ],
       "usageCode": "\"use client\";\nimport { useState } from \"react\";\nimport { DrawerSlide } from \"@/components/ui/drawer-slide\";\n\nexport default function Example() {\n  const [drawerOpen, setDrawerOpen] = useState(false);\n  return (\n    <>\n      <div className=\"flex items-center justify-center p-20\">\n        <button\n          onClick={() => setDrawerOpen(true)}\n          className=\"px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors font-medium\"\n        >\n          Open Drawer\n        </button>\n      </div>\n      <DrawerSlide isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}>\n        <h3 className=\"text-xl font-bold mb-4 text-white\">Drawer Content</h3>\n        <p className=\"text-neutral-400 mb-4\">\n          This drawer slides in from the right with spring physics. You can drag it to dismiss.\n        </p>\n        <button\n          onClick={() => setDrawerOpen(false)}\n          className=\"px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors text-sm\"\n        >\n          Close Drawer\n        </button>\n      </DrawerSlide>\n    </>\n  );\n}",
@@ -1305,7 +1310,7 @@
     {
       "slug": "notification-stack",
       "name": "Notification Stack",
-      "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types.",
+      "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types. Renders through a portal above page chrome by default.",
       "icon": "Bell",
       "category": "Navigation & Overlays",
       "props": [
@@ -1323,6 +1328,11 @@
           "name": "maxVisible",
           "type": "number",
           "description": "Limit quantity threshold managing physical screen stack instances."
+        },
+        {
+          "name": "usePortal",
+          "type": "boolean",
+          "description": "When true (default), portals the stack to document.body with a high z-index so it clears sticky headers and overflow-hidden ancestors."
         }
       ],
       "usageCode": "\"use client\";\nimport { NotificationStack, useNotifications } from \"@/components/ui/notification-stack\";\n\nexport default function Example() {\n  const { notifications, addNotification, removeNotification } = useNotifications();\n  return (\n    <div className=\"flex flex-col items-center gap-4 w-full p-20\">\n      <div className=\"flex flex-wrap gap-3 items-center justify-center\">\n        {([\"success\", \"error\", \"warning\", \"info\"] as const).map((type) => (\n          <button\n            key={type}\n            onClick={() =>\n              addNotification({\n                title: `${type.charAt(0).toUpperCase() + type.slice(1)} notification`,\n                description: \"This is a demo notification that auto-dismisses.\",\n                type,\n                duration: 4000,\n              })\n            }\n            className=\"px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize text-white bg-neutral-800 hover:bg-neutral-700\"\n          >\n            {type}\n          </button>\n        ))}\n      </div>\n      <NotificationStack notifications={notifications} onRemove={removeNotification} />\n    </div>\n  );\n}",
@@ -1558,7 +1568,7 @@
     {
       "slug": "bento-grid",
       "name": "Bento Grid",
-      "description": "Responsive masonry-style grid layout with staggered scroll-reveal entrance, hover border glow, and icon scale animations per cell.",
+      "description": "Responsive masonry-style grid with staggered scroll-reveal, pointer-follow spotlight, hover lift and shadows, optional spin borders, and spring micro-interactions per cell.",
       "icon": "LayoutGrid",
       "category": "Cards",
       "props": [
@@ -1606,6 +1616,16 @@
           "name": "spinBorderColors",
           "type": "[string, string]",
           "description": "Two hex/CSS color values for the conic gradient. Defaults to [\"#E2CBFF\", \"#393BB2\"] (purple\u2013indigo)."
+        },
+        {
+          "name": "interactiveSpotlight",
+          "type": "boolean",
+          "description": "When true (default), a violet radial highlight follows the pointer inside the card on fine-pointer hover."
+        },
+        {
+          "name": "theme",
+          "type": "\"light\" | \"dark\"",
+          "description": "Surface and text colors; injected by BentoGrid on each child."
         }
       ],
       "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\nimport { Sparkles, Zap, Shield, Globe } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"max-w-3xl mx-auto\">\n        <BentoCard\n          icon={<Sparkles className=\"w-5 h-5\" />}\n          title=\"Beautiful animations\"\n          description=\"Every interaction is crafted with spring-physics Motion.dev animations for a premium feel.\"\n          cta=\"Explore components\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          icon={<Zap className=\"w-5 h-5\" />}\n          title=\"Lightning fast\"\n          description=\"Copy-paste components with zero runtime overhead.\"\n        />\n        <BentoCard\n          icon={<Shield className=\"w-5 h-5\" />}\n          title=\"Type safe\"\n          description=\"Built with TypeScript and fully typed props.\"\n        />\n        <BentoCard\n          icon={<Globe className=\"w-5 h-5\" />}\n          title=\"Zero lock-in\"\n          description=\"You own the code. No external runtime dependency.\"\n          cta=\"Get started\"\n          className=\"col-span-2\"\n        />\n      </BentoGrid>\n    </div>\n  );\n}",

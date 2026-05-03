@@ -1,10 +1,10 @@
 "use client";
 
-import { motion, Variants } from "motion/react";
+import { motion, useReducedMotion, Variants } from "motion/react";
 import { TypewriterText } from "@/components/ui/typewriter-text";
 import { TiltCard } from "@/components/ui/3d-tilt-card";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { SiteHeader } from "@/components/site-header";
 import { useTheme } from "@/contexts/theme-context";
 import { useRef, useState } from "react";
 import {
@@ -13,9 +13,13 @@ import {
   Terminal,
   Ghost,
   Sparkles,
-  Layers,
-  ScrollText,
   ArrowRight,
+  Heart,
+  Folder,
+  FileText,
+  LayoutGrid,
+  MousePointer2,
+  Timer,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -30,9 +34,22 @@ export default function Home() {
   const playgroundCardRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const reduceMotion = useReducedMotion();
+  const [copyAddCmd, setCopyAddCmd] = useState(false);
+
+  const reveal = {
+    hidden: reduceMotion
+      ? { opacity: 1, y: 0 }
+      : { opacity: 0, y: 16 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 380, damping: 32 },
+    },
+  } satisfies Variants;
 
   const heroVariants: Variants = {
-    hidden: { opacity: 0, y: 24 },
+    hidden: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
     visible: {
       opacity: 1,
       y: 0,
@@ -41,7 +58,7 @@ export default function Home() {
   };
 
   const playgroundVariants: Variants = {
-    hidden: { opacity: 0, y: 32 },
+    hidden: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
     visible: {
       opacity: 1,
       y: 0,
@@ -77,115 +94,43 @@ export default function Home() {
   ];
 
   const copyCommand = () => {
-    navigator.clipboard.writeText("npx uniqueui init");
+    navigator.clipboard.writeText("npx uniqueui add hero");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  return (
-    <motion.main
-      className={cn(
-        "flex min-h-screen flex-col items-center selection:bg-purple-500/30 overflow-x-hidden",
-        isDark ? "text-white" : "text-neutral-900",
-      )}
-      initial={false}
-      animate={{
-        backgroundColor: isDark ? "#0a0a0a" : "#f5f3ff",
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-    >
-      {/* Background Gradient */}
-      <div
-        className={cn(
-          "fixed inset-0 z-0 h-full w-full items-center px-5 py-24 pointer-events-none",
-          isDark
-            ? "[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20"
-            : "[background:radial-gradient(120%_160%_at_0%_0%,#e0f2fe_0%,#eef2ff_35%,#fdf2ff_70%,#f5f3ff_100%)] opacity-70",
-        )}
-      />
+  const copyAddCommand = () => {
+    navigator.clipboard.writeText("npx uniqueui add morphing-card-stack");
+    setCopyAddCmd(true);
+    setTimeout(() => setCopyAddCmd(false), 2000);
+  };
 
-      {/* Header */}
-      <div className="z-10 w-full max-w-6xl items-center justify-between font-mono text-sm lg:flex p-4 md:p-8 pt-8 relative">
-        <p
-          className={cn(
-            "fixed left-0 top-0 flex w-full justify-center border-b backdrop-blur-md pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:border lg:p-4 z-50 lg:z-auto",
-            isDark
-              ? "border-neutral-800 bg-neutral-950/50 text-neutral-400 lg:bg-neutral-900/30"
-              : "border-purple-100 bg-white/80 text-neutral-600 lg:bg-white/80 shadow-sm",
-          )}
-        >
-          UniqueUI &nbsp;
-          <span
-            className={cn(
-              "font-normal",
-              isDark ? "text-neutral-500" : "text-neutral-600",
-            )}
-          >
-            v1.0.0
-          </span>
-        </p>
+  return (
+    <>
+      <SiteHeader />
+      <motion.main
+        className={cn(
+          "flex min-h-screen flex-col items-center selection:bg-purple-500/30 overflow-x-clip",
+          isDark ? "text-white" : "text-neutral-900",
+        )}
+        initial={false}
+        animate={{
+          backgroundColor: isDark ? "#0a0a0a" : "#f5f3ff",
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
+        {/* Background Gradient */}
         <div
           className={cn(
-            "fixed bottom-0 left-0 flex h-48 w-full items-end justify-center lg:static lg:h-auto lg:w-auto lg:bg-none z-50 lg:z-auto pointer-events-none lg:pointer-events-auto",
+            "fixed inset-0 z-0 h-full w-full items-center px-5 py-24 pointer-events-none",
             isDark
-              ? "bg-linear-to-t from-black via-black"
-              : "bg-linear-to-t from-white via-purple-100/40",
+              ? "[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20"
+              : "[background:radial-gradient(120%_160%_at_0%_0%,#e0f2fe_0%,#eef2ff_35%,#fdf2ff_70%,#f5f3ff_100%)] opacity-70",
           )}
-        >
-          <div className="pointer-events-auto flex items-center gap-5 p-8 lg:p-0">
-            <ThemeToggle className="shrink-0" />
-            <Link
-              href="/components"
-              className={cn(
-                "font-semibold transition-colors",
-                isDark
-                  ? "text-white hover:text-purple-400"
-                  : "text-neutral-900 hover:text-purple-600",
-              )}
-            >
-              Components
-            </Link>
-            <Link
-              href="/docs"
-              className={cn(
-                "transition-colors",
-                isDark
-                  ? "text-neutral-400 hover:text-white"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-            >
-              Docs
-            </Link>
-            <Link
-              href="/templates"
-              className={cn(
-                "transition-colors",
-                isDark
-                  ? "text-neutral-400 hover:text-white"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-            >
-              Templates
-            </Link>
-            <a
-              className={cn(
-                "flex place-items-center gap-2 transition-colors",
-                isDark
-                  ? "text-neutral-400 hover:text-white"
-                  : "text-neutral-600 hover:text-neutral-900",
-              )}
-              href="https://github.com/pras75299/uniqueui"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
-      </div>
+        />
 
-      {/* Hero */}
-      <section className="relative z-10 mt-28 lg:mt-20 px-4 w-full max-w-6xl mx-auto">
+        {/* Hero */}
+      <section className="relative z-10 mx-auto mt-6 w-full max-w-6xl px-4 pt-6 md:mt-8 md:pt-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">
           {/* Hero copy + CTAs */}
           <motion.div
@@ -395,330 +340,577 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Social proof */}
-      <section className="w-full max-w-6xl px-4 relative z-10 mt-20">
-        <div
-          className={cn(
-            "flex flex-col md:flex-row md:items-center md:justify-between gap-6 rounded-2xl border px-5 py-6 md:px-8 md:py-7",
-            isDark
-              ? "border-neutral-800 bg-neutral-950/60"
-              : "border-purple-100/70 bg-white/90 shadow-lg shadow-purple-100/40",
-          )}
-        >
-          <div>
-            <p
+      {/* ── Below hero: docs-first layout (see Matcha / shadcn / Linear patterns) ─ */}
+      <div className="relative z-10 mt-24 w-full pb-12 md:mt-32 md:pb-20">
+        {/* One column width — matches hero `max-w-6xl` so edges line up */}
+        <div className="mx-auto w-full max-w-6xl px-4">
+          <motion.section
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={reveal}
+            className="space-y-6"
+          >
+            <h2
               className={cn(
-                "text-xs font-medium uppercase tracking-[0.18em] mb-2",
-                isDark ? "text-neutral-400" : "text-neutral-600",
+                "fs-syne text-2xl font-semibold tracking-tight md:text-3xl lg:max-w-3xl",
+                isDark ? "text-neutral-100" : "text-neutral-900",
               )}
             >
-              Trusted building blocks
-            </p>
-            <p
-              className={cn(
-                "text-sm md:text-base",
-                isDark ? "text-neutral-400" : "text-neutral-600",
-              )}
-            >
-              Designed for production teams who care about motion, craft, and
-              copy‑paste speed.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-4 text-xs md:text-sm">
-            <div className="flex flex-col">
-              <span className="font-semibold">Dozens</span>
-              <span
-                className={cn(isDark ? "text-neutral-500" : "text-neutral-600")}
-              >
-                of animated components
-              </span>
-            </div>
-            <div className="h-10 w-px bg-linear-to-b from-transparent via-neutral-500/30 to-transparent" />
-            <div className="flex flex-col">
-              <span className="font-semibold">Motion‑first</span>
-              <span
-                className={cn(isDark ? "text-neutral-500" : "text-neutral-600")}
-              >
-                built on motion.dev springs
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Component strip */}
-      <section className="w-full max-w-6xl px-4 relative z-10 mt-20 space-y-8">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-semibold">
-              Component gallery
+              Built if you ship UI, not slide decks.
             </h2>
-            <p
-              className={cn(
-                "mt-2 text-sm md:text-base max-w-xl",
-                isDark ? "text-neutral-400" : "text-neutral-700",
-              )}
-            >
-              A curated set of motion‑rich components
-            </p>
-          </div>
-          <Link
-            href="/components"
-            className={cn(
-              "hidden md:inline-flex text-sm items-center gap-1 font-medium",
-              isDark
-                ? "text-purple-300 hover:text-purple-200"
-                : "text-purple-700 hover:text-purple-600",
-            )}
+            <ul className="max-w-3xl space-y-3 text-sm md:text-base">
+              {[
+                "You want motion.dev springs in real pages, not a motion lab prototype.",
+                "You prefer one `.tsx` you can diff, not a black-box runtime package.",
+                "You already live in Tailwind and Next — this meets you there.",
+              ].map((line) => (
+                <li key={line} className="flex gap-3">
+                  <Check
+                    className={cn(
+                      "mt-0.5 h-4 w-4 shrink-0",
+                      isDark ? "text-emerald-400" : "text-emerald-600",
+                    )}
+                    aria-hidden
+                  />
+                  <span className={isDark ? "text-neutral-400" : "text-neutral-600"}>
+                    {line}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </motion.section>
+
+        {/* Capability rows — scan like product docs */}
+        <section className="mt-20 md:mt-28">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={reveal}
+            className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
           >
-            Browse all components
-            <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card
-            theme={theme}
-            title="Aurora hero"
-            description="Gradient‑driven hero layout with floating aurora background and layered depth."
-            icon={<Sparkles className="w-6 h-6" />}
-          />
-          <Card
-            theme={theme}
-            title="Morphing stack"
-            description="Interactive card stack that morphs between layouts with springs."
-            icon={<Layers className="w-6 h-6" />}
-          />
-          <Card
-            theme={theme}
-            title="Spotlight cards"
-            description="Cards that track your cursor with soft, cinematic lighting."
-            icon={<Ghost className="w-6 h-6" />}
-          />
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section className="w-full max-w-6xl px-4 relative z-10 mt-24 space-y-10">
-        <div className="text-center space-y-3">
-          <h2 className="text-2xl md:text-3xl font-semibold">
-            How UniqueUI fits your stack
-          </h2>
-          <p
-            className={cn(
-              "max-w-2xl mx-auto text-sm md:text-base",
-              isDark ? "text-neutral-400" : "text-neutral-600",
-            )}
-          >
-            From install to customization in three steps. No design system
-            overhaul, just focused drops of motion where it matters.
-          </p>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card
-            theme={theme}
-            title="1 · Install the CLI"
-            description="Run `npx uniqueui init` once in your project to set up the generator and base styles."
-            icon={<Terminal className="w-6 h-6" />}
-          />
-          <Card
-            theme={theme}
-            title="2 · Add components"
-            description="Use `npx uniqueui add <component>` to drop in animated sections as single‑file React components."
-            icon={<ScrollText className="w-6 h-6" />}
-          />
-          <Card
-            theme={theme}
-            title="3 · Tune the details"
-            description="Edit Tailwind classes and motion.dev props to match your brand without touching low‑level motion."
-            icon={<Sparkles className="w-6 h-6" />}
-          />
-        </div>
-      </section>
-
-      {/* Motion-rich preview band */}
-      <section className="w-full max-w-6xl px-4 relative z-10 mt-24 mb-28 space-y-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <SpotlightCard
-            theme={theme}
-            className="h-64 flex flex-col justify-center items-center text-center"
-          >
-            <h3 className="text-2xl font-semibold mb-2">Spotlight hero</h3>
-            <p className={isDark ? "text-neutral-400" : "text-neutral-700"}>
-              Layer spotlight, gradients, and depth to turn any heading into a
-              centerpiece.
-            </p>
-          </SpotlightCard>
-
-          <TiltCard
-            theme={theme}
-            className={cn(
-              "h-64 p-8 flex flex-col justify-center items-center text-center border",
-              isDark
-                ? "bg-neutral-900/50 border-neutral-800"
-                : "bg-linear-to-br from-white/95 via-purple-50/70 to-sky-50/80 border-purple-100",
-            )}
-          >
-            <h3 className="text-2xl font-semibold mb-2">3D tilt cards</h3>
-            <p className={isDark ? "text-neutral-400" : "text-neutral-600"}>
-              Parallax hover interactions that respect motion preferences and
-              keep performance snappy.
-            </p>
-          </TiltCard>
-        </div>
-
-        <div className="flex justify-center mt-6">
-          <Link
-            href="/components"
-            className={cn(
-              "focus:outline-none focus:ring-2 focus:ring-offset-2",
-              isDark
-                ? "focus:ring-slate-400 focus:ring-offset-slate-50"
-                : "focus:ring-slate-500 focus:ring-offset-white",
-            )}
-          >
-            <div className="group relative inline-flex h-12 overflow-hidden rounded-full p-px">
-              <motion.span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-              <motion.span
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-neutral-500">
+                Surfaces in the registry
+              </p>
+              <h2
                 className={cn(
-                  "inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-8 py-1 text-sm font-medium backdrop-blur-3xl transition-colors",
-                  isDark
-                    ? "bg-slate-950 text-white hover:bg-slate-900"
-                    : "bg-white text-slate-900 hover:bg-slate-100",
+                  "mt-2 fs-syne text-2xl font-semibold tracking-tight md:text-3xl",
+                  isDark ? "text-white" : "text-neutral-900",
                 )}
               >
-                Explore all components
-              </motion.span>
+                Same flow as reading internal docs.
+              </h2>
             </div>
-          </Link>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="w-full max-w-5xl mt-12 mb-16 px-4 relative z-10">
-        <div
-          className={cn(
-            "border-t pt-8 text-center text-sm",
-            isDark
-              ? "border-neutral-800 text-neutral-500"
-              : "border-neutral-200 text-neutral-600",
-          )}
-        >
-          <p>
-            Built with ❤️ by{" "}
-            <a
-              href="https://github.com/pras75299"
-              className={cn(
-                "transition-colors",
-                isDark
-                  ? "text-neutral-300 hover:text-white"
-                  : "text-neutral-700 hover:text-neutral-900",
-              )}
-            >
-              Prashant
-            </a>
-          </p>
-          <div className="mt-4 flex justify-center gap-6">
             <Link
               href="/components"
               className={cn(
-                "transition-colors",
-                isDark ? "hover:text-white" : "hover:text-neutral-900",
+                "inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-200 ease-out",
+                isDark
+                  ? "text-violet-300 hover:text-violet-200"
+                  : "text-violet-700 hover:text-violet-900",
               )}
             >
-              Components
+              Full index
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
+
+          <div
+            className={cn(
+              "divide-y rounded-xl border",
+              isDark
+                ? "divide-neutral-800 border-neutral-800 bg-neutral-950/40"
+                : "divide-neutral-200 border-neutral-200 bg-white",
+            )}
+          >
+            {[
+              {
+                icon: <Sparkles className="h-5 w-5" />,
+                title: "Marketing & hero",
+                desc: "Aurora, gradients, and stacked narratives that read expensive without a design agency.",
+              },
+              {
+                icon: <LayoutGrid className="h-5 w-5" />,
+                title: "Layouts & bento",
+                desc: "Grids, card stacks, and spatial transitions you can tune with plain Tailwind utilities.",
+              },
+              {
+                icon: <MousePointer2 className="h-5 w-5" />,
+                title: "Input & chrome",
+                desc: "Docks, tabs, drawers, and micro-interactions that behave correctly with keyboard and screen readers.",
+              },
+              {
+                icon: <Ghost className="h-5 w-5" />,
+                title: "Depth & lighting",
+                desc: "Spotlight, tilt, and parallax tricks that stay on the GPU and respect reduced motion.",
+              },
+              {
+                icon: <Timer className="h-5 w-5" />,
+                title: "Progress & timelines",
+                desc: "Roadmaps, onboarding sequences, and status stories with spring-based choreography.",
+              },
+            ].map((row) => (
+              <Link
+                key={row.title}
+                href="/components"
+                className={cn(
+                  "group flex cursor-pointer gap-4 px-4 py-5 no-underline transition-colors duration-200 ease-out md:gap-6 md:px-6 md:py-6",
+                  isDark
+                    ? "hover:bg-neutral-900/60"
+                    : "hover:bg-neutral-50",
+                )}
+              >
+                <span
+                  className={cn(
+                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border",
+                    isDark
+                      ? "border-neutral-800 bg-neutral-900 text-neutral-300"
+                      : "border-neutral-200 bg-neutral-50 text-neutral-700",
+                  )}
+                >
+                  {row.icon}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3
+                    className={cn(
+                      "font-semibold tracking-tight",
+                      isDark ? "text-white" : "text-neutral-900",
+                    )}
+                  >
+                    {row.title}
+                  </h3>
+                  <p
+                    className={cn(
+                      "mt-1 text-sm leading-relaxed",
+                      isDark ? "text-neutral-500" : "text-neutral-600",
+                    )}
+                  >
+                    {row.desc}
+                  </p>
+                </div>
+                <ArrowRight
+                  className={cn(
+                    "mt-1 h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0",
+                    isDark ? "text-neutral-600 group-hover:text-neutral-300" : "text-neutral-400 group-hover:text-neutral-700",
+                  )}
+                  aria-hidden
+                />
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Repo preview: tree + terminal (shadcn-style DX) */}
+        <section className="mt-20 md:mt-28">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={reveal}
+            className="mb-8 lg:max-w-2xl"
+          >
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-neutral-500">
+              What lands in your editor
+            </p>
+            <h2
+              className={cn(
+                "mt-2 fs-syne text-2xl font-semibold tracking-tight md:text-3xl",
+                isDark ? "text-white" : "text-neutral-900",
+              )}
+            >
+              Files you own. Commands you already type.
+            </h2>
+          </motion.div>
+
+          <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-30px" }}
+              variants={reveal}
+              className={cn(
+                "overflow-hidden rounded-xl border font-mono text-xs md:text-sm",
+                isDark
+                  ? "border-neutral-800 bg-neutral-950/80"
+                  : "border-neutral-200 bg-white shadow-sm",
+              )}
+            >
+              <div
+                className={cn(
+                  "flex items-center gap-2 border-b px-4 py-2.5",
+                  isDark ? "border-neutral-800 bg-neutral-900/50" : "border-neutral-200 bg-neutral-50",
+                )}
+              >
+                <span className="flex gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-amber-400/90" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
+                </span>
+                <span className={cn("ml-2 text-[10px] md:text-xs", isDark ? "text-neutral-500" : "text-neutral-500")}>
+                  explorer — src
+                </span>
+              </div>
+              <div className="space-y-0.5 p-4 leading-relaxed">
+                <div className="flex items-center gap-2 text-neutral-500">
+                  <Folder className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+                  <span>app</span>
+                </div>
+                <div className="flex items-center gap-2 pl-3 text-neutral-500">
+                  <Folder className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+                  <span>components</span>
+                </div>
+                <div className="flex items-center gap-2 pl-6 text-neutral-500">
+                  <Folder className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+                  <span>ui</span>
+                </div>
+                <div
+                  className={cn(
+                    "flex items-center gap-2 border-l-2 py-0.5 pl-[1.35rem] pr-2",
+                    isDark ? "border-violet-500 bg-violet-500/5" : "border-violet-600 bg-violet-50",
+                  )}
+                >
+                  <FileText className="h-3.5 w-3.5 shrink-0 text-violet-500" aria-hidden />
+                  <span className={isDark ? "text-violet-200" : "text-violet-900"}>
+                    morphing-card-stack.tsx
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 pl-6 text-neutral-500">
+                  <FileText className="h-3.5 w-3.5 shrink-0 opacity-60" aria-hidden />
+                  <span>aurora-background.tsx</span>
+                </div>
+                <div className="flex items-center gap-2 pl-6 text-neutral-500">
+                  <FileText className="h-3.5 w-3.5 shrink-0 opacity-60" aria-hidden />
+                  <span>spotlight-card.tsx</span>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-30px" }}
+              variants={reveal}
+              className={cn(
+                "overflow-hidden rounded-xl border font-mono text-xs md:text-sm",
+                isDark
+                  ? "border-neutral-800 bg-neutral-950/80"
+                  : "border-neutral-200 bg-white shadow-sm",
+              )}
+            >
+              <div
+                className={cn(
+                  "flex items-center justify-between border-b px-4 py-2.5",
+                  isDark ? "border-neutral-800 bg-neutral-900/50" : "border-neutral-200 bg-neutral-50",
+                )}
+              >
+                <span className="flex items-center gap-2">
+                  <Terminal className="h-3.5 w-3.5 opacity-70" aria-hidden />
+                  <span className={isDark ? "text-neutral-400" : "text-neutral-600"}>
+                    zsh
+                  </span>
+                </span>
+              </div>
+              <div className="p-4">
+                <p className={isDark ? "text-neutral-500" : "text-neutral-500"}>
+                  <span className="text-emerald-500/90" aria-hidden>
+                    $
+                  </span>{" "}
+                  project
+                </p>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <code
+                    className={cn(
+                      "rounded-md px-2 py-1.5 text-[11px] md:text-xs",
+                      isDark ? "bg-black/50 text-neutral-200" : "bg-neutral-100 text-neutral-800",
+                    )}
+                  >
+                    npx uniqueui add morphing-card-stack
+                  </code>
+                  <button
+                    type="button"
+                    onClick={copyAddCommand}
+                    aria-label="Copy add command"
+                    className={cn(
+                      "inline-flex cursor-pointer items-center rounded-md border p-1.5 transition-colors duration-200 ease-out",
+                      isDark
+                        ? "border-neutral-700 hover:bg-neutral-800"
+                        : "border-neutral-200 hover:bg-neutral-100",
+                    )}
+                  >
+                    {copyAddCmd ? (
+                      <Check className="h-3.5 w-3.5 text-emerald-500" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5 opacity-70" />
+                    )}
+                  </button>
+                </div>
+                <p className={cn("mt-4 text-[11px] leading-relaxed", isDark ? "text-neutral-500" : "text-neutral-500")}>
+                  Installs npm deps from the registry entry, writes the file under{" "}
+                  <span className={isDark ? "text-neutral-400" : "text-neutral-700"}>
+                    components/ui
+                  </span>
+                  , merges Tailwind keyframes when needed.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Honest comparison — inspired by productized dev marketing */}
+        <section className="mt-20 md:mt-24">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={reveal}
+            className="mb-6"
+          >
+            <h2
+              className={cn(
+                "fs-syne text-xl font-semibold tracking-tight md:text-2xl",
+                isDark ? "text-white" : "text-neutral-900",
+              )}
+            >
+              Where UniqueUI wins time
+            </h2>
+            <p
+              className={cn(
+                "mt-2 max-w-xl text-sm",
+                isDark ? "text-neutral-500" : "text-neutral-600",
+              )}
+            >
+              Not a feature matrix for procurement — a quick read for engineers
+              deciding how to spend the afternoon.
+            </p>
+          </motion.div>
+          <div
+            className={cn(
+              "overflow-x-auto rounded-xl border",
+              isDark ? "border-neutral-800" : "border-neutral-200",
+            )}
+          >
+            <table className="w-full min-w-[520px] text-left text-sm">
+              <thead>
+                <tr className={cn("border-b", isDark ? "border-neutral-800 bg-neutral-900/40" : "border-neutral-200 bg-neutral-50")}>
+                  <th className="px-4 py-3 font-medium text-neutral-500"> </th>
+                  <th className="px-4 py-3 font-medium text-neutral-500">Hand-rolled</th>
+                  <th className="px-4 py-3 font-medium text-neutral-500">Heavy UI kit</th>
+                  <th
+                    className={cn(
+                      "px-4 py-3 font-medium",
+                      isDark ? "text-violet-300" : "text-violet-600",
+                    )}
+                  >
+                    UniqueUI
+                  </th>
+                </tr>
+              </thead>
+              <tbody className={isDark ? "divide-neutral-800 divide-y" : "divide-neutral-200 divide-y"}>
+                {[
+                  ["Time to first spring hero", "Days–weeks", "Hours + lock-in", "Minutes"],
+                  ["You keep the source", "Yes", "Often no", "Yes — pasted files"],
+                  ["Motion style", "Whatever you write", "Kit defaults", "motion.dev springs"],
+                ].map(([label, a, b, c]) => (
+                  <tr key={String(label)} className={isDark ? "bg-neutral-950/30" : "bg-white"}>
+                    <td className={cn("px-4 py-3 font-medium", isDark ? "text-neutral-300" : "text-neutral-800")}>
+                      {label}
+                    </td>
+                    <td className="px-4 py-3 text-neutral-500">{a}</td>
+                    <td className="px-4 py-3 text-neutral-500">{b}</td>
+                    <td className={cn("px-4 py-3", isDark ? "text-emerald-400" : "text-emerald-700")}>{c}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Live materials — minimal chrome */}
+        <section className="mt-20 md:mt-28">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={reveal}
+            className="mb-8 lg:max-w-2xl"
+          >
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-neutral-500">
+              Still interactive
+            </p>
+            <h2
+              className={cn(
+                "mt-2 fs-syne text-2xl font-semibold tracking-tight md:text-3xl",
+                isDark ? "text-white" : "text-neutral-900",
+              )}
+            >
+              Same primitives as inside your app.
+            </h2>
+          </motion.div>
+          <div className="grid gap-6 md:grid-cols-2">
+            <SpotlightCard theme={theme} className="min-h-56 flex flex-col justify-center rounded-xl p-8 text-center md:min-h-64">
+              <h3 className={cn("text-lg font-semibold", isDark ? "text-white" : "text-neutral-900")}>
+                Spotlight
+              </h3>
+              <p className={cn("mt-2 text-sm", isDark ? "text-neutral-400" : "text-neutral-600")}>
+                Soft follow-light for heroes and pricing columns.
+              </p>
+            </SpotlightCard>
+            <TiltCard
+              theme={theme}
+              className={cn(
+                "flex min-h-56 flex-col justify-center rounded-xl border p-8 text-center md:min-h-64",
+                isDark ? "border-neutral-800 bg-neutral-900/30" : "border-neutral-200 bg-neutral-50",
+              )}
+            >
+              <h3 className={cn("text-lg font-semibold", isDark ? "text-white" : "text-neutral-900")}>
+                Tilt
+              </h3>
+              <p className={cn("mt-2 text-sm", isDark ? "text-neutral-400" : "text-neutral-600")}>
+                Hover parallax with sane limits for trackpads.
+              </p>
+            </TiltCard>
+          </div>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/components"
+              className={cn(
+                "inline-flex cursor-pointer items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold transition-colors duration-200 ease-out",
+                isDark ? "bg-white text-black hover:bg-neutral-200" : "bg-neutral-900 text-white hover:bg-neutral-800",
+              )}
+            >
+              Browse components
+              <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/docs"
               className={cn(
-                "transition-colors",
-                isDark ? "hover:text-white" : "hover:text-neutral-900",
+                "inline-flex cursor-pointer items-center rounded-full border px-6 py-2.5 text-sm font-medium transition-colors duration-200 ease-out",
+                isDark
+                  ? "border-neutral-700 text-neutral-200 hover:bg-neutral-900"
+                  : "border-neutral-300 text-neutral-800 hover:bg-neutral-50",
               )}
             >
-              Docs
+              Documentation
             </Link>
-            <Link
-              href="/templates"
-              className={cn(
-                "transition-colors",
-                isDark ? "hover:text-white" : "hover:text-neutral-900",
-              )}
-            >
-              Templates
-            </Link>
-            <a
-              href="https://github.com/pras75299/uniqueui"
-              className={cn(
-                "transition-colors",
-                isDark ? "hover:text-white" : "hover:text-neutral-900",
-              )}
-            >
-              GitHub
-            </a>
-            <a
-              href="https://twitter.com"
-              className={cn(
-                "transition-colors",
-                isDark ? "hover:text-white" : "hover:text-neutral-900",
-              )}
-            >
-              Twitter
-            </a>
           </div>
-        </div>
-      </footer>
-    </motion.main>
-  );
-}
+        </section>
 
-/* ─── Feature Card ─── */
-function Card({
-  title,
-  description,
-  icon,
-  theme = "dark",
-}: {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  theme?: "light" | "dark";
-}) {
-  const isDark = theme === "dark";
-  return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      className={cn(
-        "group rounded-lg border px-5 py-8 transition-colors shadow-sm",
-        isDark
-          ? "border-neutral-800 bg-neutral-950/50 hover:border-neutral-700 hover:bg-neutral-900/50"
-          : "border-neutral-200 bg-white hover:border-purple-200 hover:bg-purple-50/40",
-      )}
-    >
-      <div
-        className={cn(
-          "mb-4 inline-block rounded-lg p-3",
-          isDark
-            ? "bg-neutral-900 text-neutral-200 group-hover:text-white"
-            : "bg-neutral-100 text-neutral-700 group-hover:text-neutral-900",
-        )}
-      >
-        {icon}
+        <footer className="mt-20 border-t pt-10 pb-8 md:mt-24">
+          <div className="grid gap-10 md:grid-cols-[1.1fr_minmax(0,1fr)] md:gap-16">
+            <div>
+              <p
+                className={cn(
+                  "fs-syne text-2xl font-semibold tracking-tight",
+                  isDark ? "text-white" : "text-neutral-900",
+                )}
+              >
+                UniqueUI
+              </p>
+              <p
+                className={cn(
+                  "mt-3 max-w-sm text-sm leading-relaxed",
+                  isDark ? "text-neutral-400" : "text-neutral-600",
+                )}
+              >
+                Copy-paste React components with motion.dev craftsmanship — no
+                theme runtime between you and the DOM.
+              </p>
+              <p
+                className={cn(
+                  "mt-6 inline-flex items-center gap-2 text-sm",
+                  isDark ? "text-neutral-500" : "text-neutral-600",
+                )}
+              >
+                <span>Built with</span>
+                <Heart className="h-3.5 w-3.5 text-violet-500" aria-hidden strokeWidth={2} />
+                <span>by</span>
+                <a
+                  href="https://github.com/pras75299"
+                  className={cn(
+                    "font-medium underline-offset-4 transition-colors hover:underline",
+                    isDark ? "text-neutral-200 hover:text-white" : "text-neutral-900 hover:text-violet-700",
+                  )}
+                >
+                  Prashant
+                </a>
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">Product</p>
+                <ul className="mt-3 space-y-2 text-sm">
+                  <li>
+                    <Link
+                      href="/components"
+                      className={cn(
+                        "transition-colors duration-200 ease-out",
+                        isDark ? "text-neutral-300 hover:text-white" : "text-neutral-700 hover:text-neutral-950",
+                      )}
+                    >
+                      Components
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/docs"
+                      className={cn(
+                        "transition-colors duration-200 ease-out",
+                        isDark ? "text-neutral-300 hover:text-white" : "text-neutral-700 hover:text-neutral-950",
+                      )}
+                    >
+                      Docs
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/templates"
+                      className={cn(
+                        "transition-colors duration-200 ease-out",
+                        isDark ? "text-neutral-300 hover:text-white" : "text-neutral-700 hover:text-neutral-950",
+                      )}
+                    >
+                      Templates
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">Source</p>
+                <ul className="mt-3 space-y-2 text-sm">
+                  <li>
+                    <a
+                      href="https://github.com/pras75299/uniqueui"
+                      className={cn(
+                        "transition-colors duration-200 ease-out",
+                        isDark ? "text-neutral-300 hover:text-white" : "text-neutral-700 hover:text-neutral-950",
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      GitHub
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">Quick start</p>
+                <pre
+                  className={cn(
+                    "mt-3 overflow-x-auto rounded-lg border px-3 py-2.5 font-mono text-[11px] leading-relaxed",
+                    isDark ? "border-neutral-800 bg-black/50 text-neutral-300" : "border-neutral-200 bg-neutral-50 text-neutral-800",
+                  )}
+                >
+                  <code>npx uniqueui init</code>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </footer>
+        </div>
       </div>
-      <h2 className="mb-3 text-2xl font-semibold">
-        {title}{" "}
-        <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-          -&gt;
-        </span>
-      </h2>
-      <p
-        className={cn(
-          "m-0 max-w-[30ch] text-sm",
-          isDark ? "opacity-50" : "text-neutral-600",
-        )}
-      >
-        {description}
-      </p>
-    </motion.div>
+      </motion.main>
+    </>
   );
 }
