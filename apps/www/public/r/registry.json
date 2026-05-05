@@ -873,6 +873,24 @@
           "target": "components/ui/dynamic-info.tsx"
         }
       ]
+    },
+    {
+      "name": "macbook-mock",
+      "type": "registry:ui",
+      "title": "Macbook Mock",
+      "description": "Faux MacBook frame with a hover-driven lid open and a fade-or-flap screen reveal. Hover to lift the lid; the idle screen crossfades or folds back to expose your image or React node.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/macbook-mock.tsx",
+          "type": "registry:component",
+          "target": "components/ui/macbook-mock.tsx"
+        }
+      ]
     }
   ]
 }

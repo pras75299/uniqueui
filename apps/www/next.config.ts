@@ -32,6 +32,15 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname, "../.."),
   },
   compress: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
+    ],
+  },
   async redirects() {
     return [
       {

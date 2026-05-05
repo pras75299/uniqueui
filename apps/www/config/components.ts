@@ -10,6 +10,7 @@ import {
   Flame,
   Grid,
   Hash,
+  Laptop,
   Layers,
   LayoutGrid,
   Loader2,
@@ -70,6 +71,7 @@ const iconMap = {
   Flame,
   Grid,
   Hash,
+  Laptop,
   Layers,
   LayoutGrid,
   Loader2,
@@ -2587,6 +2589,66 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "\"use client\";\nimport { DynamicInfo } from \"@/components/ui/dynamic-info\";\nimport { Github, Linkedin, Twitter } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <DynamicInfo\n      name=\"James Doe\"\n      role=\"Designer\"\n      avatar=\"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160&h=160&fit=crop\"\n      defaultExpanded\n      socials={[\n        { id: \"x\", icon: <Twitter size={14} />, href: \"https://x.com\" },\n        { id: \"in\", icon: <Linkedin size={14} />, href: \"https://linkedin.com\" },\n        { id: \"gh\", icon: <Github size={14} />, href: \"https://github.com\" },\n      ]}\n      status={{ label: \"Available\", color: \"#22c55e\" }}\n    />\n  );\n}"
+  },
+  {
+    "slug": "macbook-mock",
+    "name": "Macbook Mock",
+    "description": "Faux MacBook frame with a hover-driven lid open and a fade-or-flap screen reveal. Hover to lift the lid; the idle screen crossfades or folds back to expose your image or React node.",
+    "icon": "Laptop",
+    "category": "Components",
+    "props": [
+      {
+        "name": "size",
+        "type": "\"sm\" | \"md\" | \"lg\"",
+        "description": "Outer width and lid height. Defaults to \"md\" (320px wide)."
+      },
+      {
+        "name": "tint",
+        "type": "\"silver\" | \"spaceGray\" | \"midnight\"",
+        "description": "Chassis colourway. Affects lid, base, keyboard, trackpad, hinge, and ports."
+      },
+      {
+        "name": "screenIdleClassName",
+        "type": "string",
+        "description": "Tailwind classes for the solid screen fill shown when the lid is closed."
+      },
+      {
+        "name": "revealSrc",
+        "type": "string",
+        "description": "Image URL revealed on hover. Ignored when `screenContent` is set."
+      },
+      {
+        "name": "revealAlt",
+        "type": "string",
+        "description": "Alt text for the reveal image."
+      },
+      {
+        "name": "screenContent",
+        "type": "React.ReactNode",
+        "description": "Render any node inside the screen instead of an image — UI mock, video, gradient, etc."
+      },
+      {
+        "name": "revealMode",
+        "type": "\"fade\" | \"flap\"",
+        "description": "How the idle layer gives way: a crossfade or a 3D fold of the top half."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "description": "Force the lid open without hover. Combine with `hoverDisabled` for a static mockup."
+      },
+      {
+        "name": "hoverDisabled",
+        "type": "boolean",
+        "description": "Ignore hover entirely; only the `open` prop controls the lid."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes merged onto the outer wrapper."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { MacbookMock } from \"@/components/ui/macbook-mock\";\n\nexport default function DeviceShowcase() {\n  return (\n    <div className=\"flex justify-center p-12\">\n      <MacbookMock\n        size=\"md\"\n        tint=\"spaceGray\"\n        revealSrc=\"https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80\"\n      />\n    </div>\n  );\n}\n"
   }
 ] satisfies ComponentDefinition[];
 

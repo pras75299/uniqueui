@@ -422,4 +422,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "macbook-mock",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "macbook-mock/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

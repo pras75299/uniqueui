@@ -864,5 +864,31 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "\"use client\";\nimport { useState } from \"react\";\nimport { DynamicInfo } from \"@/components/ui/dynamic-info\";\n\nexport default function ControlledProfile() {\n  const [open, setOpen] = useState(false);\n  return (\n    <DynamicInfo\n      name=\"James Doe\"\n      role=\"Designer\"\n      expanded={open}\n      onExpandedChange={setOpen}\n      status={{ label: \"Available\" }}\n    />\n  );\n}"
       }
     ]
+  },
+  "macbook-mock": {
+    "slug": "macbook-mock",
+    "overview": "MacbookMock renders a minimal laptop frame whose lid pops open on hover, exposing a screen layer that either crossfades or flaps to a custom image or React node. The chassis is built from layered divs — no extra assets needed. Choose a tint, pass `revealSrc` for an image, or `screenContent` for any React node.",
+    "scenarios": [
+      {
+        "title": "Default hover reveal",
+        "description": "Drop in the component with a custom image — hovering opens the lid and crossfades from the dark idle screen to your photo.",
+        "code": "import { MacbookMock } from \"@/components/ui/macbook-mock\";\n\nexport default function Hero() {\n  return (\n    <MacbookMock\n      revealSrc=\"https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80\"\n      revealAlt=\"Laptop on a desk\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Flap reveal in midnight tint",
+        "description": "Set revealMode to flap so the top half of the idle layer folds back in 3D. Pair with the midnight tint for a darker chassis.",
+        "code": "import { MacbookMock } from \"@/components/ui/macbook-mock\";\n\nexport default function FlapMidnight() {\n  return (\n    <MacbookMock\n      tint=\"midnight\"\n      revealMode=\"flap\"\n      size=\"lg\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Custom screen content",
+        "description": "Pass screenContent to render any React node inside the display — a UI mock, gradient, or short video — instead of an image.",
+        "code": "import { MacbookMock } from \"@/components/ui/macbook-mock\";\n\nexport default function AppPreview() {\n  return (\n    <MacbookMock\n      tint=\"silver\"\n      screenContent={\n        <div className=\"flex h-full w-full items-center justify-center bg-linear-to-br from-violet-500 to-fuchsia-500 text-xs font-semibold text-white\">\n          Your App\n        </div>\n      }\n    />\n  );\n}"
+      },
+      {
+        "title": "Always-open static mockup",
+        "description": "Force the lid open and disable hover so it works as a static landing-page asset.",
+        "code": "import { MacbookMock } from \"@/components/ui/macbook-mock\";\n\nexport default function StaticHero() {\n  return (\n    <MacbookMock open hoverDisabled />\n  );\n}"
+      }
+    ]
   }
 };

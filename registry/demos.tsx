@@ -57,6 +57,7 @@ import { Ripple } from "@/components/ui/ripple";
 import { WordRotate } from "@/components/ui/word-rotate";
 import { ShootingStarsGrid } from "@/components/ui/shooting-stars-grid";
 import { DynamicInfo } from "@/components/ui/dynamic-info";
+import { MacbookMock } from "@/components/ui/macbook-mock";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3144,6 +3145,22 @@ export const componentDemos: Record<string, DemoComponent> = {
           status={{ label: "Available", color: "#22c55e" }}
         />
       </div>
+    </div>
+  ),
+  "macbook-mock": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex min-h-[320px] w-full items-center justify-center px-6 py-10",
+        theme === "dark" ? "bg-neutral-950" : "bg-neutral-100",
+      )}
+    >
+      <MacbookMock
+        size="md"
+        tint={theme === "dark" ? "spaceGray" : "silver"}
+        screenIdleClassName={
+          theme === "dark" ? "bg-[#121212]" : "bg-neutral-200"
+        }
+      />
     </div>
   ),
 };
