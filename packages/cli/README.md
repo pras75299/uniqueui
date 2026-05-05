@@ -469,6 +469,8 @@ npx uniqueui add magnetic-button
 | `radial-menu` | `npx uniqueui add radial-menu` | Navigation & Overlays | Circular flyout menu that bursts items outward from a center trigger with staggered spring animation. |
 | `cursor-trail` | `npx uniqueui add cursor-trail` | Cursor Effects | Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail. |
 | `pen-cursor` | `npx uniqueui add pen-cursor` | Cursor Effects | Spring-smoothed stroke with fast-fading ink tail; system cursor visible by default; grey by default. |
+| `mini-mac-keyboard` | `npx uniqueui add mini-mac-keyboard` | Decorative | Compact decorative Mac-style keyboard strip for hero/device scenes and desktop mockups. |
+| `macbook-mock` | `npx uniqueui add macbook-mock` | Device Mockups | Animated 3D MacBook-style frame with reveal screen, dynamic island states, and accessible interactions. |
 
 ---
 

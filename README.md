@@ -34,7 +34,7 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 **Key features:**
 
 - 🎯 **Copy-paste architecture** — Components live in your codebase, fully customizable
-- 🎨 **28 animated components** — From subtle to spectacular
+- 🎨 **30 animated components** — From subtle to spectacular
 - ⚡ **CLI for instant setup** — `npx uniqueui init` → `npx uniqueui add <component>` (or install via **shadcn CLI** from the published registry)
 - 🧩 **Zero lock-in** — Uses standard React, Motion, and Tailwind CSS
 - 📱 **Dark-first design** — Every component looks great out of the box
@@ -71,6 +71,9 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 | **Horizontal Scroll Gallery** | Effects & Animations | Converts vertical scroll into horizontal movement with momentum physics for immersive galleries. |
 | **Radial Menu** | Navigation & Overlays | Circular flyout menu that bursts items outward from a center trigger with staggered spring animation. |
 | **Cursor Trail** | Cursor Effects | Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail. |
+| **Pen Cursor** | Cursor Effects | Spring-smoothed stroke with fast-fading ink tail; system cursor visible by default; grey by default. |
+| **Mini Mac Keyboard** | Decorative | Compact decorative Mac-style keyboard strip for hero/device scenes and desktop mockups. |
+| **Macbook Mock** | Device Mockups | Animated 3D MacBook-style frame with reveal screen, dynamic island states, and accessible interactions. |
 
 ## Installation
 
