@@ -48,6 +48,7 @@ import { InteractiveCursor } from "@/components/ui/interactive-cursor";
 import GlowHeroSection from "@/components/ui/glow-hero-section";
 import { LimelightNav } from "@/components/ui/limelight-nav";
 import { MorphingCardStack } from "@/components/ui/morphing-card-stack";
+import { MiniMacKeyboard } from "@/components/ui/mini-mac-keyboard";
 import { MultiStepAuthCard } from "@/components/ui/multi-step-auth-card";
 import { DataTable } from "@/components/ui/data-table";
 import GlowingTextOutline from "@/components/ui/animated-glowing-text-outline";
@@ -60,6 +61,7 @@ import { Ripple } from "@/components/ui/ripple";
 import { WordRotate } from "@/components/ui/word-rotate";
 import { ShootingStarsGrid } from "@/components/ui/shooting-stars-grid";
 import { DynamicInfo } from "@/components/ui/dynamic-info";
+import { MacbookMock } from "@/components/ui/macbook-mock";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -1069,6 +1071,13 @@ export const componentDemos: Record<string, DemoComponent> = {
           Custom colored meteors with extra density.
         </p>
       </MeteorsCard>
+    </div>
+  ),
+  "mini-mac-keyboard": () => (
+    <div className="flex min-h-[280px] w-full items-center justify-center overflow-visible px-4 py-8">
+      <MiniMacKeyboard
+        wrapperClassName="translate-x-0 translate-y-0 md:translate-y-0 scale-[2.35] sm:scale-[2.75] md:scale-[3.2]"
+      />
     </div>
   ),
   "flip-card": ({ theme = "dark" }) => (
@@ -3140,6 +3149,22 @@ export const componentDemos: Record<string, DemoComponent> = {
           status={{ label: "Available", color: "#22c55e" }}
         />
       </div>
+    </div>
+  ),
+  "macbook-mock": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "flex min-h-[320px] w-full items-center justify-center px-6 py-10",
+        theme === "dark" ? "bg-neutral-950" : "bg-neutral-100",
+      )}
+    >
+      <MacbookMock
+        size="md"
+        tint={theme === "dark" ? "spaceGray" : "silver"}
+        screenIdleClassName={
+          theme === "dark" ? "bg-[#121212]" : "bg-neutral-200"
+        }
+      />
     </div>
   ),
 };

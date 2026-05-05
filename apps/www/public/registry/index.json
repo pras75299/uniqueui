@@ -15,6 +15,7 @@
     "gradient-text-reveal",
     "scramble-text",
     "meteors-card",
+    "mini-mac-keyboard",
     "flip-card",
     "dot-grid-background",
     "floating-dock",
@@ -44,6 +45,7 @@
     "ripple",
     "word-rotate",
     "shooting-stars-grid",
-    "dynamic-info"
+    "dynamic-info",
+    "macbook-mock"
   ]
 }

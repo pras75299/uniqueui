@@ -170,6 +170,14 @@ export const registry: Registry = [
         },
     },
     {
+        name: "mini-mac-keyboard",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "mini-mac-keyboard/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "flip-card",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
@@ -411,6 +419,14 @@ export const registry: Registry = [
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
             { path: "dynamic-info/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "macbook-mock",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "macbook-mock/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },
