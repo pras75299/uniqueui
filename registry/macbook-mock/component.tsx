@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useState,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+} from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { cn } from "@/lib/utils";
@@ -46,8 +53,10 @@ const TINTS = {
   },
 } as const;
 
-export type MacbookMockProps = {
-  className?: string;
+export type MacbookMockProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "onPointerEnter" | "onPointerLeave"
+> & {
   size?: keyof typeof SIZE;
   tint?: keyof typeof TINTS;
   /** Idle screen fill (Tailwind classes). */
@@ -76,6 +85,12 @@ export function MacbookMock({
   revealMode = "fade",
   open = false,
   hoverDisabled = false,
+  onFocus,
+  onBlur,
+  onKeyDown,
+  onPointerDown,
+  onClick,
+  ...rest
 }: MacbookMockProps) {
   const reduceMotion = useReducedMotion();
   const [hovered, setHovered] = useState(false);
@@ -84,12 +99,16 @@ export function MacbookMock({
   const s = SIZE[size];
 
   type Stage = "idle" | "loading" | "done";
-  const [stage, setStage] = useState<Stage>("idle");
-  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
-  if (isOpen !== prevIsOpen) {
-    setPrevIsOpen(isOpen);
-    setStage(isOpen ? (reduceMotion ? "done" : "loading") : "idle");
-  }
+  const [stage, setStage] = useState<Stage>(() =>
+    isOpen ? (reduceMotion ? "done" : "loading") : "idle",
+  );
+  useEffect(() => {
+    const syncStageId = setTimeout(() => {
+      setStage(isOpen ? (reduceMotion ? "done" : "loading") : "idle");
+    }, 0);
+    return () => clearTimeout(syncStageId);
+  }, [isOpen, reduceMotion]);
+
   useEffect(() => {
     if (!isOpen || reduceMotion) return;
     const tid = setTimeout(() => setStage("done"), 850);
@@ -100,21 +119,48 @@ export function MacbookMock({
   const flapTransition = reduceMotion ? { duration: 0.01 } : springFlap;
   const fadeTransition = reduceMotion ? { duration: 0.01 } : fadeCross;
 
-  const rotateX = reduceMotion
-    ? LID_CLOSED_DEG
-    : isOpen
-    ? LID_OPEN_DEG
-    : LID_CLOSED_DEG;
+  const rotateX = isOpen ? LID_OPEN_DEG : LID_CLOSED_DEG;
 
   return (
     <div
-      role="presentation"
+      role="button"
+      tabIndex={hoverDisabled ? -1 : 0}
+      aria-pressed={isOpen}
+      aria-disabled={hoverDisabled}
       className={cn(
         "flex cursor-default flex-col items-center text-neutral-400",
         className,
       )}
+      {...rest}
       onPointerEnter={() => !hoverDisabled && setHovered(true)}
       onPointerLeave={() => !hoverDisabled && setHovered(false)}
+      onFocus={(event) => {
+        if (!hoverDisabled) setHovered(true);
+        onFocus?.(event);
+      }}
+      onBlur={(event) => {
+        if (!hoverDisabled) setHovered(false);
+        onBlur?.(event);
+      }}
+      onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
+        if (!hoverDisabled && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          setHovered((prev) => (open ? true : !prev));
+        }
+        onKeyDown?.(event);
+      }}
+      onPointerDown={(event: PointerEvent<HTMLDivElement>) => {
+        if (!hoverDisabled && event.pointerType !== "mouse") {
+          setHovered((prev) => (open ? true : !prev));
+        }
+        onPointerDown?.(event);
+      }}
+      onClick={(event) => {
+        if (!hoverDisabled) {
+          setHovered((prev) => (open ? true : !prev));
+        }
+        onClick?.(event);
+      }}
     >
       <div className={cn("mx-auto [perspective:1400px]", s.wrap)}>
         {/* Lid */}
@@ -199,7 +245,7 @@ export function MacbookMock({
                   }}
                   initial={false}
                   animate={{
-                    rotateX: reduceMotion ? 0 : isOpen ? -118 : 0,
+                    rotateX: isOpen ? -118 : 0,
                   }}
                   transition={flapTransition}
                 />
