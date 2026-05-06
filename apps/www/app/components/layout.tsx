@@ -2,13 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { componentsList } from "@/config/components";
+import { componentsList, isNewComponent } from "@/config/components";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/theme-context";
 import { Menu, X } from "lucide-react";
 import { motion } from "motion/react";
 import { SiteHeader } from "@/components/site-header";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
+
+const subscribeNoop = () => () => {};
+const useIsClient = () =>
+  useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
 
 export default function ComponentsLayout({
   children,
@@ -20,6 +28,8 @@ export default function ComponentsLayout({
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const activeItemRef = useRef<HTMLAnchorElement | null>(null);
+  // Defer the "NEW" check to the client to avoid SSR/CSR hydration mismatch.
+  const hydrated = useIsClient();
 
   const isOverview = pathname === "/components";
 
@@ -141,6 +151,8 @@ export default function ComponentsLayout({
                   {items.map((component) => {
                     const isActive =
                       pathname === `/components/${component.slug}`;
+                    const isNew =
+                      hydrated && isNewComponent(component.addedAt);
                     return (
                       <Link
                         key={component.slug}
@@ -154,13 +166,37 @@ export default function ComponentsLayout({
                             ? isDark
                               ? "bg-neutral-800 text-white font-medium"
                               : "bg-neutral-100 text-neutral-900 font-medium"
-                            : isDark
-                              ? "text-neutral-400 hover:text-white hover:bg-neutral-900/50"
-                              : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100",
+                            : isNew
+                              ? isDark
+                                ? "text-purple-200 hover:text-white hover:bg-purple-500/10"
+                                : "text-purple-700 hover:text-purple-900 hover:bg-purple-50"
+                              : isDark
+                                ? "text-neutral-400 hover:text-white hover:bg-neutral-900/50"
+                                : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100",
                         )}
                       >
-                        <component.icon className="w-3.5 h-3.5 shrink-0" />
-                        {component.name}
+                        <component.icon
+                          className={cn(
+                            "w-3.5 h-3.5 shrink-0",
+                            isNew &&
+                              !isActive &&
+                              (isDark ? "text-purple-300" : "text-purple-500"),
+                          )}
+                        />
+                        <span className="flex-1 truncate">{component.name}</span>
+                        {isNew ? (
+                          <span
+                            aria-label="Recently added"
+                            className={cn(
+                              "ml-auto rounded-full px-1.5 py-px text-[9px] font-bold uppercase tracking-wider",
+                              isDark
+                                ? "bg-purple-500/20 text-purple-300"
+                                : "bg-purple-100 text-purple-700",
+                            )}
+                          >
+                            New
+                          </span>
+                        ) : null}
                       </Link>
                     );
                   })}

@@ -891,6 +891,24 @@
           "target": "components/ui/macbook-mock.tsx"
         }
       ]
+    },
+    {
+      "name": "liquid-glass-panel",
+      "type": "registry:ui",
+      "title": "Liquid Glass Panel",
+      "description": "A frosted container that physically refracts the content behind it via SVG turbulence + displacement — not a simple backdrop blur. Sub-pixel-crisp text on top, slow specular sheen, Fresnel-like edge highlight, and a hover boost on the displacement strength. Honors prefers-reduced-motion.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/liquid-glass-panel.tsx",
+          "type": "registry:component",
+          "target": "components/ui/liquid-glass-panel.tsx"
+        }
+      ]
     }
   ]
 }

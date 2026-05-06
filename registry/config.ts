@@ -430,4 +430,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "liquid-glass-panel",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "liquid-glass-panel/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

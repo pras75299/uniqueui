@@ -26,6 +26,7 @@ import {
   LucideScrollText,
   LucideShield,
   LucideSparkles,
+  LucideSquare,
   LucideStars,
   LucideTable,
   LucideTerminal,
@@ -49,6 +50,8 @@ export type ComponentItem = {
   description: string;
   icon: ElementType;
   category?: string;
+  /** ISO date (YYYY-MM-DD) component was added. Drives the "NEW" highlight for ~24h. */
+  addedAt?: string;
   props?: {
     name: string;
     type: string;
@@ -87,6 +90,7 @@ const iconMap = {
   LucideScrollText,
   LucideShield,
   LucideSparkles,
+  LucideSquare,
   LucideStars,
   LucideTable,
   LucideTerminal,
@@ -2649,6 +2653,57 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "\"use client\";\nimport { MacbookMock } from \"@/components/ui/macbook-mock\";\n\nexport default function DeviceShowcase() {\n  return (\n    <div className=\"flex justify-center p-12\">\n      <MacbookMock\n        size=\"md\"\n        tint=\"spaceGray\"\n        revealSrc=\"https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80\"\n      />\n    </div>\n  );\n}\n"
+  },
+  {
+    "slug": "liquid-glass-panel",
+    "name": "Liquid Glass Panel",
+    "description": "A frosted container that physically refracts the content behind it via SVG turbulence + displacement — not a simple backdrop blur. Sub-pixel-crisp text on top, slow specular sheen, Fresnel-like edge highlight, and a hover boost on the displacement strength. Honors prefers-reduced-motion.",
+    "icon": "LucideSquare",
+    "category": "Effects & Animations",
+    "addedAt": "2026-05-06",
+    "props": [
+      {
+        "name": "displacementScale",
+        "type": "number",
+        "default": "24",
+        "description": "Strength of the UV displacement applied to pixels behind the panel. Higher values warp more aggressively."
+      },
+      {
+        "name": "noiseFrequency",
+        "type": "number",
+        "default": "0.014",
+        "description": "Base frequency of the turbulence noise. Lower values produce larger, glassier ripples; higher values feel more etched."
+      },
+      {
+        "name": "tint",
+        "type": "string",
+        "default": "\"rgba(255,255,255,0.08)\"",
+        "description": "Overall surface tint applied above the refraction layer."
+      },
+      {
+        "name": "borderHighlight",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to render the inner Fresnel-like edge ring and outer drop shadow."
+      },
+      {
+        "name": "intensityOnHover",
+        "type": "number",
+        "default": "1.15",
+        "description": "Multiplier applied to displacementScale on hover. 1.0 disables the hover boost."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for sizing, padding, rounding, and layout of the panel."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Content rendered crisply on top of the refraction layer — never filtered."
+      }
+    ],
+    "usageCode": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function Example() {\n  return (\n    <div\n      className=\"relative flex min-h-[440px] w-full items-center justify-center overflow-hidden rounded-xl bg-cover bg-center px-6 py-10\"\n      style={{\n        backgroundImage:\n          \"url(https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80)\",\n      }}\n    >\n      <div className=\"grid w-full max-w-3xl gap-5 md:grid-cols-2\">\n        <LiquidGlassPanel className=\"p-7\">\n          <span className=\"text-[11px] font-mono uppercase tracking-[0.3em] text-white/70\">\n            Solar Winter · 2026\n          </span>\n          <h3 className=\"mt-3 text-2xl font-semibold text-white\">\n            Real glass, not a blur.\n          </h3>\n          <p className=\"mt-2 text-sm text-white/80\">\n            Pixels behind this panel are physically refracted via SVG turbulence —\n            text on top stays pixel-crisp.\n          </p>\n        </LiquidGlassPanel>\n        <LiquidGlassPanel\n          className=\"p-7\"\n          tint=\"rgba(120,90,255,0.18)\"\n          displacementScale={32}\n          noiseFrequency={0.018}\n        >\n          <h3 className=\"text-lg font-semibold text-white\">Tinted variant</h3>\n          <p className=\"mt-2 text-sm text-white/80\">\n            Stronger displacement and a violet tint — useful for modal surfaces or\n            CTA flourishes.\n          </p>\n          <button className=\"mt-4 rounded-full bg-white/15 px-4 py-1.5 text-xs font-medium text-white backdrop-blur-md transition hover:bg-white/25\">\n            Action\n          </button>\n        </LiquidGlassPanel>\n      </div>\n    </div>\n  );\n}\n"
   }
 ] satisfies ComponentDefinition[];
 
@@ -2656,3 +2711,21 @@ export const componentsList: ComponentItem[] = componentDefinitions.map((compone
   ...component,
   icon: iconMap[component.icon],
 }));
+
+/** Window during which a freshly added component is highlighted as NEW. */
+export const NEW_COMPONENT_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Returns true if `addedAt` is within the last 24 hours.
+ * Pure function so server and client agree without a hydration mismatch
+ * — pass a stable `now` if you want deterministic SSR.
+ */
+export function isNewComponent(
+  addedAt: string | undefined,
+  now: number = Date.now(),
+): boolean {
+  if (!addedAt) return false;
+  const t = Date.parse(addedAt);
+  if (Number.isNaN(t)) return false;
+  return now - t < NEW_COMPONENT_WINDOW_MS;
+}
