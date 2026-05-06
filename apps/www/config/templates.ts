@@ -38,6 +38,25 @@ export const TEMPLATES: TemplateConfig[] = [
     accentColor: "text-cyan-300",
   },
   {
+    id: "saas-fintech-landing",
+    name: "SaaS Fintech Landing",
+    description:
+      "High-conversion fintech SaaS landing with a premium editorial layout, trust logos, feature highlights, FAQ, and motion-driven storytelling.",
+    niche: "SaaS",
+    difficulty: "Pro",
+    status: "available",
+    components: [
+      "Editorial Hero",
+      "Trust Logo Strip",
+      "Feature Highlights",
+      "FAQ Split Layout",
+      "Conversion CTA",
+    ],
+    componentFiles: [],
+    gradient: "from-zinc-900 via-neutral-900 to-black",
+    accentColor: "text-neutral-100",
+  },
+  {
     id: "portfolio",
     name: "Developer Portfolio",
     description:
