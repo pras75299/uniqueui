@@ -31,6 +31,8 @@ export const TEMPLATES: TemplateConfig[] = [
       "shiny-text",
       "border-beam",
       "moving-border",
+      "macbook-mock",
+      "mini-mac-keyboard",
     ],
     gradient: "from-cyan-900 via-sky-900 to-indigo-950",
     accentColor: "text-cyan-300",

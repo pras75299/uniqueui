@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/morphing-card-stack";
 import { PenCursor } from "@/components/ui/pen-cursor";
 import { OutlinedMegaMark } from "@/components/ui/outlined-mega-mark";
-import { MacbookMock } from "@/components/ui/macbook-mock";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -1070,10 +1069,6 @@ export default function Home() {
                 </div>
               </div>
             </footer>
-          </div>
-
-          <div className="mt-16 flex w-full justify-center px-4 pb-8">
-            <MacbookMock />
           </div>
 
           <OutlinedMegaMark aria-hidden>UniqueUI</OutlinedMegaMark>
