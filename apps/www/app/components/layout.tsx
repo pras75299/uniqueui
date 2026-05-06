@@ -4,19 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { componentsList, isNewComponent } from "@/config/components";
 import { cn } from "@/lib/utils";
+import { useIsClient } from "@/lib/use-is-client";
 import { useTheme } from "@/contexts/theme-context";
 import { Menu, X } from "lucide-react";
 import { motion } from "motion/react";
 import { SiteHeader } from "@/components/site-header";
-import { useState, useEffect, useRef, useSyncExternalStore } from "react";
-
-const subscribeNoop = () => () => {};
-const useIsClient = () =>
-  useSyncExternalStore(
-    subscribeNoop,
-    () => true,
-    () => false,
-  );
+import { useState, useEffect, useRef } from "react";
 
 export default function ComponentsLayout({
   children,

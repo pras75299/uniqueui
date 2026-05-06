@@ -34,8 +34,11 @@ export const LiquidGlassPanel = React.forwardRef<
   },
   ref,
 ) {
+  // Only colons need escaping in CSS selectors used by `url(#…)`; underscores
+  // and dashes are valid ident chars and must be preserved to keep the id
+  // unique across instances.
   const reactId = useId();
-  const filterId = `lgp-filter-${reactId.replace(/[^a-zA-Z0-9]/g, "")}`;
+  const filterId = `lgp-filter-${reactId.replace(/:/g, "")}`;
 
   const reduceMotion = useReducedMotion();
   const [hovered, setHovered] = useState(false);
@@ -130,7 +133,7 @@ export const LiquidGlassPanel = React.forwardRef<
       <svg
         aria-hidden
         className="pointer-events-none absolute h-0 w-0"
-        focusable="false"
+        focusable={false}
         suppressHydrationWarning
       >
         <defs>
@@ -241,5 +244,3 @@ export const LiquidGlassPanel = React.forwardRef<
 });
 
 LiquidGlassPanel.displayName = "LiquidGlassPanel";
-
-export default LiquidGlassPanel;

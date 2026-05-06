@@ -6,15 +6,8 @@ import { motion } from "motion/react";
 import { ArrowRight, Search, Layers } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 import { cn } from "@/lib/utils";
-import { useState, useMemo, useSyncExternalStore } from "react";
-
-const subscribeNoop = () => () => {};
-const useIsClient = () =>
-  useSyncExternalStore(
-    subscribeNoop,
-    () => true,
-    () => false,
-  );
+import { useIsClient } from "@/lib/use-is-client";
+import { useState, useMemo } from "react";
 
 const CATEGORIES = [
   "All",
