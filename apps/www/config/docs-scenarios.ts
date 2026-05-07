@@ -933,6 +933,27 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       }
     ]
   },
+  "caustic-light-card": {
+    "slug": "caustic-light-card",
+    "overview": "CausticLightCard renders a compact WebGL2 shader on an absolutely-positioned canvas and blends it over a gradient card base using `mix-blend-mode: screen`. The shader generates layered caustic streaks from animated noise + sine interference, then masks the effect to the lower band of the card so content remains readable. Hover interactions spring both intensity and speed to deliver a premium 'alive' response without abrupt jumps. Reduced-motion users get a frozen curated frame. Performance protections are built in: rendering pauses when the card is off-screen and the global runtime limits active animated instances to four simultaneously.",
+    "scenarios": [
+      {
+        "title": "Premium feature card surface",
+        "description": "Use as a hero feature tile where the lower half shimmers like reflected water while text stays high-contrast.",
+        "code": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function FeatureTile() {\n  return (\n    <CausticLightCard className=\"h-80 w-full rounded-2xl p-6\">\n      <h3 className=\"text-2xl font-semibold text-white\">Oceanic compute</h3>\n      <p className=\"mt-2 max-w-sm text-sm text-white/85\">\n        Real-time pipelines with premium visual polish.\n      </p>\n    </CausticLightCard>\n  );\n}"
+      },
+      {
+        "title": "Calm ambient background",
+        "description": "Lower speed and intensity for a subtle ambient glow that supports copy-heavy sections.",
+        "code": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function AmbientPanel() {\n  return (\n    <CausticLightCard\n      className=\"h-72 w-full rounded-xl\"\n      intensity={0.4}\n      speed={0.35}\n      coverage={0.48}\n    >\n      <div className=\"p-6 text-white\">\n        <p className=\"text-sm uppercase tracking-[0.2em] text-white/70\">Status</p>\n        <p className=\"mt-3 text-3xl font-semibold\">All systems nominal</p>\n      </div>\n    </CausticLightCard>\n  );\n}"
+      },
+      {
+        "title": "Warm sunset tint",
+        "description": "Change causticColor to align with a brand palette or mood lighting.",
+        "code": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function WarmCard() {\n  return (\n    <CausticLightCard\n      className=\"h-72 w-full rounded-2xl\"\n      causticColor=\"#ffe6b8\"\n      intensity={0.68}\n      speed={0.58}\n      coverage={0.6}\n    >\n      <div className=\"flex h-full items-end p-6\">\n        <p className=\"text-lg font-medium text-white\">Sunset mode enabled</p>\n      </div>\n    </CausticLightCard>\n  );\n}"
+      }
+    ]
+  },
   "refractive-cursor-lens": {
     "slug": "refractive-cursor-lens",
     "overview": "RefractiveCursorLens renders a circular SVG-filtered disc absolutely-positioned inside its wrapper and tracks it to the cursor with a motion useSpring. The wrapper is `overflow-hidden` so the disc is clipped at the wrapper's edge — it never spills outside the bounds it's placed in. The disc combines `backdrop-filter: blur()` (cross-browser glass) with `filter: url(#…)` containing an feTurbulence + feDisplacementMap chain — the same trick used in LiquidGlassPanel — so the underlying content visibly refracts. A pre-baked radial mask (black-center → white-rim) is composited into the displacement noise via feComposite arithmetic, attenuating the distortion toward the middle: rim ripples strongly, center stays nearly clear. The lens fades in over 200ms when the pointer enters its bounds, snaps to position on entry to avoid a fly-in, and disappears on exit. Touch devices (`pointer: coarse`) and `prefers-reduced-motion` users see no lens at all — the wrapper still renders its children normally. The disc itself has `pointer-events: none` so clicks always reach the content underneath.",

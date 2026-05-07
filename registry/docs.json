@@ -3523,6 +3523,71 @@
       }
     },
     {
+      "slug": "caustic-light-card",
+      "name": "Caustic Light Card",
+      "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",
+      "icon": "LucideWaves",
+      "category": "Effects & Animations",
+      "addedAt": "2026-05-07",
+      "props": [
+        {
+          "name": "causticColor",
+          "type": "string",
+          "default": "\"#fff7e0\"",
+          "description": "Tint for the caustic highlights. Use warm off-whites for natural pool-light refractions."
+        },
+        {
+          "name": "intensity",
+          "type": "number",
+          "default": "0.6",
+          "description": "Base brightness multiplier for caustic glow."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "default": "0.5",
+          "description": "Base animation speed multiplier."
+        },
+        {
+          "name": "coverage",
+          "type": "number",
+          "default": "0.5",
+          "description": "Fraction of card height covered by caustics (0-1). Higher values push shimmer farther upward."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Classes for the outer card wrapper."
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Foreground content rendered above the caustic overlay."
+        }
+      ],
+      "usageCode": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function Example() {\n  return (\n    <CausticLightCard\n      className=\"h-[420px] w-full rounded-2xl\"\n      causticColor=\"#fff7e0\"\n      intensity={0.6}\n      speed={0.5}\n      coverage={0.55}\n    >\n      <div className=\"flex h-full items-end p-8\">\n        <div>\n          <h2 className=\"text-3xl font-semibold text-white\">Caustic light card</h2>\n          <p className=\"mt-2 max-w-md text-sm text-white/85\">\n            Hover for stronger shimmer while the copy remains crisp.\n          </p>\n        </div>\n      </div>\n    </CausticLightCard>\n  );\n}\n",
+      "docs": {
+        "overview": "CausticLightCard renders a compact WebGL2 shader on an absolutely-positioned canvas and blends it over a gradient card base using `mix-blend-mode: screen`. The shader generates layered caustic streaks from animated noise + sine interference, then masks the effect to the lower band of the card so content remains readable. Hover interactions spring both intensity and speed to deliver a premium 'alive' response without abrupt jumps. Reduced-motion users get a frozen curated frame. Performance protections are built in: rendering pauses when the card is off-screen and the global runtime limits active animated instances to four simultaneously.",
+        "scenarios": [
+          {
+            "title": "Premium feature card surface",
+            "description": "Use as a hero feature tile where the lower half shimmers like reflected water while text stays high-contrast.",
+            "code": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function FeatureTile() {\n  return (\n    <CausticLightCard className=\"h-80 w-full rounded-2xl p-6\">\n      <h3 className=\"text-2xl font-semibold text-white\">Oceanic compute</h3>\n      <p className=\"mt-2 max-w-sm text-sm text-white/85\">\n        Real-time pipelines with premium visual polish.\n      </p>\n    </CausticLightCard>\n  );\n}"
+          },
+          {
+            "title": "Calm ambient background",
+            "description": "Lower speed and intensity for a subtle ambient glow that supports copy-heavy sections.",
+            "code": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function AmbientPanel() {\n  return (\n    <CausticLightCard\n      className=\"h-72 w-full rounded-xl\"\n      intensity={0.4}\n      speed={0.35}\n      coverage={0.48}\n    >\n      <div className=\"p-6 text-white\">\n        <p className=\"text-sm uppercase tracking-[0.2em] text-white/70\">Status</p>\n        <p className=\"mt-3 text-3xl font-semibold\">All systems nominal</p>\n      </div>\n    </CausticLightCard>\n  );\n}"
+          },
+          {
+            "title": "Warm sunset tint",
+            "description": "Change causticColor to align with a brand palette or mood lighting.",
+            "code": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function WarmCard() {\n  return (\n    <CausticLightCard\n      className=\"h-72 w-full rounded-2xl\"\n      causticColor=\"#ffe6b8\"\n      intensity={0.68}\n      speed={0.58}\n      coverage={0.6}\n    >\n      <div className=\"flex h-full items-end p-6\">\n        <p className=\"text-lg font-medium text-white\">Sunset mode enabled</p>\n      </div>\n    </CausticLightCard>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
       "slug": "refractive-cursor-lens",
       "name": "Refractive Cursor Lens",
       "description": "A circular liquid-glass lens that follows the cursor with spring lag and refracts the content underneath via SVG turbulence + displacement. A radial-falloff mask attenuates distortion toward the center, so the rim ripples while the middle stays calm — opposite of a fisheye. Pass-through clicks, screen-reader hidden, disabled on touch and reduced-motion.",

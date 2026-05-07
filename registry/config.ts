@@ -447,6 +447,14 @@ export const registry: Registry = [
         ],
     },
     {
+        name: "caustic-light-card",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "caustic-light-card/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "refractive-cursor-lens",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [

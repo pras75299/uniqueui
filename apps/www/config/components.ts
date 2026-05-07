@@ -2753,6 +2753,51 @@ const componentDefinitions = [
     "usageCode": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function Example() {\n  return (\n    <ShaderMeshGradient\n      className=\"h-[460px] w-full rounded-2xl\"\n      colors={[\n        \"oklch(0.78 0.16 30)\",\n        \"oklch(0.72 0.17 295)\",\n        \"oklch(0.70 0.16 220)\",\n        \"oklch(0.82 0.14 150)\",\n      ]}\n      speed={1}\n      pointerInfluence={0.45}\n      grain={0.04}\n    >\n      <div className=\"flex h-full w-full items-center justify-center px-6 text-center\">\n        <div>\n          <span className=\"text-[11px] font-mono uppercase tracking-[0.32em] text-white/80\">\n            Fragment shader · WebGL2\n          </span>\n          <h2 className=\"mt-3 text-4xl font-semibold text-white\">\n            GPU mesh gradient.\n          </h2>\n          <p className=\"mt-2 text-sm text-white/85\">\n            Move your cursor — the nearest blob leans in.\n          </p>\n        </div>\n      </div>\n    </ShaderMeshGradient>\n  );\n}\n"
   },
   {
+    "slug": "caustic-light-card",
+    "name": "Caustic Light Card",
+    "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",
+    "icon": "LucideWaves",
+    "category": "Effects & Animations",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "causticColor",
+        "type": "string",
+        "default": "\"#fff7e0\"",
+        "description": "Tint for the caustic highlights. Use warm off-whites for natural pool-light refractions."
+      },
+      {
+        "name": "intensity",
+        "type": "number",
+        "default": "0.6",
+        "description": "Base brightness multiplier for caustic glow."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "0.5",
+        "description": "Base animation speed multiplier."
+      },
+      {
+        "name": "coverage",
+        "type": "number",
+        "default": "0.5",
+        "description": "Fraction of card height covered by caustics (0-1). Higher values push shimmer farther upward."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer card wrapper."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Foreground content rendered above the caustic overlay."
+      }
+    ],
+    "usageCode": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function Example() {\n  return (\n    <CausticLightCard\n      className=\"h-[420px] w-full rounded-2xl\"\n      causticColor=\"#fff7e0\"\n      intensity={0.6}\n      speed={0.5}\n      coverage={0.55}\n    >\n      <div className=\"flex h-full items-end p-8\">\n        <div>\n          <h2 className=\"text-3xl font-semibold text-white\">Caustic light card</h2>\n          <p className=\"mt-2 max-w-md text-sm text-white/85\">\n            Hover for stronger shimmer while the copy remains crisp.\n          </p>\n        </div>\n      </div>\n    </CausticLightCard>\n  );\n}\n"
+  },
+  {
     "slug": "refractive-cursor-lens",
     "name": "Refractive Cursor Lens",
     "description": "A circular liquid-glass lens that follows the cursor with spring lag and refracts the content underneath via SVG turbulence + displacement. A radial-falloff mask attenuates distortion toward the center, so the rim ripples while the middle stays calm — opposite of a fisheye. Pass-through clicks, screen-reader hidden, disabled on touch and reduced-motion.",

@@ -49,6 +49,7 @@
     "macbook-mock",
     "liquid-glass-panel",
     "shader-mesh-gradient",
+    "caustic-light-card",
     "refractive-cursor-lens"
   ]
 }

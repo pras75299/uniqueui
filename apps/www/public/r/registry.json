@@ -929,6 +929,24 @@
       ]
     },
     {
+      "name": "caustic-light-card",
+      "type": "registry:ui",
+      "title": "Caustic Light Card",
+      "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/caustic-light-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/caustic-light-card.tsx"
+        }
+      ]
+    },
+    {
       "name": "refractive-cursor-lens",
       "type": "registry:ui",
       "title": "Refractive Cursor Lens",
