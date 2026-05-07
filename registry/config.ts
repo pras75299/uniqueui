@@ -455,6 +455,14 @@ export const registry: Registry = [
         ],
     },
     {
+        name: "chromatic-aberration-reveal",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "chromatic-aberration-reveal/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "refractive-cursor-lens",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [

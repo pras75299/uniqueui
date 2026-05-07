@@ -3523,6 +3523,76 @@
       }
     },
     {
+      "slug": "chromatic-aberration-reveal",
+      "name": "Chromatic Aberration Reveal",
+      "description": "Reveal an image with an RGB split that converges into a clean final frame. Three channel-shifted layers spring to alignment with subtle staggering, plus a one-pass wave sweep during convergence. Supports in-view once, mount-triggered, and manual visibility control.",
+      "icon": "LucideScanLine",
+      "category": "Effects & Animations",
+      "addedAt": "2026-05-07",
+      "props": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Image URL rendered in the base and channel layers."
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "description": "Accessible alt text for the base image layer."
+        },
+        {
+          "name": "splitDistance",
+          "type": "number",
+          "default": "16",
+          "description": "Initial horizontal channel offset in pixels (R = -distance, B = +distance)."
+        },
+        {
+          "name": "staggerMs",
+          "type": "number",
+          "default": "80",
+          "description": "Delay between each channel settling, in milliseconds."
+        },
+        {
+          "name": "trigger",
+          "type": "\"in-view\" | \"mount\" | \"manual\"",
+          "default": "\"in-view\"",
+          "description": "Animation trigger mode. `in-view` runs once when entering viewport."
+        },
+        {
+          "name": "isVisible",
+          "type": "boolean",
+          "default": "false",
+          "description": "Used with `trigger=\"manual\"` to control reveal state externally."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Classes for the reveal wrapper."
+        }
+      ],
+      "usageCode": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function Example() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[420px] w-full rounded-2xl\"\n      src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n      alt=\"Mountain lake at dusk\"\n      splitDistance={16}\n      staggerMs={80}\n      trigger=\"in-view\"\n    />\n  );\n}\n",
+      "docs": {
+        "overview": "ChromaticAberrationReveal stacks a base `<img>` plus three RGB-biased overlay layers using `mix-blend-mode: screen` over a black wrapper. On reveal, red starts at `-splitDistance`, green at `0`, blue at `+splitDistance`, each at partial opacity, then they spring back to perfect alignment with staggered delays so convergence reads intentional and cinematic. A soft diagonal wave sweep runs once during convergence. `trigger=\"in-view\"` uses IntersectionObserver with once semantics to avoid repeated replays; `trigger=\"manual\"` enables external timeline control. Reduced-motion users get a plain fade treatment without channel split.",
+        "scenarios": [
+          {
+            "title": "Hero image entrance",
+            "description": "Use in-view mode to reveal a hero visual as it enters the viewport, then keep it stable.",
+            "code": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function HeroVisual() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[520px] w-full rounded-3xl\"\n      src=\"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80\"\n      alt=\"Futuristic skyline\"\n      trigger=\"in-view\"\n    />\n  );\n}"
+          },
+          {
+            "title": "Gallery card with tighter split",
+            "description": "Lower splitDistance for a more restrained chromatic cue in dense grids.",
+            "code": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function GalleryItem() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-72 w-full rounded-xl\"\n      src=\"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80\"\n      alt=\"Snowy mountain\"\n      splitDistance={10}\n      staggerMs={60}\n      trigger=\"mount\"\n    />\n  );\n}"
+          },
+          {
+            "title": "Manual reveal in controlled sequence",
+            "description": "Tie visibility to your own state machine or parent timeline.",
+            "code": "\"use client\";\nimport { useState } from \"react\";\nimport { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function ControlledReveal() {\n  const [visible, setVisible] = useState(false);\n\n  return (\n    <div className=\"space-y-4\">\n      <button\n        onClick={() => setVisible((v) => !v)}\n        className=\"rounded-md bg-black px-4 py-2 text-white\"\n      >\n        Toggle reveal\n      </button>\n      <ChromaticAberrationReveal\n        className=\"h-80 w-full rounded-2xl\"\n        src=\"https://images.unsplash.com/photo-1493244040629-496f6d136cc3?auto=format&fit=crop&w=1400&q=80\"\n        alt=\"Forest trail\"\n        trigger=\"manual\"\n        isVisible={visible}\n      />\n    </div>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
       "slug": "caustic-light-card",
       "name": "Caustic Light Card",
       "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",

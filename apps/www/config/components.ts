@@ -2753,6 +2753,56 @@ const componentDefinitions = [
     "usageCode": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function Example() {\n  return (\n    <ShaderMeshGradient\n      className=\"h-[460px] w-full rounded-2xl\"\n      colors={[\n        \"oklch(0.78 0.16 30)\",\n        \"oklch(0.72 0.17 295)\",\n        \"oklch(0.70 0.16 220)\",\n        \"oklch(0.82 0.14 150)\",\n      ]}\n      speed={1}\n      pointerInfluence={0.45}\n      grain={0.04}\n    >\n      <div className=\"flex h-full w-full items-center justify-center px-6 text-center\">\n        <div>\n          <span className=\"text-[11px] font-mono uppercase tracking-[0.32em] text-white/80\">\n            Fragment shader · WebGL2\n          </span>\n          <h2 className=\"mt-3 text-4xl font-semibold text-white\">\n            GPU mesh gradient.\n          </h2>\n          <p className=\"mt-2 text-sm text-white/85\">\n            Move your cursor — the nearest blob leans in.\n          </p>\n        </div>\n      </div>\n    </ShaderMeshGradient>\n  );\n}\n"
   },
   {
+    "slug": "chromatic-aberration-reveal",
+    "name": "Chromatic Aberration Reveal",
+    "description": "Reveal an image with an RGB split that converges into a clean final frame. Three channel-shifted layers spring to alignment with subtle staggering, plus a one-pass wave sweep during convergence. Supports in-view once, mount-triggered, and manual visibility control.",
+    "icon": "LucideScanLine",
+    "category": "Effects & Animations",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "description": "Image URL rendered in the base and channel layers."
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "description": "Accessible alt text for the base image layer."
+      },
+      {
+        "name": "splitDistance",
+        "type": "number",
+        "default": "16",
+        "description": "Initial horizontal channel offset in pixels (R = -distance, B = +distance)."
+      },
+      {
+        "name": "staggerMs",
+        "type": "number",
+        "default": "80",
+        "description": "Delay between each channel settling, in milliseconds."
+      },
+      {
+        "name": "trigger",
+        "type": "\"in-view\" | \"mount\" | \"manual\"",
+        "default": "\"in-view\"",
+        "description": "Animation trigger mode. `in-view` runs once when entering viewport."
+      },
+      {
+        "name": "isVisible",
+        "type": "boolean",
+        "default": "false",
+        "description": "Used with `trigger=\"manual\"` to control reveal state externally."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the reveal wrapper."
+      }
+    ],
+    "usageCode": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function Example() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[420px] w-full rounded-2xl\"\n      src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n      alt=\"Mountain lake at dusk\"\n      splitDistance={16}\n      staggerMs={80}\n      trigger=\"in-view\"\n    />\n  );\n}\n"
+  },
+  {
     "slug": "caustic-light-card",
     "name": "Caustic Light Card",
     "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",

@@ -50,6 +50,7 @@
     "liquid-glass-panel",
     "shader-mesh-gradient",
     "caustic-light-card",
+    "chromatic-aberration-reveal",
     "refractive-cursor-lens"
   ]
 }

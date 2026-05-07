@@ -947,6 +947,24 @@
       ]
     },
     {
+      "name": "chromatic-aberration-reveal",
+      "type": "registry:ui",
+      "title": "Chromatic Aberration Reveal",
+      "description": "Reveal an image with an RGB split that converges into a clean final frame. Three channel-shifted layers spring to alignment with subtle staggering, plus a one-pass wave sweep during convergence. Supports in-view once, mount-triggered, and manual visibility control.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/chromatic-aberration-reveal.tsx",
+          "type": "registry:component",
+          "target": "components/ui/chromatic-aberration-reveal.tsx"
+        }
+      ]
+    },
+    {
       "name": "refractive-cursor-lens",
       "type": "registry:ui",
       "title": "Refractive Cursor Lens",

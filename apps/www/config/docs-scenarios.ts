@@ -933,6 +933,27 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       }
     ]
   },
+  "chromatic-aberration-reveal": {
+    "slug": "chromatic-aberration-reveal",
+    "overview": "ChromaticAberrationReveal stacks a base `<img>` plus three RGB-biased overlay layers using `mix-blend-mode: screen` over a black wrapper. On reveal, red starts at `-splitDistance`, green at `0`, blue at `+splitDistance`, each at partial opacity, then they spring back to perfect alignment with staggered delays so convergence reads intentional and cinematic. A soft diagonal wave sweep runs once during convergence. `trigger=\"in-view\"` uses IntersectionObserver with once semantics to avoid repeated replays; `trigger=\"manual\"` enables external timeline control. Reduced-motion users get a plain fade treatment without channel split.",
+    "scenarios": [
+      {
+        "title": "Hero image entrance",
+        "description": "Use in-view mode to reveal a hero visual as it enters the viewport, then keep it stable.",
+        "code": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function HeroVisual() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[520px] w-full rounded-3xl\"\n      src=\"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80\"\n      alt=\"Futuristic skyline\"\n      trigger=\"in-view\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Gallery card with tighter split",
+        "description": "Lower splitDistance for a more restrained chromatic cue in dense grids.",
+        "code": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function GalleryItem() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-72 w-full rounded-xl\"\n      src=\"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80\"\n      alt=\"Snowy mountain\"\n      splitDistance={10}\n      staggerMs={60}\n      trigger=\"mount\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Manual reveal in controlled sequence",
+        "description": "Tie visibility to your own state machine or parent timeline.",
+        "code": "\"use client\";\nimport { useState } from \"react\";\nimport { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function ControlledReveal() {\n  const [visible, setVisible] = useState(false);\n\n  return (\n    <div className=\"space-y-4\">\n      <button\n        onClick={() => setVisible((v) => !v)}\n        className=\"rounded-md bg-black px-4 py-2 text-white\"\n      >\n        Toggle reveal\n      </button>\n      <ChromaticAberrationReveal\n        className=\"h-80 w-full rounded-2xl\"\n        src=\"https://images.unsplash.com/photo-1493244040629-496f6d136cc3?auto=format&fit=crop&w=1400&q=80\"\n        alt=\"Forest trail\"\n        trigger=\"manual\"\n        isVisible={visible}\n      />\n    </div>\n  );\n}"
+      }
+    ]
+  },
   "caustic-light-card": {
     "slug": "caustic-light-card",
     "overview": "CausticLightCard renders a compact WebGL2 shader on an absolutely-positioned canvas and blends it over a gradient card base using `mix-blend-mode: screen`. The shader generates layered caustic streaks from animated noise + sine interference, then masks the effect to the lower band of the card so content remains readable. Hover interactions spring both intensity and speed to deliver a premium 'alive' response without abrupt jumps. Reduced-motion users get a frozen curated frame. Performance protections are built in: rendering pauses when the card is off-screen and the global runtime limits active animated instances to four simultaneously.",
