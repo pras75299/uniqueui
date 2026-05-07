@@ -61,6 +61,7 @@ import { MacbookMock } from "@/components/ui/macbook-mock";
 import { LiquidGlassPanel } from "@/components/ui/liquid-glass-panel";
 import { ShaderMeshGradient } from "@/components/ui/shader-mesh-gradient";
 import { ChromaticAberrationReveal } from "@/components/ui/chromatic-aberration-reveal";
+import { IridescentFoilButton } from "@/components/ui/iridescent-foil-button";
 import { CausticLightCard } from "@/components/ui/caustic-light-card";
 import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
 import { motion } from "motion/react";
@@ -3270,6 +3271,23 @@ export const componentDemos: Record<string, DemoComponent> = {
           RGB split, then perfect convergence.
         </h3>
       </div>
+    </div>
+  ),
+  "iridescent-foil-button": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "relative flex h-[300px] w-full items-center justify-center rounded-xl border",
+        theme === "dark"
+          ? "border-neutral-800 bg-gradient-to-br from-[#070a13] via-[#0d1423] to-[#080d1a]"
+          : "border-neutral-200 bg-gradient-to-br from-white via-[#f7f8ff] to-[#edf2ff]",
+      )}
+    >
+      <IridescentFoilButton
+        variant={theme === "dark" ? "vivid" : "default"}
+        className="min-w-[240px] px-8 py-3 text-base"
+      >
+        Start Free Trial
+      </IridescentFoilButton>
     </div>
   ),
   "caustic-light-card": ({ theme = "dark" }) => (

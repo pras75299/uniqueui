@@ -954,6 +954,27 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       }
     ]
   },
+  "iridescent-foil-button": {
+    "slug": "iridescent-foil-button",
+    "overview": "IridescentFoilButton layers a dark base gradient, a conic foil sheen, and an SVG turbulence grain pass to simulate holographic foil without shaders. Pointer movement updates CSS custom properties (`--foil-angle`, `--foil-hue`, `--foil-x`, `--foil-y`) so hue and highlight position track the cursor in real time. Hover and press use spring scale feedback (`1.02` on hover, `0.98` on tap), while reduced-motion users keep the foil effect but skip motion scaling. The component extends native motion button props, so `type`, `disabled`, `onClick`, and form behavior work as expected.",
+    "scenarios": [
+      {
+        "title": "Primary hero CTA",
+        "description": "Use `vivid` variant for high-attention call-to-action buttons in hero sections.",
+        "code": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function HeroCta() {\n  return (\n    <IridescentFoilButton variant=\"vivid\" className=\"px-8 py-3 text-base\">\n      Start Free Trial\n    </IridescentFoilButton>\n  );\n}"
+      },
+      {
+        "title": "Subtle dashboard action",
+        "description": "Use `subtle` for dense interfaces where you want foil personality without overwhelming nearby controls.",
+        "code": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function DashboardAction() {\n  return (\n    <IridescentFoilButton variant=\"subtle\" grainOpacity={0.04} hueRange={80}>\n      Sync Reports\n    </IridescentFoilButton>\n  );\n}"
+      },
+      {
+        "title": "Disabled and form-safe button",
+        "description": "Works as a drop-in `<button>` with disabled behavior and native `type` forwarding.",
+        "code": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function FormFooter() {\n  return (\n    <IridescentFoilButton type=\"submit\" disabled>\n      Processing...\n    </IridescentFoilButton>\n  );\n}"
+      }
+    ]
+  },
   "caustic-light-card": {
     "slug": "caustic-light-card",
     "overview": "CausticLightCard renders a compact WebGL2 shader on an absolutely-positioned canvas and blends it over a gradient card base using `mix-blend-mode: screen`. The shader generates layered caustic streaks from animated noise + sine interference, then masks the effect to the lower band of the card so content remains readable. Hover interactions spring both intensity and speed to deliver a premium 'alive' response without abrupt jumps. Reduced-motion users get a frozen curated frame. Performance protections are built in: rendering pauses when the card is off-screen and the global runtime limits active animated instances to four simultaneously.",

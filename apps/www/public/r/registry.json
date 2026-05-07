@@ -965,6 +965,24 @@
       ]
     },
     {
+      "name": "iridescent-foil-button",
+      "type": "registry:ui",
+      "title": "Iridescent Foil Button",
+      "description": "A holographic foil CTA button with pointer-reactive hue/angle shifts, soft specular sheen, and fine grain texture. Built as a drop-in button with proper focus states, disabled support, and reduced-motion-safe scale behavior.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/iridescent-foil-button.tsx",
+          "type": "registry:component",
+          "target": "components/ui/iridescent-foil-button.tsx"
+        }
+      ]
+    },
+    {
       "name": "refractive-cursor-lens",
       "type": "registry:ui",
       "title": "Refractive Cursor Lens",

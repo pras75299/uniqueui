@@ -51,6 +51,7 @@
     "shader-mesh-gradient",
     "caustic-light-card",
     "chromatic-aberration-reveal",
+    "iridescent-foil-button",
     "refractive-cursor-lens"
   ]
 }

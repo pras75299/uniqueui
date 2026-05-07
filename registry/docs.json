@@ -3593,6 +3593,60 @@
       }
     },
     {
+      "slug": "iridescent-foil-button",
+      "name": "Iridescent Foil Button",
+      "description": "A holographic foil CTA button with pointer-reactive hue/angle shifts, soft specular sheen, and fine grain texture. Built as a drop-in button with proper focus states, disabled support, and reduced-motion-safe scale behavior.",
+      "icon": "LucideSparkles",
+      "category": "Effects & Animations",
+      "addedAt": "2026-05-07",
+      "props": [
+        {
+          "name": "variant",
+          "type": "\"default\" | \"subtle\" | \"vivid\"",
+          "default": "\"default\"",
+          "description": "Controls base gradient and foil intensity."
+        },
+        {
+          "name": "grainOpacity",
+          "type": "number",
+          "default": "0.05",
+          "description": "Opacity for the turbulence grain overlay. Recommended range: 0.03-0.08."
+        },
+        {
+          "name": "hueRange",
+          "type": "number",
+          "default": "120",
+          "description": "Maximum hue swing in degrees driven by pointer position."
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Button label or custom content."
+        }
+      ],
+      "usageCode": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function Example() {\n  return (\n    <IridescentFoilButton variant=\"vivid\">\n      Start Free Trial\n    </IridescentFoilButton>\n  );\n}\n",
+      "docs": {
+        "overview": "IridescentFoilButton layers a dark base gradient, a conic foil sheen, and an SVG turbulence grain pass to simulate holographic foil without shaders. Pointer movement updates CSS custom properties (`--foil-angle`, `--foil-hue`, `--foil-x`, `--foil-y`) so hue and highlight position track the cursor in real time. Hover and press use spring scale feedback (`1.02` on hover, `0.98` on tap), while reduced-motion users keep the foil effect but skip motion scaling. The component extends native motion button props, so `type`, `disabled`, `onClick`, and form behavior work as expected.",
+        "scenarios": [
+          {
+            "title": "Primary hero CTA",
+            "description": "Use `vivid` variant for high-attention call-to-action buttons in hero sections.",
+            "code": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function HeroCta() {\n  return (\n    <IridescentFoilButton variant=\"vivid\" className=\"px-8 py-3 text-base\">\n      Start Free Trial\n    </IridescentFoilButton>\n  );\n}"
+          },
+          {
+            "title": "Subtle dashboard action",
+            "description": "Use `subtle` for dense interfaces where you want foil personality without overwhelming nearby controls.",
+            "code": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function DashboardAction() {\n  return (\n    <IridescentFoilButton variant=\"subtle\" grainOpacity={0.04} hueRange={80}>\n      Sync Reports\n    </IridescentFoilButton>\n  );\n}"
+          },
+          {
+            "title": "Disabled and form-safe button",
+            "description": "Works as a drop-in `<button>` with disabled behavior and native `type` forwarding.",
+            "code": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function FormFooter() {\n  return (\n    <IridescentFoilButton type=\"submit\" disabled>\n      Processing...\n    </IridescentFoilButton>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
       "slug": "caustic-light-card",
       "name": "Caustic Light Card",
       "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",

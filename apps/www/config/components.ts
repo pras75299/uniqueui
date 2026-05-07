@@ -2803,6 +2803,40 @@ const componentDefinitions = [
     "usageCode": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function Example() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[420px] w-full rounded-2xl\"\n      src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n      alt=\"Mountain lake at dusk\"\n      splitDistance={16}\n      staggerMs={80}\n      trigger=\"in-view\"\n    />\n  );\n}\n"
   },
   {
+    "slug": "iridescent-foil-button",
+    "name": "Iridescent Foil Button",
+    "description": "A holographic foil CTA button with pointer-reactive hue/angle shifts, soft specular sheen, and fine grain texture. Built as a drop-in button with proper focus states, disabled support, and reduced-motion-safe scale behavior.",
+    "icon": "LucideSparkles",
+    "category": "Effects & Animations",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "variant",
+        "type": "\"default\" | \"subtle\" | \"vivid\"",
+        "default": "\"default\"",
+        "description": "Controls base gradient and foil intensity."
+      },
+      {
+        "name": "grainOpacity",
+        "type": "number",
+        "default": "0.05",
+        "description": "Opacity for the turbulence grain overlay. Recommended range: 0.03-0.08."
+      },
+      {
+        "name": "hueRange",
+        "type": "number",
+        "default": "120",
+        "description": "Maximum hue swing in degrees driven by pointer position."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Button label or custom content."
+      }
+    ],
+    "usageCode": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function Example() {\n  return (\n    <IridescentFoilButton variant=\"vivid\">\n      Start Free Trial\n    </IridescentFoilButton>\n  );\n}\n"
+  },
+  {
     "slug": "caustic-light-card",
     "name": "Caustic Light Card",
     "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",
