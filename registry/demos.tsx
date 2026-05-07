@@ -3253,15 +3253,15 @@ export const componentDemos: Record<string, DemoComponent> = {
         "relative h-[460px] w-full overflow-hidden rounded-xl border",
         theme === "dark"
           ? "border-neutral-800 bg-black"
-          : "border-neutral-200 bg-black",
+          : "border-neutral-200 bg-gradient-to-br from-white to-neutral-100",
       )}
     >
       <ChromaticAberrationReveal
         className="h-full w-full rounded-none"
         src="https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80"
         alt="Mountain lake at dusk"
-        splitDistance={16}
-        staggerMs={90}
+        splitDistance={42}
+        staggerMs={260}
         trigger="mount"
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/80 via-black/35 to-transparent p-6">

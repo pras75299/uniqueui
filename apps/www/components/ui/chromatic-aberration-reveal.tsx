@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 
 export interface ChromaticAberrationRevealProps
   extends Omit<HTMLMotionProps<"div">, "onDrag"> {
-  src: string;
-  alt: string;
+  src?: string;
+  alt?: string;
   splitDistance?: number;
   staggerMs?: number;
   trigger?: "in-view" | "mount" | "manual";
@@ -26,9 +26,9 @@ export const ChromaticAberrationReveal = React.forwardRef<
 >(function ChromaticAberrationReveal(
   {
     src,
-    alt,
-    splitDistance = 16,
-    staggerMs = 80,
+    alt = "",
+    splitDistance = 32,
+    staggerMs = 220,
     trigger = "in-view",
     isVisible = false,
     className,
@@ -67,6 +67,7 @@ export const ChromaticAberrationReveal = React.forwardRef<
 
   const delayStep = staggerMs / 1000;
   const shouldPlayWave = visible && !reduceMotion && !wavePlayed;
+  const hasImage = Boolean(src);
 
   return (
     <motion.div
@@ -76,76 +77,89 @@ export const ChromaticAberrationReveal = React.forwardRef<
         else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
       }}
       className={cn(
-        "relative isolate overflow-hidden rounded-2xl bg-black",
+        "relative isolate overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950",
         className,
       )}
       {...rest}
     >
-      <img
-        src={src}
-        alt={alt}
-        className="block h-full w-full object-cover"
-        loading="lazy"
-        decoding="async"
-      />
+      {hasImage ? (
+        <img
+          src={src}
+          alt={alt}
+          className="block h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[radial-gradient(110%_90%_at_20%_10%,rgba(255,255,255,0.25),transparent_58%),radial-gradient(120%_90%_at_80%_85%,rgba(59,130,246,0.24),transparent_60%),linear-gradient(135deg,#0f172a,#1e293b,#0f172a)]"
+        />
+      )}
 
       {!reduceMotion ? (
         <>
           <motion.div
             aria-hidden
             className="pointer-events-none absolute inset-0 [mix-blend-mode:screen]"
-            initial={{ x: -splitDistance, opacity: 0.6 }}
-            animate={visible ? { x: 0, opacity: 1 } : { x: -splitDistance, opacity: 0.6 }}
-            transition={{ type: "spring", stiffness: 220, damping: 26, delay: 0 }}
+            initial={{ x: -splitDistance, opacity: 0.3 }}
+            animate={visible ? { x: 0, opacity: 1 } : { x: -splitDistance, opacity: 0.3 }}
+            transition={{ type: "spring", stiffness: 95, damping: 20, delay: 0 }}
           >
-            <img
-              src={src}
-              alt=""
-              className="h-full w-full object-cover [filter:brightness(1.3)_saturate(1.35)_hue-rotate(0deg)]"
-              loading="lazy"
-              decoding="async"
+            <div
+              className={cn(
+                "h-full w-full",
+                hasImage
+                  ? "bg-cover bg-center [filter:grayscale(1)_contrast(1.4)_brightness(1.2)_sepia(1)_saturate(4)_hue-rotate(0deg)]"
+                  : "bg-[linear-gradient(135deg,#0f172a,#1e293b,#0f172a)] [filter:contrast(1.25)_brightness(1.08)]",
+              )}
+              style={hasImage ? { backgroundImage: `url("${src}")` } : undefined}
             />
           </motion.div>
 
           <motion.div
             aria-hidden
             className="pointer-events-none absolute inset-0 [mix-blend-mode:screen]"
-            initial={{ x: 0, opacity: 0.6 }}
-            animate={visible ? { x: 0, opacity: 1 } : { x: 0, opacity: 0.6 }}
+            initial={{ x: 0, opacity: 0.3 }}
+            animate={visible ? { x: 0, opacity: 1 } : { x: 0, opacity: 0.3 }}
             transition={{
               type: "spring",
-              stiffness: 205,
-              damping: 28,
+              stiffness: 86,
+              damping: 22,
               delay: delayStep,
             }}
           >
-            <img
-              src={src}
-              alt=""
-              className="h-full w-full object-cover [filter:brightness(1.28)_saturate(1.28)_hue-rotate(120deg)]"
-              loading="lazy"
-              decoding="async"
+            <div
+              className={cn(
+                "h-full w-full",
+                hasImage
+                  ? "bg-cover bg-center [filter:grayscale(1)_contrast(1.35)_brightness(1.15)_sepia(1)_saturate(4)_hue-rotate(120deg)]"
+                  : "bg-[linear-gradient(135deg,#0f172a,#1e293b,#0f172a)] [filter:contrast(1.22)_brightness(1.06)_hue-rotate(120deg)]",
+              )}
+              style={hasImage ? { backgroundImage: `url("${src}")` } : undefined}
             />
           </motion.div>
 
           <motion.div
             aria-hidden
             className="pointer-events-none absolute inset-0 [mix-blend-mode:screen]"
-            initial={{ x: splitDistance, opacity: 0.6 }}
-            animate={visible ? { x: 0, opacity: 1 } : { x: splitDistance, opacity: 0.6 }}
+            initial={{ x: splitDistance, opacity: 0.3 }}
+            animate={visible ? { x: 0, opacity: 1 } : { x: splitDistance, opacity: 0.3 }}
             transition={{
               type: "spring",
-              stiffness: 190,
-              damping: 30,
+              stiffness: 78,
+              damping: 24,
               delay: delayStep * 2,
             }}
           >
-            <img
-              src={src}
-              alt=""
-              className="h-full w-full object-cover [filter:brightness(1.26)_saturate(1.32)_hue-rotate(240deg)]"
-              loading="lazy"
-              decoding="async"
+            <div
+              className={cn(
+                "h-full w-full",
+                hasImage
+                  ? "bg-cover bg-center [filter:grayscale(1)_contrast(1.35)_brightness(1.15)_sepia(1)_saturate(4)_hue-rotate(240deg)]"
+                  : "bg-[linear-gradient(135deg,#0f172a,#1e293b,#0f172a)] [filter:contrast(1.22)_brightness(1.06)_hue-rotate(240deg)]",
+              )}
+              style={hasImage ? { backgroundImage: `url("${src}")` } : undefined}
             />
           </motion.div>
 
@@ -155,7 +169,7 @@ export const ChromaticAberrationReveal = React.forwardRef<
               className="pointer-events-none absolute -left-1/3 top-0 h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent blur-xl"
               initial={{ x: "-120%", opacity: 0 }}
               animate={{ x: "260%", opacity: [0, 0.65, 0] }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
               onAnimationComplete={() => setWavePlayed(true)}
             />
           ) : null}

@@ -2763,23 +2763,23 @@ const componentDefinitions = [
       {
         "name": "src",
         "type": "string",
-        "description": "Image URL rendered in the base and channel layers."
+        "description": "Optional image URL rendered in the base and channel layers."
       },
       {
         "name": "alt",
         "type": "string",
-        "description": "Accessible alt text for the base image layer."
+        "description": "Accessible alt text for the base image layer when `src` is provided."
       },
       {
         "name": "splitDistance",
         "type": "number",
-        "default": "16",
+        "default": "32",
         "description": "Initial horizontal channel offset in pixels (R = -distance, B = +distance)."
       },
       {
         "name": "staggerMs",
         "type": "number",
-        "default": "80",
+        "default": "220",
         "description": "Delay between each channel settling, in milliseconds."
       },
       {
@@ -2800,7 +2800,7 @@ const componentDefinitions = [
         "description": "Classes for the reveal wrapper."
       }
     ],
-    "usageCode": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function Example() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[420px] w-full rounded-2xl\"\n      src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n      alt=\"Mountain lake at dusk\"\n      splitDistance={16}\n      staggerMs={80}\n      trigger=\"in-view\"\n    />\n  );\n}\n"
+    "usageCode": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function Example() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[420px] w-full rounded-2xl\"\n      src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n      alt=\"Mountain lake at dusk\"\n      splitDistance={42}\n      staggerMs={260}\n      trigger=\"mount\"\n    />\n  );\n}\n"
   },
   {
     "slug": "iridescent-foil-button",
