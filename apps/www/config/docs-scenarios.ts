@@ -975,6 +975,27 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       }
     ]
   },
+  "kinetic-variable-headline": {
+    "slug": "kinetic-variable-headline",
+    "overview": "KineticVariableHeadline splits text into per-glyph spans and animates each glyph's `font-variation-settings` (`wght`) via springs. In entrance mode, letters rise from low weight to high weight with a left-to-right stagger. In pointer mode, each glyph weight is mapped from distance-to-pointer using a smooth falloff curve, creating a physically coherent magnetic field effect. Reduced-motion users render directly at final weight with no animation. The wrapper includes `aria-label` with the full input text so assistive technologies read a coherent headline even though glyphs are split visually.",
+    "scenarios": [
+      {
+        "title": "Hero headline with entrance choreography",
+        "description": "Use large type and entrance mode to create a premium launch moment above the fold.",
+        "code": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function HeroHeadline() {\n  return (\n    <KineticVariableHeadline\n      text=\"BUILD BOLD\"\n      mode=\"entrance\"\n      className=\"text-[clamp(3.5rem,12vw,8rem)] leading-[0.95]\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Interactive kinetic title",
+        "description": "Pointer mode turns the headline into a responsive magnetic field that reacts to cursor proximity.",
+        "code": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function InteractiveTitle() {\n  return (\n    <KineticVariableHeadline\n      text=\"FEEL THE TYPE\"\n      mode=\"pointer\"\n      weightRange={[220, 780]}\n      className=\"text-[clamp(3rem,11vw,7rem)]\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Multi-line editorial display",
+        "description": "Line breaks are preserved, so stacked statements still animate per glyph.",
+        "code": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function EditorialStack() {\n  return (\n    <KineticVariableHeadline\n      text={\"MAKE\\nIT\\nMOVE\"}\n      mode=\"both\"\n      as=\"h2\"\n      className=\"text-[clamp(3rem,13vw,8rem)] uppercase\"\n    />\n  );\n}"
+      }
+    ]
+  },
   "caustic-light-card": {
     "slug": "caustic-light-card",
     "overview": "CausticLightCard renders a compact WebGL2 shader on an absolutely-positioned canvas and blends it over a gradient card base using `mix-blend-mode: screen`. The shader generates layered caustic streaks from animated noise + sine interference, then masks the effect to the lower band of the card so content remains readable. Hover interactions spring both intensity and speed to deliver a premium 'alive' response without abrupt jumps. Reduced-motion users get a frozen curated frame. Performance protections are built in: rendering pauses when the card is off-screen and the global runtime limits active animated instances to four simultaneously.",

@@ -471,6 +471,14 @@ export const registry: Registry = [
         ],
     },
     {
+        name: "kinetic-variable-headline",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "kinetic-variable-headline/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "refractive-cursor-lens",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [

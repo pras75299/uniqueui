@@ -2837,6 +2837,51 @@ const componentDefinitions = [
     "usageCode": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function Example() {\n  return (\n    <IridescentFoilButton variant=\"vivid\">\n      Start Free Trial\n    </IridescentFoilButton>\n  );\n}\n"
   },
   {
+    "slug": "kinetic-variable-headline",
+    "name": "Kinetic Variable Headline",
+    "description": "A large display headline that animates variable font weight per glyph on entrance and pointer proximity. Letters inflate like a magnetic field while preserving readable text semantics.",
+    "icon": "LucideType",
+    "category": "Effects & Animations",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "Headline text. Supports line breaks via `\\n`."
+      },
+      {
+        "name": "mode",
+        "type": "\"entrance\" | \"pointer\" | \"both\"",
+        "default": "\"both\"",
+        "description": "Animation mode: entrance stagger, pointer magnetic field, or both."
+      },
+      {
+        "name": "weightRange",
+        "type": "[number, number]",
+        "default": "[200, 700]",
+        "description": "Variable font weight range mapped across animations."
+      },
+      {
+        "name": "staggerMs",
+        "type": "number",
+        "default": "25",
+        "description": "Per-letter delay for entrance animation in milliseconds."
+      },
+      {
+        "name": "as",
+        "type": "\"h1\" | \"h2\" | \"h3\"",
+        "default": "\"h1\"",
+        "description": "Semantic heading level."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the headline wrapper."
+      }
+    ],
+    "usageCode": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function Example() {\n  return (\n    <KineticVariableHeadline\n      text=\"CRAFTED MOTION\"\n      mode=\"both\"\n      className=\"text-[clamp(3.5rem,11vw,7.2rem)] uppercase\"\n    />\n  );\n}\n"
+  },
+  {
     "slug": "caustic-light-card",
     "name": "Caustic Light Card",
     "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",

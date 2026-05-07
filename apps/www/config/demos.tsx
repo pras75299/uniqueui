@@ -66,6 +66,7 @@ import { LiquidGlassPanel } from "@/components/ui/liquid-glass-panel";
 import { ShaderMeshGradient } from "@/components/ui/shader-mesh-gradient";
 import { ChromaticAberrationReveal } from "@/components/ui/chromatic-aberration-reveal";
 import { IridescentFoilButton } from "@/components/ui/iridescent-foil-button";
+import { KineticVariableHeadline } from "@/components/ui/kinetic-variable-headline";
 import { CausticLightCard } from "@/components/ui/caustic-light-card";
 import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
 import { motion } from "motion/react";
@@ -3292,6 +3293,19 @@ export const componentDemos: Record<string, DemoComponent> = {
       >
         Start Free Trial
       </IridescentFoilButton>
+    </div>
+  ),
+  "kinetic-variable-headline": ({ theme = "dark" }) => (
+    <div className="relative flex min-h-[320px] w-full items-center justify-center overflow-hidden px-8 py-12">
+      <KineticVariableHeadline
+        text="CRAFTED MOTION"
+        mode="both"
+        as="h1"
+        className={cn(
+          "text-center text-[clamp(3.5rem,11vw,7.2rem)] uppercase",
+          theme === "dark" ? "text-white" : "text-[#0d1f3d]",
+        )}
+      />
     </div>
   ),
   "caustic-light-card": ({ theme = "dark" }) => (

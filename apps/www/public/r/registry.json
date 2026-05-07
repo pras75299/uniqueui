@@ -983,6 +983,24 @@
       ]
     },
     {
+      "name": "kinetic-variable-headline",
+      "type": "registry:ui",
+      "title": "Kinetic Variable Headline",
+      "description": "A large display headline that animates variable font weight per glyph on entrance and pointer proximity. Letters inflate like a magnetic field while preserving readable text semantics.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/kinetic-variable-headline.tsx",
+          "type": "registry:component",
+          "target": "components/ui/kinetic-variable-headline.tsx"
+        }
+      ]
+    },
+    {
       "name": "refractive-cursor-lens",
       "type": "registry:ui",
       "title": "Refractive Cursor Lens",
