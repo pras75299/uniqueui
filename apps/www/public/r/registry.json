@@ -927,6 +927,24 @@
           "target": "components/ui/shader-mesh-gradient.tsx"
         }
       ]
+    },
+    {
+      "name": "refractive-cursor-lens",
+      "type": "registry:ui",
+      "title": "Refractive Cursor Lens",
+      "description": "A circular liquid-glass lens that follows the cursor with spring lag and refracts the content underneath via SVG turbulence + displacement. A radial-falloff mask attenuates distortion toward the center, so the rim ripples while the middle stays calm — opposite of a fisheye. Pass-through clicks, screen-reader hidden, disabled on touch and reduced-motion.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/refractive-cursor-lens.tsx",
+          "type": "registry:component",
+          "target": "components/ui/refractive-cursor-lens.tsx"
+        }
+      ]
     }
   ]
 }

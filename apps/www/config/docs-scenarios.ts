@@ -932,5 +932,26 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function FeatureCard() {\n  return (\n    <div className=\"relative h-72 w-full overflow-hidden rounded-2xl\">\n      <ShaderMeshGradient\n        className=\"absolute inset-0\"\n        speed={0.5}\n        pointerInfluence={0}\n        grain={0.02}\n      />\n      <div className=\"relative z-10 flex h-full items-end p-6\">\n        <p className=\"text-lg font-semibold text-white\">Ambient backdrop</p>\n      </div>\n    </div>\n  );\n}"
       }
     ]
+  },
+  "refractive-cursor-lens": {
+    "slug": "refractive-cursor-lens",
+    "overview": "RefractiveCursorLens renders a circular SVG-filtered disc absolutely-positioned inside its wrapper and tracks it to the cursor with a motion useSpring. The wrapper is `overflow-hidden` so the disc is clipped at the wrapper's edge — it never spills outside the bounds it's placed in. The disc combines `backdrop-filter: blur()` (cross-browser glass) with `filter: url(#…)` containing an feTurbulence + feDisplacementMap chain — the same trick used in LiquidGlassPanel — so the underlying content visibly refracts. A pre-baked radial mask (black-center → white-rim) is composited into the displacement noise via feComposite arithmetic, attenuating the distortion toward the middle: rim ripples strongly, center stays nearly clear. The lens fades in over 200ms when the pointer enters its bounds, snaps to position on entry to avoid a fly-in, and disappears on exit. Touch devices (`pointer: coarse`) and `prefers-reduced-motion` users see no lens at all — the wrapper still renders its children normally. The disc itself has `pointer-events: none` so clicks always reach the content underneath.",
+    "scenarios": [
+      {
+        "title": "Reading aid over body copy",
+        "description": "Wrap a long article or marketing block. The lens makes the text underneath ripple as the cursor passes — a playful flourish that doubles as a reading aid.",
+        "code": "import { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function Article() {\n  return (\n    <RefractiveCursorLens className=\"max-w-3xl mx-auto py-16\">\n      <h1 className=\"text-5xl font-semibold tracking-tight\">Field guide</h1>\n      <p className=\"mt-6 text-lg text-neutral-700\">\n        Hover anywhere over this paragraph. The lens refracts the type beneath\n        it without ever stealing the click — your selection, copy, and link\n        navigation all keep working as if the lens weren&apos;t there.\n      </p>\n    </RefractiveCursorLens>\n  );\n}"
+      },
+      {
+        "title": "Image inspector — bounded to a single element",
+        "description": "Use `showOnlyOver` to constrain the lens to a single image. The rest of the page stays untouched; the lens only appears while the cursor is over the framed photo.",
+        "code": "\"use client\";\nimport { useRef } from \"react\";\nimport { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function PhotoInspector() {\n  const imgRef = useRef<HTMLImageElement>(null);\n  return (\n    <RefractiveCursorLens\n      showOnlyOver={imgRef}\n      size={160}\n      displacementScale={28}\n    >\n      <div className=\"relative\">\n        <img\n          ref={imgRef}\n          src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n          alt=\"\"\n          className=\"w-full rounded-2xl\"\n        />\n      </div>\n    </RefractiveCursorLens>\n  );\n}"
+      },
+      {
+        "title": "Heavy lens with sluggish spring",
+        "description": "Crank `displacementScale` and soften the spring for a heavier, more theatrical feel — useful for hero sections that want a single eye-catching flourish.",
+        "code": "import { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function Hero() {\n  return (\n    <RefractiveCursorLens\n      size={200}\n      displacementScale={36}\n      springConfig={{ stiffness: 90, damping: 18 }}\n      className=\"min-h-[60vh] flex items-center justify-center\"\n    >\n      <h1 className=\"text-7xl font-bold tracking-tight\">\n        Trail your cursor.\n      </h1>\n    </RefractiveCursorLens>\n  );\n}"
+      }
+    ]
   }
 };

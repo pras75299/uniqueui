@@ -48,6 +48,7 @@
     "dynamic-info",
     "macbook-mock",
     "liquid-glass-panel",
-    "shader-mesh-gradient"
+    "shader-mesh-gradient",
+    "refractive-cursor-lens"
   ]
 }

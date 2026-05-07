@@ -446,4 +446,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "refractive-cursor-lens",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "refractive-cursor-lens/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

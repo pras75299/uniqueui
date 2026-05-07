@@ -316,6 +316,10 @@ void main(){
     srgb += (n - 0.5) * uGrain;
   }
 
+  // GL context is created with premultipliedAlpha:true. With alpha hardcoded
+  // to 1.0, premultiplied and straight alpha are mathematically identical,
+  // so writing the rgb directly is correct. If anyone later introduces an
+  // alpha < 1.0 (e.g. an edge mask), pre-multiply it: vec4(srgb * a, a).
   outColor = vec4(srgb, 1.0);
 }`;
 
@@ -389,10 +393,14 @@ export const ShaderMeshGradient = React.forwardRef<
     if (!container || !canvas) return;
     if (detectBackend() !== "webgl2") return;
 
+    // alpha:true so the canvas is transparent before the first draw — the
+    // wrapper's CSS radial-gradient fallback shows through during the brief
+    // gap between mount and first frame, and stays visible if the GL pipeline
+    // ever fails to initialize on a remount.
     const gl = canvas.getContext("webgl2", {
       antialias: false,
-      alpha: false,
-      premultipliedAlpha: false,
+      alpha: true,
+      premultipliedAlpha: true,
       preserveDrawingBuffer: false,
     });
     if (!gl) return;
@@ -521,11 +529,14 @@ export const ShaderMeshGradient = React.forwardRef<
       raf = requestAnimationFrame(tick);
     };
 
+    // Paint the first frame synchronously so a remount never shows a flash of
+    // empty canvas — even if the next RAF tick is a frame away.
     if (reduceMotion) {
       // Single static frame at a curated seed — visually pleasing without motion.
       t = 4.2;
       renderFrame();
     } else {
+      renderFrame();
       raf = requestAnimationFrame(tick);
     }
 
@@ -539,9 +550,11 @@ export const ShaderMeshGradient = React.forwardRef<
       gl.deleteShader(vs);
       gl.deleteShader(fs);
       if (vao) gl.deleteVertexArray(vao);
-      // Best-effort context release — helps free GPU memory on unmount.
-      const lose = gl.getExtension("WEBGL_lose_context");
-      if (lose) lose.loseContext();
+      // NOTE: deliberately not calling WEBGL_lose_context.loseContext() —
+      // it leaves the canvas's context permanently lost, so a remount that
+      // reuses the canvas (or strict-mode's double-mount in dev) gets a
+      // null gl back from getContext. GC reclaims the context once the
+      // canvas is detached from the DOM, which is sufficient.
     };
   }, [oklabColors, reduceMotion]);
 
