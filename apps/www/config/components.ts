@@ -2704,6 +2704,51 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function Example() {\n  return (\n    <div\n      className=\"relative flex min-h-[440px] w-full items-center justify-center overflow-hidden rounded-xl bg-cover bg-center px-6 py-10\"\n      style={{\n        backgroundImage:\n          \"url(https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80)\",\n      }}\n    >\n      <div className=\"grid w-full max-w-3xl gap-5 md:grid-cols-2\">\n        <LiquidGlassPanel className=\"p-7\">\n          <span className=\"text-[11px] font-mono uppercase tracking-[0.3em] text-white/70\">\n            Solar Winter · 2026\n          </span>\n          <h3 className=\"mt-3 text-2xl font-semibold text-white\">\n            Real glass, not a blur.\n          </h3>\n          <p className=\"mt-2 text-sm text-white/80\">\n            Pixels behind this panel are physically refracted via SVG turbulence —\n            text on top stays pixel-crisp.\n          </p>\n        </LiquidGlassPanel>\n        <LiquidGlassPanel\n          className=\"p-7\"\n          tint=\"rgba(120,90,255,0.18)\"\n          displacementScale={32}\n          noiseFrequency={0.018}\n        >\n          <h3 className=\"text-lg font-semibold text-white\">Tinted variant</h3>\n          <p className=\"mt-2 text-sm text-white/80\">\n            Stronger displacement and a violet tint — useful for modal surfaces or\n            CTA flourishes.\n          </p>\n          <button className=\"mt-4 rounded-full bg-white/15 px-4 py-1.5 text-xs font-medium text-white backdrop-blur-md transition hover:bg-white/25\">\n            Action\n          </button>\n        </LiquidGlassPanel>\n      </div>\n    </div>\n  );\n}\n"
+  },
+  {
+    "slug": "shader-mesh-gradient",
+    "name": "Shader Mesh Gradient",
+    "description": "GPU-rendered mesh gradient: a fragment shader warps multiple OKLCH color blobs through 3-octave simplex noise so they flow continuously instead of locking into a static pattern. Pointer position subtly attracts the nearest blob; reduced-motion freezes a single curated frame; falls back to a static CSS radial gradient on devices without WebGL2.",
+    "icon": "LucideWaves",
+    "category": "Effects & Animations",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": "4 OKLCH stops",
+        "description": "3–6 color stops. Accepts hex, rgb()/rgba(), hsl(), or oklch(). Mixed in OKLab space inside the shader for perceptually uniform blends."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "1",
+        "description": "Flow speed multiplier. uTime accumulates as deltaTime * speed."
+      },
+      {
+        "name": "pointerInfluence",
+        "type": "number",
+        "default": "0.4",
+        "description": "How strongly the nearest blob is attracted to the cursor. 0 disables pointer reactivity."
+      },
+      {
+        "name": "grain",
+        "type": "number",
+        "default": "0.04",
+        "description": "Film grain layered on top of the shader output. 0 disables. Keep below 0.1 to avoid banding."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for sizing, rounding, and layout of the canvas wrapper."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Overlay content rendered crisply above the shader (text, CTAs, navbars)."
+      }
+    ],
+    "usageCode": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function Example() {\n  return (\n    <ShaderMeshGradient\n      className=\"h-[460px] w-full rounded-2xl\"\n      colors={[\n        \"oklch(0.78 0.16 30)\",\n        \"oklch(0.72 0.17 295)\",\n        \"oklch(0.70 0.16 220)\",\n        \"oklch(0.82 0.14 150)\",\n      ]}\n      speed={1}\n      pointerInfluence={0.45}\n      grain={0.04}\n    >\n      <div className=\"flex h-full w-full items-center justify-center px-6 text-center\">\n        <div>\n          <span className=\"text-[11px] font-mono uppercase tracking-[0.32em] text-white/80\">\n            Fragment shader · WebGL2\n          </span>\n          <h2 className=\"mt-3 text-4xl font-semibold text-white\">\n            GPU mesh gradient.\n          </h2>\n          <p className=\"mt-2 text-sm text-white/85\">\n            Move your cursor — the nearest blob leans in.\n          </p>\n        </div>\n      </div>\n    </ShaderMeshGradient>\n  );\n}\n"
   }
 ] satisfies ComponentDefinition[];
 

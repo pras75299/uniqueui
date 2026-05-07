@@ -438,4 +438,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "shader-mesh-gradient",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "shader-mesh-gradient/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

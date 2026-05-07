@@ -909,6 +909,24 @@
           "target": "components/ui/liquid-glass-panel.tsx"
         }
       ]
+    },
+    {
+      "name": "shader-mesh-gradient",
+      "type": "registry:ui",
+      "title": "Shader Mesh Gradient",
+      "description": "GPU-rendered mesh gradient: a fragment shader warps multiple OKLCH color blobs through 3-octave simplex noise so they flow continuously instead of locking into a static pattern. Pointer position subtly attracts the nearest blob; reduced-motion freezes a single curated frame; falls back to a static CSS radial gradient on devices without WebGL2.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/shader-mesh-gradient.tsx",
+          "type": "registry:component",
+          "target": "components/ui/shader-mesh-gradient.tsx"
+        }
+      ]
     }
   ]
 }

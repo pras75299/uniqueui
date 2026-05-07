@@ -911,5 +911,26 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function GlassToast() {\n  return (\n    <LiquidGlassPanel\n      tint=\"rgba(120,90,255,0.18)\"\n      displacementScale={28}\n      className=\"max-w-sm p-5 rounded-2xl\"\n    >\n      <p className=\"text-sm font-medium text-white\">Build complete</p>\n      <p className=\"mt-1 text-xs text-white/70\">\n        Deployed in 24s · 12 components synced\n      </p>\n    </LiquidGlassPanel>\n  );\n}"
       }
     ]
+  },
+  "shader-mesh-gradient": {
+    "slug": "shader-mesh-gradient",
+    "overview": "ShaderMeshGradient renders a full-bleed animated mesh gradient on a single <canvas>. A WebGL2 fragment shader warps the sample point through 3-octave 2D simplex noise, then mixes the input color stops in OKLab space so the transitions stay perceptually smooth — no muddy mid-greys the way naïve sRGB blending produces. Each blob center drifts on a disjoint sine frequency, and the cursor exerts an exponentially-falling attraction on the nearest blob so the surface feels alive without becoming a draggable toy. On devices without WebGL2 the component degrades to a static CSS radial gradient using the same color stops; reduced-motion users see a single curated frame instead of the animation. Cap usage at ~2 instances per page — each runs its own RAF loop and GL context.",
+    "scenarios": [
+      {
+        "title": "Hero background with overlay copy",
+        "description": "Drop the gradient behind a hero headline. The canvas covers the parent, while children sit on top in a dedicated z-10 layer.",
+        "code": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function Hero() {\n  return (\n    <ShaderMeshGradient className=\"h-[520px] w-full\">\n      <div className=\"flex h-full w-full items-center justify-center px-6 text-center\">\n        <div>\n          <h1 className=\"text-5xl font-semibold tracking-tight text-white\">\n            Build at the speed of light.\n          </h1>\n          <p className=\"mt-3 text-base text-white/85\">\n            A GPU-shaded mesh gradient — not a CSS approximation.\n          </p>\n        </div>\n      </div>\n    </ShaderMeshGradient>\n  );\n}"
+      },
+      {
+        "title": "Brand palette in OKLCH",
+        "description": "Pass any number of stops between 3 and 6. OKLCH gives you direct control over perceived lightness and chroma — so a muted teal won't visually outweigh a saturated coral.",
+        "code": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function BrandGradient() {\n  return (\n    <ShaderMeshGradient\n      className=\"h-[420px] w-full rounded-3xl\"\n      colors={[\n        \"oklch(0.74 0.18 25)\",\n        \"oklch(0.68 0.16 320)\",\n        \"oklch(0.78 0.14 195)\",\n      ]}\n      speed={0.7}\n    />\n  );\n}"
+      },
+      {
+        "title": "Calm card backdrop",
+        "description": "Drop pointerInfluence to 0 and slow speed for a non-interactive ambient surface — useful as the background of a marketing card or feature tile.",
+        "code": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function FeatureCard() {\n  return (\n    <div className=\"relative h-72 w-full overflow-hidden rounded-2xl\">\n      <ShaderMeshGradient\n        className=\"absolute inset-0\"\n        speed={0.5}\n        pointerInfluence={0}\n        grain={0.02}\n      />\n      <div className=\"relative z-10 flex h-full items-end p-6\">\n        <p className=\"text-lg font-semibold text-white\">Ambient backdrop</p>\n      </div>\n    </div>\n  );\n}"
+      }
+    ]
   }
 };
