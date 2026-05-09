@@ -202,7 +202,7 @@ function strokeWidthToPadPx(strokeWidth: number | string): number {
  */
 interface HairlineOutlinedParagraphProps extends Pick<
   OutlinedMegaMarkProps,
-  "fontSize" | "letterSpacing" | "strokeWidth" | "className"
+  "children" | "fontSize" | "letterSpacing" | "strokeWidth" | "className"
 > {
   lightStrokeColor: string;
   darkStrokeColor: string;
