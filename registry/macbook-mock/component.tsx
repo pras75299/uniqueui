@@ -68,10 +68,30 @@ export type MacbookMockProps = Omit<
   screenContent?: ReactNode;
   /** `fade` crossfades; `flap` folds the top half of the idle layer back in 3D. */
   revealMode?: "fade" | "flap";
-  /** Keep the lid open without requiring hover. */
+  /**
+   * Controlled lid state. When provided, the component is fully controlled —
+   * hover and `open` are ignored; pair with `onOpenChange` to drive transitions.
+   */
+  isOpen?: boolean;
+  /** Called when the user attempts to toggle the lid (hover, click, keyboard). */
+  onOpenChange?: (next: boolean) => void;
+  /** Uncontrolled fallback: keep the lid open without requiring hover. */
   open?: boolean;
-  /** Ignore hover entirely; only the `open` prop controls lid state. */
+  /** Uncontrolled fallback: ignore hover entirely; only the `open` prop controls lid state. */
   hoverDisabled?: boolean;
+  /**
+   * Replace the hard-coded "AirPods Connected" island narrative.
+   * - `"default"` (default): keep the existing idle → loader → AirPods sequence.
+   * - `ReactNode`: render the node inside the island shell, no loader sequence.
+   * - `false`: hide the dynamic island entirely.
+   */
+  dynamicIsland?: ReactNode | "default" | false;
+  /**
+   * Loader phase duration before the island transitions from `loading` → `done`,
+   * in ms. `false` skips the loader and goes straight to the done state. Only
+   * applies when `dynamicIsland` is `"default"`. Default 850.
+   */
+  loaderDuration?: number | false;
 };
 
 export function MacbookMock({
@@ -83,8 +103,12 @@ export function MacbookMock({
   revealAlt = "Laptop screen content",
   screenContent,
   revealMode = "fade",
+  isOpen: isOpenControlled,
+  onOpenChange,
   open = false,
   hoverDisabled = false,
+  dynamicIsland = "default",
+  loaderDuration = 850,
   onFocus,
   onBlur,
   onKeyDown,
@@ -94,26 +118,55 @@ export function MacbookMock({
 }: MacbookMockProps) {
   const reduceMotion = useReducedMotion();
   const [hovered, setHovered] = useState(false);
-  const isOpen = hoverDisabled ? open : hovered || open;
+  const isControlled = typeof isOpenControlled === "boolean";
+  const isOpen = isControlled
+    ? isOpenControlled
+    : hoverDisabled
+      ? open
+      : hovered || open;
+  const requestOpen = (next: boolean) => {
+    if (isControlled) {
+      onOpenChange?.(next);
+    } else {
+      setHovered(next);
+      onOpenChange?.(next);
+    }
+  };
   const t = TINTS[tint];
   const s = SIZE[size];
 
   type Stage = "idle" | "loading" | "done";
+  // The dynamic-island narrative only runs when the consumer keeps the default;
+  // `false` hides the island and a custom node bypasses the state machine.
+  const useIslandNarrative = dynamicIsland === "default";
+  const skipLoader = loaderDuration === false || loaderDuration === 0;
+
   const [stage, setStage] = useState<Stage>(() =>
-    isOpen ? (reduceMotion ? "done" : "loading") : "idle",
+    isOpen
+      ? reduceMotion || skipLoader
+        ? "done"
+        : "loading"
+      : "idle",
   );
   useEffect(() => {
     const syncStageId = setTimeout(() => {
-      setStage(isOpen ? (reduceMotion ? "done" : "loading") : "idle");
+      setStage(
+        isOpen
+          ? reduceMotion || skipLoader
+            ? "done"
+            : "loading"
+          : "idle",
+      );
     }, 0);
     return () => clearTimeout(syncStageId);
-  }, [isOpen, reduceMotion]);
+  }, [isOpen, reduceMotion, skipLoader]);
 
   useEffect(() => {
-    if (!isOpen || reduceMotion) return;
-    const tid = setTimeout(() => setStage("done"), 850);
+    if (!isOpen || reduceMotion || skipLoader) return;
+    const duration = typeof loaderDuration === "number" ? loaderDuration : 850;
+    const tid = setTimeout(() => setStage("done"), duration);
     return () => clearTimeout(tid);
-  }, [isOpen, reduceMotion]);
+  }, [isOpen, reduceMotion, loaderDuration, skipLoader]);
 
   const lidTransition = reduceMotion ? { duration: 0.01 } : springLid;
   const flapTransition = reduceMotion ? { duration: 0.01 } : springFlap;
@@ -132,32 +185,32 @@ export function MacbookMock({
         className,
       )}
       {...rest}
-      onPointerEnter={() => !hoverDisabled && setHovered(true)}
-      onPointerLeave={() => !hoverDisabled && setHovered(false)}
+      onPointerEnter={() => !hoverDisabled && requestOpen(true)}
+      onPointerLeave={() => !hoverDisabled && requestOpen(false)}
       onFocus={(event) => {
-        if (!hoverDisabled) setHovered(true);
+        if (!hoverDisabled) requestOpen(true);
         onFocus?.(event);
       }}
       onBlur={(event) => {
-        if (!hoverDisabled) setHovered(false);
+        if (!hoverDisabled) requestOpen(false);
         onBlur?.(event);
       }}
       onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
         if (!hoverDisabled && (event.key === "Enter" || event.key === " ")) {
           event.preventDefault();
-          setHovered((prev) => (open ? true : !prev));
+          requestOpen(open ? true : !isOpen);
         }
         onKeyDown?.(event);
       }}
       onPointerDown={(event: PointerEvent<HTMLDivElement>) => {
         if (!hoverDisabled && event.pointerType !== "mouse") {
-          setHovered((prev) => (open ? true : !prev));
+          requestOpen(open ? true : !isOpen);
         }
         onPointerDown?.(event);
       }}
       onClick={(event) => {
         if (!hoverDisabled) {
-          setHovered((prev) => (open ? true : !prev));
+          requestOpen(open ? true : !isOpen);
         }
         onClick?.(event);
       }}
@@ -252,66 +305,77 @@ export function MacbookMock({
               </>
             )}
 
-            {/* Dynamic island — idle dots → loader wave → AirPods message */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-20">
-              <div className="flex w-full items-start justify-center pt-1.5">
-                <div className="relative h-2.5 min-w-[4.5rem] overflow-hidden rounded-full bg-black px-1">
-                  {/* Idle: 3 static dots */}
-                  <motion.div
-                    className="absolute inset-0 flex items-center justify-center gap-px"
-                    animate={{ opacity: stage === "idle" ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    aria-hidden
-                  >
-                    <div className="h-0.5 w-0.5 rounded-full bg-neutral-600" />
-                    <div className="h-0.5 w-0.5 rounded-full bg-neutral-600" />
-                    <div className="h-0.5 w-0.5 rounded-full bg-neutral-600" />
-                  </motion.div>
+            {/* Dynamic island — `false` hides it, a custom node renders inline,
+                otherwise the default idle → loader → AirPods narrative plays. */}
+            {dynamicIsland !== false ? (
+              <div className="pointer-events-none absolute inset-x-0 top-0 z-20">
+                <div className="flex w-full items-start justify-center pt-1.5">
+                  <div className="relative h-2.5 min-w-[4.5rem] overflow-hidden rounded-full bg-black px-1">
+                    {useIslandNarrative ? (
+                      <>
+                        {/* Idle: 3 static dots */}
+                        <motion.div
+                          className="absolute inset-0 flex items-center justify-center gap-px"
+                          animate={{ opacity: stage === "idle" ? 1 : 0 }}
+                          transition={{ duration: 0.15 }}
+                          aria-hidden
+                        >
+                          <div className="h-0.5 w-0.5 rounded-full bg-neutral-600" />
+                          <div className="h-0.5 w-0.5 rounded-full bg-neutral-600" />
+                          <div className="h-0.5 w-0.5 rounded-full bg-neutral-600" />
+                        </motion.div>
 
-                  {/* Loading: 3 dots wave */}
-                  <motion.div
-                    className="absolute inset-0 flex items-center justify-center gap-px"
-                    animate={{ opacity: stage === "loading" ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    aria-hidden
-                  >
-                    {[0, 1, 2].map((i) => (
-                      <motion.div
-                        key={i}
-                        className="h-0.5 w-0.5 rounded-full bg-white"
-                        animate={
-                          stage === "loading" && !reduceMotion
-                            ? { opacity: [0.3, 1, 0.3], y: [0, -1, 0] }
-                            : { opacity: 1, y: 0 }
-                        }
-                        transition={{
-                          duration: 0.7,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                          delay: i * 0.12,
-                        }}
-                      />
-                    ))}
-                  </motion.div>
+                        {/* Loading: 3 dots wave */}
+                        <motion.div
+                          className="absolute inset-0 flex items-center justify-center gap-px"
+                          animate={{ opacity: stage === "loading" ? 1 : 0 }}
+                          transition={{ duration: 0.15 }}
+                          aria-hidden
+                        >
+                          {[0, 1, 2].map((i) => (
+                            <motion.div
+                              key={i}
+                              className="h-0.5 w-0.5 rounded-full bg-white"
+                              animate={
+                                stage === "loading" && !reduceMotion
+                                  ? { opacity: [0.3, 1, 0.3], y: [0, -1, 0] }
+                                  : { opacity: 1, y: 0 }
+                              }
+                              transition={{
+                                duration: 0.7,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                                delay: i * 0.12,
+                              }}
+                            />
+                          ))}
+                        </motion.div>
 
-                  {/* Done: AirPods Connected */}
-                  <motion.div
-                    className="absolute inset-0 flex items-center justify-center gap-0.5 px-0.5"
-                    initial={false}
-                    animate={{ opacity: stage === "done" ? 1 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    aria-hidden
-                  >
-                    <span className="max-w-[3.25rem] truncate text-[3px] leading-none font-medium text-white">
-                      AirPods Connected
-                    </span>
-                    <div className="flex h-1 w-2 shrink-0 items-center rounded-xs border border-emerald-500/80">
-                      <div className="h-full w-[82%] bg-emerald-500" />
-                    </div>
-                  </motion.div>
+                        {/* Done: AirPods Connected */}
+                        <motion.div
+                          className="absolute inset-0 flex items-center justify-center gap-0.5 px-0.5"
+                          initial={false}
+                          animate={{ opacity: stage === "done" ? 1 : 0 }}
+                          transition={{ duration: 0.2 }}
+                          aria-hidden
+                        >
+                          <span className="max-w-[3.25rem] truncate text-[3px] leading-none font-medium text-white">
+                            AirPods Connected
+                          </span>
+                          <div className="flex h-1 w-2 shrink-0 items-center rounded-xs border border-emerald-500/80">
+                            <div className="h-full w-[82%] bg-emerald-500" />
+                          </div>
+                        </motion.div>
+                      </>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center gap-0.5 px-0.5 text-[3px] leading-none font-medium text-white">
+                        {dynamicIsland}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : null}
           </div>
         </motion.div>
 
