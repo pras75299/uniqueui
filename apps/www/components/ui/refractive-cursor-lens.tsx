@@ -16,7 +16,19 @@ export interface RefractiveCursorLensProps {
   size?: number;
   /** SVG displacement-map scale. Higher = more pronounced refraction. Default 18. */
   displacementScale?: number;
-  /** Optional element ref that bounds where the lens shows. Defaults to the wrapper itself. */
+  /**
+   * `feTurbulence` noise frequency on X / Y axes. Lower values produce broader,
+   * smoother distortion blobs; higher values produce finer ripples. Default
+   * `[0.014, 0.012]` to match the previous fixed pattern.
+   */
+  noiseFrequency?: [number, number];
+  /** Seed for `feTurbulence` — bumping this varies the noise pattern between instances. Default 9. */
+  noiseSeed?: number;
+  /**
+   * Optional element ref that bounds where the lens shows. Defaults to the
+   * wrapper itself. When set, the lens is also visually clipped to the bounds
+   * element via `clip-path` so it cannot render outside it.
+   */
   showOnlyOver?: React.RefObject<HTMLElement | null>;
   /** motion useSpring config for the cursor follow. Accepts the full SpringOptions surface (stiffness, damping, mass, restSpeed, restDelta…). */
   springConfig?: SpringOptions;
@@ -73,6 +85,8 @@ export const RefractiveCursorLens = React.forwardRef<
   {
     size = 120,
     displacementScale = 18,
+    noiseFrequency = [0.014, 0.012],
+    noiseSeed = 9,
     showOnlyOver,
     springConfig = DEFAULT_SPRING_CONFIG,
     className,
@@ -201,9 +215,9 @@ export const RefractiveCursorLens = React.forwardRef<
               <filter id={filterId} colorInterpolationFilters="sRGB">
                 <feTurbulence
                   type="fractalNoise"
-                  baseFrequency="0.014 0.012"
+                  baseFrequency={`${noiseFrequency[0]} ${noiseFrequency[1]}`}
                   numOctaves={2}
-                  seed={9}
+                  seed={noiseSeed}
                   result="noise"
                 />
                 <feImage
@@ -240,8 +254,10 @@ export const RefractiveCursorLens = React.forwardRef<
           <div
             className="absolute inset-0 rounded-full"
             style={{
-              backdropFilter: "blur(0.5px) saturate(1.18) brightness(1.04)",
-              WebkitBackdropFilter: "blur(0.5px) saturate(1.18) brightness(1.04)",
+              // 1px is the smallest blur most engines actually rasterize. The
+              // previous 0.5px was a no-op on Chromium.
+              backdropFilter: "blur(1px) saturate(1.18) brightness(1.04)",
+              WebkitBackdropFilter: "blur(1px) saturate(1.18) brightness(1.04)",
               filter: `url(#${filterId})`,
               WebkitFilter: `url(#${filterId})`,
             }}
