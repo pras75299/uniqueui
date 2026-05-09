@@ -694,17 +694,22 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   },
   "outlined-mega-mark": {
     "slug": "outlined-mega-mark",
-    "overview": "OutlinedMegaMark renders your label twice: once for light mode and once for dark mode, each with a configurable WebKit text stroke (width and colour per theme) and transparent fill. Font size and letter-spacing are plain CSS strings so you can use clamp() for responsive footers or fixed sizes in previews.",
+    "overview": "With `gradientOnHover` (default), the headline is hollow SVG `<text>` (`fill=\"none\"`) with a **themed idle stroke** everywhere. A second copy uses `stroke=\"url(#linearGradient)\"` **masked** by a pointer-following radial spotlight. Customize colours with `outlineGradientStops={['#a','#b']}` or the full `outlineGradient={{ stops: [...], x1:'0%', y1:'0%', x2:'100%', y2:'0%' }}` prop. `ResizeObserver` + font loading keep the `viewBox` tight. Set `gradientOnHover={false}` for `-webkit-text-stroke` only, or `fillOnHover` for solid hover fill.",
     "scenarios": [
       {
         "title": "Landing page footer",
-        "description": "Place the mark below legal or link columns as a wide typographic signature without opaque fills.",
-        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Footer() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark>UniqueUI</OutlinedMegaMark>\n    </footer>\n  );\n}"
+        "description": "Place the mark below legal or link columns; move the pointer over the letters to reveal the gradient stroke along the outline in a moving spotlight.",
+        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Footer() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark\n        fontSize=\"clamp(7rem, 26vw, 14rem)\"\n        letterSpacing=\"-0.02em\"\n        strokeWidth={1}\n        lightStrokeColor=\"var(--color-neutral-400)\"\n        darkStrokeColor=\"var(--color-neutral-500)\"\n        gradientOnHover\n        outlineGradient={{\n          stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n          x1: \"0%\",\n          y1: \"0%\",\n          x2: \"100%\",\n          y2: \"0%\",\n        }}\n      >\n        UniqueUI\n      </OutlinedMegaMark>\n    </footer>\n  );\n}"
       },
       {
         "title": "Custom stroke and scale",
         "description": "Tune stroke width and colours for contrast on tinted backgrounds, or shrink fontSize for dense layouts.",
-        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function CustomMark() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2rem, 8vw, 4rem)\"\n      strokeWidth={2}\n      lightStrokeColor=\"rgb(147 51 234)\"\n      darkStrokeColor=\"rgb(196 181 253)\"\n      containerClassName=\"pt-4\"\n    >\n      Ship slower\n    </OutlinedMegaMark>\n  );\n}"
+        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function CustomMark() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2rem, 8vw, 4rem)\"\n      strokeWidth={2}\n      lightStrokeColor=\"rgb(147 51 234)\"\n      darkStrokeColor=\"rgb(196 181 253)\"\n      containerClassName=\"pt-4\"\n      gradientOnHover\n      outlineGradient={{\n        stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n        x1: \"0%\",\n        y1: \"0%\",\n        x2: \"100%\",\n        y2: \"0%\",\n      }}\n    >\n      Ship slower\n    </OutlinedMegaMark>\n  );\n}"
+      },
+      {
+        "title": "outlineGradientStops shorthand",
+        "description": "When you only need custom colours along the default axis, pass `outlineGradientStops={[...]}` instead of the full `outlineGradient` object.",
+        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Shorthand() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2.5rem, 10vw, 5rem)\"\n      strokeWidth={1.25}\n      lightStrokeColor=\"var(--color-neutral-400)\"\n      darkStrokeColor=\"var(--color-neutral-500)\"\n      gradientOnHover\n      outlineGradientStops={[\"#38bdf8\", \"#a855f7\", \"#ec4899\"]}\n    >\n      Three stops\n    </OutlinedMegaMark>\n  );\n}"
       }
     ]
   },

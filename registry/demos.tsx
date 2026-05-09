@@ -2879,6 +2879,14 @@ export const componentDemos: Record<string, DemoComponent> = {
       strokeWidth={1}
       lightStrokeColor="var(--color-neutral-400)"
       darkStrokeColor="var(--color-neutral-500)"
+      gradientOnHover
+      outlineGradient={{
+        stops: ["#fde68a", "#f97316", "#ec4899"],
+        x1: "0%",
+        y1: "0%",
+        x2: "100%",
+        y2: "0%",
+      }}
     >
       UniqueUI
     </OutlinedMegaMark>

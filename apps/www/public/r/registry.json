@@ -736,7 +736,7 @@
       "name": "outlined-mega-mark",
       "type": "registry:ui",
       "title": "Outlined Mega Mark",
-      "description": "Full-width responsive outlined headline with transparent fill and separate stroke colors for light and dark backgrounds — ideal for landing footers.",
+      "description": "Full-width mega outlined headline with theme-aware stroke colours; optional hover swaps the outline for an SVG gradient stroke (hollow fill).",
       "dependencies": [
         "clsx",
         "tailwind-merge"
