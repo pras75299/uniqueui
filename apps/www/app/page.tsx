@@ -1071,7 +1071,17 @@ export default function Home() {
             </footer>
           </div>
 
-          <OutlinedMegaMark aria-hidden>UniqueUI</OutlinedMegaMark>
+          <OutlinedMegaMark
+            containerClassName="mx-auto w-full max-w-6xl px-4 pt-2 md:pt-4"
+            fontSize="clamp(5rem, 13vw + 1rem, 12.5rem)"
+            letterSpacing="-0.01em"
+            strokeWidth={1}
+            lightStrokeColor="var(--color-neutral-200)"
+            darkStrokeColor="var(--color-neutral-700)"
+            gradientOnHover
+          >
+            UniqueUI
+          </OutlinedMegaMark>
         </div>
       </motion.main>
     </>

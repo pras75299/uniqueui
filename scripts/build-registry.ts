@@ -44,6 +44,8 @@ type RegistryDocsComponent = {
   description: string;
   icon: string;
   category?: string;
+  /** ISO date (YYYY-MM-DD) — drives the "NEW" highlight for ~24h after add. */
+  addedAt?: string;
   props: Array<{
     name: string;
     type: string;
@@ -97,6 +99,8 @@ export type ComponentItem = {
   description: string;
   icon: ElementType;
   category?: string;
+  /** ISO date (YYYY-MM-DD) component was added. Drives the "NEW" highlight for ~24h. */
+  addedAt?: string;
   props?: {
     name: string;
     type: string;
@@ -121,6 +125,24 @@ export const componentsList: ComponentItem[] = componentDefinitions.map((compone
   ...component,
   icon: iconMap[component.icon],
 }));
+
+/** Window during which a freshly added component is highlighted as NEW. */
+export const NEW_COMPONENT_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Returns true if \`addedAt\` is within the last 24 hours.
+ * Pure function so server and client agree without a hydration mismatch
+ * — pass a stable \`now\` if you want deterministic SSR.
+ */
+export function isNewComponent(
+  addedAt: string | undefined,
+  now: number = Date.now(),
+): boolean {
+  if (!addedAt) return false;
+  const t = Date.parse(addedAt);
+  if (Number.isNaN(t)) return false;
+  return now - t < NEW_COMPONENT_WINDOW_MS;
+}
 `;
 }
 

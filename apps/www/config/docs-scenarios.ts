@@ -694,17 +694,22 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   },
   "outlined-mega-mark": {
     "slug": "outlined-mega-mark",
-    "overview": "OutlinedMegaMark renders your label twice: once for light mode and once for dark mode, each with a configurable WebKit text stroke (width and colour per theme) and transparent fill. Font size and letter-spacing are plain CSS strings so you can use clamp() for responsive footers or fixed sizes in previews.",
+    "overview": "With `gradientOnHover` (default), the headline stays hollow (**`fill=\"none\"`**) SVG text: themed **idle** outline (`stroke` from a duplicate `linearGradient` whose stops reuse `--omm-stroke-idle`) fills the framing, while a **`stroke=\"url(#vividGradient)\"` copy** paints only beneath a radial mask that trails the cursor. Pointer mapping runs on the outer wrapper so the spotlight reliably tracks hits across the mega mark box. Customize vivid colours with `outlineGradientStops` or `outlineGradient`. Set `gradientOnHover={false}` for `-webkit-text-stroke`-only markup, or `fillOnHover` for solid hover fill.",
     "scenarios": [
       {
         "title": "Landing page footer",
-        "description": "Place the mark below legal or link columns as a wide typographic signature without opaque fills.",
-        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Footer() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark>UniqueUI</OutlinedMegaMark>\n    </footer>\n  );\n}"
+        "description": "Place the mark below legal or link columns; move the pointer over the letters to reveal the gradient stroke along the outline in a moving spotlight.",
+        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Footer() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark\n        fontSize=\"clamp(7rem, 26vw, 14rem)\"\n        letterSpacing=\"-0.02em\"\n        strokeWidth={1}\n        lightStrokeColor=\"var(--color-neutral-400)\"\n        darkStrokeColor=\"var(--color-neutral-500)\"\n        gradientOnHover\n        outlineGradient={{\n          stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n          x1: \"0%\",\n          y1: \"0%\",\n          x2: \"100%\",\n          y2: \"0%\",\n        }}\n      >\n        UniqueUI\n      </OutlinedMegaMark>\n    </footer>\n  );\n}"
       },
       {
         "title": "Custom stroke and scale",
         "description": "Tune stroke width and colours for contrast on tinted backgrounds, or shrink fontSize for dense layouts.",
-        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function CustomMark() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2rem, 8vw, 4rem)\"\n      strokeWidth={2}\n      lightStrokeColor=\"rgb(147 51 234)\"\n      darkStrokeColor=\"rgb(196 181 253)\"\n      containerClassName=\"pt-4\"\n    >\n      Ship slower\n    </OutlinedMegaMark>\n  );\n}"
+        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function CustomMark() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2rem, 8vw, 4rem)\"\n      strokeWidth={2}\n      lightStrokeColor=\"rgb(147 51 234)\"\n      darkStrokeColor=\"rgb(196 181 253)\"\n      containerClassName=\"pt-4\"\n      gradientOnHover\n      outlineGradient={{\n        stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n        x1: \"0%\",\n        y1: \"0%\",\n        x2: \"100%\",\n        y2: \"0%\",\n      }}\n    >\n      Ship slower\n    </OutlinedMegaMark>\n  );\n}"
+      },
+      {
+        "title": "outlineGradientStops shorthand",
+        "description": "When you only need custom colours along the default axis, pass `outlineGradientStops={[...]}` instead of the full `outlineGradient` object.",
+        "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Shorthand() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2.5rem, 10vw, 5rem)\"\n      strokeWidth={1.25}\n      lightStrokeColor=\"var(--color-neutral-400)\"\n      darkStrokeColor=\"var(--color-neutral-500)\"\n      gradientOnHover\n      outlineGradientStops={[\"#38bdf8\", \"#a855f7\", \"#ec4899\"]}\n    >\n      Three stops\n    </OutlinedMegaMark>\n  );\n}"
       }
     ]
   },
@@ -888,6 +893,153 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "title": "Always-open static mockup",
         "description": "Force the lid open and disable hover so it works as a static landing-page asset.",
         "code": "import { MacbookMock } from \"@/components/ui/macbook-mock\";\n\nexport default function StaticHero() {\n  return (\n    <MacbookMock open hoverDisabled />\n  );\n}"
+      }
+    ]
+  },
+  "liquid-glass-panel": {
+    "slug": "liquid-glass-panel",
+    "overview": "LiquidGlassPanel renders an SVG turbulence + displacement filter onto a backdrop layer, so content behind it warps the way real glass would. The text/content layer sits above the filter and is never distorted, preserving sub-pixel antialiasing. Use it for cards, navbars, modal surfaces, or HUD overlays placed on top of imagery, video, or animated backgrounds.",
+    "scenarios": [
+      {
+        "title": "Hero overlay card",
+        "description": "Drop a glass card on top of a hero image — refraction makes the panel feel like a physical pane, while the headline stays perfectly crisp.",
+        "code": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function HeroCard() {\n  return (\n    <div\n      className=\"relative h-[480px] w-full overflow-hidden rounded-2xl bg-cover bg-center\"\n      style={{ backgroundImage: \"url(https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80)\" }}\n    >\n      <LiquidGlassPanel className=\"absolute bottom-8 left-8 right-8 p-8 md:right-auto md:max-w-md\">\n        <span className=\"text-xs font-mono uppercase tracking-[0.3em] text-white/70\">\n          Solar Winter · 2026\n        </span>\n        <h2 className=\"mt-3 text-3xl font-semibold text-white\">\n          Real glass, not a blur.\n        </h2>\n        <p className=\"mt-3 text-sm text-white/80\">\n          Sub-pixel refraction warps the imagery behind the panel while the copy stays sharp.\n        </p>\n      </LiquidGlassPanel>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Floating HUD navbar",
+        "description": "Use a slim panel as a floating navbar on top of a video or image background. Reduce displacementScale for a calmer, more readable surface.",
+        "code": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function GlassNav() {\n  return (\n    <LiquidGlassPanel\n      displacementScale={12}\n      noiseFrequency={0.01}\n      className=\"flex items-center gap-6 px-6 py-3 rounded-full\"\n    >\n      <span className=\"text-sm font-semibold text-white\">UniqueUI</span>\n      <nav className=\"flex items-center gap-4 text-sm text-white/70\">\n        <a href=\"#\" className=\"hover:text-white\">Components</a>\n        <a href=\"#\" className=\"hover:text-white\">Pricing</a>\n        <a href=\"#\" className=\"hover:text-white\">Docs</a>\n      </nav>\n    </LiquidGlassPanel>\n  );\n}"
+      },
+      {
+        "title": "Tinted modal surface",
+        "description": "Tint the panel with a brand color for modal dialogs or notification toasts that still let the underlying scene breathe through.",
+        "code": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function GlassToast() {\n  return (\n    <LiquidGlassPanel\n      tint=\"rgba(120,90,255,0.18)\"\n      displacementScale={28}\n      className=\"max-w-sm p-5 rounded-2xl\"\n    >\n      <p className=\"text-sm font-medium text-white\">Build complete</p>\n      <p className=\"mt-1 text-xs text-white/70\">\n        Deployed in 24s · 12 components synced\n      </p>\n    </LiquidGlassPanel>\n  );\n}"
+      }
+    ]
+  },
+  "shader-mesh-gradient": {
+    "slug": "shader-mesh-gradient",
+    "overview": "ShaderMeshGradient renders a full-bleed animated mesh gradient on a single <canvas>. A WebGL2 fragment shader warps the sample point through 3-octave 2D simplex noise, then mixes the input color stops in OKLab space so the transitions stay perceptually smooth — no muddy mid-greys the way naïve sRGB blending produces. Each blob center drifts on a disjoint sine frequency, and the cursor exerts an exponentially-falling attraction on the nearest blob so the surface feels alive without becoming a draggable toy. On devices without WebGL2 the component degrades to a static CSS radial gradient using the same color stops; reduced-motion users see a single curated frame instead of the animation. Cap usage at ~2 instances per page — each runs its own RAF loop and GL context.",
+    "scenarios": [
+      {
+        "title": "Hero background with overlay copy",
+        "description": "Drop the gradient behind a hero headline. The canvas covers the parent, while children sit on top in a dedicated z-10 layer.",
+        "code": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function Hero() {\n  return (\n    <ShaderMeshGradient className=\"h-[520px] w-full\">\n      <div className=\"flex h-full w-full items-center justify-center px-6 text-center\">\n        <div>\n          <h1 className=\"text-5xl font-semibold tracking-tight text-white\">\n            Build at the speed of light.\n          </h1>\n          <p className=\"mt-3 text-base text-white/85\">\n            A GPU-shaded mesh gradient — not a CSS approximation.\n          </p>\n        </div>\n      </div>\n    </ShaderMeshGradient>\n  );\n}"
+      },
+      {
+        "title": "Brand palette in OKLCH",
+        "description": "Pass any number of stops between 3 and 6. OKLCH gives you direct control over perceived lightness and chroma — so a muted teal won't visually outweigh a saturated coral.",
+        "code": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function BrandGradient() {\n  return (\n    <ShaderMeshGradient\n      className=\"h-[420px] w-full rounded-3xl\"\n      colors={[\n        \"oklch(0.74 0.18 25)\",\n        \"oklch(0.68 0.16 320)\",\n        \"oklch(0.78 0.14 195)\",\n      ]}\n      speed={0.7}\n    />\n  );\n}"
+      },
+      {
+        "title": "Calm card backdrop",
+        "description": "Drop pointerInfluence to 0 and slow speed for a non-interactive ambient surface — useful as the background of a marketing card or feature tile.",
+        "code": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function FeatureCard() {\n  return (\n    <div className=\"relative h-72 w-full overflow-hidden rounded-2xl\">\n      <ShaderMeshGradient\n        className=\"absolute inset-0\"\n        speed={0.5}\n        pointerInfluence={0}\n        grain={0.02}\n      />\n      <div className=\"relative z-10 flex h-full items-end p-6\">\n        <p className=\"text-lg font-semibold text-white\">Ambient backdrop</p>\n      </div>\n    </div>\n  );\n}"
+      }
+    ]
+  },
+  "chromatic-aberration-reveal": {
+    "slug": "chromatic-aberration-reveal",
+    "overview": "ChromaticAberrationReveal stacks a base `<img>` plus three RGB-biased overlay layers using `mix-blend-mode: screen` over a black wrapper. On reveal, red starts at `-splitDistance`, green at `0`, blue at `+splitDistance`, each at partial opacity, then they spring back to perfect alignment with staggered delays so convergence reads intentional and cinematic. A soft diagonal wave sweep runs once during convergence. `trigger=\"in-view\"` uses IntersectionObserver with once semantics to avoid repeated replays; `trigger=\"manual\"` enables external timeline control. Reduced-motion users get a plain fade treatment without channel split.",
+    "scenarios": [
+      {
+        "title": "Hero image entrance",
+        "description": "Use in-view mode to reveal a hero visual as it enters the viewport, then keep it stable.",
+        "code": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function HeroVisual() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[520px] w-full rounded-3xl\"\n      src=\"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80\"\n      alt=\"Futuristic skyline\"\n      trigger=\"in-view\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Gallery card with tighter split",
+        "description": "Lower splitDistance for a more restrained chromatic cue in dense grids.",
+        "code": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function GalleryItem() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-72 w-full rounded-xl\"\n      src=\"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80\"\n      alt=\"Snowy mountain\"\n      splitDistance={10}\n      staggerMs={60}\n      trigger=\"mount\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Manual reveal in controlled sequence",
+        "description": "Tie visibility to your own state machine or parent timeline.",
+        "code": "\"use client\";\nimport { useState } from \"react\";\nimport { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function ControlledReveal() {\n  const [visible, setVisible] = useState(false);\n\n  return (\n    <div className=\"space-y-4\">\n      <button\n        onClick={() => setVisible((v) => !v)}\n        className=\"rounded-md bg-black px-4 py-2 text-white\"\n      >\n        Toggle reveal\n      </button>\n      <ChromaticAberrationReveal\n        className=\"h-80 w-full rounded-2xl\"\n        src=\"https://images.unsplash.com/photo-1493244040629-496f6d136cc3?auto=format&fit=crop&w=1400&q=80\"\n        alt=\"Forest trail\"\n        trigger=\"manual\"\n        isVisible={visible}\n      />\n    </div>\n  );\n}"
+      }
+    ]
+  },
+  "iridescent-foil-button": {
+    "slug": "iridescent-foil-button",
+    "overview": "IridescentFoilButton layers a dark base gradient, a conic foil sheen, and an SVG turbulence grain pass to simulate holographic foil without shaders. Pointer movement updates CSS custom properties (`--foil-angle`, `--foil-hue`, `--foil-x`, `--foil-y`) so hue and highlight position track the cursor in real time. Hover and press use spring scale feedback (`1.02` on hover, `0.98` on tap), while reduced-motion users keep the foil effect but skip motion scaling. The component extends native motion button props, so `type`, `disabled`, `onClick`, and form behavior work as expected.",
+    "scenarios": [
+      {
+        "title": "Primary hero CTA",
+        "description": "Use `vivid` variant for high-attention call-to-action buttons in hero sections.",
+        "code": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function HeroCta() {\n  return (\n    <IridescentFoilButton variant=\"vivid\" className=\"px-8 py-3 text-base\">\n      Start Free Trial\n    </IridescentFoilButton>\n  );\n}"
+      },
+      {
+        "title": "Subtle dashboard action",
+        "description": "Use `subtle` for dense interfaces where you want foil personality without overwhelming nearby controls.",
+        "code": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function DashboardAction() {\n  return (\n    <IridescentFoilButton variant=\"subtle\" grainOpacity={0.04} hueRange={80}>\n      Sync Reports\n    </IridescentFoilButton>\n  );\n}"
+      },
+      {
+        "title": "Disabled and form-safe button",
+        "description": "Works as a drop-in `<button>` with disabled behavior and native `type` forwarding.",
+        "code": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function FormFooter() {\n  return (\n    <IridescentFoilButton type=\"submit\" disabled>\n      Processing...\n    </IridescentFoilButton>\n  );\n}"
+      }
+    ]
+  },
+  "kinetic-variable-headline": {
+    "slug": "kinetic-variable-headline",
+    "overview": "KineticVariableHeadline splits text into per-glyph spans and animates each glyph's `font-variation-settings` (`wght`) via springs. In entrance mode, letters rise from low weight to high weight with a left-to-right stagger. In pointer mode, each glyph weight is mapped from distance-to-pointer using a smooth falloff curve, creating a physically coherent magnetic field effect. Reduced-motion users render directly at final weight with no animation. The wrapper includes `aria-label` with the full input text so assistive technologies read a coherent headline even though glyphs are split visually.",
+    "scenarios": [
+      {
+        "title": "Hero headline with entrance choreography",
+        "description": "Use large type and entrance mode to create a premium launch moment above the fold.",
+        "code": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function HeroHeadline() {\n  return (\n    <KineticVariableHeadline\n      text=\"BUILD BOLD\"\n      mode=\"entrance\"\n      className=\"text-[clamp(3.5rem,12vw,8rem)] leading-[0.95]\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Interactive kinetic title",
+        "description": "Pointer mode turns the headline into a responsive magnetic field that reacts to cursor proximity.",
+        "code": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function InteractiveTitle() {\n  return (\n    <KineticVariableHeadline\n      text=\"FEEL THE TYPE\"\n      mode=\"pointer\"\n      weightRange={[220, 780]}\n      className=\"text-[clamp(3rem,11vw,7rem)]\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Multi-line editorial display",
+        "description": "Line breaks are preserved, so stacked statements still animate per glyph.",
+        "code": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function EditorialStack() {\n  return (\n    <KineticVariableHeadline\n      text={\"MAKE\\nIT\\nMOVE\"}\n      mode=\"both\"\n      as=\"h2\"\n      className=\"text-[clamp(3rem,13vw,8rem)] uppercase\"\n    />\n  );\n}"
+      }
+    ]
+  },
+  "caustic-light-card": {
+    "slug": "caustic-light-card",
+    "overview": "CausticLightCard renders a compact WebGL2 shader on an absolutely-positioned canvas and blends it over a gradient card base using `mix-blend-mode: screen`. The shader generates layered caustic streaks from animated noise + sine interference, then masks the effect to the lower band of the card so content remains readable. Hover interactions spring both intensity and speed to deliver a premium 'alive' response without abrupt jumps. Reduced-motion users get a frozen curated frame. Performance protections are built in: rendering pauses when the card is off-screen and the global runtime limits active animated instances to four simultaneously.",
+    "scenarios": [
+      {
+        "title": "Premium feature card surface",
+        "description": "Use as a hero feature tile where the lower half shimmers like reflected water while text stays high-contrast.",
+        "code": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function FeatureTile() {\n  return (\n    <CausticLightCard className=\"h-80 w-full rounded-2xl p-6\">\n      <h3 className=\"text-2xl font-semibold text-white\">Oceanic compute</h3>\n      <p className=\"mt-2 max-w-sm text-sm text-white/85\">\n        Real-time pipelines with premium visual polish.\n      </p>\n    </CausticLightCard>\n  );\n}"
+      },
+      {
+        "title": "Calm ambient background",
+        "description": "Lower speed and intensity for a subtle ambient glow that supports copy-heavy sections.",
+        "code": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function AmbientPanel() {\n  return (\n    <CausticLightCard\n      className=\"h-72 w-full rounded-xl\"\n      intensity={0.4}\n      speed={0.35}\n      coverage={0.48}\n    >\n      <div className=\"p-6 text-white\">\n        <p className=\"text-sm uppercase tracking-[0.2em] text-white/70\">Status</p>\n        <p className=\"mt-3 text-3xl font-semibold\">All systems nominal</p>\n      </div>\n    </CausticLightCard>\n  );\n}"
+      },
+      {
+        "title": "Warm sunset tint",
+        "description": "Change causticColor to align with a brand palette or mood lighting.",
+        "code": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function WarmCard() {\n  return (\n    <CausticLightCard\n      className=\"h-72 w-full rounded-2xl\"\n      causticColor=\"#ffe6b8\"\n      intensity={0.68}\n      speed={0.58}\n      coverage={0.6}\n    >\n      <div className=\"flex h-full items-end p-6\">\n        <p className=\"text-lg font-medium text-white\">Sunset mode enabled</p>\n      </div>\n    </CausticLightCard>\n  );\n}"
+      }
+    ]
+  },
+  "refractive-cursor-lens": {
+    "slug": "refractive-cursor-lens",
+    "overview": "RefractiveCursorLens renders a circular SVG-filtered disc absolutely-positioned inside its wrapper and tracks it to the cursor with a motion useSpring. The wrapper is `overflow-hidden` so the disc is clipped at the wrapper's edge — it never spills outside the bounds it's placed in. The disc combines `backdrop-filter: blur()` (cross-browser glass) with `filter: url(#…)` containing an feTurbulence + feDisplacementMap chain — the same trick used in LiquidGlassPanel — so the underlying content visibly refracts. A pre-baked radial mask (black-center → white-rim) is composited into the displacement noise via feComposite arithmetic, attenuating the distortion toward the middle: rim ripples strongly, center stays nearly clear. The lens fades in over 200ms when the pointer enters its bounds, snaps to position on entry to avoid a fly-in, and disappears on exit. Touch devices (`pointer: coarse`) and `prefers-reduced-motion` users see no lens at all — the wrapper still renders its children normally. The disc itself has `pointer-events: none` so clicks always reach the content underneath.",
+    "scenarios": [
+      {
+        "title": "Reading aid over body copy",
+        "description": "Wrap a long article or marketing block. The lens makes the text underneath ripple as the cursor passes — a playful flourish that doubles as a reading aid.",
+        "code": "import { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function Article() {\n  return (\n    <RefractiveCursorLens className=\"max-w-3xl mx-auto py-16\">\n      <h1 className=\"text-5xl font-semibold tracking-tight\">Field guide</h1>\n      <p className=\"mt-6 text-lg text-neutral-700\">\n        Hover anywhere over this paragraph. The lens refracts the type beneath\n        it without ever stealing the click — your selection, copy, and link\n        navigation all keep working as if the lens weren&apos;t there.\n      </p>\n    </RefractiveCursorLens>\n  );\n}"
+      },
+      {
+        "title": "Image inspector — bounded to a single element",
+        "description": "Use `showOnlyOver` to constrain the lens to a single image. The rest of the page stays untouched; the lens only appears while the cursor is over the framed photo.",
+        "code": "\"use client\";\nimport { useRef } from \"react\";\nimport { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function PhotoInspector() {\n  const imgRef = useRef<HTMLImageElement>(null);\n  return (\n    <RefractiveCursorLens\n      showOnlyOver={imgRef}\n      size={160}\n      displacementScale={28}\n    >\n      <div className=\"relative\">\n        <img\n          ref={imgRef}\n          src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n          alt=\"\"\n          className=\"w-full rounded-2xl\"\n        />\n      </div>\n    </RefractiveCursorLens>\n  );\n}"
+      },
+      {
+        "title": "Heavy lens with sluggish spring",
+        "description": "Crank `displacementScale` and soften the spring for a heavier, more theatrical feel — useful for hero sections that want a single eye-catching flourish.",
+        "code": "import { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function Hero() {\n  return (\n    <RefractiveCursorLens\n      size={200}\n      displacementScale={36}\n      springConfig={{ stiffness: 90, damping: 18 }}\n      className=\"min-h-[60vh] flex items-center justify-center\"\n    >\n      <h1 className=\"text-7xl font-bold tracking-tight\">\n        Trail your cursor.\n      </h1>\n    </RefractiveCursorLens>\n  );\n}"
       }
     ]
   }

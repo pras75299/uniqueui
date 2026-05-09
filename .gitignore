@@ -22,3 +22,6 @@ entities.json
 
 .turbo*
 .claire*
+
+# Local design/planning docs — keep on disk, do not version
+COMPONENT_PROMPTS.md

@@ -14,6 +14,7 @@ import {
   Layers,
   LayoutGrid,
   Loader2,
+  LucideFocus,
   LucideMaximize2,
   LucideMessageSquare,
   LucideMousePointer,
@@ -26,6 +27,7 @@ import {
   LucideScrollText,
   LucideShield,
   LucideSparkles,
+  LucideSquare,
   LucideStars,
   LucideTable,
   LucideTerminal,
@@ -49,6 +51,8 @@ export type ComponentItem = {
   description: string;
   icon: ElementType;
   category?: string;
+  /** ISO date (YYYY-MM-DD) component was added. Drives the "NEW" highlight for ~24h. */
+  addedAt?: string;
   props?: {
     name: string;
     type: string;
@@ -75,6 +79,7 @@ const iconMap = {
   Layers,
   LayoutGrid,
   Loader2,
+  LucideFocus,
   LucideMaximize2,
   LucideMessageSquare,
   LucideMousePointer,
@@ -87,6 +92,7 @@ const iconMap = {
   LucideScrollText,
   LucideShield,
   LucideSparkles,
+  LucideSquare,
   LucideStars,
   LucideTable,
   LucideTerminal,
@@ -476,7 +482,7 @@ const componentDefinitions = [
     "name": "Magnetic Button",
     "description": "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
     "icon": "LucideMousePointer",
-    "category": "Effects & Animations",
+    "category": "Components",
     "props": [
       {
         "name": "children",
@@ -796,7 +802,7 @@ const componentDefinitions = [
     "name": "Mini Mac Keyboard",
     "description": "Pure CSS decorative compact Mac-style keyboard with subtle spring entrance from motion.dev — ideal for hero device mockups.",
     "icon": "LayoutGrid",
-    "category": "Effects & Animations",
+    "category": "Components",
     "props": [
       {
         "name": "wrapperClassName",
@@ -2131,14 +2137,14 @@ const componentDefinitions = [
   {
     "slug": "outlined-mega-mark",
     "name": "Outlined Mega Mark",
-    "description": "Full-width responsive outlined headline with transparent fill and separate stroke colors for light and dark backgrounds — ideal for landing footers.",
+    "description": "Full-width mega outlined headline with theme-aware stroke colours; optional hover swaps the outline for an SVG gradient stroke (hollow fill).",
     "icon": "LucideType",
     "category": "Text",
     "props": [
       {
         "name": "children",
-        "type": "React.ReactNode",
-        "description": "Text or nodes rendered in both light and dark stroke layers."
+        "type": "string",
+        "description": "Plain-text label rendered once (accessible); SVG mode duplicates visually inside stroke layers only."
       },
       {
         "name": "fontSize",
@@ -2168,7 +2174,34 @@ const componentDefinitions = [
         "name": "strokeWidth",
         "type": "number | string",
         "default": "1",
-        "description": "Outline width; numbers become px (e.g. 2 → 2px). Use a string for units like rem."
+        "description": "Outline width rendered as SVG/CSS stroke. Numeric values (and `\"N\"` / `\"Npx\"` strings) are clamped so the stroke never exceeds **1px**; thicker values are capped to a hairline. Other CSS units (`rem`, `em`) pass through and are not clamped."
+      },
+      {
+        "name": "fillOnHover",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true without gradientOnHover, hover fills glyphs with the active stroke colour."
+      },
+      {
+        "name": "gradientOnHover",
+        "type": "boolean",
+        "default": "true",
+        "description": "When true (default), renders **two hollow SVG `<text>` strokes**: a diagonal **idle** stroke using your theme accent (`lightStrokeColor` / `darkStrokeColor`) everywhere, plus a **`linearGradient` stroke** visible only inside a radial **spotlight mask** driven by pointer position. Idle stroke is clipped under the hotspot so the two strokes never visually stack thicker than **1 device px** (`nonScalingStroke`, width capped via `strokeWidth`). When false, `-webkit-text-stroke` markup only."
+      },
+      {
+        "name": "outlineGradient",
+        "type": "OutlinedMegaMarkOutlineGradient",
+        "description": "Vivid hover outline gradient. Shape: `{ stops: string[] /* 2+ CSS colours */, x1?, y1?, x2?, y2? }` — optional line for the SVG linearGradient (`userSpaceOnUse`). Exported from the component module. Overrides `outlineGradientStops`."
+      },
+      {
+        "name": "outlineGradientStops",
+        "type": "readonly string[]",
+        "description": "Shortcut for gradient `stops` only (horizontal default axis). Ignored when `outlineGradient` is set."
+      },
+      {
+        "name": "hoverGradient",
+        "type": "string",
+        "description": "Deprecated: ignored. Use `outlineGradient` or `outlineGradientStops`."
       },
       {
         "name": "containerClassName",
@@ -2178,10 +2211,10 @@ const componentDefinitions = [
       {
         "name": "className",
         "type": "string",
-        "description": "Optional Tailwind classes for the inner paragraph."
+        "description": "Optional Tailwind classes on the SVG (gradient mode) or inner paragraph (plain mode)."
       }
     ],
-    "usageCode": "\"use client\";\nimport { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function LandingFooter() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(11.25rem, 10vw, 14.25rem)\"\n      strokeWidth={1}\n      lightStrokeColor=\"var(--color-neutral-300)\"\n      darkStrokeColor=\"var(--color-neutral-700)\"\n      letterSpacing=\"-0.02em\"\n    >\n      UniqueUI\n    </OutlinedMegaMark>\n  );\n}\n"
+    "usageCode": "\"use client\";\nimport { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function LandingFooter() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark\n        fontSize=\"clamp(7rem, 26vw, 14rem)\"\n        letterSpacing=\"-0.02em\"\n        strokeWidth={1}\n        lightStrokeColor=\"var(--color-neutral-400)\"\n        darkStrokeColor=\"var(--color-neutral-500)\"\n        gradientOnHover\n        outlineGradient={{\n          stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n          x1: \"0%\",\n          y1: \"0%\",\n          x2: \"100%\",\n          y2: \"0%\",\n        }}\n      >\n        UniqueUI\n      </OutlinedMegaMark>\n    </footer>\n  );\n}\n"
   },
   {
     "slug": "blur-reveal",
@@ -2649,6 +2682,320 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "\"use client\";\nimport { MacbookMock } from \"@/components/ui/macbook-mock\";\n\nexport default function DeviceShowcase() {\n  return (\n    <div className=\"flex justify-center p-12\">\n      <MacbookMock\n        size=\"md\"\n        tint=\"spaceGray\"\n        revealSrc=\"https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80\"\n      />\n    </div>\n  );\n}\n"
+  },
+  {
+    "slug": "liquid-glass-panel",
+    "name": "Liquid Glass Panel",
+    "description": "A frosted container that physically refracts the content behind it via SVG turbulence + displacement — not a simple backdrop blur. Sub-pixel-crisp text on top, slow specular sheen, Fresnel-like edge highlight, and a hover boost on the displacement strength. Honors prefers-reduced-motion.",
+    "icon": "LucideSquare",
+    "category": "Cards",
+    "addedAt": "2026-05-06",
+    "props": [
+      {
+        "name": "displacementScale",
+        "type": "number",
+        "default": "24",
+        "description": "Strength of the UV displacement applied to pixels behind the panel. Higher values warp more aggressively."
+      },
+      {
+        "name": "noiseFrequency",
+        "type": "number",
+        "default": "0.014",
+        "description": "Base frequency of the turbulence noise. Lower values produce larger, glassier ripples; higher values feel more etched."
+      },
+      {
+        "name": "tint",
+        "type": "string",
+        "default": "\"rgba(255,255,255,0.08)\"",
+        "description": "Overall surface tint applied above the refraction layer."
+      },
+      {
+        "name": "borderHighlight",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to render the inner Fresnel-like edge ring and outer drop shadow."
+      },
+      {
+        "name": "intensityOnHover",
+        "type": "number",
+        "default": "1.15",
+        "description": "Multiplier applied to displacementScale on hover. 1.0 disables the hover boost."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for sizing, padding, rounding, and layout of the panel."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Content rendered crisply on top of the refraction layer — never filtered."
+      }
+    ],
+    "usageCode": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function Example() {\n  return (\n    <div\n      className=\"relative flex min-h-[440px] w-full items-center justify-center overflow-hidden rounded-xl bg-cover bg-center px-6 py-10\"\n      style={{\n        backgroundImage:\n          \"url(https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80)\",\n      }}\n    >\n      <div className=\"grid w-full max-w-3xl gap-5 md:grid-cols-2\">\n        <LiquidGlassPanel className=\"p-7\">\n          <span className=\"text-[11px] font-mono uppercase tracking-[0.3em] text-white/70\">\n            Solar Winter · 2026\n          </span>\n          <h3 className=\"mt-3 text-2xl font-semibold text-white\">\n            Real glass, not a blur.\n          </h3>\n          <p className=\"mt-2 text-sm text-white/80\">\n            Pixels behind this panel are physically refracted via SVG turbulence —\n            text on top stays pixel-crisp.\n          </p>\n        </LiquidGlassPanel>\n        <LiquidGlassPanel\n          className=\"p-7\"\n          tint=\"rgba(120,90,255,0.18)\"\n          displacementScale={32}\n          noiseFrequency={0.018}\n        >\n          <h3 className=\"text-lg font-semibold text-white\">Tinted variant</h3>\n          <p className=\"mt-2 text-sm text-white/80\">\n            Stronger displacement and a violet tint — useful for modal surfaces or\n            CTA flourishes.\n          </p>\n          <button className=\"mt-4 rounded-full bg-white/15 px-4 py-1.5 text-xs font-medium text-white backdrop-blur-md transition hover:bg-white/25\">\n            Action\n          </button>\n        </LiquidGlassPanel>\n      </div>\n    </div>\n  );\n}\n"
+  },
+  {
+    "slug": "shader-mesh-gradient",
+    "name": "Shader Mesh Gradient",
+    "description": "GPU-rendered mesh gradient: a fragment shader warps multiple OKLCH color blobs through 3-octave simplex noise so they flow continuously instead of locking into a static pattern. Pointer position subtly attracts the nearest blob; reduced-motion freezes a single curated frame; falls back to a static CSS radial gradient on devices without WebGL2.",
+    "icon": "LucideWaves",
+    "category": "Backgrounds",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": "4 OKLCH stops",
+        "description": "3–6 color stops. Accepts hex, rgb()/rgba(), hsl(), or oklch(). Mixed in OKLab space inside the shader for perceptually uniform blends."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "1",
+        "description": "Flow speed multiplier. uTime accumulates as deltaTime * speed."
+      },
+      {
+        "name": "pointerInfluence",
+        "type": "number",
+        "default": "0.4",
+        "description": "How strongly the nearest blob is attracted to the cursor. 0 disables pointer reactivity."
+      },
+      {
+        "name": "grain",
+        "type": "number",
+        "default": "0.04",
+        "description": "Film grain layered on top of the shader output. 0 disables. Keep below 0.1 to avoid banding."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for sizing, rounding, and layout of the canvas wrapper."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Overlay content rendered crisply above the shader (text, CTAs, navbars)."
+      }
+    ],
+    "usageCode": "import { ShaderMeshGradient } from \"@/components/ui/shader-mesh-gradient\";\n\nexport default function Example() {\n  return (\n    <ShaderMeshGradient\n      className=\"h-[460px] w-full rounded-2xl\"\n      colors={[\n        \"oklch(0.78 0.16 30)\",\n        \"oklch(0.72 0.17 295)\",\n        \"oklch(0.70 0.16 220)\",\n        \"oklch(0.82 0.14 150)\",\n      ]}\n      speed={1}\n      pointerInfluence={0.45}\n      grain={0.04}\n    >\n      <div className=\"flex h-full w-full items-center justify-center px-6 text-center\">\n        <div>\n          <span className=\"text-[11px] font-mono uppercase tracking-[0.32em] text-white/80\">\n            Fragment shader · WebGL2\n          </span>\n          <h2 className=\"mt-3 text-4xl font-semibold text-white\">\n            GPU mesh gradient.\n          </h2>\n          <p className=\"mt-2 text-sm text-white/85\">\n            Move your cursor — the nearest blob leans in.\n          </p>\n        </div>\n      </div>\n    </ShaderMeshGradient>\n  );\n}\n"
+  },
+  {
+    "slug": "chromatic-aberration-reveal",
+    "name": "Chromatic Aberration Reveal",
+    "description": "Reveal an image with an RGB split that converges into a clean final frame. Three channel-shifted layers spring to alignment with subtle staggering, plus a one-pass wave sweep during convergence. Supports in-view once, mount-triggered, and manual visibility control.",
+    "icon": "LucideScanLine",
+    "category": "Effects & Animations",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "description": "Image URL rendered in the base and channel layers."
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "description": "Accessible alt text for the base image layer."
+      },
+      {
+        "name": "splitDistance",
+        "type": "number",
+        "default": "16",
+        "description": "Initial horizontal channel offset in pixels (R = -distance, B = +distance)."
+      },
+      {
+        "name": "staggerMs",
+        "type": "number",
+        "default": "80",
+        "description": "Delay between each channel settling, in milliseconds."
+      },
+      {
+        "name": "trigger",
+        "type": "\"in-view\" | \"mount\" | \"manual\"",
+        "default": "\"in-view\"",
+        "description": "Animation trigger mode. `in-view` runs once when entering viewport."
+      },
+      {
+        "name": "isVisible",
+        "type": "boolean",
+        "default": "false",
+        "description": "Used with `trigger=\"manual\"` to control reveal state externally."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the reveal wrapper."
+      }
+    ],
+    "usageCode": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function Example() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[420px] w-full rounded-2xl\"\n      src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n      alt=\"Mountain lake at dusk\"\n      splitDistance={16}\n      staggerMs={80}\n      trigger=\"in-view\"\n    />\n  );\n}\n"
+  },
+  {
+    "slug": "iridescent-foil-button",
+    "name": "Iridescent Foil Button",
+    "description": "A holographic foil CTA button with pointer-reactive hue/angle shifts, soft specular sheen, and fine grain texture. Built as a drop-in button with proper focus states, disabled support, and reduced-motion-safe scale behavior.",
+    "icon": "LucideSparkles",
+    "category": "Components",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "variant",
+        "type": "\"default\" | \"subtle\" | \"vivid\"",
+        "default": "\"default\"",
+        "description": "Controls base gradient and foil intensity."
+      },
+      {
+        "name": "grainOpacity",
+        "type": "number",
+        "default": "0.05",
+        "description": "Opacity for the turbulence grain overlay. Recommended range: 0.03-0.08."
+      },
+      {
+        "name": "hueRange",
+        "type": "number",
+        "default": "120",
+        "description": "Maximum hue swing in degrees driven by pointer position."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Button label or custom content."
+      }
+    ],
+    "usageCode": "import { IridescentFoilButton } from \"@/components/ui/iridescent-foil-button\";\n\nexport default function Example() {\n  return (\n    <IridescentFoilButton variant=\"vivid\">\n      Start Free Trial\n    </IridescentFoilButton>\n  );\n}\n"
+  },
+  {
+    "slug": "kinetic-variable-headline",
+    "name": "Kinetic Variable Headline",
+    "description": "A large display headline that animates variable font weight per glyph on entrance and pointer proximity. Letters inflate like a magnetic field while preserving readable text semantics.",
+    "icon": "LucideType",
+    "category": "Text",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "Headline text. Supports line breaks via `\\n`."
+      },
+      {
+        "name": "mode",
+        "type": "\"entrance\" | \"pointer\" | \"both\"",
+        "default": "\"both\"",
+        "description": "Animation mode: entrance stagger, pointer magnetic field, or both."
+      },
+      {
+        "name": "weightRange",
+        "type": "[number, number]",
+        "default": "[200, 700]",
+        "description": "Variable font weight range mapped across animations."
+      },
+      {
+        "name": "staggerMs",
+        "type": "number",
+        "default": "25",
+        "description": "Per-letter delay for entrance animation in milliseconds."
+      },
+      {
+        "name": "as",
+        "type": "\"h1\" | \"h2\" | \"h3\"",
+        "default": "\"h1\"",
+        "description": "Semantic heading level."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the headline wrapper."
+      }
+    ],
+    "usageCode": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function Example() {\n  return (\n    <KineticVariableHeadline\n      text=\"CRAFTED MOTION\"\n      mode=\"both\"\n      className=\"text-[clamp(3.5rem,11vw,7.2rem)] uppercase\"\n    />\n  );\n}\n"
+  },
+  {
+    "slug": "caustic-light-card",
+    "name": "Caustic Light Card",
+    "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",
+    "icon": "LucideWaves",
+    "category": "Cards",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "causticColor",
+        "type": "string",
+        "default": "\"#fff7e0\"",
+        "description": "Tint for the caustic highlights. Use warm off-whites for natural pool-light refractions."
+      },
+      {
+        "name": "intensity",
+        "type": "number",
+        "default": "0.6",
+        "description": "Base brightness multiplier for caustic glow."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "0.5",
+        "description": "Base animation speed multiplier."
+      },
+      {
+        "name": "coverage",
+        "type": "number",
+        "default": "0.5",
+        "description": "Fraction of card height covered by caustics (0-1). Higher values push shimmer farther upward."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer card wrapper."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Foreground content rendered above the caustic overlay."
+      }
+    ],
+    "usageCode": "import { CausticLightCard } from \"@/components/ui/caustic-light-card\";\n\nexport default function Example() {\n  return (\n    <CausticLightCard\n      className=\"h-[420px] w-full rounded-2xl\"\n      causticColor=\"#fff7e0\"\n      intensity={0.6}\n      speed={0.5}\n      coverage={0.55}\n    >\n      <div className=\"flex h-full items-end p-8\">\n        <div>\n          <h2 className=\"text-3xl font-semibold text-white\">Caustic light card</h2>\n          <p className=\"mt-2 max-w-md text-sm text-white/85\">\n            Hover for stronger shimmer while the copy remains crisp.\n          </p>\n        </div>\n      </div>\n    </CausticLightCard>\n  );\n}\n"
+  },
+  {
+    "slug": "refractive-cursor-lens",
+    "name": "Refractive Cursor Lens",
+    "description": "A circular liquid-glass lens that follows the cursor with spring lag and refracts the content underneath via SVG turbulence + displacement. A radial-falloff mask attenuates distortion toward the center, so the rim ripples while the middle stays calm — opposite of a fisheye. Pass-through clicks, screen-reader hidden, disabled on touch and reduced-motion.",
+    "icon": "LucideFocus",
+    "category": "Cursor Effects",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "size",
+        "type": "number",
+        "default": "120",
+        "description": "Diameter of the lens in CSS pixels."
+      },
+      {
+        "name": "displacementScale",
+        "type": "number",
+        "default": "18",
+        "description": "Scale passed to feDisplacementMap. Higher values produce stronger refraction at the rim."
+      },
+      {
+        "name": "showOnlyOver",
+        "type": "React.RefObject<HTMLElement | null>",
+        "description": "Optional ref bounding where the lens appears. Defaults to the wrapper element. Useful when the lens should only activate over a specific region (e.g. an image, an article)."
+      },
+      {
+        "name": "springConfig",
+        "type": "{ stiffness: number; damping: number }",
+        "default": "{ stiffness: 220, damping: 26 }",
+        "description": "motion useSpring config for the cursor follow. Lower stiffness gives more lag."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the wrapper element. Does NOT style the lens itself."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Content the lens floats over and refracts."
+      }
+    ],
+    "usageCode": "import { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[460px] w-full rounded-2xl border bg-neutral-950\">\n      <RefractiveCursorLens className=\"h-full w-full\">\n        <div className=\"flex h-full items-center justify-center px-10\">\n          <article className=\"max-w-xl\">\n            <h2 className=\"text-4xl font-semibold tracking-tight text-white\">\n              Move your cursor anywhere here.\n            </h2>\n            <p className=\"mt-4 text-base text-neutral-300\">\n              The lens follows you and refracts the content underneath — type,\n              gradients, images. Clicks pass straight through.\n            </p>\n          </article>\n        </div>\n      </RefractiveCursorLens>\n    </div>\n  );\n}\n"
   }
 ] satisfies ComponentDefinition[];
 
@@ -2656,3 +3003,21 @@ export const componentsList: ComponentItem[] = componentDefinitions.map((compone
   ...component,
   icon: iconMap[component.icon],
 }));
+
+/** Window during which a freshly added component is highlighted as NEW. */
+export const NEW_COMPONENT_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Returns true if `addedAt` is within the last 24 hours.
+ * Pure function so server and client agree without a hydration mismatch
+ * — pass a stable `now` if you want deterministic SSR.
+ */
+export function isNewComponent(
+  addedAt: string | undefined,
+  now: number = Date.now(),
+): boolean {
+  if (!addedAt) return false;
+  const t = Date.parse(addedAt);
+  if (Number.isNaN(t)) return false;
+  return now - t < NEW_COMPONENT_WINDOW_MS;
+}

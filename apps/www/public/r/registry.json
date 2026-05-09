@@ -736,7 +736,7 @@
       "name": "outlined-mega-mark",
       "type": "registry:ui",
       "title": "Outlined Mega Mark",
-      "description": "Full-width responsive outlined headline with transparent fill and separate stroke colors for light and dark backgrounds — ideal for landing footers.",
+      "description": "Full-width mega outlined headline with theme-aware stroke colours; optional hover swaps the outline for an SVG gradient stroke (hollow fill).",
       "dependencies": [
         "clsx",
         "tailwind-merge"
@@ -889,6 +889,132 @@
           "path": "components/ui/macbook-mock.tsx",
           "type": "registry:component",
           "target": "components/ui/macbook-mock.tsx"
+        }
+      ]
+    },
+    {
+      "name": "liquid-glass-panel",
+      "type": "registry:ui",
+      "title": "Liquid Glass Panel",
+      "description": "A frosted container that physically refracts the content behind it via SVG turbulence + displacement — not a simple backdrop blur. Sub-pixel-crisp text on top, slow specular sheen, Fresnel-like edge highlight, and a hover boost on the displacement strength. Honors prefers-reduced-motion.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/liquid-glass-panel.tsx",
+          "type": "registry:component",
+          "target": "components/ui/liquid-glass-panel.tsx"
+        }
+      ]
+    },
+    {
+      "name": "shader-mesh-gradient",
+      "type": "registry:ui",
+      "title": "Shader Mesh Gradient",
+      "description": "GPU-rendered mesh gradient: a fragment shader warps multiple OKLCH color blobs through 3-octave simplex noise so they flow continuously instead of locking into a static pattern. Pointer position subtly attracts the nearest blob; reduced-motion freezes a single curated frame; falls back to a static CSS radial gradient on devices without WebGL2.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/shader-mesh-gradient.tsx",
+          "type": "registry:component",
+          "target": "components/ui/shader-mesh-gradient.tsx"
+        }
+      ]
+    },
+    {
+      "name": "caustic-light-card",
+      "type": "registry:ui",
+      "title": "Caustic Light Card",
+      "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/caustic-light-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/caustic-light-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "chromatic-aberration-reveal",
+      "type": "registry:ui",
+      "title": "Chromatic Aberration Reveal",
+      "description": "Reveal an image with an RGB split that converges into a clean final frame. Three channel-shifted layers spring to alignment with subtle staggering, plus a one-pass wave sweep during convergence. Supports in-view once, mount-triggered, and manual visibility control.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/chromatic-aberration-reveal.tsx",
+          "type": "registry:component",
+          "target": "components/ui/chromatic-aberration-reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "iridescent-foil-button",
+      "type": "registry:ui",
+      "title": "Iridescent Foil Button",
+      "description": "A holographic foil CTA button with pointer-reactive hue/angle shifts, soft specular sheen, and fine grain texture. Built as a drop-in button with proper focus states, disabled support, and reduced-motion-safe scale behavior.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/iridescent-foil-button.tsx",
+          "type": "registry:component",
+          "target": "components/ui/iridescent-foil-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kinetic-variable-headline",
+      "type": "registry:ui",
+      "title": "Kinetic Variable Headline",
+      "description": "A large display headline that animates variable font weight per glyph on entrance and pointer proximity. Letters inflate like a magnetic field while preserving readable text semantics.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/kinetic-variable-headline.tsx",
+          "type": "registry:component",
+          "target": "components/ui/kinetic-variable-headline.tsx"
+        }
+      ]
+    },
+    {
+      "name": "refractive-cursor-lens",
+      "type": "registry:ui",
+      "title": "Refractive Cursor Lens",
+      "description": "A circular liquid-glass lens that follows the cursor with spring lag and refracts the content underneath via SVG turbulence + displacement. A radial-falloff mask attenuates distortion toward the center, so the rim ripples while the middle stays calm — opposite of a fisheye. Pass-through clicks, screen-reader hidden, disabled on touch and reduced-motion.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/refractive-cursor-lens.tsx",
+          "type": "registry:component",
+          "target": "components/ui/refractive-cursor-lens.tsx"
         }
       ]
     }

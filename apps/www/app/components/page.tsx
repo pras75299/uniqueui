@@ -1,11 +1,12 @@
 "use client";
 
-import { componentsList } from "@/config/components";
+import { componentsList, isNewComponent } from "@/config/components";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight, Search, Layers } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 import { cn } from "@/lib/utils";
+import { useIsClient } from "@/lib/use-is-client";
 import { useState, useMemo } from "react";
 
 const CATEGORIES = [
@@ -35,6 +36,8 @@ export default function ComponentsIndex() {
   const isDark = theme === "dark";
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  // Defer "NEW" pill to after hydration to avoid SSR/CSR drift.
+  const hydrated = useIsClient();
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -217,7 +220,9 @@ export default function ComponentsIndex() {
           animate="visible"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
-          {filtered.map((component) => (
+          {filtered.map((component) => {
+              const isNew = hydrated && isNewComponent(component.addedAt);
+              return (
               <motion.div
                 key={component.slug}
                 variants={cardVariants}
@@ -225,12 +230,29 @@ export default function ComponentsIndex() {
                 <Link href={`/components/${component.slug}`} className="block h-full">
                   <div
                     className={cn(
-                      "group h-full p-5 rounded-xl border transition-all duration-200 cursor-pointer",
-                      isDark
+                      "group relative h-full p-5 rounded-xl border transition-all duration-200 cursor-pointer",
+                      isNew
+                        ? isDark
+                          ? "border-purple-500/40 bg-purple-500/5 hover:bg-purple-500/10 hover:border-purple-400/60 shadow-lg shadow-purple-500/10"
+                          : "border-purple-300 bg-purple-50/40 hover:bg-purple-50 hover:border-purple-400 shadow-lg shadow-purple-200/40"
+                        : isDark
                         ? "border-neutral-800 bg-neutral-900/20 hover:bg-neutral-900/60 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-900/10"
                         : "border-neutral-200 bg-white hover:border-purple-200 hover:shadow-xl hover:shadow-purple-100/60"
                     )}
                   >
+                    {isNew ? (
+                      <span
+                        aria-label="Recently added"
+                        className={cn(
+                          "absolute top-3 right-3 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                          isDark
+                            ? "bg-purple-500/25 text-purple-200 ring-1 ring-purple-400/40"
+                            : "bg-purple-600 text-white shadow-sm",
+                        )}
+                      >
+                        New
+                      </span>
+                    ) : null}
                     {/* Icon row */}
                     <div className="flex items-start justify-between mb-4">
                       <div
@@ -287,7 +309,8 @@ export default function ComponentsIndex() {
                   </div>
                 </Link>
               </motion.div>
-            ))}
+              );
+            })}
         </motion.div>
       ) : (
         /* ── Empty state ── */

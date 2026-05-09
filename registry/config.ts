@@ -430,4 +430,60 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "liquid-glass-panel",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "liquid-glass-panel/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "shader-mesh-gradient",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "shader-mesh-gradient/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "caustic-light-card",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "caustic-light-card/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "chromatic-aberration-reveal",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "chromatic-aberration-reveal/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "iridescent-foil-button",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "iridescent-foil-button/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "kinetic-variable-headline",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "kinetic-variable-headline/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "refractive-cursor-lens",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "refractive-cursor-lens/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

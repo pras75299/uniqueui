@@ -1,0 +1,265 @@
+"use client";
+
+import * as React from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useReducedMotion,
+  type HTMLMotionProps,
+} from "motion/react";
+import { cn } from "@/lib/utils";
+
+export interface ChromaticAberrationRevealProps
+  extends Omit<HTMLMotionProps<"div">, "onDrag"> {
+  /** Image URL. Required — used by the chromatic overlay layers (browser caches the request). */
+  src: string;
+  /** Alt text for the source layer. Overlay layers are aria-hidden. */
+  alt: string;
+  /**
+   * Optional override for the visible source layer — e.g. `next/image`, `<picture>`,
+   * or a custom blur-up component. Defaults to a plain `<img>` at `src`.
+   */
+  children?: React.ReactNode;
+  /**
+   * Distance the R/B layers split before converging. `number` → px; `string` passes
+   * through (e.g. `"4%"`, `"1rem"`, `"calc(2vw + 4px)"`). Default 16.
+   */
+  splitDistance?: number | string;
+  /** Per-layer stagger between R/G/B reveals, in ms. Default 80. */
+  staggerMs?: number;
+  /** Axis along which the layers split. Default `"horizontal"`. */
+  direction?: "horizontal" | "vertical";
+  /** When the converge animation runs. Default `"in-view"`. */
+  trigger?: "in-view" | "mount" | "manual";
+  /**
+   * When `true` and `trigger="in-view"`, the converge + sheen replay every time the
+   * element re-enters the viewport. Default `false` (one-shot, matches prior behavior).
+   */
+  replayOnIntersect?: boolean;
+  /** Manual visibility for `trigger="manual"`. */
+  isVisible?: boolean;
+  className?: string;
+}
+
+function cssLength(value: number | string): string {
+  return typeof value === "number" ? `${value}px` : value;
+}
+
+function negativeCssLength(value: number | string): string {
+  return typeof value === "number" ? `${-value}px` : `calc(-1 * (${value}))`;
+}
+
+// CSS `url(...)` is a different parsing context from HTML attributes — quotes,
+// closing parens, backslashes, and control chars can all break out of the function
+// call. Strip control chars and percent-encode the structural chars so the URL stays
+// safely contained inside `url("...")`. encodeURIComponent is too aggressive (it
+// would re-encode `%xx` sequences in already-encoded URLs).
+function safeCssUrl(src: string): string {
+  return src
+    .replace(/[\x00-\x1f\x7f]/g, "")
+    .replace(/"/g, "%22")
+    .replace(/\)/g, "%29")
+    .replace(/\\/g, "%5C");
+}
+
+export const ChromaticAberrationReveal = React.forwardRef<
+  HTMLDivElement,
+  ChromaticAberrationRevealProps
+>(function ChromaticAberrationReveal(
+  {
+    src,
+    alt,
+    children,
+    splitDistance = 16,
+    staggerMs = 80,
+    direction = "horizontal",
+    trigger = "in-view",
+    replayOnIntersect = false,
+    isVisible = false,
+    className,
+    ...rest
+  },
+  ref,
+) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const reduceMotion = useReducedMotion();
+  const [inViewVisible, setInViewVisible] = useState(false);
+  // Increments every time the in-view observer fires while replay is enabled — used
+  // as the React `key` on the sheen so the animation re-mounts and re-plays.
+  const [intersectVersion, setIntersectVersion] = useState(0);
+
+  useEffect(() => {
+    if (trigger !== "in-view") return;
+    const node = containerRef.current;
+    if (!node) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const intersecting = Boolean(entry?.isIntersecting);
+        if (replayOnIntersect) {
+          setInViewVisible(intersecting);
+          if (intersecting) setIntersectVersion((v) => v + 1);
+          // No unobserve — keep listening for re-entries.
+        } else if (intersecting) {
+          setInViewVisible(true);
+          setIntersectVersion(1);
+          io.unobserve(node);
+        }
+      },
+      { threshold: 0.2 },
+    );
+
+    io.observe(node);
+    return () => io.disconnect();
+  }, [trigger, replayOnIntersect]);
+
+  const visible =
+    trigger === "manual" ? isVisible : trigger === "mount" ? true : inViewVisible;
+
+  // Sheen mount key — derived from the trigger and visibility. Going 0 → N unmounts
+  // and remounts the sheen, replaying its enter animation.
+  // - mount: plays once after first commit (key=1 always when visible).
+  // - manual: plays whenever `isVisible` flips true (key toggles 0/1, the unmount
+  //   when isVisible flips false re-arms it).
+  // - in-view: incremented by the IO callback per (re-)entry.
+  const waveKey =
+    trigger === "manual"
+      ? isVisible
+        ? 1
+        : 0
+      : trigger === "mount"
+        ? 1
+        : intersectVersion;
+
+  const delayStep = staggerMs / 1000;
+  const isHorizontal = direction === "horizontal";
+
+  // Resolve the offset for one RGB layer relative to the split axis.
+  const offset = (sign: -1 | 0 | 1) => {
+    if (sign === 0) return { x: 0, y: 0 };
+    const v = sign === -1 ? negativeCssLength(splitDistance) : cssLength(splitDistance);
+    return isHorizontal ? { x: v, y: 0 } : { x: 0, y: v };
+  };
+
+  const overlayBg: React.CSSProperties = {
+    backgroundImage: `url("${safeCssUrl(src)}")`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  };
+
+  return (
+    <motion.div
+      ref={(node) => {
+        containerRef.current = node;
+        if (typeof ref === "function") ref(node);
+        else if (ref)
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }}
+      className={cn(
+        "relative isolate overflow-hidden rounded-2xl bg-black",
+        className,
+      )}
+      {...rest}
+    >
+      {children ?? (
+        // Plain <img> keeps the registry component framework-agnostic when copy-pasted.
+        // Consumers on Next.js can pass a `next/image` element via `children`.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={alt}
+          className="block h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+
+      {!reduceMotion ? (
+        <>
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 [mix-blend-mode:screen]"
+            style={{
+              ...overlayBg,
+              filter: "brightness(1.3) saturate(1.35) hue-rotate(0deg)",
+            }}
+            initial={{ ...offset(-1), opacity: 0.6 }}
+            animate={visible ? { x: 0, y: 0, opacity: 1 } : { ...offset(-1), opacity: 0.6 }}
+            transition={{ type: "spring", stiffness: 220, damping: 26, delay: 0 }}
+          />
+
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 [mix-blend-mode:screen]"
+            style={{
+              ...overlayBg,
+              filter: "brightness(1.28) saturate(1.28) hue-rotate(120deg)",
+            }}
+            initial={{ ...offset(0), opacity: 0.6 }}
+            animate={visible ? { x: 0, y: 0, opacity: 1 } : { ...offset(0), opacity: 0.6 }}
+            transition={{
+              type: "spring",
+              stiffness: 205,
+              damping: 28,
+              delay: delayStep,
+            }}
+          />
+
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 [mix-blend-mode:screen]"
+            style={{
+              ...overlayBg,
+              filter: "brightness(1.26) saturate(1.32) hue-rotate(240deg)",
+            }}
+            initial={{ ...offset(1), opacity: 0.6 }}
+            animate={visible ? { x: 0, y: 0, opacity: 1 } : { ...offset(1), opacity: 0.6 }}
+            transition={{
+              type: "spring",
+              stiffness: 190,
+              damping: 30,
+              delay: delayStep * 2,
+            }}
+          />
+
+          {visible && waveKey > 0 ? (
+            <motion.div
+              key={waveKey}
+              aria-hidden
+              className={cn(
+                "pointer-events-none absolute bg-gradient-to-r from-transparent via-white/40 to-transparent blur-xl",
+                isHorizontal
+                  ? "-left-1/3 top-0 h-full w-1/2 -skew-x-12"
+                  : "left-0 -top-1/3 h-1/2 w-full -skew-y-12",
+              )}
+              initial={
+                isHorizontal
+                  ? { x: "-120%", opacity: 0 }
+                  : { y: "-120%", opacity: 0 }
+              }
+              animate={
+                isHorizontal
+                  ? { x: "260%", opacity: [0, 0.65, 0] }
+                  : { y: "260%", opacity: [0, 0.65, 0] }
+              }
+              transition={{ duration: 0.7, ease: "easeOut" }}
+            />
+          ) : null}
+        </>
+      ) : (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-black"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: visible ? 0 : 0.16 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+        />
+      )}
+    </motion.div>
+  );
+});
+
+ChromaticAberrationReveal.displayName = "ChromaticAberrationReveal";
+
+export default ChromaticAberrationReveal;
