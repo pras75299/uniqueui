@@ -11,14 +11,25 @@ import { cn } from "@/lib/utils";
 
 export interface ShaderMeshGradientProps
   extends Omit<HTMLMotionProps<"div">, "onDrag"> {
-  /** 3–6 color stops. Accepts hex (`#abcdef`), `rgb()`, `rgba()`, `hsl()`, or `oklch(L C H)`. */
+  /** 3–6 color stops. Accepts hex (`#abcdef`), `rgb()`, `rgba()`, `hsl()`, or `oklch(L C H)`. Extra stops past 6 are dropped (with a dev-mode warning). */
   colors?: string[];
-  /** Flow speed multiplier. Default 1.0. */
+  /** Flow speed multiplier. `0` pauses the animation and frees the RAF loop. Default 1.0. */
   speed?: number;
   /** 0 = ignore pointer; 0.4 = subtle pull on the nearest blob. */
   pointerInfluence?: number;
   /** Film grain intensity layered on top. 0 disables. */
   grain?: number;
+  /**
+   * Blob softness, 0–1. 0 = tight, lava-lamp-style cores; 1 = broad watercolor wash.
+   * Default 0.5.
+   */
+  softness?: number;
+  /**
+   * Optional seed for the blob layout. When provided, every mount of the same
+   * `seed` produces the same gradient — useful for SSR snapshots, screenshot
+   * tests, and brand-locked compositions. Default 0.
+   */
+  seed?: number;
   /** Overlay content rendered crisply above the canvas. */
   children?: React.ReactNode;
 }
@@ -179,6 +190,8 @@ uniform float uTime;
 uniform vec2 uMouse;
 uniform float uPointerInfluence;
 uniform float uGrain;
+uniform float uSoftness; // 0 sharp · 1 soft
+uniform float uSeed;
 uniform int uColorCount;
 uniform vec3 uColors[6];
 
@@ -286,9 +299,13 @@ void main(){
   for (int i = 0; i < 6; i++) {
     if (i >= uColorCount) break;
     float fi = float(i);
+    // uSeed shifts the per-blob phase so the same color list with a different seed
+    // produces a different (but still organic) layout. Phase is large because sin/cos
+    // wrap, and we want the seed to actually break the pattern.
+    float ph = uSeed * (1.13 + 0.07 * fi);
     vec2 center = vec2(
-      0.5 * aspect + 0.42 * aspect * sin(t * (0.55 + 0.13 * fi) + fi * 1.7),
-      0.5 + 0.38 * cos(t * (0.48 + 0.11 * fi) + fi * 2.3)
+      0.5 * aspect + 0.42 * aspect * sin(t * (0.55 + 0.13 * fi) + fi * 1.7 + ph),
+      0.5 + 0.38 * cos(t * (0.48 + 0.11 * fi) + fi * 2.3 + ph)
     );
 
     // Pointer pull on the nearest blob — softer falloff (~1.4 instead of ~3.5)
@@ -302,7 +319,11 @@ void main(){
     // Per-blob hover boost: when the cursor is on top of a blob, its weight
     // briefly increases so its color reads more strongly under the cursor.
     float hoverBoost = 1.0 + uPointerInfluence * 1.4 * exp(-dMouse * 2.5);
-    float w = hoverBoost / (0.035 + d * d * 4.0);
+    // Softness lerps the falloff: a small constant + low d² coefficient = sharp
+    // cores; a large constant + high coefficient = broad wash.
+    float coreCoef = mix(4.0, 0.6, uSoftness);
+    float coreBias = mix(0.020, 0.090, uSoftness);
+    float w = hoverBoost / (coreBias + d * d * coreCoef);
     mixedOklab += uColors[i] * w;
     wsum += w;
   }
@@ -341,6 +362,8 @@ export const ShaderMeshGradient = React.forwardRef<
     speed = 1,
     pointerInfluence = 0.4,
     grain = 0.04,
+    softness = 0.5,
+    seed = 0,
     className,
     children,
     style,
@@ -348,6 +371,13 @@ export const ShaderMeshGradient = React.forwardRef<
   },
   ref,
 ) {
+  // Dev-mode signal that color stops past 6 are dropped — silent overflow was a
+  // real footgun, but a render-time warn costs nothing in production builds.
+  if (process.env.NODE_ENV !== "production" && colors.length > 6) {
+    console.warn(
+      `[ShaderMeshGradient] received ${colors.length} colors; only the first 6 are used.`,
+    );
+  }
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const reduceMotion = useReducedMotion();
@@ -358,9 +388,13 @@ export const ShaderMeshGradient = React.forwardRef<
   const speedRef = useRef(speed);
   const pointerInfluenceRef = useRef(pointerInfluence);
   const grainRef = useRef(grain);
+  const softnessRef = useRef(softness);
+  const seedRef = useRef(seed);
   speedRef.current = speed;
   pointerInfluenceRef.current = pointerInfluence;
   grainRef.current = grain;
+  softnessRef.current = softness;
+  seedRef.current = seed;
 
   // Stable reference to the OKLab triplets. We re-parse only when the
   // string list changes — colors[] is an array prop so we key on its joined value.
@@ -452,6 +486,8 @@ export const ShaderMeshGradient = React.forwardRef<
     const uMouse = gl.getUniformLocation(program, "uMouse");
     const uPointerInfluence = gl.getUniformLocation(program, "uPointerInfluence");
     const uGrain = gl.getUniformLocation(program, "uGrain");
+    const uSoftness = gl.getUniformLocation(program, "uSoftness");
+    const uSeed = gl.getUniformLocation(program, "uSeed");
     const uColorCount = gl.getUniformLocation(program, "uColorCount");
     const uColors = gl.getUniformLocation(program, "uColors[0]");
 
@@ -489,17 +525,6 @@ export const ShaderMeshGradient = React.forwardRef<
     /* pointer (normalized 0–1, exponential lerp) */
     const target = { x: 0.5, y: 0.5 };
     const current = { x: 0.5, y: 0.5 };
-    const onMove = (e: PointerEvent) => {
-      const rect = container.getBoundingClientRect();
-      target.x = (e.clientX - rect.left) / rect.width;
-      target.y = 1 - (e.clientY - rect.top) / rect.height;
-    };
-    const onLeave = () => {
-      target.x = 0.5;
-      target.y = 0.5;
-    };
-    container.addEventListener("pointermove", onMove);
-    container.addEventListener("pointerleave", onLeave);
 
     /* render loop */
     let raf = 0;
@@ -511,6 +536,8 @@ export const ShaderMeshGradient = React.forwardRef<
       gl.uniform2f(uMouse, current.x, current.y);
       gl.uniform1f(uPointerInfluence, pointerInfluenceRef.current);
       gl.uniform1f(uGrain, grainRef.current);
+      gl.uniform1f(uSoftness, Math.max(0, Math.min(1, softnessRef.current)));
+      gl.uniform1f(uSeed, seedRef.current);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
@@ -524,10 +551,47 @@ export const ShaderMeshGradient = React.forwardRef<
       current.x += (target.x - current.x) * k;
       current.y += (target.y - current.y) * k;
 
-      t += dt * speedRef.current;
-      renderFrame();
-      raf = requestAnimationFrame(tick);
+      // Skip the work entirely when the gradient is paused AND the cursor isn't
+      // pulling. We still draw one frame per pointer move (handled by onMove
+      // restarting the loop), so the surface stays interactive when configured to.
+      const animating =
+        speedRef.current !== 0 ||
+        (pointerInfluenceRef.current !== 0 &&
+          (Math.abs(target.x - current.x) > 0.001 ||
+            Math.abs(target.y - current.y) > 0.001));
+
+      if (animating) {
+        t += dt * speedRef.current;
+        renderFrame();
+        raf = requestAnimationFrame(tick);
+      } else {
+        // Park the loop. onMove will restart it via `kick()`.
+        raf = 0;
+      }
     };
+
+    const kick = () => {
+      if (raf === 0) {
+        lastTs = performance.now();
+        raf = requestAnimationFrame(tick);
+      }
+    };
+
+    const onMove = (e: PointerEvent) => {
+      const rect = container.getBoundingClientRect();
+      target.x = (e.clientX - rect.left) / rect.width;
+      target.y = 1 - (e.clientY - rect.top) / rect.height;
+      // Resume the loop if it was parked due to speed=0.
+      if (pointerInfluenceRef.current !== 0) kick();
+    };
+    const onLeave = () => {
+      target.x = 0.5;
+      target.y = 0.5;
+      // One more tick so the cursor's exit returns the blob to its resting layout.
+      if (pointerInfluenceRef.current !== 0) kick();
+    };
+    container.addEventListener("pointermove", onMove);
+    container.addEventListener("pointerleave", onLeave);
 
     // Paint the first frame synchronously so a remount never shows a flash of
     // empty canvas — even if the next RAF tick is a frame away.
