@@ -110,7 +110,9 @@ function NotificationDemo({ theme = "dark" }: DemoThemeProps) {
             key={type}
             onClick={() =>
               addNotification({
-                title: `${type.charAt(0).toUpperCase() + type.slice(1)} notification`,
+                title: `${
+                  type.charAt(0).toUpperCase() + type.slice(1)
+                } notification`,
                 description: "This is a demo notification that auto-dismisses.",
                 type,
                 duration: 4000,
@@ -194,7 +196,8 @@ function InteractiveCursorDemo({ theme = "dark" }: DemoThemeProps) {
             isDark ? "text-neutral-500" : "text-neutral-500",
           )}
         >
-          Move inside this card. Hover buttons to see magnetic pull. Click anywhere for burst particles.
+          Move inside this card. Hover buttons to see magnetic pull. Click
+          anywhere for burst particles.
         </p>
 
         {/* Button row — each one is a magnetic target */}
@@ -238,7 +241,11 @@ function InteractiveCursorDemo({ theme = "dark" }: DemoThemeProps) {
             isDark ? "text-neutral-700" : "text-neutral-400",
           )}
         >
-          Pass <code className={isDark ? "text-neutral-500" : "text-neutral-500"}>hideSystemCursor</code> to fully replace the native cursor
+          Pass{" "}
+          <code className={isDark ? "text-neutral-500" : "text-neutral-500"}>
+            hideSystemCursor
+          </code>{" "}
+          to fully replace the native cursor
         </p>
       </div>
 
@@ -247,7 +254,9 @@ function InteractiveCursorDemo({ theme = "dark" }: DemoThemeProps) {
         hideSystemCursor={false}
         color={isDark ? "#a855f7" : "#7c3aed"}
         clickColor={isDark ? "#c084fc" : "#8b5cf6"}
-        trailColor={isDark ? "rgba(168, 85, 247, 0.35)" : "rgba(124, 58, 237, 0.25)"}
+        trailColor={
+          isDark ? "rgba(168, 85, 247, 0.35)" : "rgba(124, 58, 237, 0.25)"
+        }
         glow={true}
         particleEffect={true}
         magneticPull={true}
@@ -510,7 +519,9 @@ const DATA_TABLE_DEMO_LOCATIONS = [
   "Miami",
 ];
 
-function withDemoLocation<T extends Record<string, unknown>>(rows: T[]): (T & { location: string })[] {
+function withDemoLocation<T extends Record<string, unknown>>(
+  rows: T[],
+): (T & { location: string })[] {
   return rows.map((row, index) => {
     const existing = (row as { location?: unknown }).location;
     return {
@@ -518,40 +529,91 @@ function withDemoLocation<T extends Record<string, unknown>>(rows: T[]): (T & { 
       location:
         typeof existing === "string"
           ? existing
-          : DATA_TABLE_DEMO_LOCATIONS[index % DATA_TABLE_DEMO_LOCATIONS.length]!,
+          : DATA_TABLE_DEMO_LOCATIONS[
+              index % DATA_TABLE_DEMO_LOCATIONS.length
+            ]!,
     };
   });
 }
 
 /** Extra wide columns for data-table freeze demos so horizontal scroll is obvious in previews. */
 const DATA_TABLE_FREEZE_EXTRA_FIELDS = [
-  { project: "Orion", division: "Platform core", site: "SF-01", timezone: "PT", costCenter: "CC-4100" },
-  { project: "Nova", division: "Product design", site: "NYC-04", timezone: "ET", costCenter: "CC-2200" },
-  { project: "Atlas", division: "Growth GTM", site: "CHI-02", timezone: "CT", costCenter: "CC-1800" },
-  { project: "Pulse", division: "Platform core", site: "SEA-01", timezone: "PT", costCenter: "CC-4100" },
-  { project: "Vertex", division: "Product design", site: "AUS-01", timezone: "CT", costCenter: "CC-3300" },
-  { project: "Helix", division: "Growth GTM", site: "DEN-01", timezone: "MT", costCenter: "CC-5200" },
-  { project: "Quark", division: "Platform core", site: "PDX-02", timezone: "PT", costCenter: "CC-4100" },
-  { project: "Echo", division: "Product design", site: "BOS-03", timezone: "ET", costCenter: "CC-2200" },
+  {
+    project: "Orion",
+    division: "Platform core",
+    site: "SF-01",
+    timezone: "PT",
+    costCenter: "CC-4100",
+  },
+  {
+    project: "Nova",
+    division: "Product design",
+    site: "NYC-04",
+    timezone: "ET",
+    costCenter: "CC-2200",
+  },
+  {
+    project: "Atlas",
+    division: "Growth GTM",
+    site: "CHI-02",
+    timezone: "CT",
+    costCenter: "CC-1800",
+  },
+  {
+    project: "Pulse",
+    division: "Platform core",
+    site: "SEA-01",
+    timezone: "PT",
+    costCenter: "CC-4100",
+  },
+  {
+    project: "Vertex",
+    division: "Product design",
+    site: "AUS-01",
+    timezone: "CT",
+    costCenter: "CC-3300",
+  },
+  {
+    project: "Helix",
+    division: "Growth GTM",
+    site: "DEN-01",
+    timezone: "MT",
+    costCenter: "CC-5200",
+  },
+  {
+    project: "Quark",
+    division: "Platform core",
+    site: "PDX-02",
+    timezone: "PT",
+    costCenter: "CC-4100",
+  },
+  {
+    project: "Echo",
+    division: "Product design",
+    site: "BOS-03",
+    timezone: "ET",
+    costCenter: "CC-2200",
+  },
 ] as const;
 
 function withDemoFreezeExtras<T extends Record<string, unknown>>(rows: T[]) {
   return rows.map((row, index) => ({
     ...row,
-    ...DATA_TABLE_FREEZE_EXTRA_FIELDS[index % DATA_TABLE_FREEZE_EXTRA_FIELDS.length],
+    ...DATA_TABLE_FREEZE_EXTRA_FIELDS[
+      index % DATA_TABLE_FREEZE_EXTRA_FIELDS.length
+    ],
   }));
 }
 
 export const componentDemos: Record<string, DemoComponent> = {
   "animated-glowing-text-outline": () => (
     <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-background gap-16 border border-border rounded-xl overflow-hidden relative">
-      <GlowingTextOutline 
-        text="Hello World" 
-        fontSize={80} 
-        colors={["#ffaa40", "#9c40ff", "#ffaa40"]} 
+      <GlowingTextOutline
+        text="Hello World"
+        fontSize={80}
+        colors={["#ffaa40", "#9c40ff", "#ffaa40"]}
         animationDuration={5}
       />
-      
     </div>
   ),
   "moving-border": ({ theme = "dark" }) => (
@@ -753,7 +815,9 @@ export const componentDemos: Record<string, DemoComponent> = {
           </h3>
           <p
             className={
-              theme === "dark" ? "text-neutral-400 text-sm" : "text-neutral-600 text-sm"
+              theme === "dark"
+                ? "text-neutral-400 text-sm"
+                : "text-neutral-600 text-sm"
             }
           >
             Vertical pillars drift right → left; soft overlap
@@ -786,7 +850,9 @@ export const componentDemos: Record<string, DemoComponent> = {
           </h3>
           <p
             className={
-              theme === "dark" ? "text-neutral-400 text-sm" : "text-neutral-600 text-sm"
+              theme === "dark"
+                ? "text-neutral-400 text-sm"
+                : "text-neutral-600 text-sm"
             }
           >
             Showcase tokens — same motion language
@@ -1082,9 +1148,7 @@ export const componentDemos: Record<string, DemoComponent> = {
   ),
   "mini-mac-keyboard": () => (
     <div className="flex min-h-[280px] w-full items-center justify-center overflow-visible px-4 py-8">
-      <MiniMacKeyboard
-        wrapperClassName="translate-x-0 translate-y-0 md:translate-y-0 scale-[2.35] sm:scale-[2.75] md:scale-[3.2]"
-      />
+      <MiniMacKeyboard wrapperClassName="translate-x-0 translate-y-0 md:translate-y-0 scale-[2.35] sm:scale-[2.75] md:scale-[3.2]" />
     </div>
   ),
   "flip-card": ({ theme = "dark" }) => (
@@ -1685,11 +1749,7 @@ export const componentDemos: Record<string, DemoComponent> = {
           Particle Field
         </h3>
       </div>
-      <ParticleField
-        particleCount={120}
-        particleColor="#a855f7"
-        speed={0.5}
-      />
+      <ParticleField particleCount={120} particleColor="#a855f7" speed={0.5} />
     </div>
   ),
   "particle-field/multi": ({ theme = "dark" }) => (
@@ -1827,7 +1887,9 @@ export const componentDemos: Record<string, DemoComponent> = {
       />
     </div>
   ),
-  "interactive-cursor": ({ theme = "dark" }) => <InteractiveCursorDemo theme={theme} />,
+  "interactive-cursor": ({ theme = "dark" }) => (
+    <InteractiveCursorDemo theme={theme} />
+  ),
   "pen-cursor": ({ theme = "dark" }) => <PenCursorDemo theme={theme} />,
   "glow-hero-section/default": ({ theme = "dark" }) => (
     <GlowHeroSection theme={theme} height="h-[520px]" />
@@ -1859,9 +1921,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     <div
       className={cn(
         "flex items-center justify-center p-12 h-[300px] w-full rounded-xl",
-        theme === "dark"
-          ? "bg-neutral-950"
-          : "bg-neutral-100",
+        theme === "dark" ? "bg-neutral-950" : "bg-neutral-100",
       )}
     >
       <LimelightNav
@@ -1879,9 +1939,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     <div
       className={cn(
         "flex items-center justify-center p-12 h-[300px] w-full rounded-xl",
-        theme === "dark"
-          ? "bg-neutral-950"
-          : "bg-neutral-100",
+        theme === "dark" ? "bg-neutral-950" : "bg-neutral-100",
       )}
     >
       <LimelightNav
@@ -2975,7 +3033,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     </div>
   ),
 
-  "ripple": ({ theme = "dark" }) => {
+  ripple: ({ theme = "dark" }) => {
     const isDark = theme === "dark";
     return (
       <div
@@ -3003,7 +3061,12 @@ export const componentDemos: Record<string, DemoComponent> = {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ type: "spring", stiffness: 60, damping: 20, delay: 0.1 }}
+            transition={{
+              type: "spring",
+              stiffness: 60,
+              damping: 20,
+              delay: 0.1,
+            }}
             className={cn(
               "text-[10px] uppercase tracking-[0.35em]",
               isDark ? "text-rose-300/70" : "text-rose-500/70",
@@ -3015,12 +3078,20 @@ export const componentDemos: Record<string, DemoComponent> = {
           <motion.h2
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 80, damping: 22, delay: 0.28 }}
+            transition={{
+              type: "spring",
+              stiffness: 80,
+              damping: 22,
+              delay: 0.28,
+            }}
             className={cn(
               "text-[3.4rem] leading-[1] font-light",
               isDark ? "text-white" : "text-stone-900",
             )}
-            style={{ fontFamily: '"Cormorant Garamond", "Garamond", "Georgia", serif', fontStyle: "italic" }}
+            style={{
+              fontFamily: '"Cormorant Garamond", "Garamond", "Georgia", serif',
+              fontStyle: "italic",
+            }}
           >
             Aurore.
           </motion.h2>
@@ -3028,19 +3099,30 @@ export const componentDemos: Record<string, DemoComponent> = {
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 90, damping: 24, delay: 0.46 }}
+            transition={{
+              type: "spring",
+              stiffness: 90,
+              damping: 24,
+              delay: 0.46,
+            }}
             className={cn(
               "text-xs leading-relaxed tracking-wide",
               isDark ? "text-stone-400" : "text-stone-500",
             )}
           >
-            A scent composed at the edge of dawn — rose, oud, and liquid amber woven into silence.
+            A scent composed at the edge of dawn — rose, oud, and liquid amber
+            woven into silence.
           </motion.p>
 
           <motion.button
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 26, delay: 0.62 }}
+            transition={{
+              type: "spring",
+              stiffness: 100,
+              damping: 26,
+              delay: 0.62,
+            }}
             className={cn(
               "mt-1 px-7 py-2.5 text-xs tracking-[0.18em] uppercase transition-all duration-300",
               isDark
@@ -3134,9 +3216,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     <div
       className={cn(
         "rounded-xl overflow-hidden h-[300px] w-full relative",
-        theme === "dark"
-          ? "bg-neutral-900"
-          : "bg-neutral-200",
+        theme === "dark" ? "bg-neutral-900" : "bg-neutral-200",
       )}
     >
       <div className="absolute top-0 left-1/2 -translate-x-1/2">
@@ -3149,9 +3229,24 @@ export const componentDemos: Record<string, DemoComponent> = {
           position="static"
           mergeEdge="top"
           socials={[
-            { id: "x", icon: <Twitter size={14} />, label: "Twitter", href: "https://x.com" },
-            { id: "in", icon: <Linkedin size={14} />, label: "LinkedIn", href: "https://linkedin.com" },
-            { id: "gh", icon: <Github size={14} />, label: "GitHub", href: "https://github.com" },
+            {
+              id: "x",
+              icon: <Twitter size={14} />,
+              label: "Twitter",
+              href: "https://x.com",
+            },
+            {
+              id: "in",
+              icon: <Linkedin size={14} />,
+              label: "LinkedIn",
+              href: "https://linkedin.com",
+            },
+            {
+              id: "gh",
+              icon: <Github size={14} />,
+              label: "GitHub",
+              href: "https://github.com",
+            },
           ]}
           status={{ label: "Available", color: "#22c55e" }}
         />
@@ -3194,8 +3289,8 @@ export const componentDemos: Record<string, DemoComponent> = {
             Real glass, not a blur.
           </h3>
           <p className="mt-2 text-sm text-white/80">
-            Pixels behind this panel are physically refracted via SVG turbulence —
-            text on top stays pixel-crisp.
+            Pixels behind this panel are physically refracted via SVG turbulence
+            — text on top stays pixel-crisp.
           </p>
         </LiquidGlassPanel>
         <LiquidGlassPanel
@@ -3206,8 +3301,8 @@ export const componentDemos: Record<string, DemoComponent> = {
         >
           <h3 className="text-lg font-semibold text-white">Tinted variant</h3>
           <p className="mt-2 text-sm text-white/80">
-            Stronger displacement and a violet tint — useful for modal surfaces or
-            CTA flourishes.
+            Stronger displacement and a violet tint — useful for modal surfaces
+            or CTA flourishes.
           </p>
           <button className="mt-4 rounded-full bg-white/15 px-4 py-1.5 text-xs font-medium text-white backdrop-blur-md transition hover:bg-white/25">
             Action
@@ -3257,15 +3352,15 @@ export const componentDemos: Record<string, DemoComponent> = {
         "relative h-[460px] w-full overflow-hidden rounded-xl border",
         theme === "dark"
           ? "border-neutral-800 bg-black"
-          : "border-neutral-200 bg-gradient-to-br from-white to-neutral-100",
+          : "border-neutral-200 bg-black",
       )}
     >
       <ChromaticAberrationReveal
         className="h-full w-full rounded-none"
         src="https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80"
         alt="Mountain lake at dusk"
-        splitDistance={42}
-        staggerMs={260}
+        splitDistance={16}
+        staggerMs={90}
         trigger="mount"
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/80 via-black/35 to-transparent p-6">
@@ -3388,24 +3483,26 @@ export const componentDemos: Record<string, DemoComponent> = {
                 theme === "dark" ? "text-neutral-300" : "text-neutral-700",
               )}
             >
-              The lens follows you with a slight spring lag and refracts whatever
-              sits underneath — type, gradients, images. Clicks pass straight
-              through. Hidden on touch and reduced-motion.
+              The lens follows you with a slight spring lag and refracts
+              whatever sits underneath — type, gradients, images. Clicks pass
+              straight through. Hidden on touch and reduced-motion.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
-              {["SVG", "backdrop-filter", "spring", "pointer:fine"].map((tag) => (
-                <span
-                  key={tag}
-                  className={cn(
-                    "rounded-full px-3 py-1 text-xs font-medium",
-                    theme === "dark"
-                      ? "bg-white/5 text-neutral-300 ring-1 ring-white/10"
-                      : "bg-black/5 text-neutral-700 ring-1 ring-black/10",
-                  )}
-                >
-                  {tag}
-                </span>
-              ))}
+              {["SVG", "backdrop-filter", "spring", "pointer:fine"].map(
+                (tag) => (
+                  <span
+                    key={tag}
+                    className={cn(
+                      "rounded-full px-3 py-1 text-xs font-medium",
+                      theme === "dark"
+                        ? "bg-white/5 text-neutral-300 ring-1 ring-white/10"
+                        : "bg-black/5 text-neutral-700 ring-1 ring-black/10",
+                    )}
+                  >
+                    {tag}
+                  </span>
+                ),
+              )}
             </div>
           </article>
         </div>

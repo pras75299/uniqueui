@@ -482,7 +482,7 @@ const componentDefinitions = [
     "name": "Magnetic Button",
     "description": "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
     "icon": "LucideMousePointer",
-    "category": "Effects & Animations",
+    "category": "Components",
     "props": [
       {
         "name": "children",
@@ -802,7 +802,7 @@ const componentDefinitions = [
     "name": "Mini Mac Keyboard",
     "description": "Pure CSS decorative compact Mac-style keyboard with subtle spring entrance from motion.dev — ideal for hero device mockups.",
     "icon": "LayoutGrid",
-    "category": "Effects & Animations",
+    "category": "Components",
     "props": [
       {
         "name": "wrapperClassName",
@@ -2661,7 +2661,7 @@ const componentDefinitions = [
     "name": "Liquid Glass Panel",
     "description": "A frosted container that physically refracts the content behind it via SVG turbulence + displacement — not a simple backdrop blur. Sub-pixel-crisp text on top, slow specular sheen, Fresnel-like edge highlight, and a hover boost on the displacement strength. Honors prefers-reduced-motion.",
     "icon": "LucideSquare",
-    "category": "Effects & Animations",
+    "category": "Cards",
     "addedAt": "2026-05-06",
     "props": [
       {
@@ -2712,7 +2712,7 @@ const componentDefinitions = [
     "name": "Shader Mesh Gradient",
     "description": "GPU-rendered mesh gradient: a fragment shader warps multiple OKLCH color blobs through 3-octave simplex noise so they flow continuously instead of locking into a static pattern. Pointer position subtly attracts the nearest blob; reduced-motion freezes a single curated frame; falls back to a static CSS radial gradient on devices without WebGL2.",
     "icon": "LucideWaves",
-    "category": "Effects & Animations",
+    "category": "Backgrounds",
     "addedAt": "2026-05-07",
     "props": [
       {
@@ -2763,23 +2763,23 @@ const componentDefinitions = [
       {
         "name": "src",
         "type": "string",
-        "description": "Optional image URL rendered in the base and channel layers."
+        "description": "Image URL rendered in the base and channel layers."
       },
       {
         "name": "alt",
         "type": "string",
-        "description": "Accessible alt text for the base image layer when `src` is provided."
+        "description": "Accessible alt text for the base image layer."
       },
       {
         "name": "splitDistance",
         "type": "number",
-        "default": "32",
+        "default": "16",
         "description": "Initial horizontal channel offset in pixels (R = -distance, B = +distance)."
       },
       {
         "name": "staggerMs",
         "type": "number",
-        "default": "220",
+        "default": "80",
         "description": "Delay between each channel settling, in milliseconds."
       },
       {
@@ -2800,14 +2800,14 @@ const componentDefinitions = [
         "description": "Classes for the reveal wrapper."
       }
     ],
-    "usageCode": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function Example() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[420px] w-full rounded-2xl\"\n      src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n      alt=\"Mountain lake at dusk\"\n      splitDistance={42}\n      staggerMs={260}\n      trigger=\"mount\"\n    />\n  );\n}\n"
+    "usageCode": "import { ChromaticAberrationReveal } from \"@/components/ui/chromatic-aberration-reveal\";\n\nexport default function Example() {\n  return (\n    <ChromaticAberrationReveal\n      className=\"h-[420px] w-full rounded-2xl\"\n      src=\"https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80\"\n      alt=\"Mountain lake at dusk\"\n      splitDistance={16}\n      staggerMs={80}\n      trigger=\"in-view\"\n    />\n  );\n}\n"
   },
   {
     "slug": "iridescent-foil-button",
     "name": "Iridescent Foil Button",
     "description": "A holographic foil CTA button with pointer-reactive hue/angle shifts, soft specular sheen, and fine grain texture. Built as a drop-in button with proper focus states, disabled support, and reduced-motion-safe scale behavior.",
     "icon": "LucideSparkles",
-    "category": "Effects & Animations",
+    "category": "Components",
     "addedAt": "2026-05-07",
     "props": [
       {
@@ -2841,7 +2841,7 @@ const componentDefinitions = [
     "name": "Kinetic Variable Headline",
     "description": "A large display headline that animates variable font weight per glyph on entrance and pointer proximity. Letters inflate like a magnetic field while preserving readable text semantics.",
     "icon": "LucideType",
-    "category": "Effects & Animations",
+    "category": "Text",
     "addedAt": "2026-05-07",
     "props": [
       {
@@ -2886,7 +2886,7 @@ const componentDefinitions = [
     "name": "Caustic Light Card",
     "description": "A premium card surface with animated pool-like caustic highlights rendered by a lightweight WebGL2 fragment shader. Caustics are masked to the lower region, brightest near the bottom, with hover-driven boosts to intensity and speed. Off-screen cards pause automatically and only four visible cards animate at once.",
     "icon": "LucideWaves",
-    "category": "Effects & Animations",
+    "category": "Cards",
     "addedAt": "2026-05-07",
     "props": [
       {
@@ -2931,7 +2931,7 @@ const componentDefinitions = [
     "name": "Refractive Cursor Lens",
     "description": "A circular liquid-glass lens that follows the cursor with spring lag and refracts the content underneath via SVG turbulence + displacement. A radial-falloff mask attenuates distortion toward the center, so the rim ripples while the middle stays calm — opposite of a fisheye. Pass-through clicks, screen-reader hidden, disabled on touch and reduced-motion.",
     "icon": "LucideFocus",
-    "category": "Effects & Animations",
+    "category": "Cursor Effects",
     "addedAt": "2026-05-07",
     "props": [
       {

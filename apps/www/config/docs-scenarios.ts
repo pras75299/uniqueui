@@ -935,7 +935,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   },
   "chromatic-aberration-reveal": {
     "slug": "chromatic-aberration-reveal",
-    "overview": "ChromaticAberrationReveal stacks a base visual plus three RGB-biased overlays using `mix-blend-mode: screen`. On reveal, red starts at `-splitDistance`, green at `0`, blue at `+splitDistance`, then they spring back together with staggered delays and a one-pass wave. `src` is optional: if omitted, the component renders a polished gradient card surface that still animates normally. `trigger=\"mount\"` is the clearest way to verify animation immediately in previews.",
+    "overview": "ChromaticAberrationReveal stacks a base `<img>` plus three RGB-biased overlay layers using `mix-blend-mode: screen` over a black wrapper. On reveal, red starts at `-splitDistance`, green at `0`, blue at `+splitDistance`, each at partial opacity, then they spring back to perfect alignment with staggered delays so convergence reads intentional and cinematic. A soft diagonal wave sweep runs once during convergence. `trigger=\"in-view\"` uses IntersectionObserver with once semantics to avoid repeated replays; `trigger=\"manual\"` enables external timeline control. Reduced-motion users get a plain fade treatment without channel split.",
     "scenarios": [
       {
         "title": "Hero image entrance",
