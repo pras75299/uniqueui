@@ -694,7 +694,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   },
   "outlined-mega-mark": {
     "slug": "outlined-mega-mark",
-    "overview": "With `gradientOnHover` (default), the headline is hollow SVG `<text>` (`fill=\"none\"`) with a **themed idle stroke** everywhere. A second copy uses `stroke=\"url(#linearGradient)\"` **masked** by a pointer-following radial spotlight. Customize colours with `outlineGradientStops={['#a','#b']}` or the full `outlineGradient={{ stops: [...], x1:'0%', y1:'0%', x2:'100%', y2:'0%' }}` prop. `ResizeObserver` + font loading keep the `viewBox` tight. Set `gradientOnHover={false}` for `-webkit-text-stroke` only, or `fillOnHover` for solid hover fill.",
+    "overview": "With `gradientOnHover` (default), the headline stays hollow (**`fill=\"none\"`**) SVG text: themed **idle** outline (`stroke` from a duplicate `linearGradient` whose stops reuse `--omm-stroke-idle`) fills the framing, while a **`stroke=\"url(#vividGradient)\"` copy** paints only beneath a radial mask that trails the cursor. Pointer mapping runs on the outer wrapper so the spotlight reliably tracks hits across the mega mark box. Customize vivid colours with `outlineGradientStops` or `outlineGradient`. Set `gradientOnHover={false}` for `-webkit-text-stroke`-only markup, or `fillOnHover` for solid hover fill.",
     "scenarios": [
       {
         "title": "Landing page footer",

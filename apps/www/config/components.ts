@@ -2186,7 +2186,7 @@ const componentDefinitions = [
         "name": "gradientOnHover",
         "type": "boolean",
         "default": "true",
-        "description": "When true (default), an SVG **pointer spotlight** reveals the vivid gradient stroke only near the cursor; idle outline stays themed and fill stays none. When false, uses `-webkit-text-stroke` markup instead. Overrides fillOnHover on hover."
+        "description": "When true (default), renders **two hollow SVG `<text>` strokes**: a diagonal **idle** stroke using your theme accent (`lightStrokeColor` / `darkStrokeColor`) everywhere, plus a **`linearGradient` stroke** visible only inside a radial **spotlight mask** driven by pointer position. Idle stroke is clipped under the hotspot so the two strokes never visually stack thicker than **1 device px** (`nonScalingStroke`, width capped via `strokeWidth`). When false, `-webkit-text-stroke` markup only."
       },
       {
         "name": "outlineGradient",

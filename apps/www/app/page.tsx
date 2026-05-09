@@ -1073,11 +1073,11 @@ export default function Home() {
 
           <OutlinedMegaMark
             containerClassName="mx-auto w-full max-w-6xl px-4 pt-2 md:pt-4"
-            fontSize="clamp(3rem, 5vw + 1.5rem, 6.75rem)"
+            fontSize="clamp(5rem, 13vw + 1rem, 12.5rem)"
             letterSpacing="-0.01em"
             strokeWidth={1}
-            lightStrokeColor="var(--color-neutral-400)"
-            darkStrokeColor="var(--color-neutral-500)"
+            lightStrokeColor="var(--color-neutral-200)"
+            darkStrokeColor="var(--color-neutral-700)"
             gradientOnHover
           >
             UniqueUI

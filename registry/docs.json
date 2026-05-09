@@ -2726,7 +2726,7 @@
           "name": "gradientOnHover",
           "type": "boolean",
           "default": "true",
-          "description": "When true (default), an SVG **pointer spotlight** reveals the vivid gradient stroke only near the cursor; idle outline stays themed and fill stays none. When false, uses `-webkit-text-stroke` markup instead. Overrides fillOnHover on hover."
+          "description": "When true (default), renders **two hollow SVG `<text>` strokes**: a diagonal **idle** stroke using your theme accent (`lightStrokeColor` / `darkStrokeColor`) everywhere, plus a **`linearGradient` stroke** visible only inside a radial **spotlight mask** driven by pointer position. Idle stroke is clipped under the hotspot so the two strokes never visually stack thicker than **1 device px** (`nonScalingStroke`, width capped via `strokeWidth`). When false, `-webkit-text-stroke` markup only."
         },
         {
           "name": "outlineGradient",
@@ -2756,7 +2756,7 @@
       ],
       "usageCode": "\"use client\";\nimport { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function LandingFooter() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark\n        fontSize=\"clamp(7rem, 26vw, 14rem)\"\n        letterSpacing=\"-0.02em\"\n        strokeWidth={1}\n        lightStrokeColor=\"var(--color-neutral-400)\"\n        darkStrokeColor=\"var(--color-neutral-500)\"\n        gradientOnHover\n        outlineGradient={{\n          stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n          x1: \"0%\",\n          y1: \"0%\",\n          x2: \"100%\",\n          y2: \"0%\",\n        }}\n      >\n        UniqueUI\n      </OutlinedMegaMark>\n    </footer>\n  );\n}\n",
       "docs": {
-        "overview": "With `gradientOnHover` (default), the headline is hollow SVG `<text>` (`fill=\"none\"`) with a **themed idle stroke** everywhere. A second copy uses `stroke=\"url(#linearGradient)\"` **masked** by a pointer-following radial spotlight. Customize colours with `outlineGradientStops={['#a','#b']}` or the full `outlineGradient={{ stops: [...], x1:'0%', y1:'0%', x2:'100%', y2:'0%' }}` prop. `ResizeObserver` + font loading keep the `viewBox` tight. Set `gradientOnHover={false}` for `-webkit-text-stroke` only, or `fillOnHover` for solid hover fill.",
+        "overview": "With `gradientOnHover` (default), the headline stays hollow (**`fill=\"none\"`**) SVG text: themed **idle** outline (`stroke` from a duplicate `linearGradient` whose stops reuse `--omm-stroke-idle`) fills the framing, while a **`stroke=\"url(#vividGradient)\"` copy** paints only beneath a radial mask that trails the cursor. Pointer mapping runs on the outer wrapper so the spotlight reliably tracks hits across the mega mark box. Customize vivid colours with `outlineGradientStops` or `outlineGradient`. Set `gradientOnHover={false}` for `-webkit-text-stroke`-only markup, or `fillOnHover` for solid hover fill.",
         "scenarios": [
           {
             "title": "Landing page footer",

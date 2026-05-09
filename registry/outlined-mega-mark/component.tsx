@@ -198,6 +198,59 @@ function strokeWidthToPadPx(strokeWidth: number | string): number {
 }
 
 /**
+ * Shared `-webkit-text-stroke` typography for hairline parity with plain CSS mega marks.
+ */
+interface HairlineOutlinedParagraphProps extends Pick<
+  OutlinedMegaMarkProps,
+  "fontSize" | "letterSpacing" | "strokeWidth" | "className"
+> {
+  lightStrokeColor: string;
+  darkStrokeColor: string;
+  ariaHidden?: boolean;
+  paragraphClassName?: string;
+  paragraphStyleExtras?: CSSProperties;
+}
+
+function HairlineOutlinedParagraph({
+  children,
+  fontSize = DEFAULT_FONT_SIZE,
+  letterSpacing = DEFAULT_LETTER_SPACING,
+  lightStrokeColor = DEFAULT_LIGHT_STROKE,
+  darkStrokeColor = DEFAULT_DARK_STROKE,
+  strokeWidth = DEFAULT_STROKE_WIDTH,
+  ariaHidden,
+  paragraphClassName,
+  paragraphStyleExtras,
+  className,
+}: HairlineOutlinedParagraphProps) {
+  const strokeWidthCss = strokeWidthToCss(strokeWidth);
+  const paragraphStyle: CSSProperties & OutlinedStyle = {
+    fontSize,
+    letterSpacing,
+    "--omm-stroke-width": strokeWidthCss,
+    "--omm-stroke-light": lightStrokeColor,
+    "--omm-stroke-dark": darkStrokeColor,
+    WebkitTextStroke: "var(--omm-stroke-width) var(--omm-stroke-current)",
+    ...paragraphStyleExtras,
+  };
+
+  return (
+    <p
+      aria-hidden={ariaHidden}
+      className={cn(
+        "pointer-events-none relative z-0 w-full text-center font-sans font-bold leading-none text-transparent antialiased",
+        "[--omm-stroke-current:var(--omm-stroke-light)] dark:[--omm-stroke-current:var(--omm-stroke-dark)]",
+        paragraphClassName,
+        className,
+      )}
+      style={paragraphStyle}
+    >
+      {children}
+    </p>
+  );
+}
+
+/**
  * Plain WebKit-stroke headline (no SVG) — `fillOnHover` and static outline only.
  */
 function OutlinedMegaMarkPlain({
@@ -219,16 +272,6 @@ function OutlinedMegaMarkPlain({
   | "outlineGradientStops"
 >) {
   const { style: outerStyle, ...divRest } = rest;
-  const strokeWidthCss = strokeWidthToCss(strokeWidth);
-
-  const paragraphStyle: OutlinedStyle = {
-    fontSize,
-    letterSpacing,
-    "--omm-stroke-width": strokeWidthCss,
-    "--omm-stroke-light": lightStrokeColor,
-    "--omm-stroke-dark": darkStrokeColor,
-    WebkitTextStroke: "var(--omm-stroke-width) var(--omm-stroke-current)",
-  };
 
   return (
     <div
@@ -243,25 +286,28 @@ function OutlinedMegaMarkPlain({
         } as CSSProperties
       }
     >
-      <p
-        className={cn(
-          "w-full text-center font-bold leading-[1.05] text-transparent",
-          "[--omm-stroke-current:var(--omm-stroke-light)] dark:[--omm-stroke-current:var(--omm-stroke-dark)]",
-          fillOnHover &&
-            "transition-colors duration-300 ease-out hover:text-[color:var(--omm-stroke-current)]",
-          className,
-        )}
-        style={paragraphStyle}
+      <HairlineOutlinedParagraph
+        fontSize={fontSize}
+        letterSpacing={letterSpacing}
+        lightStrokeColor={lightStrokeColor}
+        darkStrokeColor={darkStrokeColor}
+        strokeWidth={strokeWidth}
+        paragraphClassName={
+          fillOnHover
+            ? "pointer-events-auto transition-colors duration-300 ease-out hover:text-[color:var(--omm-stroke-current)]"
+            : undefined
+        }
+        className={className}
       >
         {children}
-      </p>
+      </HairlineOutlinedParagraph>
     </div>
   );
 }
 
 /**
- * SVG outline: idle `stroke` is theme-tinted; vivid gradient `stroke` is revealed only under a pointer-driven
- * radial mask (outline-only, hollow fill).
+ * Classic dual-layer SVG mega mark: themed idle stroke + vivid gradient stroke, both clipped by coordinated
+ * masks so only one hairline shows per pixel. Wrapper-level pointer mapping keeps spotlight tracking reliable.
  */
 function OutlinedMegaMarkSvg({
   children,
@@ -282,13 +328,19 @@ function OutlinedMegaMarkSvg({
   const { style: outerStyle, ...divRest } = rest;
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const vbDimsRef = useRef({
+    x: FALLBACK_VB_RECT[0],
+    y: FALLBACK_VB_RECT[1],
+    w: FALLBACK_VB_RECT[2],
+    h: FALLBACK_VB_RECT[3],
+  });
   const rafMoveRef = useRef(0);
   const pendingPtRef = useRef<{ x: number; y: number } | null>(null);
 
   const rawId = useId();
   const gradId = `omm-${rawId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const spotMaskRadId = `${gradId}-spot-rad`;
-  /** Luminance inverted vs `spotMaskRadId` — hides idle stroke where the hotspot reveals the gradient stroke (avoids stacking two hairlines into a thick line). */
+  /** Complement of `spotMaskRadId` — suppresses themed idle stroke under the hotspot so it never stacks. */
   const idleSubtractRadId = `${gradId}-idle-subtract-rad`;
   const spotMaskId = `${gradId}-spot-mask`;
   const idleSubtractMaskId = `${gradId}-idle-subtract-mask`;
@@ -315,23 +367,43 @@ function OutlinedMegaMarkSvg({
     Math.hypot(vbW, vbH) * (reducedMotion ? 0.14 : 0.1),
   );
 
+  useLayoutEffect(() => {
+    vbDimsRef.current = { x: vbX, y: vbY, w: vbW, h: vbH };
+  }, [vbX, vbY, vbW, vbH]);
+
   const flushPointerRaf = useCallback(() => {
     rafMoveRef.current = 0;
     const p = pendingPtRef.current;
     if (p) setPointerSvg(p);
   }, []);
 
-  const onSvgPointerMove = useCallback(
-    (e: PointerEvent<SVGSVGElement>) => {
+  const onWrapPointerMove = useCallback(
+    (e: PointerEvent<HTMLDivElement>) => {
+      const root = wrapRef.current;
       const svg = svgRef.current;
-      if (!svg || typeof svg.createSVGPoint !== "function") return;
+      if (!root || !svg || typeof svg.createSVGPoint !== "function") return;
+      const rect = root.getBoundingClientRect();
+      const px = e.clientX - rect.left;
+      const py = e.clientY - rect.top;
+
       const pt = svg.createSVGPoint();
       pt.x = e.clientX;
       pt.y = e.clientY;
       const ctm = svg.getScreenCTM();
-      if (!ctm) return;
-      const loc = pt.matrixTransform(ctm.inverse());
-      pendingPtRef.current = { x: loc.x, y: loc.y };
+
+      let ux: number;
+      let uy: number;
+      if (ctm) {
+        const loc = pt.matrixTransform(ctm.inverse());
+        ux = loc.x;
+        uy = loc.y;
+      } else {
+        const { x: vx, y: vy, w: vbw, h: vbh } = vbDimsRef.current;
+        ux = vx + (px / rect.width) * vbw;
+        uy = vy + (py / rect.height) * vbh;
+      }
+      pendingPtRef.current = { x: ux, y: uy };
+
       if (!rafMoveRef.current) {
         rafMoveRef.current = requestAnimationFrame(flushPointerRaf);
       }
@@ -339,7 +411,7 @@ function OutlinedMegaMarkSvg({
     [flushPointerRaf],
   );
 
-  const onSvgPointerLeave = useCallback(() => {
+  const onWrapPointerLeave = useCallback(() => {
     pendingPtRef.current = null;
     setPointerSvg(null);
     if (rafMoveRef.current) {
@@ -406,10 +478,13 @@ function OutlinedMegaMarkSvg({
     <div
       {...divRest}
       ref={wrapRef}
+      role="presentation"
+      onPointerMove={onWrapPointerMove}
+      onPointerLeave={onWrapPointerLeave}
       className={cn(
         "[--omm-stroke-idle:var(--omm-stroke-light)] dark:[--omm-stroke-idle:var(--omm-stroke-dark)]",
-        "w-full shrink-0 px-2 pt-8 md:pt-10",
-        "outline-none",
+        "relative isolate w-full shrink-0 cursor-crosshair overflow-visible px-2 pt-8 md:pt-10",
+        "pointer-events-auto outline-none selection:bg-transparent",
         containerClassName,
       )}
       style={
@@ -420,19 +495,16 @@ function OutlinedMegaMarkSvg({
         } as CSSProperties
       }
     >
-      {/* Visually duplicated in SVG below; keeps one accessible text node */}
       <span className="sr-only">{children}</span>
       <svg
         ref={svgRef}
         className={cn(
-          "block w-full overflow-visible select-none font-sans font-bold [&_text]:leading-[1.05]",
+          "pointer-events-none block w-full overflow-visible select-none font-sans font-bold [&_text]:leading-none",
           className,
         )}
         aria-hidden
         preserveAspectRatio="xMidYMid meet"
         viewBox={vb}
-        onPointerMove={onSvgPointerMove}
-        onPointerLeave={onSvgPointerLeave}
       >
         <defs>
           <radialGradient
@@ -473,7 +545,6 @@ function OutlinedMegaMarkSvg({
               />
             ))}
           </linearGradient>
-          {/* Duplicate stops at theme idle colours so baseline stroke stays on-theme */}
           <linearGradient
             id={`${gradId}-idle`}
             x1={gx1}
@@ -519,7 +590,6 @@ function OutlinedMegaMarkSvg({
             width={vbW}
             height={vbH}
           >
-            {/* Black under the cursor → hides idle duplicate; white outside → idle remains the only visible hairline */}
             <rect
               x={vbX}
               y={vbY}
@@ -529,7 +599,7 @@ function OutlinedMegaMarkSvg({
             />
           </mask>
         </defs>
-        {/* Solid theme stroke */}
+        {/* Themed idle stroke */}
         <text
           ref={textMeasureRef}
           x="50%"
@@ -539,6 +609,8 @@ function OutlinedMegaMarkSvg({
           fill="none"
           stroke={`url(#${gradId}-idle)`}
           strokeWidth={strokeWidthCss}
+          vectorEffect="nonScalingStroke"
+          shapeRendering="geometricPrecision"
           strokeLinejoin="round"
           strokeLinecap="round"
           paintOrder="stroke fill"
@@ -550,7 +622,7 @@ function OutlinedMegaMarkSvg({
         >
           {children}
         </text>
-        {/* Vivid gradient stroke — only visible through pointer spotlight mask */}
+        {/* Vivid gradient stroke — spotlight only */}
         <text
           x="50%"
           y="50%"
@@ -559,6 +631,8 @@ function OutlinedMegaMarkSvg({
           fill="none"
           stroke={`url(#${gradId})`}
           strokeWidth={strokeWidthCss}
+          vectorEffect="nonScalingStroke"
+          shapeRendering="geometricPrecision"
           strokeLinejoin="round"
           strokeLinecap="round"
           paintOrder="stroke fill"
@@ -576,8 +650,8 @@ function OutlinedMegaMarkSvg({
 }
 
 /**
- * Huge responsive outlined headline — transparent fill by default (`gradientOnHover`, SVG stroke),
- * or `-webkit-text-stroke` plain variant when gradients are disabled.
+ * Huge responsive outlined headline — transparent fill; `gradientOnHover` renders dual-layer SVG strokes with a
+ * pointer spotlight reveal, or `-webkit-text-stroke` only when gradients are disabled.
  */
 export function OutlinedMegaMark({
   children,
