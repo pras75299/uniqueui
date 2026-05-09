@@ -9,10 +9,29 @@ export interface LiquidGlassPanelProps
   extends Omit<HTMLMotionProps<"div">, "onDrag"> {
   displacementScale?: number;
   noiseFrequency?: number;
+  /**
+   * Background tint applied to the panel surface. Accepts standard CSS color
+   * functions (`rgb()`, `rgba()`, `hsl()`, `hsla()`, `oklch()`, hex, named
+   * colors). Anything outside the allow-list is replaced with a neutral
+   * translucent white to avoid CSS injection via inline `style`.
+   */
   tint?: string;
   borderHighlight?: boolean;
   intensityOnHover?: number;
-  children: React.ReactNode;
+  /** CSS blend mode for the conic specular sheen — flip to `darken` / `multiply` for light surfaces. */
+  sheenBlendMode?: React.CSSProperties["mixBlendMode"];
+  children?: React.ReactNode;
+}
+
+// Same allow-list pattern used by `shader-mesh-gradient` — accept the canonical
+// color function shapes and reject anything else (defends against CSS injection
+// via the `tint` prop being inlined into `style.backgroundColor`).
+const SAFE_CSS_COLOR_RE =
+  /^(?:#[0-9a-fA-F]{3,8}|rgba?\([\d.,\s%/]+\)|hsla?\([\d.,\s%deg/]+\)|oklch\([\d.,\s%/]+\)|[a-zA-Z]+)$/;
+
+function safeCssColor(input: string): string {
+  const trimmed = input.trim();
+  return SAFE_CSS_COLOR_RE.test(trimmed) ? trimmed : "rgba(255,255,255,0.06)";
 }
 
 export const LiquidGlassPanel = React.forwardRef<
@@ -25,34 +44,33 @@ export const LiquidGlassPanel = React.forwardRef<
     tint = "rgba(255,255,255,0.06)",
     borderHighlight = true,
     intensityOnHover = 1.5,
+    sheenBlendMode = "screen",
     className,
     children,
     style,
     onMouseEnter,
     onMouseLeave,
+    onFocus,
+    onBlur,
     ...rest
   },
   ref,
 ) {
-  // Only colons need escaping in CSS selectors used by `url(#…)`; underscores
-  // and dashes are valid ident chars and must be preserved to keep the id
-  // unique across instances.
+  // Strip every char that isn't valid in a CSS ident — defense in depth in case
+  // useId ever expands to chars beyond `:` that would also break `url(#…)`.
   const reactId = useId();
-  const filterId = `lgp-filter-${reactId.replace(/:/g, "")}`;
+  const filterId = `lgp-filter-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
 
   const reduceMotion = useReducedMotion();
   const [hovered, setHovered] = useState(false);
   const hoveredRef = useRef(false);
 
-  // SSR-safe: same values both passes; the filter is rendered with stable
-  // initial values, then animated client-side via state once mounted.
-  const initial = {
-    seed: 1,
-    bfX: noiseFrequency,
-    bfY: noiseFrequency * 1.3,
-    scale: displacementScale,
-  };
-  const [filterValues, setFilterValues] = useState(initial);
+  // SVG filter element refs — the RAF loop mutates attributes on these directly
+  // instead of going through React state, so we don't trigger a render on every
+  // animation frame. (The previous setState-per-frame implementation re-rendered
+  // the entire panel ~60×/sec.)
+  const turbulenceRef = useRef<SVGFETurbulenceElement | null>(null);
+  const displaceRef = useRef<SVGFEDisplacementMapElement | null>(null);
 
   useEffect(() => {
     hoveredRef.current = hovered;
@@ -85,7 +103,18 @@ export const LiquidGlassPanel = React.forwardRef<
 
       const seed = 1 + (Math.sin(drift * 0.15) * 0.5 + 0.5) * 99;
 
-      setFilterValues({ seed, bfX, bfY, scale });
+      // Direct SVG attribute mutation — same visual outcome as the previous
+      // setState path, with zero React work per frame.
+      const turb = turbulenceRef.current;
+      const disp = displaceRef.current;
+      if (turb) {
+        turb.setAttribute("baseFrequency", `${bfX.toFixed(4)} ${bfY.toFixed(4)}`);
+        turb.setAttribute("seed", seed.toFixed(2));
+      }
+      if (disp) {
+        disp.setAttribute("scale", scale.toFixed(2));
+      }
+
       raf = requestAnimationFrame(tick);
     };
 
@@ -98,7 +127,7 @@ export const LiquidGlassPanel = React.forwardRef<
     intensityOnHover,
   ]);
 
-  const s = reduceMotion ? initial : filterValues;
+  const safeTint = safeCssColor(tint);
 
   return (
     <motion.div
@@ -108,7 +137,7 @@ export const LiquidGlassPanel = React.forwardRef<
         className,
       )}
       style={{
-        backgroundColor: tint,
+        backgroundColor: safeTint,
         ...style,
       }}
       animate={{
@@ -122,6 +151,17 @@ export const LiquidGlassPanel = React.forwardRef<
       onMouseLeave={(e) => {
         setHovered(false);
         onMouseLeave?.(e);
+      }}
+      onFocus={(e) => {
+        // Mirror hover state on keyboard focus so focus-within users get the
+        // same intensity boost — also makes the panel feel responsive when
+        // focused via tab navigation.
+        setHovered(true);
+        onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        setHovered(false);
+        onBlur?.(e);
       }}
       {...rest}
     >
@@ -146,16 +186,18 @@ export const LiquidGlassPanel = React.forwardRef<
             colorInterpolationFilters="sRGB"
           >
             <feTurbulence
+              ref={turbulenceRef}
               type="fractalNoise"
-              baseFrequency={`${s.bfX.toFixed(4)} ${s.bfY.toFixed(4)}`}
+              baseFrequency={`${noiseFrequency.toFixed(4)} ${(noiseFrequency * 1.3).toFixed(4)}`}
               numOctaves={2}
-              seed={s.seed.toFixed(2)}
+              seed="1"
               result="noise"
             />
             <feDisplacementMap
+              ref={displaceRef}
               in="SourceGraphic"
               in2="noise"
-              scale={s.scale.toFixed(2)}
+              scale={displacementScale.toFixed(2)}
               xChannelSelector="R"
               yChannelSelector="G"
             />
@@ -202,7 +244,7 @@ export const LiquidGlassPanel = React.forwardRef<
         style={{
           background:
             "conic-gradient(from 0deg, rgba(255,255,255,0) 0deg, rgba(255,255,255,0.32) 60deg, rgba(255,255,255,0) 140deg, rgba(255,255,255,0.18) 240deg, rgba(255,255,255,0) 360deg)",
-          mixBlendMode: "screen",
+          mixBlendMode: sheenBlendMode,
           filter: "blur(28px)",
         }}
         animate={{
@@ -238,7 +280,7 @@ export const LiquidGlassPanel = React.forwardRef<
       ) : null}
 
       {/* Crisp content layer — never filtered. */}
-      <div className="relative z-10">{children}</div>
+      {children ? <div className="relative z-10">{children}</div> : null}
     </motion.div>
   );
 });
