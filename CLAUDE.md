@@ -9,6 +9,7 @@ UniqueUI is a monorepo for an animated React component library built on a copy-p
 **Package manager**: pnpm 10.33.0 with workspaces (`pnpm-workspace.yaml`)
 
 **Workspaces**:
+
 - `apps/www` — Next.js 16 showcase/docs site
 - `packages/cli` — `uniqueui-cli` npm package (Commander-based)
 - `registry/` — Component source files (not a workspace, read by build scripts)
@@ -16,12 +17,14 @@ UniqueUI is a monorepo for an animated React component library built on a copy-p
 ## Commands
 
 ### Root
+
 ```bash
 pnpm build:registry       # Rebuild registry artifacts and sync docs UI from registry/
 pnpm test                 # Run Vitest across all workspaces
 ```
 
 ### apps/www
+
 ```bash
 cd apps/www
 pnpm dev                  # Dev server at localhost:3000
@@ -30,6 +33,7 @@ pnpm lint                 # ESLint (eslint-config-next)
 ```
 
 ### packages/cli
+
 ```bash
 cd packages/cli
 pnpm build                # Compile TypeScript → dist/
@@ -37,6 +41,7 @@ pnpm dev                  # Run CLI directly with ts-node
 ```
 
 ### Scripts
+
 ```bash
 # From root:
 npx ts-node scripts/build-registry.ts      # Same as pnpm build:registry
@@ -46,6 +51,7 @@ bash scripts/test-cli-e2e.sh               # End-to-end CLI smoke tests
 ```
 
 ### Running a single test
+
 ```bash
 # From root:
 pnpm test -- packages/cli/src/npm-dependency-name.test.ts
@@ -75,10 +81,10 @@ user's project/components/ui/     ← files written to the end-user's codebase
 
 Three config files drive the entire docs site:
 
-| File | Purpose |
-|------|---------|
-| `apps/www/config/components.ts` | `componentsList` array — slug, name, props table, `usageCode` shown in the code tab |
-| `apps/www/config/demos.tsx` | `componentDemos` map — live React preview rendered in `ComponentPreview` |
+| File                                | Purpose                                                                                           |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `apps/www/config/components.ts`     | `componentsList` array — slug, name, props table, `usageCode` shown in the code tab               |
+| `apps/www/config/demos.tsx`         | `componentDemos` map — live React preview rendered in `ComponentPreview`                          |
 | `apps/www/config/docs-scenarios.ts` | `docsScenarios` map — per-component `overview` + `scenarios[]` (title, description, code snippet) |
 
 `ComponentPreview` (`apps/www/components/component-preview.tsx`) renders a demo by looking up `slug` in `componentDemos`. It removes `overflow-hidden` for components that need full-page scroll (currently only `horizontal-scroll-gallery`).
@@ -117,6 +123,7 @@ When editing an existing component, update `registry/{component}/component.tsx` 
 Follow Conventional Commits: `feat(scope): message`, `fix(scope): message`, `chore(scope): message`. Scope is typically `registry`, `cli`, `docs`, or a component name.
 
 <!-- code-review-graph MCP tools -->
+
 ## MCP Tools: code-review-graph
 
 **IMPORTANT: This project has a knowledge graph. ALWAYS use the
@@ -137,16 +144,16 @@ Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
 
 ### Key Tools
 
-| Tool | Use when |
-|------|----------|
-| `detect_changes` | Reviewing code changes — gives risk-scored analysis |
-| `get_review_context` | Need source snippets for review — token-efficient |
-| `get_impact_radius` | Understanding blast radius of a change |
-| `get_affected_flows` | Finding which execution paths are impacted |
-| `query_graph` | Tracing callers, callees, imports, tests, dependencies |
-| `semantic_search_nodes` | Finding functions/classes by name or keyword |
-| `get_architecture_overview` | Understanding high-level codebase structure |
-| `refactor_tool` | Planning renames, finding dead code |
+| Tool                        | Use when                                               |
+| --------------------------- | ------------------------------------------------------ |
+| `detect_changes`            | Reviewing code changes — gives risk-scored analysis    |
+| `get_review_context`        | Need source snippets for review — token-efficient      |
+| `get_impact_radius`         | Understanding blast radius of a change                 |
+| `get_affected_flows`        | Finding which execution paths are impacted             |
+| `query_graph`               | Tracing callers, callees, imports, tests, dependencies |
+| `semantic_search_nodes`     | Finding functions/classes by name or keyword           |
+| `get_architecture_overview` | Understanding high-level codebase structure            |
+| `refactor_tool`             | Planning renames, finding dead code                    |
 
 ### Workflow
 
@@ -154,3 +161,15 @@ Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
 2. Use `detect_changes` for code review.
 3. Use `get_affected_flows` to understand impact.
 4. Use `query_graph` pattern="tests_for" to check coverage.
+
+# Commit Rules
+
+- Always use one liner commit message do not use any extra text and do not include words like claude or codex or cursor or windsurf or gemini or anthropic or openai or deepseek or etc.
+- Always use the correct commit message format feat(scope): message or fix(scope): message or chore(scope): message or ref(scope): message or docs(scope): message or test(scope): message or style(scope): message or perf(scope): message or revert(scope): message or ci(scope): message or build(scope): message or release(scope): message or hotfix(scope): message or revert(scope): message or docs(scope): message or test(scope): message or style(scope): message or perf(scope): message or revert(scope): message or ci(scope): message or build(scope): message or release(scope): message or hotfix(scope): message
+- Always run code review like code-rabbitmq to review the code before committing.
+- Always run lint before committing.
+- Always run tests before committing.
+- Always run build before committing.
+- Always run typecheck before committing.
+- Always run security scan before committing.
+- Always run ci before committing.
