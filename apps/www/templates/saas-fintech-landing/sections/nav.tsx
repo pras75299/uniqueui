@@ -1,66 +1,137 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useMotionValueEvent } from "motion/react";
+import { useState } from "react";
 import { Sun, Moon } from "lucide-react";
 import type { FintechThemeTokens } from "../components/theme";
 import { useTheme } from "@/contexts/theme-context";
 import { cn } from "@/lib/utils";
 
-const links = ["Home", "How it works", "Services", "Connect"];
+const links: { label: string; href: string }[] = [
+  { label: "Markets", href: "#markets" },
+  { label: "Strategy", href: "#strategy" },
+  { label: "Research", href: "#research" },
+  { label: "Connect", href: "#connect" },
+];
 
-function BrandMark({ isDark }: { isDark: boolean }) {
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
+
+/**
+ * Liquid-glass wordmark: ink color when scrolled (over paper), paper
+ * color when transparent (over the hero photo).
+ */
+function Wordmark({ light, tokens }: { light: boolean; tokens: FintechThemeTokens }) {
   return (
-    <div
-      className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-      style={{
-        background: isDark
-          ? "radial-gradient(circle at 30% 30%, #2A2218, #0F1116 70%)"
-          : "radial-gradient(circle at 30% 30%, #FFF6CF, #F2E6A6 65%, #E5D77F)",
-        boxShadow: isDark
-          ? "inset 0 0 0 1px rgba(255,255,255,0.06)"
-          : "inset 0 0 0 1px rgba(11,13,18,0.05)",
-      }}
-      aria-hidden
+    <span
+      className={cn(
+        "select-none text-[18px] font-light tracking-[-0.02em] font-[var(--font-serif)]",
+        "transition-colors duration-300",
+        light ? "text-[#F4F1E8]" : tokens.text,
+      )}
     >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path
-          d="M3.5 12.5V3.5h3.2c1.7 0 2.7.85 2.7 2.2 0 1-.55 1.7-1.45 1.95v.05c1.15.2 1.85 1 1.85 2.1 0 1.55-1.2 2.7-3.05 2.7H3.5Zm1.55-5.4h1.4c.85 0 1.4-.4 1.4-1.1s-.5-1.05-1.35-1.05H5.05V7.1Zm0 4.05h1.5c1 0 1.55-.4 1.55-1.15 0-.7-.55-1.15-1.5-1.15H5.05v2.3Z"
-          fill={isDark ? "#FFF6CF" : "#0B0D12"}
-        />
-      </svg>
-    </div>
+      Bayard<span className="opacity-50">.</span>
+    </span>
   );
 }
 
 export default function Nav({ tokens }: { tokens: FintechThemeTokens }) {
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
+  const reduceMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const [scrolled, setScrolled] = useState(false);
+
+  /**
+   * Threshold is small (24px) — any meaningful scroll triggers the
+   * morph. The pill then floats over whatever is beneath: hero photo
+   * (dark) or paper body (light). The glass adapts via theme tokens.
+   */
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setScrolled(latest > 24);
+  });
+
+  // Render: light = transparent state (text reads on dark photo)
+  const light = !scrolled;
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -10 }}
+      initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 280, damping: 24 }}
-      className={cn(
-        "sticky top-12 z-40 backdrop-blur-md",
-        isDark ? "bg-[#0A0B0F]/85" : "bg-white/85",
-      )}
+      transition={{ duration: 0.3, ease: EASE_OUT }}
+      className="pointer-events-none fixed inset-x-0 top-12 z-40 px-2 sm:px-4"
     >
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
-        <BrandMark isDark={isDark} />
+      {/*
+        Outer wrapper enables centered max-width transition. Inner pill
+        animates: maxWidth (full → 760), margin-top (0 → 12px), padding,
+        radius (0 → 9999), and visual properties (bg, border, blur,
+        shadow) via CSS for a soft simultaneous fade.
+      */}
+      <motion.div
+        layout="position"
+        initial={false}
+        animate={
+          reduceMotion
+            ? { maxWidth: scrolled ? 760 : 1200 }
+            : {
+                maxWidth: scrolled ? 760 : 1200,
+                marginTop: scrolled ? 10 : 0,
+                paddingLeft: scrolled ? 18 : 20,
+                paddingRight: scrolled ? 8 : 20,
+                borderRadius: scrolled ? 9999 : 0,
+              }
+        }
+        transition={{
+          duration: reduceMotion ? 0 : 0.5,
+          ease: EASE_OUT,
+        }}
+        className={cn(
+          "pointer-events-auto relative mx-auto flex h-14 items-center justify-between",
+          "[transition-property:background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)]",
+          scrolled
+            ? cn(
+                "border backdrop-blur-2xl backdrop-saturate-150",
+                isDark
+                  ? "border-white/[0.08] bg-black/40 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.55)]"
+                  : "border-black/[0.06] bg-white/55 shadow-[0_8px_32px_-8px_rgba(20,20,20,0.18)]",
+              )
+            : "border border-transparent bg-transparent shadow-none",
+        )}
+      >
+        {/*
+          Liquid-glass top highlight — a thin gradient ribbon along the
+          inner top edge, only visible in pill mode. Mimics the specular
+          band on Apple-style glass surfaces.
+        */}
+        {scrolled && (
+          <motion.span
+            aria-hidden
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, ease: EASE_OUT }}
+            className={cn(
+              "pointer-events-none absolute inset-x-3 top-px h-px",
+              isDark
+                ? "bg-gradient-to-r from-transparent via-white/15 to-transparent"
+                : "bg-gradient-to-r from-transparent via-white/80 to-transparent",
+            )}
+          />
+        )}
+
+        <Wordmark light={light} tokens={tokens} />
 
         <nav className="hidden items-center gap-9 md:flex">
-          {links.map((link, i) => (
+          {links.map((link) => (
             <a
-              key={link}
-              href="#"
-              onClick={(e) => e.preventDefault()}
+              key={link.label}
+              href={link.href}
               className={cn(
-                "text-[13px] transition-colors hover:text-current",
-                i === 0 ? tokens.text : tokens.textMuted,
+                "text-[11px] font-medium uppercase tracking-[0.18em] transition-colors duration-300",
+                light
+                  ? "text-[#F4F1E8]/75 hover:text-[#F4F1E8]"
+                  : cn(tokens.textMuted, "hover:text-current"),
               )}
             >
-              {link}
+              {link.label}
             </a>
           ))}
         </nav>
@@ -71,29 +142,34 @@ export default function Nav({ tokens }: { tokens: FintechThemeTokens }) {
             aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
             onClick={() => setTheme(isDark ? "light" : "dark")}
             className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-full border transition-colors",
-              tokens.outlinedBorder,
-              isDark
-                ? "bg-[#0F1116] text-amber-200 hover:bg-[#161821]"
-                : "bg-white text-[#3A4050] hover:bg-[#F1F2F6]",
+              "flex h-8 w-8 items-center justify-center rounded-full border",
+              "[transition-property:transform,background-color,border-color,color] duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]",
+              "active:scale-[0.94]",
+              light
+                ? "border-white/40 text-[#F4F1E8] hover:bg-white/10"
+                : cn(
+                    tokens.outlinedBorder,
+                    tokens.text,
+                    isDark ? "hover:bg-[#13110D]" : "hover:bg-[#F1EEE6]",
+                  ),
             )}
           >
             <motion.span
               key={isDark ? "moon" : "sun"}
-              initial={{ rotate: -90, opacity: 0 }}
+              initial={reduceMotion ? { opacity: 1, rotate: 0 } : { rotate: -45, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 320, damping: 22 }}
+              transition={{ duration: 0.2, ease: EASE_OUT }}
               className="flex"
             >
-              {isDark ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+              {isDark ? <Moon className="h-3.5 w-3.5" /> : <Sun className="h-3.5 w-3.5" />}
             </motion.span>
           </button>
           <a
             href="#"
             onClick={(e) => e.preventDefault()}
             className={cn(
-              "hidden text-[13px] transition-colors sm:inline-block",
-              tokens.text,
+              "hidden text-[12px] font-medium transition-colors duration-300 sm:inline-block",
+              light ? "text-[#F4F1E8] hover:text-white" : tokens.text,
             )}
           >
             Login
@@ -102,15 +178,18 @@ export default function Nav({ tokens }: { tokens: FintechThemeTokens }) {
             href="#"
             onClick={(e) => e.preventDefault()}
             className={cn(
-              "inline-flex h-9 items-center rounded-md px-5 text-[13px] font-semibold transition-transform hover:-translate-y-[1px]",
-              tokens.primaryBg,
-              tokens.primaryFg,
+              "inline-flex h-9 items-center rounded-full px-5 text-[12px] font-medium",
+              "[transition-property:transform,background-color,color] duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]",
+              "active:scale-[0.97]",
+              light
+                ? "bg-[#F4F1E8] text-[#0A0A0A] hover:bg-white"
+                : cn(tokens.primaryBg, tokens.primaryFg),
             )}
           >
-            Signup
+            Open account
           </a>
         </div>
-      </div>
+      </motion.div>
     </motion.header>
   );
 }

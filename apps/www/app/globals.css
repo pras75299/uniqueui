@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
@@ -7,6 +8,30 @@
   --font-mono: "Fira Code", "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
   --font-syne: "Syne", "Inter", system-ui, sans-serif;
   --font-dm-sans: "DM Sans", "Inter", system-ui, sans-serif;
+  --font-serif: "Newsreader", "Source Serif 4", Georgia, "Times New Roman", serif;
+
+  /* Editorial fintech motion curves */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+.animate-caret-blink {
+  animation: caret-blink 1.05s steps(2, jump-none) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-caret-blink { animation: none; }
+}
+
+/* Smooth scroll for in-page anchor links (used by saas-fintech-landing nav). */
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 @layer utilities {

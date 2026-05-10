@@ -11,6 +11,7 @@ import FeaturesGrid from "./sections/features-grid";
 import Faq from "./sections/faq";
 import FinalCta from "./sections/final-cta";
 import Footer from "./sections/footer";
+import { ScrollProgress } from "./components/scroll-progress";
 import { getFintechThemeTokens } from "./components/theme";
 
 export default function SaasFintechLanding() {
@@ -26,6 +27,7 @@ export default function SaasFintechLanding() {
         tokens.text,
       )}
     >
+      <ScrollProgress tokens={tokens} />
       <Nav tokens={tokens} />
       <Hero tokens={tokens} />
       <LogoStrip tokens={tokens} />

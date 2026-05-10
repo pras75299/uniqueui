@@ -3,97 +3,129 @@
 import type { FintechThemeTokens } from "../components/theme";
 import { Reveal } from "../components/reveal";
 import { motion, useReducedMotion } from "motion/react";
+import { cn } from "@/lib/utils";
+import { ArrowUpRight } from "lucide-react";
 
-/** Decorative starburst / firework on the bottom-left of the CTA */
-function Starburst() {
-  const lines = Array.from({ length: 22 }, (_, i) => {
-    const angle = (i / 22) * Math.PI * 2;
-    const len = 36 + (i % 3) * 14;
-    return {
-      x2: 60 + Math.cos(angle) * len,
-      y2: 60 + Math.sin(angle) * len,
-      delay: i * 0.04,
-    };
-  });
-  return (
-    <svg
-      aria-hidden
-      className="pointer-events-none absolute -bottom-6 -left-2 h-40 w-40 opacity-90"
-      viewBox="0 0 120 120"
-    >
-      {lines.map((l, i) => (
-        <motion.line
-          key={i}
-          x1="60"
-          y1="60"
-          x2={l.x2}
-          y2={l.y2}
-          stroke="white"
-          strokeWidth="0.6"
-          strokeLinecap="round"
-          initial={{ opacity: 0.2, pathLength: 0 }}
-          whileInView={{ opacity: [0.25, 0.7, 0.25], pathLength: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{
-            pathLength: { duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: l.delay },
-            opacity: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: l.delay },
-          }}
-        />
-      ))}
-      <circle cx="60" cy="60" r="2.4" fill="white" />
-    </svg>
-  );
-}
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
-/** Right-side play arrow inside a thin circle outline */
-function PlayMark() {
-  return (
-    <svg
-      aria-hidden
-      className="pointer-events-none absolute right-8 top-1/2 hidden h-16 w-16 -translate-y-1/2 sm:block"
-      viewBox="0 0 64 64"
-    >
-      <circle cx="32" cy="32" r="30" fill="none" stroke="white" strokeWidth="1" opacity="0.35" />
-      <path d="M26 22 L44 32 L26 42 Z" fill="white" />
-    </svg>
-  );
-}
-
-export default function FinalCta({ tokens: _tokens }: { tokens: FintechThemeTokens }) {
+/** A single hairline ledger line drawing in across the dark CTA panel. */
+function HairlineMark() {
   const reduceMotion = useReducedMotion();
-
   return (
-    <section className="pb-14 sm:pb-20">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-        <Reveal className="relative overflow-hidden rounded-3xl bg-[#0B0D12] p-10 text-center text-white sm:p-14">
-          <Starburst />
-          <PlayMark />
-          <motion.div
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute -bottom-px left-0 h-px w-full"
+      viewBox="0 0 600 1"
+      preserveAspectRatio="none"
+    >
+      <motion.line
+        x1="0"
+        y1="0.5"
+        x2="600"
+        y2="0.5"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeDasharray="600"
+        strokeDashoffset={reduceMotion ? 0 : 600}
+        whileInView={{ strokeDashoffset: 0 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{
+          duration: reduceMotion ? 0 : 1.6,
+          ease: EASE_OUT,
+        }}
+        opacity="0.4"
+      />
+    </svg>
+  );
+}
+
+export default function FinalCta({ tokens }: { tokens: FintechThemeTokens }) {
+  return (
+    <section id="connect" className={cn("scroll-mt-32 pb-20 sm:pb-28", tokens.pageBg)}>
+      <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
+        <Reveal className="relative overflow-hidden rounded-[10px] bg-[#0A0A0A] p-12 text-[#F2EFE7] sm:p-16 lg:p-20">
+          {/* Subtle hairline grid behind */}
+          <div
             aria-hidden
-            initial={{ opacity: 0.25 }}
-            animate={reduceMotion ? { opacity: 0.25 } : { opacity: [0.2, 0.45, 0.2] }}
-            transition={
-              reduceMotion
-                ? { duration: 0 }
-                : { duration: 7, repeat: Infinity, ease: "easeInOut" }
-            }
-            className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top_right,rgba(56,189,248,0.18),transparent_55%)]"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, rgba(242,239,231,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(242,239,231,0.04) 1px, transparent 1px)",
+              backgroundSize: "calc(100%/8) 100%, 100% 64px",
+            }}
           />
-          <div className="relative z-10">
-            <h2 className="text-balance text-[28px] font-semibold leading-[1.1] tracking-[-0.01em] sm:text-[36px]">
-              Take Full Control of Your Financial
-              <br className="hidden sm:block" /> Future Starting Today
-            </h2>
-            <p className="mx-auto mt-4 max-w-md text-[13px] text-white/65 sm:text-[14px]">
-              Start Taking Charge of Your Finances and Build a Better Tomorrow
-            </p>
-            <a
-              href="#"
-              onClick={(e) => e.preventDefault()}
-              className="mt-6 inline-flex h-10 items-center rounded-md bg-white px-5 text-[12px] font-semibold text-black transition-transform hover:-translate-y-[1px]"
-            >
-              Contact us
-            </a>
+          <HairlineMark />
+
+          <div className="relative z-10 grid gap-10 md:grid-cols-[1.4fr_1fr] md:items-end">
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-[#D88275]">
+                <span className="inline-block h-px w-7 bg-current align-middle opacity-60" />
+                <span className="ml-2.5">Begin</span>
+              </p>
+              <h2
+                className={cn(
+                  "mt-5 text-balance font-light leading-[1.02] tracking-[-0.02em]",
+                  "text-[40px] sm:text-[56px] lg:text-[72px]",
+                  tokens.serif,
+                )}
+              >
+                <motion.span
+                  className="block overflow-hidden"
+                >
+                  <motion.span
+                    className="block"
+                    initial={{ y: "100%" }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true, amount: 0.5 }}
+                    transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.1 }}
+                  >
+                    The compounding starts
+                  </motion.span>
+                </motion.span>
+                <motion.span className="block overflow-hidden">
+                  <motion.span
+                    className="block italic"
+                    initial={{ y: "100%" }}
+                    whileInView={{ y: 0 }}
+                    viewport={{ once: true, amount: 0.5 }}
+                    transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.22 }}
+                  >
+                    the day you open.
+                  </motion.span>
+                </motion.span>
+              </h2>
+            </div>
+
+            <div className="md:pb-3">
+              <p className="max-w-[40ch] text-[14px] leading-[1.6] text-[#9C988E]">
+                Open an account in under three minutes. Fund it whenever you
+                like. Capital is at risk; horizons are long.
+              </p>
+              <div className="mt-7 flex flex-wrap items-center gap-6">
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className={cn(
+                    "group inline-flex h-11 items-center gap-2 rounded-full bg-[#F2EFE7] px-6 text-[13px] font-medium text-[#0A0A0A]",
+                    "transition-transform duration-150 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]",
+                    "active:scale-[0.97]",
+                  )}
+                >
+                  Open an account
+                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] group-hover:-translate-y-px group-hover:translate-x-px" />
+                </a>
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className="group inline-flex items-center gap-1.5 border-b border-[#F2EFE7]/60 pb-0.5 text-[13px] font-medium text-[#F2EFE7]"
+                >
+                  Talk to a partner
+                  <span className="transition-transform duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] group-hover:translate-x-0.5">
+                    →
+                  </span>
+                </a>
+              </div>
+            </div>
           </div>
         </Reveal>
       </div>

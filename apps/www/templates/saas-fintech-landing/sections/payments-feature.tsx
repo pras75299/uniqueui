@@ -3,98 +3,123 @@
 import type { FintechThemeTokens } from "../components/theme";
 import { cn } from "@/lib/utils";
 import { Reveal } from "../components/reveal";
-import { ChevronRight, Wifi, ArrowUp, ArrowDown, Send, FilePlus, MoreHorizontal } from "lucide-react";
+import { StaggerGroup, StaggerItem } from "../components/stagger";
+import { CountUp } from "../components/count-up";
+import { ArrowUpRight } from "lucide-react";
+
+const transactions = [
+  { date: "May 09", desc: "Treasury sweep", amount: "+$24,000.00", positive: true },
+  { date: "May 08", desc: "Aalto Industries · DRIP", amount: "+$1,420.18", positive: true },
+  { date: "May 06", desc: "Quarterly fee", amount: "−$182.50", positive: false },
+  { date: "May 02", desc: "Wire — institutional", amount: "+$50,000.00", positive: true },
+];
+
+const bullets = [
+  "Sub-second internal settlement",
+  "Real-time treasury sweeps to yield",
+  "Programmatic execution via the Bayard API",
+];
 
 export default function PaymentsFeature({ tokens }: { tokens: FintechThemeTokens }) {
   return (
-    <section className="py-14 sm:py-20">
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 sm:px-6 md:grid-cols-[0.95fr_1.05fr] md:gap-16">
-        {/* Visual: gray rounded panel with savings card */}
+    <section id="markets" className={cn("scroll-mt-32 py-20 sm:py-28", tokens.pageBg)}>
+      <div className="mx-auto grid w-full max-w-[1200px] items-start gap-14 px-5 sm:px-8 md:grid-cols-[1fr_1fr] md:gap-20">
+        {/* Visual: editorial transactions ledger */}
         <Reveal
           className={cn(
-            "flex flex-col items-center justify-between rounded-3xl p-8",
-            tokens.softSurface,
+            "rounded-[10px] border p-7 sm:p-8",
+            tokens.border,
+            tokens.cardBg,
           )}
         >
-          {/* Savings card */}
-          <div
-            className={cn(
-              "relative w-full max-w-[280px] rounded-2xl p-5 shadow-[0_18px_40px_-18px_rgba(11,13,18,0.18)]",
-              tokens.cardBg,
-            )}
-          >
-            <div className="mb-8 flex items-start justify-between">
-              <Wifi
-                className={cn("h-4 w-4 -rotate-90", tokens.textMuted)}
-                aria-hidden
-              />
-              <span className="flex items-center gap-1 text-[11px] font-semibold">
-                <span className="inline-block h-2.5 w-2.5 rounded-sm bg-[#0B0D12]" />
-                Payon°
-              </span>
-            </div>
-            <p className={cn("text-[10px] uppercase tracking-[0.16em]", tokens.textMuted)}>
-              Savings Card
+          {/* Header */}
+          <div className="flex items-baseline justify-between">
+            <p className={cn("text-[10px] font-medium uppercase tracking-[0.22em]", tokens.textMuted)}>
+              Transactions · Last 7 days
             </p>
-            <p className="mt-1 text-[30px] font-semibold tabular-nums leading-none">
-              $16,058
-              <span className={cn("text-[20px]", tokens.textMuted)}>.94</span>
-            </p>
+            <span className={cn("text-[10px] tabular-nums", tokens.textSubtle)}>
+              4 of 12
+            </span>
           </div>
 
-          {/* Better Integration label */}
+          {/* Net flow oversized */}
           <p
             className={cn(
-              "mt-7 text-[11px]",
-              tokens.textMuted,
+              "mt-4 text-[44px] font-light leading-none tabular-nums sm:text-[52px]",
+              tokens.serif,
+              tokens.text,
             )}
           >
-            <span className={tokens.textSubtle}>Better</span>{" "}
-            <span className="font-semibold text-current">Integration</span>
+            <CountUp value={75237.68} prefix="+$" decimals={2} duration={1.0} />
+          </p>
+          <p className={cn("mt-2 text-[12px]", tokens.textMuted)}>
+            Net flow this week
           </p>
 
-          {/* Action chips row */}
-          <div className="mt-3 flex w-full items-center justify-center gap-2">
-            {[
-              { Icon: ArrowUp, key: "up" },
-              { Icon: ArrowDown, key: "down" },
-              { Icon: Send, key: "send" },
-              { Icon: FilePlus, key: "file" },
-              { Icon: MoreHorizontal, key: "more" },
-            ].map(({ Icon, key }) => (
-              <span
-                key={key}
+          {/* Hairline rule */}
+          <div className={cn("mt-6 h-px w-full border-t", tokens.borderSoft)} />
+
+          {/* Transaction rows — staggered fade as ledger entries posting */}
+          <StaggerGroup className="mt-2" stagger={0.07} delay={0.25}>
+            {transactions.map((t, i) => (
+              <StaggerItem
+                key={t.desc + i}
+                as="div"
+                y={6}
                 className={cn(
-                  "flex h-10 w-10 items-center justify-center rounded-md shadow-sm",
-                  tokens.cardBg,
+                  "grid grid-cols-[60px_1fr_auto] items-center gap-3 py-3 text-[12px]",
+                  i !== 0 && cn("border-t", tokens.borderSoft),
                 )}
               >
-                <Icon className={cn("h-4 w-4", tokens.textMuted)} aria-hidden />
-              </span>
+                <span className={cn("tabular-nums", tokens.textSubtle)}>{t.date}</span>
+                <span className={cn("truncate", tokens.text)}>{t.desc}</span>
+                <span
+                  className={cn(
+                    "tabular-nums",
+                    t.positive ? tokens.accentText : tokens.textMuted,
+                  )}
+                >
+                  {t.amount}
+                </span>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerGroup>
         </Reveal>
 
         {/* Copy column */}
-        <Reveal delay={0.05} className="flex flex-col justify-center">
-          <h2 className="text-balance text-[34px] font-semibold leading-[1.06] tracking-[-0.01em] sm:text-[44px]">
-            Streamline Sales With
-            <br />
-            Seamless Payments
-          </h2>
-          <p className={cn("mt-4 max-w-md text-[13px] leading-relaxed", tokens.textMuted)}>
-            Deliver a frictionless buying experience with secure, responsive,
-            and fully integrated payment tools.
+        <Reveal delay={0.05} className="flex flex-col justify-center pt-4 md:pt-8">
+          <p className={cn("text-[10px] font-medium uppercase tracking-[0.22em]", tokens.accentText)}>
+            <span className="inline-block h-px w-7 bg-current align-middle opacity-60" />
+            <span className="ml-2.5">Movement</span>
           </p>
-          <ul className="mt-6 space-y-3 text-[14px]">
-            {[
-              "Real-Time Payment Tracking",
-              "Accept Payments Quickly And Securely",
-              "Effortless Integration With Your Platform",
-            ].map((b) => (
-              <li key={b} className="flex items-start gap-2">
-                <ChevronRight className={cn("mt-0.5 h-4 w-4 shrink-0", tokens.textMuted)} />
-                <span>{b}</span>
+          <h2
+            className={cn(
+              "mt-5 text-balance font-light leading-[1.04] tracking-[-0.02em]",
+              "text-[36px] sm:text-[44px] lg:text-[52px]",
+              tokens.serif,
+              tokens.text,
+            )}
+          >
+            Money moves like a wire,
+            <br />
+            <span className="italic">priced like a transfer.</span>
+          </h2>
+          <p className={cn("mt-5 max-w-[42ch] text-[14px] leading-[1.6]", tokens.textMuted)}>
+            Every dollar in a Bayard account earns from the moment it lands.
+            Internal payments settle in milliseconds; external rails clear at
+            interbank cost. There is no float.
+          </p>
+          <ul className="mt-7 space-y-3 text-[13px]">
+            {bullets.map((b) => (
+              <li key={b} className="flex items-start gap-3">
+                <span
+                  className={cn(
+                    "mt-2 inline-block h-px w-4 shrink-0",
+                    "bg-current",
+                    tokens.accentText,
+                  )}
+                />
+                <span className={tokens.text}>{b}</span>
               </li>
             ))}
           </ul>
@@ -102,12 +127,15 @@ export default function PaymentsFeature({ tokens }: { tokens: FintechThemeTokens
             href="#"
             onClick={(e) => e.preventDefault()}
             className={cn(
-              "mt-7 inline-flex h-11 w-fit items-center rounded-md px-6 text-[13px] font-semibold transition-transform hover:-translate-y-[1px]",
+              "group mt-9 inline-flex h-11 w-fit items-center gap-2 rounded-full px-6 text-[13px] font-medium",
+              "transition-transform duration-150 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]",
+              "active:scale-[0.97]",
               tokens.primaryBg,
               tokens.primaryFg,
             )}
           >
-            Create Account
+            Open an account
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] group-hover:-translate-y-px group-hover:translate-x-px" />
           </a>
         </Reveal>
       </div>

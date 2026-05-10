@@ -1,227 +1,324 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform, useSpring } from "motion/react";
+import { useRef } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { FintechThemeTokens } from "../components/theme";
+import { CountUp } from "../components/count-up";
+import { TypingHeadline } from "../components/typing-headline";
 
-const accountRows = [
-  { label: "65R00" },
-  { label: "48R00" },
-  { label: "48R00" },
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
+
+/**
+ * Aerial dusk skyline — sourced from Unsplash (whitelisted in CSP).
+ * Picked specifically for the long horizon line + dusk blue palette.
+ */
+const HERO_IMAGE =
+  "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=2400&q=85";
+
+const tickers = [
+  { sym: "AA", name: "Aalto Industries", change: "+0.42%", positive: true },
+  { sym: "GS", name: "Goldsmith Capital", change: "−0.18%", positive: false },
+  { sym: "NV", name: "Nordvest Holdings", change: "+0.25%", positive: true },
 ];
 
-export default function Hero({ tokens }: { tokens: FintechThemeTokens }) {
+/** Hairline sparkline trending gently upward over 12 months. */
+function Sparkline({ stroke }: { stroke: string }) {
   const reduceMotion = useReducedMotion();
+  const points = [
+    [0, 38], [9, 34], [18, 36], [27, 30], [36, 31],
+    [45, 25], [55, 27], [64, 21], [73, 22], [82, 16],
+    [91, 18], [100, 12],
+  ];
+  const d = points
+    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x} ${y}`)
+    .join(" ");
+
+  return (
+    <svg
+      viewBox="0 0 100 50"
+      preserveAspectRatio="none"
+      className="h-[60px] w-full"
+      aria-hidden
+    >
+      <line x1="0" y1="38" x2="100" y2="38" stroke="currentColor" strokeWidth="0.15" opacity="0.18" />
+      <line x1="0" y1="20" x2="100" y2="20" stroke="currentColor" strokeWidth="0.15" opacity="0.1" />
+      <motion.path
+        d={d}
+        fill="none"
+        stroke={stroke}
+        strokeWidth="0.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={reduceMotion ? { pathLength: 1 } : { pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: reduceMotion ? 0 : 1.1, ease: EASE_OUT, delay: 1.2 }}
+        vectorEffect="non-scaling-stroke"
+      />
+      <motion.circle
+        cx="100"
+        cy="12"
+        r="0.9"
+        fill={stroke}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2, delay: 2.0, ease: EASE_OUT }}
+      />
+    </svg>
+  );
+}
+
+export default function Hero({ tokens: _tokens }: { tokens: FintechThemeTokens }) {
+  const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  /**
+   * Image zoom-out reveal: scale starts at 1.1 and pulls back to 1.0
+   * as the section scrolls past. A soft spring smooths the otherwise-
+   * jittery scroll-tied scale. Text simultaneously rises ~24px upward
+   * (positive scroll progress → negative Y) so the headline lifts
+   * into place as the city pulls back.
+   */
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const rawScale = useTransform(scrollYProgress, [0, 1], [1.1, 1.0]);
+  const bgScale = useSpring(rawScale, {
+    stiffness: 220,
+    damping: 36,
+    mass: 0.5,
+    restDelta: 0.001,
+  });
+  const cardY = useTransform(scrollYProgress, [0, 1], [0, -28]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, -16]);
 
   return (
     <section
-      className="relative overflow-hidden"
-      style={{
-        background:
-          "radial-gradient(ellipse 60% 50% at 0% 0%, rgba(255,242,180,0.55), transparent 60%)",
-      }}
+      ref={sectionRef}
+      className="relative isolate overflow-hidden bg-[#0A0E16]"
     >
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 pt-10 pb-16 sm:px-6 sm:pt-14 sm:pb-20 md:grid-cols-[1fr_1fr] md:gap-12 md:pt-16 md:pb-24">
-        {/* Copy column */}
+      {/* Background image — fills section, scales 1.1 → 1.0 on scroll */}
+      <motion.div
+        aria-hidden
+        style={reduceMotion ? undefined : { scale: bgScale }}
+        className="absolute inset-0 origin-center"
+      >
+        <Image
+          src={HERO_IMAGE}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      </motion.div>
+
+      {/* Gradient overlay — darkens upper-left for headline legibility */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-gradient-to-br from-[#070912]/85 via-[#0A0E16]/55 to-[#0A0E16]/30"
+      />
+      {/* Vignette + bottom fade-to-paper so the section meets the next one cleanly */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(120% 80% at 30% 30%, transparent 50%, rgba(7,9,18,0.55) 100%), linear-gradient(to bottom, transparent 60%, rgba(248,246,241,0.9) 100%)",
+        }}
+      />
+      {/* Hairline 8-col grid in faint white */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 hidden md:block text-white"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, currentColor 1px, transparent 1px)",
+          backgroundSize: "calc(100%/8) 100%",
+          opacity: 0.045,
+        }}
+      />
+
+      <div className="relative mx-auto grid w-full max-w-[1200px] gap-14 px-5 pt-20 pb-28 sm:px-8 md:grid-cols-8 md:gap-10 md:pt-28 md:pb-36 lg:pt-32">
+        {/* Headline column — 5/8 */}
         <motion.div
-          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 240, damping: 26 }}
-          className="space-y-6"
+          transition={{ duration: 0.4, ease: EASE_OUT }}
+          style={reduceMotion ? undefined : { y: textY }}
+          className="md:col-span-5"
         >
-          <h1 className="text-balance text-[44px] font-semibold leading-[1.02] tracking-[-0.02em] sm:text-[58px] lg:text-[68px]">
-            Invest Intelligently,
-            <br />
-            Live Independently
-          </h1>
-          <p
+          {/* Eyebrow */}
+          <motion.p
+            initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, ease: EASE_OUT, delay: 0.05 }}
             className={cn(
-              "max-w-md text-[13px] leading-relaxed sm:text-[14px]",
-              tokens.textMuted,
+              "flex items-center gap-2.5 text-[10px] font-medium uppercase tracking-[0.22em]",
+              "text-[#D88275]",
             )}
           >
-            Your all-in-one solution to smarter money management. Track
-            spending, set goals, and make informed financial decisions with
-            clarity and ease.
-          </p>
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <span className="inline-block h-px w-7 bg-current opacity-70" />
+            Q2 — 2026 Investor Letter
+          </motion.p>
+
+          {/* Typing headline — char-by-char with caret + per-word hover lift */}
+          <h1
+            className={cn(
+              "mt-6 text-balance font-light tracking-[-0.025em] text-[#F4F1E8]",
+              "text-[44px] leading-[1.02] sm:text-[58px] md:text-[72px] lg:text-[88px] lg:leading-[0.98]",
+              "font-[var(--font-serif)]",
+            )}
+          >
+            <TypingHeadline
+              ariaLabel="Invest with the patience of an institution."
+              tokens={[
+                { text: "Invest" },
+                { text: "with" },
+                { text: "the" },
+                { text: "patience" },
+                { lineBreak: true },
+                { text: "of", italic: true },
+                { text: "an" },
+                { text: "institution." },
+              ]}
+            />
+          </h1>
+
+          <motion.p
+            initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: EASE_OUT, delay: 1.4 }}
+            className={cn(
+              "mt-7 max-w-[36ch] text-[14px] leading-[1.65]",
+              "text-[#C2BEB2]",
+            )}
+          >
+            A patient-capital platform for individuals who think in decades, not
+            quarters. Custody, research, and execution under one roof — built
+            on the discipline of a sovereign fund.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: EASE_OUT, delay: 1.55 }}
+            className="mt-9 flex flex-wrap items-center gap-6"
+          >
             <a
               href="#"
               onClick={(e) => e.preventDefault()}
               className={cn(
-                "inline-flex h-11 items-center rounded-md px-6 text-[13px] font-semibold transition-transform hover:-translate-y-[1px]",
-                tokens.primaryBg,
-                tokens.primaryFg,
+                "group inline-flex h-11 items-center gap-2 rounded-full bg-[#F4F1E8] px-6 text-[13px] font-medium text-[#0A0A0A]",
+                "[transition-property:transform,background-color] duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]",
+                "active:scale-[0.97] hover:bg-white",
               )}
             >
-              Get Started
+              Open an account
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] group-hover:-translate-y-px group-hover:translate-x-px" />
             </a>
             <a
               href="#"
               onClick={(e) => e.preventDefault()}
               className={cn(
-                "inline-flex h-11 items-center rounded-md border bg-transparent px-6 text-[13px] font-medium transition-colors",
-                tokens.outlinedBorder,
-                tokens.outlinedFg,
+                "group inline-flex items-center gap-1.5 text-[13px] font-medium",
+                "border-b border-[#F4F1E8]/60 pb-0.5 text-[#F4F1E8]",
+                "transition-colors duration-150 hover:border-[#F4F1E8]",
               )}
             >
-              See Details
+              Read the prospectus
+              <span className="transition-transform duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] group-hover:translate-x-0.5">
+                →
+              </span>
             </a>
-          </div>
+          </motion.div>
         </motion.div>
 
-        {/* Phone column */}
+        {/* Glass portfolio card — 3/8 */}
         <motion.div
-          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 220, damping: 26, delay: 0.08 }}
-          className="relative mx-auto w-full max-w-[330px] sm:max-w-[360px]"
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14, scale: 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.7 }}
+          style={reduceMotion ? undefined : { y: cardY }}
+          className="md:col-span-3 md:pt-2"
         >
-          {/* Phone frame */}
-          <div className="relative mx-auto h-[560px] w-[270px] rounded-[44px] border-[8px] border-[#0B0D12] bg-[#0B0D12] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.45)] sm:h-[600px] sm:w-[290px]">
-            <div className="relative h-full w-full overflow-hidden rounded-[36px] bg-white">
-              {/* Notch */}
-              <div className="absolute left-1/2 top-2.5 z-10 h-7 w-24 -translate-x-1/2 rounded-full bg-[#0B0D12]" aria-hidden>
-                <span className="absolute left-[18%] top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-white/15" />
-                <span className="absolute right-[18%] top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-white/15" />
-              </div>
+          <div
+            className={cn(
+              "rounded-[10px] border border-white/[0.14] bg-white/[0.05] p-7 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.6)] backdrop-blur-2xl sm:p-8",
+            )}
+          >
+            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-[#C2BEB2]">
+              Portfolio Balance
+            </p>
+            <p
+              className={cn(
+                "mt-3 truncate text-[32px] font-light leading-none tabular-nums tracking-[-0.015em] text-[#F4F1E8] sm:text-[38px] lg:text-[42px]",
+                "font-[var(--font-serif)]",
+              )}
+            >
+              <CountUp value={1284690.42} prefix="$" decimals={2} delay={1.0} duration={1.0} />
+            </p>
 
-              {/* Status row */}
-              <div className="flex items-center justify-between px-5 pt-4 text-[10px] font-semibold text-[#0B0D12]">
-                <span className="tabular-nums">9:41</span>
-                <div className="flex items-center gap-1 opacity-70">
-                  <span>•••</span>
-                  <span>📶</span>
-                  <span>🔋</span>
-                </div>
-              </div>
+            <div className="mt-3 flex items-baseline gap-3 text-[12px]">
+              <span className="inline-flex items-center gap-1 tabular-nums text-[#D88275]">
+                <svg width="9" height="9" viewBox="0 0 9 9" aria-hidden>
+                  <path d="M4.5 1.5 L8 5 H6 V8 H3 V5 H1 Z" fill="currentColor" />
+                </svg>
+                +$24,310.18
+              </span>
+              <span className="tabular-nums text-[#9F9C90]">+1.92% today</span>
+            </div>
 
-              {/* Balance area */}
-              <div className="px-5 pt-7 text-center">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-[#5A6072]">
-                  Total Balance
-                </p>
-                <p className="mt-1 text-[34px] font-semibold tabular-nums leading-none text-[#0B0D12]">
-                  $4,4089
-                </p>
-              </div>
+            <div className="mt-6 h-px w-full bg-white/[0.12]" />
 
-              {/* Tabs */}
-              <div className="mx-5 mt-5 flex items-center rounded-full bg-[#F1F2F6] p-1 text-[11px] font-semibold">
-                <span className="flex flex-1 items-center justify-center gap-1 rounded-full bg-[#0B0D12] py-1.5 text-white">
-                  <span className="text-[9px]">↗</span> Payout
-                </span>
-                <span className="flex flex-1 items-center justify-center gap-1 rounded-full py-1.5 text-[#5A6072]">
-                  Card
-                </span>
+            <div className="mt-5">
+              <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.2em]">
+                <span className="text-[#9F9C90]">YTD Performance</span>
+                <span className="tabular-nums text-[#D88275]">+18.42%</span>
               </div>
-
-              {/* Total payout row */}
-              <div className="mx-5 mt-4">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-[#5A6072]">
-                  Total Payout
-                </p>
-                <div className="mt-1 flex items-end justify-between">
-                  <p className="text-[28px] font-semibold tabular-nums leading-none text-[#0B0D12]">
-                    $1,469
-                  </p>
-                  <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-[10px] font-semibold text-emerald-600">
-                    Get Paid
-                  </span>
-                </div>
-              </div>
-
-              {/* Account list */}
-              <div className="mx-5 mt-5 space-y-3">
-                {accountRows.map((r, i) => (
-                  <motion.div
-                    key={i}
-                    initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 260,
-                      damping: 28,
-                      delay: 0.4 + i * 0.07,
-                    }}
-                    className="flex items-center justify-between border-b border-[#EFF1F5] pb-2 text-[11px]"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="h-6 w-6 rounded-full bg-[#F1F2F6]" />
-                      <span className="text-[10px] text-[#5A6072]">Account {i + 1}</span>
-                    </div>
-                    <span className="font-semibold tabular-nums text-[#0B0D12]">
-                      {r.label}
-                    </span>
-                  </motion.div>
-                ))}
+              <div className="mt-2 text-[#F4F1E8]">
+                <Sparkline stroke="currentColor" />
               </div>
             </div>
+
+            <div className="mt-5 h-px w-full bg-white/[0.12]" />
+
+            <ul className="mt-5 space-y-0">
+              {tickers.map((t, i) => (
+                <motion.li
+                  key={t.sym}
+                  initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: EASE_OUT, delay: 1.6 + i * 0.06 }}
+                  className={cn(
+                    "flex items-center gap-3 py-3 text-[12px]",
+                    i !== 0 && "border-t border-white/[0.08]",
+                  )}
+                >
+                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-[4px] border border-white/[0.18] text-[10px] font-medium tracking-[0.05em] text-[#F4F1E8]">
+                    {t.sym}
+                  </span>
+                  <span className="flex-1 truncate text-[#F4F1E8]">{t.name}</span>
+                  <span
+                    className={cn(
+                      "tabular-nums",
+                      t.positive ? "text-[#D88275]" : "text-[#9F9C90]",
+                    )}
+                  >
+                    {t.change}
+                  </span>
+                </motion.li>
+              ))}
+            </ul>
           </div>
 
-          {/* Floating chip — On Saves (top-right) */}
-          <motion.div
-            initial={reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ type: "spring", stiffness: 240, damping: 26, delay: 0.25 }}
-            className={cn(
-              "absolute -right-4 top-[18%] hidden rounded-xl border px-4 py-2.5 shadow-[0_12px_30px_-10px_rgba(11,13,18,0.18)] sm:flex sm:flex-col",
-              tokens.border,
-              tokens.cardBg,
-            )}
-          >
-            <span className="flex items-center gap-1.5 text-[10px] text-[#5A6072]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#0B0D12]" /> On Saves
-            </span>
-            <span className="mt-0.5 text-[14px] font-semibold tabular-nums">
-              $ 10,400.22
-            </span>
-          </motion.div>
-
-          {/* Floating chip — Total Expends (bottom-left) */}
-          <motion.div
-            initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 240, damping: 26, delay: 0.35 }}
-            className={cn(
-              "absolute -left-4 bottom-[22%] hidden rounded-xl border px-3.5 py-2.5 shadow-[0_12px_30px_-10px_rgba(11,13,18,0.18)] sm:block",
-              tokens.border,
-              tokens.cardBg,
-            )}
-          >
-            <span className="flex items-center gap-1.5 text-[10px] text-[#5A6072]">
-              <span className="rounded-md bg-[#F1F2F6] px-1 py-px text-[9px]">📊</span>
-              Total Expends
-            </span>
-            <p className="mt-0.5 text-[14px] font-semibold tabular-nums">$659.00</p>
-            <p className="mt-0.5 flex items-center gap-1 text-[9px] font-semibold text-emerald-600">
-              <ArrowUpRight className="h-2.5 w-2.5" />
-              5.23% <span className="font-normal text-[#9097A8]">vs last month</span>
-            </p>
-          </motion.div>
-
-          {/* Floating chip — Cash Available (bottom-mid) */}
-          <motion.div
-            initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 240, damping: 26, delay: 0.45 }}
-            className={cn(
-              "absolute -bottom-2 left-1/2 hidden -translate-x-1/3 rounded-xl border px-3.5 py-2.5 shadow-[0_12px_30px_-10px_rgba(11,13,18,0.18)] sm:block",
-              tokens.border,
-              tokens.cardBg,
-            )}
-          >
-            <span className="flex items-center gap-1.5 text-[10px] text-[#5A6072]">
-              <span className="rounded-md bg-[#F1F2F6] px-1 py-px text-[9px]">💸</span>
-              Cash Available
-            </span>
-            <p className="mt-0.5 text-[14px] font-semibold tabular-nums">$546.00</p>
-            <p className="mt-0.5 flex items-center gap-1 text-[9px] font-semibold text-rose-500">
-              <ArrowDownRight className="h-2.5 w-2.5" />
-              5.23% <span className="font-normal text-[#9097A8]">vs last month</span>
-            </p>
-          </motion.div>
+          <p className="mt-3 text-[10px] tracking-[0.02em] text-[#7E7B72]">
+            Indicative figures. Capital at risk. See prospectus for details.
+          </p>
         </motion.div>
       </div>
     </section>

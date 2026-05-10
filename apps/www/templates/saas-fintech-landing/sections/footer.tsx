@@ -2,94 +2,111 @@
 
 import { cn } from "@/lib/utils";
 import type { FintechThemeTokens } from "../components/theme";
-import { Instagram, Facebook, Twitter, Youtube } from "lucide-react";
+import { StaggerGroup, StaggerItem } from "../components/stagger";
+import { Twitter, Linkedin, Github, Rss } from "lucide-react";
 
 const columns = [
-  { title: "About", items: ["Partnership", "Terms of Use", "Privacy"] },
-  { title: "Product", items: ["About", "Features", "Support"] },
-  { title: "Resources", items: ["Career", "Blog", "Legal"] },
-  { title: "Contact", items: ["+123 456 789", "Los Angeles, CA"] },
+  { title: "Platform", items: ["Markets", "Strategy", "Custody", "API"] },
+  { title: "Research", items: ["Letters", "Notes", "Outlook"] },
+  { title: "Company", items: ["About", "Investors", "Careers", "Press"] },
+  { title: "Legal", items: ["Disclosures", "Privacy", "Terms"] },
 ];
 
 const socials = [
-  { Icon: Instagram, label: "Instagram", bg: "bg-[#E879A6]" },
-  { Icon: Facebook, label: "Facebook", bg: "bg-[#3B82F6]" },
-  { Icon: Twitter, label: "Twitter", bg: "bg-[#0EA5E9]" },
-  { Icon: Youtube, label: "YouTube", bg: "bg-[#EF4444]" },
+  { Icon: Twitter, label: "Twitter" },
+  { Icon: Linkedin, label: "LinkedIn" },
+  { Icon: Github, label: "GitHub" },
+  { Icon: Rss, label: "RSS" },
 ];
-
-function FooterBrandMark() {
-  return (
-    <span
-      className="flex h-6 w-6 items-center justify-center rounded-full"
-      style={{
-        background:
-          "radial-gradient(circle at 30% 30%, #FFF6CF, #F2E6A6 65%, #E5D77F)",
-      }}
-      aria-hidden
-    >
-      <span className="text-[10px] font-bold text-[#0B0D12]">b</span>
-    </span>
-  );
-}
 
 export default function Footer({ tokens }: { tokens: FintechThemeTokens }) {
   return (
-    <footer className={cn("border-t pt-12 pb-6", tokens.border)}>
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 sm:grid-cols-2 sm:px-6 md:grid-cols-[1.4fr_repeat(4,1fr)]">
+    <footer className={cn("border-t pt-16 pb-10", tokens.borderSoft)}>
+      <StaggerGroup
+        stagger={0.07}
+        delay={0.05}
+        className="mx-auto grid w-full max-w-[1200px] gap-12 px-5 sm:grid-cols-2 sm:px-8 md:grid-cols-[1.5fr_repeat(4,1fr)]"
+      >
         <div className="sm:col-span-2 md:col-span-1">
-          <FooterBrandMark />
-          <p
+          <span
             className={cn(
-              "mt-3 max-w-[240px] text-[12px] leading-relaxed",
-              tokens.textMuted,
+              "select-none text-[20px] font-light tracking-[-0.02em]",
+              tokens.serif,
+              tokens.text,
             )}
           >
-            Let us handle all your finances and guarantee secure transactions
+            Bayard<span className="opacity-50">.</span>
+          </span>
+          <p className={cn("mt-4 max-w-[28ch] text-[12px] leading-[1.6]", tokens.textMuted)}>
+            A patient-capital platform for individuals who think in decades.
+            Member SIPC. Capital at risk.
           </p>
-          <div className="mt-5 flex gap-2">
-            {socials.map(({ Icon, label, bg }) => (
-              <a
-                key={label}
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                aria-label={label}
-                className={cn(
-                  "flex h-7 w-7 items-center justify-center rounded-md text-white transition-transform hover:-translate-y-[1px]",
-                  bg,
-                )}
-              >
-                <Icon className="h-3.5 w-3.5" />
-              </a>
+          <StaggerGroup className="mt-6 flex gap-2" stagger={0.06}>
+            {socials.map(({ Icon, label }) => (
+              <StaggerItem key={label} as="span" y={6}>
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  aria-label={label}
+                  className={cn(
+                    "flex h-8 w-8 items-center justify-center rounded-full border",
+                    "[transition-property:transform,background-color,color] duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)]",
+                    "hover:-translate-y-px active:scale-[0.94]",
+                    tokens.outlinedBorder,
+                    tokens.textMuted,
+                    "hover:text-current",
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" strokeWidth={1.5} />
+                </a>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerGroup>
         </div>
 
         {columns.map((col) => (
-          <div key={col.title}>
-            <h4 className="text-[12px] font-semibold">{col.title}</h4>
-            <ul className={cn("mt-4 space-y-2.5 text-[12px]", tokens.textMuted)}>
+          <StaggerItem key={col.title} as="div" y={8}>
+            <h4
+              className={cn(
+                "text-[10px] font-medium uppercase tracking-[0.22em]",
+                tokens.textMuted,
+              )}
+            >
+              {col.title}
+            </h4>
+            <ul className={cn("mt-5 space-y-3 text-[12px]", tokens.text)}>
               {col.items.map((link) => (
                 <li
                   key={link}
-                  className="cursor-pointer transition-colors hover:text-current"
+                  className={cn(
+                    "cursor-pointer transition-colors duration-150",
+                    tokens.textMuted,
+                    "hover:text-current",
+                  )}
                 >
-                  {link}
+                  <span
+                    className="inline-block transition-transform duration-200 [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:translate-x-0.5"
+                  >
+                    {link}
+                  </span>
                 </li>
               ))}
             </ul>
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGroup>
 
       <div
         className={cn(
-          "mx-auto mt-10 w-full max-w-6xl border-t px-4 pt-5 text-center text-[11px] sm:px-6",
+          "mx-auto mt-14 flex w-full max-w-[1200px] flex-col items-start justify-between gap-2 border-t px-5 pt-6 text-[10px] sm:flex-row sm:items-center sm:px-8",
           tokens.borderSoft,
-          tokens.textMuted,
+          tokens.textSubtle,
         )}
       >
-        © 2025. All Rights Reserved.
+        <span className="tracking-[0.02em]">© 2026 Bayard Capital, Inc.</span>
+        <span className="tracking-[0.02em]">
+          Securities offered through Bayard Securities LLC. Member FINRA / SIPC.
+        </span>
       </div>
     </footer>
   );
