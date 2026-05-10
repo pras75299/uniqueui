@@ -28,11 +28,15 @@ export function ScrollProgress({ tokens }: { tokens: FintechThemeTokens }) {
     <motion.div
       aria-hidden
       className={cn(
-        "fixed inset-x-0 top-0 z-[60] h-px origin-left",
+        "fixed inset-x-0 top-0 z-60 h-px origin-left",
         tokens.text,
         "bg-current",
       )}
-      style={{ scaleX: reduceMotion ? 1 : scaleX, opacity: 0.55 }}
+      style={{
+        // With reduced motion, skip the spring so progress stays accurate.
+        scaleX: reduceMotion ? scrollYProgress : scaleX,
+        opacity: 0.55,
+      }}
     />
   );
 }
