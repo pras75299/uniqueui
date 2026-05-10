@@ -8,7 +8,13 @@ import { Lock, LineChart, ShieldCheck } from "lucide-react";
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 
-export default function FeaturesGrid({ tokens }: { tokens: FintechThemeTokens }) {
+export default function FeaturesGrid({
+  tokens,
+  className,
+}: {
+  tokens: FintechThemeTokens;
+  className?: string;
+}) {
   const reduceMotion = useReducedMotion();
 
   const items = [
@@ -30,7 +36,10 @@ export default function FeaturesGrid({ tokens }: { tokens: FintechThemeTokens })
   ];
 
   return (
-    <section id="research" className={cn("scroll-mt-32 py-20 sm:py-28", tokens.pageBg)}>
+    <section
+      id="research"
+      className={cn("scroll-mt-32 py-20 sm:py-28", tokens.pageBg, className)}
+    >
       <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
         <Reveal>
           <p className={cn("text-center text-[10px] font-medium uppercase tracking-[0.28em]", tokens.accentText)}>
@@ -69,7 +78,7 @@ export default function FeaturesGrid({ tokens }: { tokens: FintechThemeTokens })
                 tokens.cardBg,
                 /* Only background-color transitions via CSS — transform is
                    Motion's domain, so the two never overwrite each other. */
-                "[transition-property:background-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                "[transition-property:background-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none",
               )}
             >
               {/* Icon — translates only (no scale, so hover boundary stays
@@ -78,8 +87,8 @@ export default function FeaturesGrid({ tokens }: { tokens: FintechThemeTokens })
                 aria-hidden
                 className={cn(
                   "inline-flex",
-                  "[transition-property:transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)]",
-                  "group-hover:-translate-y-[3px]",
+                  "[transition-property:transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none",
+                  "group-hover:-translate-y-[3px] motion-reduce:group-hover:translate-y-0",
                 )}
               >
                 <item.Icon
@@ -108,23 +117,27 @@ export default function FeaturesGrid({ tokens }: { tokens: FintechThemeTokens })
                 {item.copy}
               </p>
 
-              {/* Link is its own named group — arrow no longer triggers on
-                  card hover, only on link hover. Press feedback added. */}
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
+              {/* Control is a button until a real destination exists — avoids
+                  fake `href=\"#\"` + preventDefault. */}
+              <button
+                type="button"
                 className={cn(
-                  "group/link mt-10 inline-flex w-fit items-center gap-1 border-b border-current pb-0.5 text-[12px] font-medium",
-                  "[transition-property:transform,color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]",
-                  "active:scale-[0.97]",
+                  "group/link mt-10 inline-flex w-fit cursor-pointer items-center gap-1 border-0 border-b border-current bg-transparent p-0 pb-0.5 text-left text-[12px] font-medium",
+                  "[transition-property:transform,color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none",
+                  "active:scale-[0.97] motion-reduce:active:scale-100",
                   tokens.text,
                 )}
               >
                 Read more
-                <span className="inline-block transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/link:translate-x-1">
+                <span
+                  className={cn(
+                    "inline-block transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none",
+                    "group-hover/link:translate-x-1 motion-reduce:group-hover/link:translate-x-0",
+                  )}
+                >
                   →
                 </span>
-              </a>
+              </button>
             </motion.div>
           ))}
         </div>

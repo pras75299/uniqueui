@@ -14,7 +14,13 @@ import type { FintechThemeTokens } from "./theme";
  * entrance — and it never starts from `scale(0)` because the
  * scroll origin sits at the left edge.
  */
-export function ScrollProgress({ tokens }: { tokens: FintechThemeTokens }) {
+export function ScrollProgress({
+  tokens,
+  className,
+}: {
+  tokens: FintechThemeTokens;
+  className?: string;
+}) {
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -31,6 +37,7 @@ export function ScrollProgress({ tokens }: { tokens: FintechThemeTokens }) {
         "fixed inset-x-0 top-0 z-60 h-px origin-left",
         tokens.text,
         "bg-current",
+        className,
       )}
       style={{
         // With reduced motion, skip the spring so progress stays accurate.
