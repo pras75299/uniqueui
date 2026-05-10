@@ -1,11 +1,13 @@
 import { TEMPLATES } from "@/config/templates";
 import { notFound } from "next/navigation";
 import SaasLanding from "@/templates/saas-landing";
+import SaasFintechLanding from "@/templates/saas-fintech-landing";
 import type { ComponentType } from "react";
 
 // Map of slug → template component (add new templates here)
 const TEMPLATE_COMPONENTS: Record<string, ComponentType> = {
   "saas-landing": SaasLanding,
+  "saas-fintech-landing": SaasFintechLanding,
 };
 
 export function generateStaticParams() {
