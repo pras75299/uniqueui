@@ -2,6 +2,16 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
 
+const MARQUEE_KEYFRAMES = `@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(var(--marquee-distance), 0, 0);
+  }
+}`;
+
 export interface InfiniteMarqueeProps {
   children: React.ReactNode;
   className?: string;
@@ -61,6 +71,7 @@ export function InfiniteMarquee({
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
     >
+      <style data-uniqueui-marquee="true">{MARQUEE_KEYFRAMES}</style>
       <div
         className="flex w-max"
         style={{

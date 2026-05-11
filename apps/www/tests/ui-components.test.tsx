@@ -197,8 +197,11 @@ describe("InfiniteMarquee", () => {
     );
 
     const outerContainer = container.firstChild as HTMLElement;
-    const animatedStrip = outerContainer.firstElementChild as HTMLElement;
+    const animatedStrip = outerContainer.querySelector(
+      'div[style*="animation-name: marquee-scroll"]'
+    ) as HTMLElement | null;
 
+    expect(animatedStrip).not.toBeNull();
     expect(animatedStrip.style.animationName).toBe("marquee-scroll");
     expect(animatedStrip.style.animationPlayState).toBe("running");
 
@@ -207,6 +210,19 @@ describe("InfiniteMarquee", () => {
 
     fireEvent.mouseLeave(outerContainer);
     expect(animatedStrip.style.animationPlayState).toBe("running");
+  });
+
+  it("ships its scrolling keyframes with the component", () => {
+    const { container } = render(
+      <InfiniteMarquee>
+        <MarqueeItem>Item C</MarqueeItem>
+      </InfiniteMarquee>
+    );
+
+    const styleTag = container.querySelector('style[data-uniqueui-marquee="true"]');
+    expect(styleTag).not.toBeNull();
+    expect(styleTag?.textContent).toContain("@keyframes marquee-scroll");
+    expect(styleTag?.textContent).toContain("var(--marquee-distance)");
   });
 
   it("does not pause on mouse enter when pauseOnHover is false", () => {

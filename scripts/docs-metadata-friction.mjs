@@ -40,7 +40,11 @@ try {
   const gitOut = execFileSync(
     "git",
     ["log", "--since=30 days ago", "--pretty=format:%H", "--", "registry/docs.json"],
-    { cwd: repoRoot, encoding: "utf8" }
+    {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }
   ).trim();
   touches30d = gitOut ? gitOut.split(/\r?\n/).length : 0;
 } catch {
@@ -57,14 +61,23 @@ const conflicts = conflictsRaw !== null ? Number.parseInt(conflictsRaw, 10) : nu
 const c2Triggered = conflicts !== null && Number.isFinite(conflicts) ? conflicts >= 3 : null;
 const c3Triggered = ownershipNeed === "yes" ? true : ownershipNeed === "no" ? false : null;
 const c4Triggered = toolingNeed === "yes" ? true : toolingNeed === "no" ? false : null;
+const hasAnyManualField =
+  conflictsRaw !== null || ownershipNeed !== null || toolingNeed !== null || action !== null;
+const hasAllManualFields =
+  conflicts !== null &&
+  c3Triggered !== null &&
+  c4Triggered !== null &&
+  action;
 const metCount =
   c2Triggered === null || c3Triggered === null || c4Triggered === null
     ? null
     : [c1Triggered, c2Triggered, c3Triggered, c4Triggered].filter(Boolean).length;
 const row =
-  conflicts === null || c3Triggered === null || c4Triggered === null || metCount === null || !action
-    ? null
-    : `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | ${conflicts} | ${ownershipNeed} | ${toolingNeed} | ${metCount} | ${action} |`;
+  !hasAnyManualField
+    ? `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | pending | pending | pending | pending | pending |`
+    : !hasAllManualFields || metCount === null
+      ? null
+      : `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | ${conflicts} | ${ownershipNeed} | ${toolingNeed} | ${metCount} | ${action} |`;
 
 const summary = [
   "Docs metadata friction snapshot",
@@ -80,8 +93,10 @@ const summary = [
 
 if (!shouldAppend) {
   console.log(summary);
-  if (row) {
+  if (hasAllManualFields && row) {
     console.log(`\nProposed log row:\n${row}`);
+  } else if (!hasAnyManualField) {
+    console.log("\n`--append` will add a row with `pending` manual columns for maintainers to fill in.");
   } else {
     console.log("\nProvide --conflicts <n> --ownership <yes|no> --tooling <yes|no> --action <text> to generate an appendable log row.");
   }
@@ -89,7 +104,7 @@ if (!shouldAppend) {
 }
 
 if (!row) {
-  console.error("ERROR: Missing required manual fields. Use --conflicts <n> --ownership <yes|no> --tooling <yes|no> --action <text> with --append.");
+  console.error("ERROR: Partial manual fields supplied. Provide all of --conflicts <n> --ownership <yes|no> --tooling <yes|no> --action <text>, or omit them all.");
   process.exit(1);
 }
 
