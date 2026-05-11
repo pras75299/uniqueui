@@ -6,6 +6,14 @@
 - pnpm 10.33.0 — `npm install -g pnpm@10.33.0`
 - Git
 
+## Package Manager Policy
+
+This repository uses **pnpm workspaces** as its development workflow.
+
+- Run install and scripts with `pnpm`
+- Treat `pnpm-lock.yaml` as the source of truth
+- Do not commit workspace `package-lock.json` files
+
 ## Local Setup
 
 ```bash
@@ -13,7 +21,7 @@ git clone https://github.com/pras75299/uniqueui.git
 cd uniqueui
 pnpm install
 pnpm build:registry
-cd apps/www && pnpm dev    # Docs site at localhost:3000
+pnpm dev                   # Docs site at localhost:3000
 ```
 
 ## Repository Structure

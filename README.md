@@ -39,6 +39,24 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 - 🧩 **Zero lock-in** — Uses standard React, Motion, and Tailwind CSS
 - 📱 **Dark-first design** — Every component looks great out of the box
 
+## Repo Map
+
+If you are exploring or contributing to the repository, these are the main places to start:
+
+- `apps/www` — Next.js docs and demo site
+- `packages/cli` — published `uniqueui-cli`
+- `registry/` — component source, metadata, and registry config
+- `scripts/` — build, verification, and release helpers
+- `docs/` — architecture notes and maintainer documentation
+
+**Start here:**
+
+- Want to use UniqueUI in an app? Continue with the installation section below.
+- Want to contribute a component or fix? Read [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+- Want to run the docs site locally? Run `pnpm dev` from the repo root or read [`BUILD.md`](./BUILD.md).
+
+> Repository development uses **pnpm workspaces**. Root commands in this repo assume `pnpm`, not `npm`.
+
 ## Components
 
 | Component | Category | Description |
