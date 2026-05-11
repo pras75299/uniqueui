@@ -3531,6 +3531,8 @@ export const componentDemos: Record<string, DemoComponent> = {
         className="min-h-0 flex-1"
         columns={5}
         meshRotationDuration={36}
+        titleClassName="text-white"
+        descriptionClassName="text-neutral-400"
         items={AMBIENT_GLASS_BENTO_SHOWCASE}
       />
     </div>
