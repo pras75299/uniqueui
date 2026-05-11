@@ -28,7 +28,7 @@ export default function ComponentPreview({ slug }: { slug: string }) {
       className={cn(
         "w-full rounded-xl border relative flex",
         isOutlinedMegaMark
-          ? "min-h-[460px] flex-col items-stretch"
+          ? "min-h-[min(32rem,82dvh)] flex-col items-stretch py-4 sm:py-6"
           : "min-h-[300px] items-center justify-center",
         hasOverflowHidden && "overflow-hidden",
         isDark ? "border-neutral-800 bg-neutral-950/50" : "border-neutral-200 bg-neutral-50/80"
@@ -52,7 +52,8 @@ export default function ComponentPreview({ slug }: { slug: string }) {
       <div
         className={cn(
           "relative z-10 w-full",
-          isOutlinedMegaMark && "flex min-h-0 flex-1 flex-col",
+          isOutlinedMegaMark &&
+            "flex w-full flex-col items-center justify-center",
         )}
       >
         <Demo theme={theme} />

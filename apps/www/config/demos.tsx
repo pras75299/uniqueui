@@ -2876,7 +2876,7 @@ export const componentDemos: Record<string, DemoComponent> = {
 
   "outlined-mega-mark": () => (
     <OutlinedMegaMark
-      containerClassName="flex min-h-full w-full flex-1 flex-col items-center justify-center px-3 pt-0 pb-2 md:pb-4"
+      containerClassName="flex w-full max-w-full flex-col items-center justify-center px-3 py-2 md:py-4"
       fontSize="clamp(7rem, 26vw, 14rem)"
       letterSpacing="-0.02em"
       strokeWidth={1}
