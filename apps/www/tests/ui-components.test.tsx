@@ -197,11 +197,16 @@ describe("InfiniteMarquee", () => {
     );
 
     const outerContainer = container.firstChild as HTMLElement;
-    // Should not throw and state transition should be handled silently
-    expect(() => {
-      fireEvent.mouseEnter(outerContainer);
-      fireEvent.mouseLeave(outerContainer);
-    }).not.toThrow();
+    const animatedStrip = outerContainer.firstElementChild as HTMLElement;
+
+    expect(animatedStrip.style.animationName).toBe("marquee-scroll");
+    expect(animatedStrip.style.animationPlayState).toBe("running");
+
+    fireEvent.mouseEnter(outerContainer);
+    expect(animatedStrip.style.animationPlayState).toBe("paused");
+
+    fireEvent.mouseLeave(outerContainer);
+    expect(animatedStrip.style.animationPlayState).toBe("running");
   });
 
   it("does not pause on mouse enter when pauseOnHover is false", () => {

@@ -1,7 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useAnimationControls } from "motion/react";
 
 export interface InfiniteMarqueeProps {
   children: React.ReactNode;
@@ -27,7 +26,6 @@ export function InfiniteMarquee({
   const [segmentWidth, setSegmentWidth] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const controls = useAnimationControls();
 
   useEffect(() => {
     const segment = segmentRef.current;
@@ -51,36 +49,10 @@ export function InfiniteMarquee({
     };
   }, [children, gap]);
 
-  const duration = segmentWidth / speed;
-  const startX = direction === "left" ? 0 : -segmentWidth;
-  const endX = direction === "left" ? -segmentWidth : 0;
+  const duration = segmentWidth > 0 ? segmentWidth / speed : 20;
+  const marqueeDistance = `${segmentWidth > 0 ? -segmentWidth : -1}px`;
   const repeatCount =
     segmentWidth > 0 ? Math.max(2, Math.ceil(containerWidth / segmentWidth) + 1) : 2;
-
-  useEffect(() => {
-    if (!segmentWidth) return;
-    controls.set({ x: startX });
-  }, [controls, startX, segmentWidth]);
-
-  useEffect(() => {
-    if (!segmentWidth) return;
-
-    if (isPaused) {
-      controls.stop();
-      return;
-    }
-
-    controls.set({ x: startX });
-    controls.start({
-      x: endX,
-      transition: {
-        duration: duration || 20,
-        repeat: Infinity,
-        repeatType: "loop",
-        ease: "linear",
-      },
-    });
-  }, [controls, direction, duration, endX, isPaused, segmentWidth, startX]);
 
   return (
     <div
@@ -89,10 +61,18 @@ export function InfiniteMarquee({
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
     >
-      <motion.div
+      <div
         className="flex w-max"
-        style={{ x: startX }}
-        animate={controls}
+        style={{
+          animationName: "marquee-scroll",
+          animationDuration: `${duration}s`,
+          animationTimingFunction: "linear",
+          animationIterationCount: "infinite",
+          animationDirection: direction === "left" ? "normal" : "reverse",
+          animationPlayState: isPaused ? "paused" : "running",
+          willChange: "transform",
+          ["--marquee-distance" as string]: marqueeDistance,
+        }}
       >
         {/* Measured original segment */}
         <div
@@ -112,7 +92,7 @@ export function InfiniteMarquee({
             {children}
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }

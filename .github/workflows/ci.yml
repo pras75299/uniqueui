@@ -43,8 +43,11 @@ jobs:
       - name: Run workspace tests
         run: pnpm test
 
-      - name: Lint docs site
-        run: pnpm --dir apps/www lint
+      - name: Lint workspaces
+        run: pnpm lint
+
+      - name: Check dead code
+        run: pnpm deadcode
 
       - name: Type-check CLI
         run: pnpm --dir packages/cli exec tsc --noEmit

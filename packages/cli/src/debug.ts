@@ -17,7 +17,7 @@ async function run() {
                 try {
                     const body = await res.text();
                     console.log('Error Body:', body.slice(0, 200));
-                } catch (e) {
+                } catch {
                     console.log('No body');
                 }
             } else {

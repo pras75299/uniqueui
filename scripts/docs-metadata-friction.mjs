@@ -13,6 +13,13 @@ const endMarker = "<!-- DOCS_METADATA_FRICTION_LOG_END -->";
 const args = new Set(process.argv.slice(2));
 const shouldAppend = args.has("--append");
 
+function getArgValue(flag) {
+  const argv = process.argv.slice(2);
+  const index = argv.indexOf(flag);
+  if (index === -1) return null;
+  return argv[index + 1] ?? null;
+}
+
 if (!fs.existsSync(docsJsonPath)) {
   console.error(`ERROR: Missing ${docsJsonPath}`);
   process.exit(1);
@@ -42,7 +49,22 @@ try {
 
 const c1Triggered = lineCount > 1500 || sizeKb > 200;
 const date = new Date().toISOString().slice(0, 10);
-const row = `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | TODO | TODO | TODO | TODO | TODO |`;
+const conflictsRaw = getArgValue("--conflicts");
+const ownershipNeed = getArgValue("--ownership");
+const toolingNeed = getArgValue("--tooling");
+const action = getArgValue("--action");
+const conflicts = conflictsRaw !== null ? Number.parseInt(conflictsRaw, 10) : null;
+const c2Triggered = conflicts !== null && Number.isFinite(conflicts) ? conflicts >= 3 : null;
+const c3Triggered = ownershipNeed === "yes" ? true : ownershipNeed === "no" ? false : null;
+const c4Triggered = toolingNeed === "yes" ? true : toolingNeed === "no" ? false : null;
+const metCount =
+  c2Triggered === null || c3Triggered === null || c4Triggered === null
+    ? null
+    : [c1Triggered, c2Triggered, c3Triggered, c4Triggered].filter(Boolean).length;
+const row =
+  conflicts === null || c3Triggered === null || c4Triggered === null || metCount === null || !action
+    ? null
+    : `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | ${conflicts} | ${ownershipNeed} | ${toolingNeed} | ${metCount} | ${action} |`;
 
 const summary = [
   "Docs metadata friction snapshot",
@@ -58,8 +80,17 @@ const summary = [
 
 if (!shouldAppend) {
   console.log(summary);
-  console.log(`\nProposed log row:\n${row}`);
+  if (row) {
+    console.log(`\nProposed log row:\n${row}`);
+  } else {
+    console.log("\nProvide --conflicts <n> --ownership <yes|no> --tooling <yes|no> --action <text> to generate an appendable log row.");
+  }
   process.exit(0);
+}
+
+if (!row) {
+  console.error("ERROR: Missing required manual fields. Use --conflicts <n> --ownership <yes|no> --tooling <yes|no> --action <text> with --append.");
+  process.exit(1);
 }
 
 const logRaw = fs.readFileSync(logPath, "utf8");

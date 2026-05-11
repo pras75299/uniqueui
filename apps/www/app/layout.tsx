@@ -16,13 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased" suppressHydrationWarning>
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem("uniqueui-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;else document.documentElement.dataset.theme="dark";})();`,
-          }}
-        />
+        <Script id="theme-init" src="/theme-init.js" strategy="beforeInteractive" />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
