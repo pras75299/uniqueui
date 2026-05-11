@@ -1042,5 +1042,21 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "import { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function Hero() {\n  return (\n    <RefractiveCursorLens\n      size={200}\n      displacementScale={36}\n      springConfig={{ stiffness: 90, damping: 18 }}\n      className=\"min-h-[60vh] flex items-center justify-center\"\n    >\n      <h1 className=\"text-7xl font-bold tracking-tight\">\n        Trail your cursor.\n      </h1>\n    </RefractiveCursorLens>\n  );\n}"
       }
     ]
+  },
+  "ambient-glass-bento": {
+    "slug": "ambient-glass-bento",
+    "overview": "AmbientGlassBento lays out feature tiles on a `md:grid-cols-5` track with alternating `md:col-span-3` and `md:col-span-2` cells. Each card stacks three absolutely-positioned radial blobs that drift on independent mirrored motion timelines (subtle overshoot-style easing on the top accent). A per-tile SVG feTurbulence overlay approximates film grain without remote image hosts. `prefers-reduced-motion` freezes the ambient motion. Export `AMBIENT_GLASS_BENTO_SHOWCASE` mirrors the marketing reference grid.",
+    "scenarios": [
+      {
+        "title": "Custom palette tiles",
+        "description": "Pass your own items array with brand spotColors (hex, rgb, or oklch strings) and alternate colSpan 3/2 for the staggered bento rhythm.",
+        "code": "import { AmbientGlassBento } from \"@/components/ui/ambient-glass-bento\";\n\nconst items = [\n  {\n    title: \"Ship faster\",\n    description: \"Opinionated defaults with room to grow.\",\n    colSpan: 3 as const,\n    tightCopy: true,\n    spotColors: [\"#a78bfa\", \"#6366f1\", \"#c4b5fd\"] as const,\n  },\n  {\n    title: \"Stay reliable\",\n    description: \"Health checks and rollbacks baked in.\",\n    colSpan: 2 as const,\n    spotColors: [\"#38bdf8\", \"#0ea5e9\", \"#bae6fd\"] as const,\n  },\n];\n\nexport default function TwoTileStrip() {\n  return (\n    <div className=\"max-w-4xl p-4\">\n      <AmbientGlassBento items={items} />\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Light section background",
+        "description": "Place the grid on neutral-100/200 page sections; cards already include light and dark mode glass shadows.",
+        "code": "import {\n  AmbientGlassBento,\n  AMBIENT_GLASS_BENTO_SHOWCASE,\n} from \"@/components/ui/ambient-glass-bento\";\n\nexport default function Section() {\n  return (\n    <section className=\"rounded-3xl bg-neutral-100 py-12 dark:bg-neutral-950\">\n      <div className=\"mx-auto max-w-5xl px-4\">\n        <AmbientGlassBento items={AMBIENT_GLASS_BENTO_SHOWCASE} />\n      </div>\n    </section>\n  );\n}"
+      }
+    ]
   }
 };

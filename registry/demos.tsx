@@ -65,6 +65,10 @@ import { IridescentFoilButton } from "@/components/ui/iridescent-foil-button";
 import { KineticVariableHeadline } from "@/components/ui/kinetic-variable-headline";
 import { CausticLightCard } from "@/components/ui/caustic-light-card";
 import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
+import {
+  AmbientGlassBento,
+  AMBIENT_GLASS_BENTO_SHOWCASE,
+} from "@/components/ui/ambient-glass-bento";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3510,6 +3514,18 @@ export const componentDemos: Record<string, DemoComponent> = {
           </article>
         </div>
       </RefractiveCursorLens>
+    </div>
+  ),
+  "ambient-glass-bento": ({ theme = "dark" }) => (
+    <div
+      className={cn(
+        "w-full max-w-5xl rounded-xl border p-4",
+        theme === "dark"
+          ? "border-neutral-800 bg-neutral-950"
+          : "border-neutral-200 bg-neutral-100",
+      )}
+    >
+      <AmbientGlassBento items={AMBIENT_GLASS_BENTO_SHOWCASE} />
     </div>
   ),
 };

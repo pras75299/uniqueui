@@ -130,6 +130,24 @@
       ]
     },
     {
+      "name": "ambient-glass-bento",
+      "type": "registry:ui",
+      "title": "Ambient Glass Bento",
+      "description": "A responsive 5-column bento grid of glassy tiles: three drifting radial colour blobs per card, SVG film grain, and a soft top accent line — all animated with motion while copy stays sharp on top.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ambient-glass-bento.tsx",
+          "type": "registry:component",
+          "target": "components/ui/ambient-glass-bento.tsx"
+        }
+      ]
+    },
+    {
       "name": "magnetic-button",
       "type": "registry:ui",
       "title": "Magnetic Button",

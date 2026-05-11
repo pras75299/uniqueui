@@ -15,6 +15,7 @@ import {
   LayoutGrid,
   Loader2,
   LucideFocus,
+  LucideLayoutGrid,
   LucideMaximize2,
   LucideMessageSquare,
   LucideMousePointer,
@@ -80,6 +81,7 @@ const iconMap = {
   LayoutGrid,
   Loader2,
   LucideFocus,
+  LucideLayoutGrid,
   LucideMaximize2,
   LucideMessageSquare,
   LucideMousePointer,
@@ -2996,6 +2998,27 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[460px] w-full rounded-2xl border bg-neutral-950\">\n      <RefractiveCursorLens className=\"h-full w-full\">\n        <div className=\"flex h-full items-center justify-center px-10\">\n          <article className=\"max-w-xl\">\n            <h2 className=\"text-4xl font-semibold tracking-tight text-white\">\n              Move your cursor anywhere here.\n            </h2>\n            <p className=\"mt-4 text-base text-neutral-300\">\n              The lens follows you and refracts the content underneath — type,\n              gradients, images. Clicks pass straight through.\n            </p>\n          </article>\n        </div>\n      </RefractiveCursorLens>\n    </div>\n  );\n}\n"
+  },
+  {
+    "slug": "ambient-glass-bento",
+    "name": "Ambient Glass Bento",
+    "description": "A responsive 5-column bento grid of glassy tiles: three drifting radial colour blobs per card, SVG film grain, and a soft top accent line — all animated with motion while copy stays sharp on top.",
+    "icon": "LucideLayoutGrid",
+    "category": "Data & Layout",
+    "addedAt": "2026-05-11",
+    "props": [
+      {
+        "name": "items",
+        "type": "readonly AmbientGlassBentoItem[]",
+        "description": "Each tile: title, description, colSpan (2 or 3 on md), spotColors tuple of three CSS colours, optional tightCopy for max-w-md body width."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Merged onto the outer grid container."
+      }
+    ],
+    "usageCode": "import {\n  AmbientGlassBento,\n  AMBIENT_GLASS_BENTO_SHOWCASE,\n} from \"@/components/ui/ambient-glass-bento\";\n\nexport default function Example() {\n  return (\n    <div className=\"w-full max-w-5xl p-4\">\n      <AmbientGlassBento items={AMBIENT_GLASS_BENTO_SHOWCASE} />\n    </div>\n  );\n}\n"
   }
 ] satisfies ComponentDefinition[];
 

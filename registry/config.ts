@@ -81,6 +81,14 @@ export const registry: Registry = [
         ],
     },
     {
+        name: "ambient-glass-bento",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "ambient-glass-bento/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
         name: "magnetic-button",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
