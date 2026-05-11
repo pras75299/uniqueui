@@ -36,69 +36,53 @@ export type AmbientGlassBentoProps = Omit<
 };
 
 const cardShell =
-  "group relative h-full w-full overflow-hidden rounded-2xl border-0 bg-neutral-200/95 p-0 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.55),0_1px_0_0_rgb(255_255_255/0.35)] backdrop-blur-sm dark:bg-neutral-800/95 dark:shadow-[inset_0_1px_0_0_rgb(0_0_0/0.45),0_1px_0_0_rgb(0_0_0/0.35)]";
+  "group relative h-full w-full overflow-hidden rounded-2xl border-0 bg-neutral-200 p-0 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.55),0_1px_0_0_rgb(255_255_255/0.35)] dark:bg-neutral-800 dark:shadow-[inset_0_1px_0_0_rgb(0_0_0/0.45),0_1px_0_0_rgb(0_0_0/0.35)]";
 
-const driftTransition = (duration: number) =>
-  ({
-    duration,
-    repeat: Infinity,
-    repeatType: "mirror" as const,
-    ease: [0.45, 0.05, 0.55, 0.95] as const,
-  });
-
-function DriftingBlob({
-  color,
-  opacity,
-  leftPct,
-  topPct,
-  widthPct,
-  xPath,
-  yPath,
-  duration,
+/** Single soft mesh; slow linear rotation so colour washes move smoothly inside the card. */
+function AmbientMesh({
+  c0,
+  c1,
+  c2,
 }: {
-  color: string;
-  opacity: number;
-  leftPct: string;
-  topPct: string;
-  widthPct: string;
-  xPath: number[];
-  yPath: number[];
-  duration: number;
+  c0: string;
+  c1: string;
+  c2: string;
 }) {
   const reduce = useReducedMotion();
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute"
-      style={
-        {
-          left: leftPct,
-          top: topPct,
-          width: widthPct,
-          aspectRatio: "1",
-          transform: "translate(-50%, -50%)",
-        } as CSSProperties
-      }
+      className="pointer-events-none absolute inset-0 overflow-hidden"
     >
-      <motion.div
-        className="h-full w-full rounded-full blur-3xl"
-        style={
-          {
-            opacity,
-            background: `radial-gradient(circle closest-side, ${color}, transparent 68%)`,
-          } as CSSProperties
-        }
-        initial={false}
-        animate={
-          reduce
-            ? undefined
-            : {
-                x: xPath,
-                y: yPath,
-              }
-        }
-        transition={reduce ? undefined : driftTransition(duration)}
-      />
+      <div
+        className="absolute left-1/2 top-1/2 h-[210%] w-[210%]"
+        style={{ transform: "translate(-50%, -50%)" }}
+      >
+        <motion.div
+          className="h-full w-full blur-3xl"
+          style={
+            {
+              opacity: 0.92,
+              background: `
+                radial-gradient(circle 40% at 30% 36%, ${c0}, transparent 70%),
+                radial-gradient(circle 36% at 70% 44%, ${c1}, transparent 70%),
+                radial-gradient(circle 34% at 48% 74%, ${c2}, transparent 72%)
+              `,
+            } as CSSProperties
+          }
+          initial={false}
+          animate={reduce ? undefined : { rotate: [0, 360] }}
+          transition={
+            reduce
+              ? undefined
+              : {
+                  duration: 48,
+                  repeat: Infinity,
+                  ease: "linear",
+                }
+          }
+        />
+      </div>
     </div>
   );
 }
@@ -150,41 +134,7 @@ function AmbientGlassBentoCard({
 
   return (
     <div className={cardShell}>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        <DriftingBlob
-          color={c0}
-          opacity={0.4}
-          leftPct="58%"
-          topPct="42%"
-          widthPct="92%"
-          xPath={[0, 22, -16, 10, 0]}
-          yPath={[0, -18, 14, -9, 0]}
-          duration={13.5}
-        />
-        <DriftingBlob
-          color={c1}
-          opacity={0.3}
-          leftPct="38%"
-          topPct="36%"
-          widthPct="78%"
-          xPath={[0, -18, 14, -8, 0]}
-          yPath={[0, 16, -12, 8, 0]}
-          duration={11.2}
-        />
-        <DriftingBlob
-          color={c2}
-          opacity={0.25}
-          leftPct="72%"
-          topPct="58%"
-          widthPct="88%"
-          xPath={[0, 16, -20, 12, 0]}
-          yPath={[0, 12, -18, 9, 0]}
-          duration={15.8}
-        />
-      </div>
+      <AmbientMesh c0={c0} c1={c1} c2={c2} />
 
       <CardNoiseOverlay filterId={filterId} />
 
@@ -204,10 +154,10 @@ function AmbientGlassBentoCard({
           reduce
             ? undefined
             : {
-                duration: 8.4,
+                duration: 11,
                 repeat: Infinity,
                 repeatType: "mirror",
-                ease: [0.34, 1.22, 0.64, 1],
+                ease: [0.42, 0, 0.58, 1],
               }
         }
       />
@@ -227,10 +177,10 @@ function AmbientGlassBentoCard({
 }
 
 /**
- * Asymmetric 2×2 **bento** grid of glassy feature tiles. Each tile drifts three
- * soft colour blobs behind the copy (springy mirrored motion) plus a film-grain
- * overlay — text stays in a high `z-index` layer so it stays crisp. Honors
- * `prefers-reduced-motion` (static layout, no drift).
+ * Asymmetric 2×2 **bento** grid of glassy feature tiles. Each tile uses one
+ * oversized radial mesh that **rotates slowly** with linear easing so the wash
+ * moves smoothly inside the frame; film-grain sits above. Copy stays on a high
+ * `z-index`. Honors `prefers-reduced-motion` (static mesh).
  */
 export function AmbientGlassBento({
   items,
