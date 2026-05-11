@@ -2880,8 +2880,8 @@ export const componentDemos: Record<string, DemoComponent> = {
       fontSize="clamp(7rem, 26vw, 14rem)"
       letterSpacing="-0.02em"
       strokeWidth={1}
-      lightStrokeColor="var(--color-neutral-400)"
-      darkStrokeColor="var(--color-neutral-500)"
+      lightStrokeColor="var(--color-neutral-400, #a3a3a3)"
+      darkStrokeColor="var(--color-neutral-200, #e5e5e5)"
       gradientOnHover
       outlineGradient={{
         stops: ["#fde68a", "#f97316", "#ec4899"],

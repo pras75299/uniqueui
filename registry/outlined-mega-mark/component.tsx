@@ -17,8 +17,8 @@ import { cn } from "@/lib/utils";
 /** Responsive mega type: floor 6rem, cap 14.25rem, `10vw` active across typical viewports. */
 const DEFAULT_FONT_SIZE = "clamp(6rem, 10vw, 14.25rem)";
 const DEFAULT_LETTER_SPACING = "-0.02em";
-const DEFAULT_LIGHT_STROKE = "var(--color-neutral-300)";
-const DEFAULT_DARK_STROKE = "var(--color-neutral-700)";
+const DEFAULT_LIGHT_STROKE = "var(--color-neutral-500, #737373)";
+const DEFAULT_DARK_STROKE = "var(--color-neutral-300, #d4d4d4)";
 const DEFAULT_STROKE_WIDTH = 1;
 /** Stroke is clamped so it never renders thicker than one device pixel layer (overrides larger prop values). */
 const MAX_STROKE_PX = 1;
@@ -515,7 +515,7 @@ function OutlinedMegaMarkSvg({
             r={spotRadius}
           >
             <stop offset="0%" stopColor="white" />
-            <stop offset="42%" stopColor="white" stopOpacity={0.75} />
+            <stop offset="52%" stopColor="white" stopOpacity={0.55} />
             <stop offset="100%" stopColor="black" />
           </radialGradient>
           <radialGradient
@@ -526,7 +526,7 @@ function OutlinedMegaMarkSvg({
             r={spotRadius}
           >
             <stop offset="0%" stopColor="black" />
-            <stop offset="42%" stopColor="#434343" />
+            <stop offset="52%" stopColor="#2a2a2a" />
             <stop offset="100%" stopColor="white" />
           </radialGradient>
           <linearGradient
@@ -609,11 +609,10 @@ function OutlinedMegaMarkSvg({
           fill="none"
           stroke={`url(#${gradId}-idle)`}
           strokeWidth={strokeWidthCss}
-          vectorEffect="nonScalingStroke"
           shapeRendering="geometricPrecision"
-          strokeLinejoin="round"
+          strokeLinejoin="bevel"
           strokeLinecap="round"
-          paintOrder="stroke fill"
+          strokeMiterlimit={1.42}
           mask={pointerSvg ? `url(#${idleSubtractMaskId})` : undefined}
           style={{
             fontSize,
@@ -631,11 +630,10 @@ function OutlinedMegaMarkSvg({
           fill="none"
           stroke={`url(#${gradId})`}
           strokeWidth={strokeWidthCss}
-          vectorEffect="nonScalingStroke"
           shapeRendering="geometricPrecision"
-          strokeLinejoin="round"
+          strokeLinejoin="bevel"
           strokeLinecap="round"
-          paintOrder="stroke fill"
+          strokeMiterlimit={1.42}
           mask={`url(#${spotMaskId})`}
           style={{
             fontSize,

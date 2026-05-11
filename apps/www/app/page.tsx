@@ -1076,8 +1076,8 @@ export default function Home() {
             fontSize="clamp(5rem, 13vw + 1rem, 12.5rem)"
             letterSpacing="-0.01em"
             strokeWidth={1}
-            lightStrokeColor="var(--color-neutral-200)"
-            darkStrokeColor="var(--color-neutral-700)"
+            lightStrokeColor="var(--color-neutral-200, #e5e5e5)"
+            darkStrokeColor="var(--color-neutral-400, #a3a3a3)"
             gradientOnHover
           >
             UniqueUI

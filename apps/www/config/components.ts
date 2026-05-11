@@ -2161,13 +2161,13 @@ const componentDefinitions = [
       {
         "name": "lightStrokeColor",
         "type": "string",
-        "default": "\"var(--color-neutral-300)\"",
+        "default": "\"var(--color-neutral-500, #737373)\"",
         "description": "Outline colour when the page is in light mode."
       },
       {
         "name": "darkStrokeColor",
         "type": "string",
-        "default": "\"var(--color-neutral-700)\"",
+        "default": "\"var(--color-neutral-300, #d4d4d4)\"",
         "description": "Outline colour when the page is in dark mode."
       },
       {
@@ -2214,7 +2214,7 @@ const componentDefinitions = [
         "description": "Optional Tailwind classes on the SVG (gradient mode) or inner paragraph (plain mode)."
       }
     ],
-    "usageCode": "\"use client\";\nimport { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function LandingFooter() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark\n        fontSize=\"clamp(7rem, 26vw, 14rem)\"\n        letterSpacing=\"-0.02em\"\n        strokeWidth={1}\n        lightStrokeColor=\"var(--color-neutral-400)\"\n        darkStrokeColor=\"var(--color-neutral-500)\"\n        gradientOnHover\n        outlineGradient={{\n          stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n          x1: \"0%\",\n          y1: \"0%\",\n          x2: \"100%\",\n          y2: \"0%\",\n        }}\n      >\n        UniqueUI\n      </OutlinedMegaMark>\n    </footer>\n  );\n}\n"
+    "usageCode": "\"use client\";\nimport { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function LandingFooter() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark\n        fontSize=\"clamp(7rem, 26vw, 14rem)\"\n        letterSpacing=\"-0.02em\"\n        strokeWidth={1}\n        lightStrokeColor=\"var(--color-neutral-400, #a3a3a3)\"\n        darkStrokeColor=\"var(--color-neutral-200, #e5e5e5)\"\n        gradientOnHover\n        outlineGradient={{\n          stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n          x1: \"0%\",\n          y1: \"0%\",\n          x2: \"100%\",\n          y2: \"0%\",\n        }}\n      >\n        UniqueUI\n      </OutlinedMegaMark>\n    </footer>\n  );\n}\n"
   },
   {
     "slug": "blur-reveal",
