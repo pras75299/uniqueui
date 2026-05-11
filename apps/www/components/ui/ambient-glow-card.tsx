@@ -209,7 +209,7 @@ export function AmbientGlowCard({
   const hasCustomSurface = surface.length > 0;
   const composedStyle: CSSProperties = {
     minHeight,
-    ...(hasCustomSurface ? { backgroundColor: surface } : null),
+    ...(hasCustomSurface ? { backgroundColor: surface } : {}),
     ...style,
   };
 
