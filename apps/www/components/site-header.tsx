@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
-import { ArrowLeft, Github } from "lucide-react";
+import { ArrowLeft, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
@@ -134,7 +134,7 @@ export function SiteHeader({ trailing, className }: SiteHeaderProps) {
             )}
             aria-label="UniqueUI on GitHub"
           >
-            <Github className="h-4 w-4 shrink-0" aria-hidden />
+            <Globe className="h-4 w-4 shrink-0" aria-hidden />
             <span className="hidden text-sm sm:inline">GitHub</span>
           </a>
           <ThemeToggle />

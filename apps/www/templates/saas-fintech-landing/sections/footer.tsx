@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import type { FintechThemeTokens } from "../components/theme";
 import { StaggerGroup, StaggerItem } from "../components/stagger";
-import { Twitter, Linkedin, Github, Rss } from "lucide-react";
+import { Share2, Link2, Globe, Rss } from "lucide-react";
 
 const columns = [
   { title: "Platform", items: ["Markets", "Strategy", "Custody", "API"] },
@@ -13,9 +13,9 @@ const columns = [
 ];
 
 const socials = [
-  { Icon: Twitter, label: "Twitter" },
-  { Icon: Linkedin, label: "LinkedIn" },
-  { Icon: Github, label: "GitHub" },
+  { Icon: Share2, label: "X" },
+  { Icon: Link2, label: "LinkedIn" },
+  { Icon: Globe, label: "GitHub" },
   { Icon: Rss, label: "RSS" },
 ];
 

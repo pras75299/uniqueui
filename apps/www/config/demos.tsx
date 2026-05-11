@@ -89,9 +89,8 @@ import {
   Bell,
   Palette,
   Clock,
-  Github,
-  Linkedin,
-  Twitter,
+  Link2,
+  Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -3239,19 +3238,19 @@ export const componentDemos: Record<string, DemoComponent> = {
           socials={[
             {
               id: "x",
-              icon: <Twitter size={14} />,
-              label: "Twitter",
+              icon: <Share2 size={14} />,
+              label: "X",
               href: "https://x.com",
             },
             {
               id: "in",
-              icon: <Linkedin size={14} />,
+              icon: <Link2 size={14} />,
               label: "LinkedIn",
               href: "https://linkedin.com",
             },
             {
               id: "gh",
-              icon: <Github size={14} />,
+              icon: <Globe size={14} />,
               label: "GitHub",
               href: "https://github.com",
             },

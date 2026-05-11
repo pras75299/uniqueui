@@ -59,10 +59,12 @@ function ensureUseClient(code: string): string {
 }
 
 /**
- * Escape a string for safe inline use inside JSX attributes.
+ * Emit a JSX child expression that renders `s` verbatim. Required for docs copy
+ * that may contain `{`, `}`, `<`, backticks, quotes, etc. — raw JSX text would
+ * be parsed as JSX/JS and break compilation (e.g. `prop={false}` in an overview).
  */
-function escapeJsx(str: string): string {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function jsxExprString(s: string): string {
+    return `{${JSON.stringify(s)}}`;
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -297,8 +299,8 @@ async function run() {
         // ── Hub page: lists demo + all scenario links ────────────────────────
         const scenarioItems = comp.scenarios.map((s, i) => [
             `        <a href="/${comp.slug}/scenario-${i + 1}" style={{ display: 'block', padding: '14px 16px', border: '1px solid #e2e8f0', borderRadius: '8px', textDecoration: 'none', color: 'inherit', background: '#fff', transition: 'box-shadow 0.15s' }}>`,
-            `          <div style={{ fontWeight: 600, fontSize: '14px', color: '#1a202c' }}>Scenario ${i + 1}: ${escapeJsx(s.title)}</div>`,
-            `          <div style={{ fontSize: '12px', color: '#718096', marginTop: '4px' }}>${escapeJsx(s.description)}</div>`,
+            `          <div style={{ fontWeight: 600, fontSize: '14px', color: '#1a202c' }}>${jsxExprString(`Scenario ${i + 1}: ${s.title}`)}</div>`,
+            `          <div style={{ fontSize: '12px', color: '#718096', marginTop: '4px' }}>${jsxExprString(s.description)}</div>`,
             `        </a>`,
         ].join('\n')).join('\n');
 
@@ -309,7 +311,7 @@ async function run() {
             `      <a href="/" style={{ fontSize: '13px', color: '#6366f1', textDecoration: 'none' }}>← Back to index</a>`,
             `      <h1 style={{ fontSize: '28px', fontWeight: 700, margin: '12px 0 8px' }}>${comp.slug}</h1>`,
             comp.overview
-                ? `      <p style={{ color: '#4a5568', fontSize: '15px', maxWidth: '600px', lineHeight: 1.6, marginBottom: '28px' }}>${escapeJsx(comp.overview)}</p>`
+                ? `      <p style={{ color: '#4a5568', fontSize: '15px', maxWidth: '600px', lineHeight: 1.6, marginBottom: '28px' }}>${jsxExprString(comp.overview)}</p>`
                 : `      <div style={{ marginBottom: '28px' }} />`,
             `      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>`,
             `        <a href="/${comp.slug}/demo" style={{ display: 'block', padding: '14px 16px', border: '2px solid #6366f1', borderRadius: '8px', textDecoration: 'none', background: '#eef2ff' }}>`,
@@ -359,7 +361,7 @@ async function run() {
         `      <td style={{ padding: '10px 14px', color: '#718096', fontSize: '13px' }}>`,
         c.scenarios.length > 0
             ? c.scenarios.map((s, i) =>
-                `        <a href="/${c.slug}/scenario-${i + 1}" style={{ color: '#6366f1', textDecoration: 'none', marginRight: '8px', display: 'inline-block' }}>${i + 1}. ${escapeJsx(s.title)}</a>`
+                `        <a href="/${c.slug}/scenario-${i + 1}" style={{ color: '#6366f1', textDecoration: 'none', marginRight: '8px', display: 'inline-block' }}>${jsxExprString(`${i + 1}. ${s.title}`)}</a>`
               ).join('\n')
             : `        <span style={{ color: '#cbd5e0' }}>—</span>`,
         `      </td>`,
