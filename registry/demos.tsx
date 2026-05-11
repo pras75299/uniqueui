@@ -3525,6 +3525,8 @@ export const componentDemos: Record<string, DemoComponent> = {
     >
       <AmbientGlassBento
         className="min-h-0 flex-1"
+        columns={5}
+        meshRotationDuration={36}
         items={AMBIENT_GLASS_BENTO_SHOWCASE}
       />
     </div>

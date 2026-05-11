@@ -17,15 +17,61 @@ function safeColor(input: string, fallback: string): string {
   return SAFE_CSS_COLOR.test(t) ? t : fallback;
 }
 
+function clamp(n: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, n));
+}
+
+const SPAN_CLASS: Record<number, string> = {
+  1: "md:col-span-1",
+  2: "md:col-span-2",
+  3: "md:col-span-3",
+  4: "md:col-span-4",
+  5: "md:col-span-5",
+  6: "md:col-span-6",
+  7: "md:col-span-7",
+  8: "md:col-span-8",
+  9: "md:col-span-9",
+  10: "md:col-span-10",
+  11: "md:col-span-11",
+  12: "md:col-span-12",
+};
+
+const COLS_CLASS: Record<number, string> = {
+  2: "md:grid-cols-2",
+  3: "md:grid-cols-3",
+  4: "md:grid-cols-4",
+  5: "md:grid-cols-5",
+  6: "md:grid-cols-6",
+  7: "md:grid-cols-7",
+  8: "md:grid-cols-8",
+  9: "md:grid-cols-9",
+  10: "md:grid-cols-10",
+  11: "md:grid-cols-11",
+  12: "md:grid-cols-12",
+};
+
 export type AmbientGlassBentoItem = {
+  /** Primary heading (plain text). */
   title: string;
+  /** Supporting copy (plain text). */
   description: string;
-  /** `md` column span out of 5 — use `3` + `2` pairs for the classic bento rhythm. */
-  colSpan: 2 | 3;
-  /** Three blob colours (largest visual weight uses the first stop). */
+  /**
+   * Column span at `md+` within `columns`. Clamped to `1…columns`.
+   * Example: with `columns={5}`, use `3` and `2` for a classic bento row.
+   */
+  colSpan: number;
+  /** Three CSS colours for the moving radial wash (hex, rgb, oklch, etc.). */
   spotColors: readonly [string, string, string];
-  /** Wider readable measure for the body line (matches the reference layout). */
+  /** Solid card surface behind the mesh (any valid CSS colour). */
+  cardBackground?: string;
+  /** Narrower measure for the description block. */
   tightCopy?: boolean;
+  /** Extra classes on the outer card shell (surface + overflow clip). */
+  cardClassName?: string;
+  /** Overrides default title typography when set. */
+  titleClassName?: string;
+  /** Overrides default body typography when set. */
+  descriptionClassName?: string;
 };
 
 export type AmbientGlassBentoProps = Omit<
@@ -33,52 +79,112 @@ export type AmbientGlassBentoProps = Omit<
   "children"
 > & {
   items: readonly AmbientGlassBentoItem[];
+  /**
+   * Number of equal columns at `md+` (the “how many tracks per row” control).
+   * Allowed: 2–12. Default: 5.
+   */
+  columns?: number;
+  /**
+   * When `true`, `md+` uses two equal-height rows (`1fr` / `1fr`) so cards
+   * stretch in the preview / fixed-height parents. When `false`, row heights
+   * follow content (`minmax(0,auto)` flow).
+   */
+  equalHeightRows?: boolean;
+  /** Seconds for one full 360° rotation of the colour mesh. Default 42. */
+  meshRotationDuration?: number;
+  /** Disable moving gradients (still respects `prefers-reduced-motion`). */
+  ambientMotion?: boolean;
+  /** Gap scale between cards. Default `md`. */
+  gap?: "sm" | "md" | "lg";
+  /** Merged onto every card shell after defaults. */
+  cardClassName?: string;
+  /** Default heading classes (merged with each item’s `titleClassName`). */
+  titleClassName?: string;
+  /** Default description classes (merged with each item’s `descriptionClassName`). */
+  descriptionClassName?: string;
 };
 
-const cardShell =
-  "group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border-0 bg-neutral-200 p-0 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.55),0_1px_0_0_rgb(255_255_255/0.35)] dark:bg-neutral-900 dark:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.06),0_1px_0_0_rgb(0_0_0/0.45)]";
+const cardShellBase =
+  "group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border-0 p-0 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.55),0_1px_0_0_rgb(255_255_255/0.35)] dark:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.06),0_1px_0_0_rgb(0_0_0/0.45)]";
 
-/** Single soft mesh; slow linear rotation so colour washes move smoothly inside the card. */
+const defaultCardTint =
+  "bg-neutral-200 dark:bg-neutral-900";
+
+const gapClass = {
+  sm: "gap-2 md:gap-3",
+  md: "gap-3 md:gap-4",
+  lg: "gap-4 md:gap-5",
+} as const;
+
+/** Moving colour field: linear spin + mirrored translate so motion reads clearly. */
 function AmbientMesh({
   c0,
   c1,
   c2,
+  rotateDuration,
+  motionEnabled,
 }: {
   c0: string;
   c1: string;
   c2: string;
+  rotateDuration: number;
+  motionEnabled: boolean;
 }) {
   const reduce = useReducedMotion();
+  const off = reduce || !motionEnabled;
+
   return (
     <div
       aria-hidden
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
       <div
-        className="absolute left-1/2 top-1/2 h-[210%] w-[210%]"
+        className="absolute left-1/2 top-1/2 h-[220%] w-[220%]"
         style={{ transform: "translate(-50%, -50%)" }}
       >
         <motion.div
-          className="h-full w-full blur-3xl"
+          className="h-full w-full will-change-transform blur-3xl"
           style={
             {
-              opacity: 0.72,
+              opacity: 0.82,
               background: `
-                radial-gradient(circle 40% at 30% 36%, ${c0}, transparent 70%),
-                radial-gradient(circle 36% at 70% 44%, ${c1}, transparent 70%),
-                radial-gradient(circle 34% at 48% 74%, ${c2}, transparent 72%)
+                radial-gradient(circle 42% at 34% 38%, ${c0}, transparent 70%),
+                radial-gradient(circle 38% at 68% 42%, ${c1}, transparent 70%),
+                radial-gradient(circle 36% at 48% 72%, ${c2}, transparent 72%)
               `,
             } as CSSProperties
           }
           initial={false}
-          animate={reduce ? undefined : { rotate: [0, 360] }}
-          transition={
-            reduce
+          animate={
+            off
               ? undefined
               : {
-                  duration: 48,
-                  repeat: Infinity,
-                  ease: "linear",
+                  rotate: [0, 360],
+                  x: ["-5%", "7%", "-4%", "5%", "-5%"],
+                  y: ["4%", "-6%", "5%", "-4%", "4%"],
+                }
+          }
+          transition={
+            off
+              ? undefined
+              : {
+                  rotate: {
+                    duration: rotateDuration,
+                    repeat: Infinity,
+                    ease: "linear",
+                  },
+                  x: {
+                    duration: rotateDuration * 0.38,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                    ease: [0.45, 0.05, 0.55, 0.95],
+                  },
+                  y: {
+                    duration: rotateDuration * 0.48,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                    ease: [0.45, 0.05, 0.55, 0.95],
+                  },
                 }
           }
         />
@@ -123,18 +229,51 @@ function CardNoiseOverlay({ filterId }: { filterId: string }) {
 function AmbientGlassBentoCard({
   item,
   filterId,
+  meshRotationDuration,
+  ambientMotion,
+  rootCardClassName,
+  defaultTitleClassName,
+  defaultDescriptionClassName,
 }: {
   item: AmbientGlassBentoItem;
   filterId: string;
+  meshRotationDuration: number;
+  ambientMotion: boolean;
+  rootCardClassName?: string;
+  defaultTitleClassName?: string;
+  defaultDescriptionClassName?: string;
 }) {
   const reduce = useReducedMotion();
   const c0 = safeColor(item.spotColors[0], "#fda4c8");
   const c1 = safeColor(item.spotColors[1], "#fb7185");
   const c2 = safeColor(item.spotColors[2], "#fecdd3");
 
+  const surfaceBg = item.cardBackground
+    ? safeColor(item.cardBackground, "")
+    : null;
+  const surfaceStyle =
+    surfaceBg && surfaceBg.length > 0
+      ? ({ backgroundColor: surfaceBg } as CSSProperties)
+      : undefined;
+  const hasCustomSurface = Boolean(surfaceStyle);
+
   return (
-    <div className={cardShell}>
-      <AmbientMesh c0={c0} c1={c1} c2={c2} />
+    <div
+      className={cn(
+        cardShellBase,
+        !hasCustomSurface && defaultCardTint,
+        item.cardClassName,
+        rootCardClassName,
+      )}
+      style={surfaceStyle}
+    >
+      <AmbientMesh
+        c0={c0}
+        c1={c1}
+        c2={c2}
+        rotateDuration={meshRotationDuration}
+        motionEnabled={ambientMotion}
+      />
 
       <CardNoiseOverlay filterId={filterId} />
 
@@ -146,12 +285,12 @@ function AmbientGlassBentoCard({
         }}
         initial={false}
         animate={
-          reduce
+          reduce || !ambientMotion
             ? undefined
             : { x: [0, 26, -18, 14, -6, 0] }
         }
         transition={
-          reduce
+          reduce || !ambientMotion
             ? undefined
             : {
                 duration: 11,
@@ -164,10 +303,22 @@ function AmbientGlassBentoCard({
 
       <div className="relative z-10 flex h-full min-h-[14rem] flex-col justify-end p-6 sm:p-8 md:min-h-0">
         <div className={cn(item.tightCopy && "max-w-md")}>
-          <h3 className="font-sans text-2xl font-medium tracking-tight text-neutral-900 dark:text-neutral-50">
+          <h3
+            className={cn(
+              "text-balance font-sans text-2xl font-medium tracking-tight text-neutral-900 antialiased dark:text-neutral-50",
+              defaultTitleClassName,
+              item.titleClassName,
+            )}
+          >
             {item.title}
           </h3>
-          <p className="mt-2 text-base text-neutral-600 dark:text-neutral-400">
+          <p
+            className={cn(
+              "text-pretty mt-2 text-base leading-relaxed text-neutral-600 antialiased dark:text-neutral-400",
+              defaultDescriptionClassName,
+              item.descriptionClassName,
+            )}
+          >
             {item.description}
           </p>
         </div>
@@ -177,41 +328,70 @@ function AmbientGlassBentoCard({
 }
 
 /**
- * Asymmetric 2×2 **bento** grid of glassy feature tiles. Each tile uses one
- * oversized radial mesh that **rotates slowly** with linear easing so the wash
- * moves smoothly inside the frame; film-grain sits above. Copy stays on a high
- * `z-index`. Honors `prefers-reduced-motion` (static mesh).
+ * Configurable bento grid: set **`columns`** (md+ track count), per-item
+ * **`colSpan`** and **`cardBackground`**, **`spotColors`** for the animated wash,
+ * and optional typography classes. The ambient layer uses **transform-only**
+ * motion (rotate + mirrored translate) so colour clearly moves inside each
+ * card; `prefers-reduced-motion` and `ambientMotion={false}` disable it.
  */
 export function AmbientGlassBento({
   items,
   className,
+  columns = 5,
+  equalHeightRows = true,
+  meshRotationDuration = 42,
+  ambientMotion = true,
+  gap = "md",
+  cardClassName: rootCardClassName,
+  titleClassName: defaultTitleClassName,
+  descriptionClassName: defaultDescriptionClassName,
   ...rest
 }: AmbientGlassBentoProps) {
   const raw = useId();
   const baseId = raw.replace(/[^a-zA-Z0-9_-]/g, "");
 
+  const colCount = clamp(columns, 2, 12);
+  const mdCols = COLS_CLASS[colCount] ?? "md:grid-cols-5";
+
+  const rowSizing = equalHeightRows
+    ? "md:grid-auto-rows-[minmax(0,1fr)]"
+    : "";
+
   return (
     <div
       {...rest}
       className={cn(
-        "grid h-full w-full min-h-[26rem] grid-cols-1 gap-3 md:min-h-0 md:grid-cols-5 md:gap-4 md:[grid-template-rows:minmax(0,1fr)_minmax(0,1fr)]",
+        "grid h-full w-full min-h-[26rem] grid-cols-1 md:min-h-0",
+        mdCols,
+        gapClass[gap],
+        rowSizing,
         className,
       )}
     >
-      {items.map((item, i) => (
-        <div
-          key={`${item.title}-${i}`}
-          className={cn(
-            "flex h-full min-h-[15rem] flex-col md:min-h-0",
-            item.colSpan === 3 ? "md:col-span-3" : "md:col-span-2",
-          )}
-        >
-          <AmbientGlassBentoCard
-            item={item}
-            filterId={`agb-noise-${baseId}-${i}`}
-          />
-        </div>
-      ))}
+      {items.map((item, i) => {
+        const span = clamp(item.colSpan ?? 1, 1, colCount);
+        const spanCls = SPAN_CLASS[span] ?? "md:col-span-1";
+
+        return (
+          <div
+            key={`${item.title}-${i}`}
+            className={cn(
+              "flex h-full min-h-[15rem] flex-col md:min-h-0",
+              spanCls,
+            )}
+          >
+            <AmbientGlassBentoCard
+              item={item}
+              filterId={`agb-noise-${baseId}-${i}`}
+              meshRotationDuration={meshRotationDuration}
+              ambientMotion={ambientMotion}
+              rootCardClassName={rootCardClassName}
+              defaultTitleClassName={defaultTitleClassName}
+              defaultDescriptionClassName={defaultDescriptionClassName}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -224,6 +404,7 @@ export const AMBIENT_GLASS_BENTO_SHOWCASE: readonly AmbientGlassBentoItem[] = [
       "Not code. Not prototypes. Real, live systems running in production from day one.",
     colSpan: 3,
     tightCopy: true,
+    cardBackground: "rgb(23 23 23)",
     spotColors: ["rgb(255, 126, 179)", "rgb(255, 117, 140)", "rgb(255, 177, 153)"],
   },
   {
@@ -231,6 +412,7 @@ export const AMBIENT_GLASS_BENTO_SHOWCASE: readonly AmbientGlassBentoItem[] = [
     description:
       "Deployment, scaling, and runtime handled automatically. No DevOps, no setup, no friction.",
     colSpan: 2,
+    cardBackground: "rgb(23 23 23)",
     spotColors: ["rgb(130, 170, 240)", "rgb(100, 150, 255)", "rgb(180, 200, 255)"],
   },
   {
@@ -238,6 +420,7 @@ export const AMBIENT_GLASS_BENTO_SHOWCASE: readonly AmbientGlassBentoItem[] = [
     description:
       "Create, run, and improve real production systems — not one-shot prompts or demos.",
     colSpan: 2,
+    cardBackground: "rgb(23 23 23)",
     spotColors: ["rgb(255, 200, 100)", "rgb(255, 170, 80)", "rgb(255, 220, 150)"],
   },
   {
@@ -246,6 +429,7 @@ export const AMBIENT_GLASS_BENTO_SHOWCASE: readonly AmbientGlassBentoItem[] = [
       "AI doesn't just generate code — it builds, runs, and evolves the entire system end-to-end.",
     colSpan: 3,
     tightCopy: true,
-    spotColors: ["rgb(160, 200, 160)", "rgb(120, 180, 140)", "rgb(200, 230, 200)"],
+    cardBackground: "rgb(23 23 23)",
+    spotColors: ["rgb(200, 210, 220)", "rgb(160, 175, 190)", "rgb(230, 235, 240)"],
   },
 ] as const;

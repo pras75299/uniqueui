@@ -3875,7 +3875,7 @@
     {
       "slug": "ambient-glass-bento",
       "name": "Ambient Glass Bento",
-      "description": "A responsive 5-column bento grid of glassy tiles: three drifting radial colour blobs per card, SVG film grain, and a soft top accent line — all animated with motion while copy stays sharp on top.",
+      "description": "Configurable bento grid: per-card title, description, solid cardBackground, animated spotColors, and md colSpan; grid columns, gap, equal-height rows, and mesh speed are root props. Motion uses transform-only rotate plus mirrored translate so the wash visibly moves.",
       "icon": "LucideLayoutGrid",
       "category": "Data & Layout",
       "addedAt": "2026-05-11",
@@ -3883,7 +3883,52 @@
         {
           "name": "items",
           "type": "readonly AmbientGlassBentoItem[]",
-          "description": "Each tile: title, description, colSpan (2 or 3 on md), spotColors tuple of three CSS colours, optional tightCopy for max-w-md body width."
+          "description": "Per tile: title, description, colSpan (1…columns at md+), spotColors [c1,c2,c3], optional cardBackground (CSS colour), tightCopy, cardClassName, titleClassName, descriptionClassName."
+        },
+        {
+          "name": "columns",
+          "type": "number",
+          "default": "5",
+          "description": "Equal column tracks at md+ (2–12). Controls how many grid columns exist; pair with each item’s colSpan."
+        },
+        {
+          "name": "equalHeightRows",
+          "type": "boolean",
+          "default": "true",
+          "description": "When true, md+ uses grid-auto-rows minmax(0,1fr) so rows share height inside a fixed-height parent (e.g. docs preview). Set false for content-sized rows."
+        },
+        {
+          "name": "meshRotationDuration",
+          "type": "number",
+          "default": "42",
+          "description": "Seconds for one full 360° rotation of the ambient colour mesh (translate loops scale off this)."
+        },
+        {
+          "name": "ambientMotion",
+          "type": "boolean",
+          "default": "true",
+          "description": "Disable all card ambient animation (still respects prefers-reduced-motion)."
+        },
+        {
+          "name": "gap",
+          "type": "\"sm\" | \"md\" | \"lg\"",
+          "default": "\"md\"",
+          "description": "Gap between cards."
+        },
+        {
+          "name": "cardClassName",
+          "type": "string",
+          "description": "Applied to every card shell (merged after defaults; per-item cardClassName wins later in cn)."
+        },
+        {
+          "name": "titleClassName",
+          "type": "string",
+          "description": "Default heading classes; merged before each item’s titleClassName."
+        },
+        {
+          "name": "descriptionClassName",
+          "type": "string",
+          "description": "Default body classes; merged before each item’s descriptionClassName."
         },
         {
           "name": "className",
@@ -3891,19 +3936,19 @@
           "description": "Merged onto the outer grid container."
         }
       ],
-      "usageCode": "import {\n  AmbientGlassBento,\n  AMBIENT_GLASS_BENTO_SHOWCASE,\n} from \"@/components/ui/ambient-glass-bento\";\n\nexport default function Example() {\n  return (\n    <div className=\"w-full max-w-5xl p-4\">\n      <AmbientGlassBento items={AMBIENT_GLASS_BENTO_SHOWCASE} />\n    </div>\n  );\n}\n",
+      "usageCode": "import {\n  AmbientGlassBento,\n  AMBIENT_GLASS_BENTO_SHOWCASE,\n} from \"@/components/ui/ambient-glass-bento\";\n\nexport default function Example() {\n  return (\n    <div className=\"w-full max-w-5xl p-4\">\n      <AmbientGlassBento\n        columns={5}\n        gap=\"md\"\n        meshRotationDuration={40}\n        items={AMBIENT_GLASS_BENTO_SHOWCASE}\n      />\n    </div>\n  );\n}\n",
       "docs": {
-        "overview": "AmbientGlassBento lays out feature tiles on a `md:grid-cols-5` track with alternating `md:col-span-3` and `md:col-span-2` cells. Each card stacks three absolutely-positioned radial blobs that drift on independent mirrored motion timelines (subtle overshoot-style easing on the top accent). A per-tile SVG feTurbulence overlay approximates film grain without remote image hosts. `prefers-reduced-motion` freezes the ambient motion. Export `AMBIENT_GLASS_BENTO_SHOWCASE` mirrors the marketing reference grid.",
+        "overview": "AmbientGlassBento renders a CSS grid: mobile is a single column; from `md` up you set **`columns`** (2–12) for how many equal tracks exist, and each **`items[]`** entry sets **`colSpan`** (clamped to 1…columns), **`title`**, **`description`**, optional **`cardBackground`** for the solid surface, **`spotColors`** as a three-stop tuple driving the moving radial wash, plus optional **`cardClassName` / `titleClassName` / `descriptionClassName`** per tile. Root **`cardClassName`**, **`titleClassName`**, and **`descriptionClassName`** apply to all cards as defaults before per-item overrides. The wash animates with **linear `rotate`** and **mirrored `x`/`y`** keyframes (transform-only, `will-change: transform` on the mesh) so colour visibly drifts; **`meshRotationDuration`** scales those loops. **`equalHeightRows`** toggles `md:grid-auto-rows-[minmax(0,1fr)]` for preview-style equal row heights when a parent supplies height. Grain is inline SVG `feTurbulence`; no remote noise assets. Typography uses **`text-balance`** / **`text-pretty`** and **`antialiased`** on headings and body.",
         "scenarios": [
           {
-            "title": "Custom palette tiles",
-            "description": "Pass your own items array with brand spotColors (hex, rgb, or oklch strings) and alternate colSpan 3/2 for the staggered bento rhythm.",
-            "code": "import { AmbientGlassBento } from \"@/components/ui/ambient-glass-bento\";\n\nconst items = [\n  {\n    title: \"Ship faster\",\n    description: \"Opinionated defaults with room to grow.\",\n    colSpan: 3 as const,\n    tightCopy: true,\n    spotColors: [\"#a78bfa\", \"#6366f1\", \"#c4b5fd\"] as const,\n  },\n  {\n    title: \"Stay reliable\",\n    description: \"Health checks and rollbacks baked in.\",\n    colSpan: 2 as const,\n    spotColors: [\"#38bdf8\", \"#0ea5e9\", \"#bae6fd\"] as const,\n  },\n];\n\nexport default function TwoTileStrip() {\n  return (\n    <div className=\"max-w-4xl p-4\">\n      <AmbientGlassBento items={items} />\n    </div>\n  );\n}"
+            "title": "Four-column product grid",
+            "description": "Use columns={4} and colSpan values that sum to four per row for a denser marketing strip.",
+            "code": "import { AmbientGlassBento } from \"@/components/ui/ambient-glass-bento\";\n\nconst items = [\n  {\n    title: \"Ship\",\n    description: \"From idea to production in one pipeline.\",\n    colSpan: 2,\n    cardBackground: \"#0c0c0e\",\n    spotColors: [\"#a78bfa\", \"#6366f1\", \"#c4b5fd\"] as const,\n  },\n  {\n    title: \"Scale\",\n    description: \"Autoscaling without config drift.\",\n    colSpan: 2,\n    cardBackground: \"#0c0c0e\",\n    spotColors: [\"#38bdf8\", \"#0ea5e9\", \"#bae6fd\"] as const,\n  },\n];\n\nexport default function FourCols() {\n  return (\n    <div className=\"max-w-4xl p-4\">\n      <AmbientGlassBento columns={4} equalHeightRows={false} items={items} />\n    </div>\n  );\n}"
           },
           {
-            "title": "Light section background",
-            "description": "Place the grid on neutral-100/200 page sections; cards already include light and dark mode glass shadows.",
-            "code": "import {\n  AmbientGlassBento,\n  AMBIENT_GLASS_BENTO_SHOWCASE,\n} from \"@/components/ui/ambient-glass-bento\";\n\nexport default function Section() {\n  return (\n    <section className=\"rounded-3xl bg-neutral-100 py-12 dark:bg-neutral-950\">\n      <div className=\"mx-auto max-w-5xl px-4\">\n        <AmbientGlassBento items={AMBIENT_GLASS_BENTO_SHOWCASE} />\n      </div>\n    </section>\n  );\n}"
+            "title": "Brand defaults + per-card overrides",
+            "description": "Set root titleClassName for all headings, then override a single hero tile with item.titleClassName.",
+            "code": "import { AmbientGlassBento } from \"@/components/ui/ambient-glass-bento\";\n\nconst items = [\n  {\n    title: \"Hero\",\n    description: \"Larger display treatment on one tile only.\",\n    colSpan: 3,\n    cardBackground: \"rgb(15 23 42)\",\n    spotColors: [\"#f472b6\", \"#e879f9\", \"#fda4af\"] as const,\n    titleClassName: \"text-3xl font-semibold tracking-tight text-white\",\n    descriptionClassName: \"text-neutral-300\",\n  },\n  {\n    title: \"Detail\",\n    description: \"Inherits root title styles.\",\n    colSpan: 2,\n    cardBackground: \"rgb(15 23 42)\",\n    spotColors: [\"#94a3b8\", \"#64748b\", \"#cbd5e1\"] as const,\n  },\n];\n\nexport default function Overrides() {\n  return (\n    <AmbientGlassBento\n      columns={5}\n      titleClassName=\"text-2xl font-medium text-white\"\n      descriptionClassName=\"text-sm text-neutral-400\"\n      items={items}\n    />\n  );\n}"
           }
         ]
       }

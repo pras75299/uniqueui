@@ -3002,7 +3002,7 @@ const componentDefinitions = [
   {
     "slug": "ambient-glass-bento",
     "name": "Ambient Glass Bento",
-    "description": "A responsive 5-column bento grid of glassy tiles: three drifting radial colour blobs per card, SVG film grain, and a soft top accent line — all animated with motion while copy stays sharp on top.",
+    "description": "Configurable bento grid: per-card title, description, solid cardBackground, animated spotColors, and md colSpan; grid columns, gap, equal-height rows, and mesh speed are root props. Motion uses transform-only rotate plus mirrored translate so the wash visibly moves.",
     "icon": "LucideLayoutGrid",
     "category": "Data & Layout",
     "addedAt": "2026-05-11",
@@ -3010,7 +3010,52 @@ const componentDefinitions = [
       {
         "name": "items",
         "type": "readonly AmbientGlassBentoItem[]",
-        "description": "Each tile: title, description, colSpan (2 or 3 on md), spotColors tuple of three CSS colours, optional tightCopy for max-w-md body width."
+        "description": "Per tile: title, description, colSpan (1…columns at md+), spotColors [c1,c2,c3], optional cardBackground (CSS colour), tightCopy, cardClassName, titleClassName, descriptionClassName."
+      },
+      {
+        "name": "columns",
+        "type": "number",
+        "default": "5",
+        "description": "Equal column tracks at md+ (2–12). Controls how many grid columns exist; pair with each item’s colSpan."
+      },
+      {
+        "name": "equalHeightRows",
+        "type": "boolean",
+        "default": "true",
+        "description": "When true, md+ uses grid-auto-rows minmax(0,1fr) so rows share height inside a fixed-height parent (e.g. docs preview). Set false for content-sized rows."
+      },
+      {
+        "name": "meshRotationDuration",
+        "type": "number",
+        "default": "42",
+        "description": "Seconds for one full 360° rotation of the ambient colour mesh (translate loops scale off this)."
+      },
+      {
+        "name": "ambientMotion",
+        "type": "boolean",
+        "default": "true",
+        "description": "Disable all card ambient animation (still respects prefers-reduced-motion)."
+      },
+      {
+        "name": "gap",
+        "type": "\"sm\" | \"md\" | \"lg\"",
+        "default": "\"md\"",
+        "description": "Gap between cards."
+      },
+      {
+        "name": "cardClassName",
+        "type": "string",
+        "description": "Applied to every card shell (merged after defaults; per-item cardClassName wins later in cn)."
+      },
+      {
+        "name": "titleClassName",
+        "type": "string",
+        "description": "Default heading classes; merged before each item’s titleClassName."
+      },
+      {
+        "name": "descriptionClassName",
+        "type": "string",
+        "description": "Default body classes; merged before each item’s descriptionClassName."
       },
       {
         "name": "className",
@@ -3018,7 +3063,7 @@ const componentDefinitions = [
         "description": "Merged onto the outer grid container."
       }
     ],
-    "usageCode": "import {\n  AmbientGlassBento,\n  AMBIENT_GLASS_BENTO_SHOWCASE,\n} from \"@/components/ui/ambient-glass-bento\";\n\nexport default function Example() {\n  return (\n    <div className=\"w-full max-w-5xl p-4\">\n      <AmbientGlassBento items={AMBIENT_GLASS_BENTO_SHOWCASE} />\n    </div>\n  );\n}\n"
+    "usageCode": "import {\n  AmbientGlassBento,\n  AMBIENT_GLASS_BENTO_SHOWCASE,\n} from \"@/components/ui/ambient-glass-bento\";\n\nexport default function Example() {\n  return (\n    <div className=\"w-full max-w-5xl p-4\">\n      <AmbientGlassBento\n        columns={5}\n        gap=\"md\"\n        meshRotationDuration={40}\n        items={AMBIENT_GLASS_BENTO_SHOWCASE}\n      />\n    </div>\n  );\n}\n"
   }
 ] satisfies ComponentDefinition[];
 
