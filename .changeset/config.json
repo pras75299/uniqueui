@@ -7,5 +7,5 @@
   "access": "public",
   "baseBranch": "pras75299/initial-feature-setup",
   "updateInternalDependencies": "patch",
-  "ignore": ["uniqueui-monorepo", "www"]
+  "ignore": ["www"]
 }

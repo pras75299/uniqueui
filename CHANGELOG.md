@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2
+
+### Patch Changes
+
+- Show the underlying install error when `uniqueui add` cannot install dependencies automatically.
+
 ## 1.1.0
 
 ### Minor Changes
