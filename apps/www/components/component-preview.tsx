@@ -31,7 +31,7 @@ export default function ComponentPreview({ slug }: { slug: string }) {
           ? "min-h-[min(32rem,82dvh)] flex-col items-stretch py-4 sm:py-6"
           : "min-h-[300px] items-center justify-center",
         hasOverflowHidden && "overflow-hidden",
-        isDark ? "border-neutral-800 bg-neutral-950/50" : "border-neutral-200 bg-neutral-50/80"
+        isDark ? "border-neutral-800 bg-neutral-950/50" : "border-neutral-200 bg-neutral-50/80",
       )}
       initial={false}
       animate={{
@@ -46,14 +46,14 @@ export default function ComponentPreview({ slug }: { slug: string }) {
           hasOverflowHidden ? "" : "rounded-xl overflow-hidden",
           isDark
             ? "[background-image:linear-gradient(to_right,#333_1px,transparent_1px),linear-gradient(to_bottom,#333_1px,transparent_1px)]"
-            : "[background-image:linear-gradient(to_right,#d4d4d4_1px,transparent_1px),linear-gradient(to_bottom,#d4d4d4_1px,transparent_1px)]"
+            : "[background-image:linear-gradient(to_right,#d4d4d4_1px,transparent_1px),linear-gradient(to_bottom,#d4d4d4_1px,transparent_1px)]",
         )}
       />
       <div
         className={cn(
           "relative z-10 w-full",
           isOutlinedMegaMark &&
-            "flex w-full flex-col items-center justify-center",
+            "flex min-h-0 flex-1 flex-col items-center justify-center",
         )}
       >
         <Demo theme={theme} />

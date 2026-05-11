@@ -14,6 +14,7 @@ import {
   Layers,
   LayoutGrid,
   Loader2,
+  LucideAperture,
   LucideFocus,
   LucideMaximize2,
   LucideMessageSquare,
@@ -79,6 +80,7 @@ const iconMap = {
   Layers,
   LayoutGrid,
   Loader2,
+  LucideAperture,
   LucideFocus,
   LucideMaximize2,
   LucideMessageSquare,
@@ -2996,6 +2998,67 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[460px] w-full rounded-2xl border bg-neutral-950\">\n      <RefractiveCursorLens className=\"h-full w-full\">\n        <div className=\"flex h-full items-center justify-center px-10\">\n          <article className=\"max-w-xl\">\n            <h2 className=\"text-4xl font-semibold tracking-tight text-white\">\n              Move your cursor anywhere here.\n            </h2>\n            <p className=\"mt-4 text-base text-neutral-300\">\n              The lens follows you and refracts the content underneath — type,\n              gradients, images. Clicks pass straight through.\n            </p>\n          </article>\n        </div>\n      </RefractiveCursorLens>\n    </div>\n  );\n}\n"
+  },
+  {
+    "slug": "ambient-glow-card",
+    "name": "Ambient Glow Card",
+    "description": "A single responsive card whose copy you write as normal JSX children. A soft radial-gradient blob slowly drifts between the four corners — colour and speed are props. Headings inherit the page font; paragraphs get muted body styling. Fills any parent column via w-full h-full.",
+    "icon": "LucideAperture",
+    "category": "Cards",
+    "addedAt": "2026-05-11",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Card body — pass standard JSX (heading + paragraph). Headings inherit the page font and get sensible tracking + colour; paragraphs get muted body styling."
+      },
+      {
+        "name": "blobColor",
+        "type": "string | readonly [string, string, string]",
+        "description": "Blob accent. Single CSS colour (hex / rgb / oklch / named) for a one-stop wash, or a tuple of three stops for a richer gradient. Defaults to a warm pink trio."
+      },
+      {
+        "name": "cardBackground",
+        "type": "string",
+        "description": "Optional solid surface colour; omit for theme default neutral-100 / neutral-900."
+      },
+      {
+        "name": "animationDuration",
+        "type": "number",
+        "default": "24",
+        "description": "Seconds for one full drift cycle through the four corners. Clamped 6–120 (lower = faster)."
+      },
+      {
+        "name": "motionDisabled",
+        "type": "boolean",
+        "default": "false",
+        "description": "Pin the blob to a single corner. `prefers-reduced-motion` always pins regardless."
+      },
+      {
+        "name": "padding",
+        "type": "\"sm\" | \"md\" | \"lg\"",
+        "default": "\"md\"",
+        "description": "Inner padding scale around the children slot."
+      },
+      {
+        "name": "showNoise",
+        "type": "boolean",
+        "default": "true",
+        "description": "SVG film-grain overlay on top of the surface."
+      },
+      {
+        "name": "minHeight",
+        "type": "string",
+        "default": "\"13rem\"",
+        "description": "Minimum card height when content is short. Any CSS length."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Merged onto the outer article (e.g. h-full, ring, custom shadow)."
+      }
+    ],
+    "usageCode": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-md p-4\">\n      <AmbientGlowCard\n        blobColor={[\"#f9b8c4\", \"#f897ad\", \"#fcd1c1\"]}\n        animationDuration={24}\n      >\n        <h3>Software That Actually Scales</h3>\n        <p>Not code. Not prototypes. Real, live systems running in production from day one.</p>\n      </AmbientGlowCard>\n    </div>\n  );\n}\n"
   }
 ] satisfies ComponentDefinition[];
 

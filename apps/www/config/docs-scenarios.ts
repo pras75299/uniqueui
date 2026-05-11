@@ -1042,5 +1042,26 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "import { RefractiveCursorLens } from \"@/components/ui/refractive-cursor-lens\";\n\nexport default function Hero() {\n  return (\n    <RefractiveCursorLens\n      size={200}\n      displacementScale={36}\n      springConfig={{ stiffness: 90, damping: 18 }}\n      className=\"min-h-[60vh] flex items-center justify-center\"\n    >\n      <h1 className=\"text-7xl font-bold tracking-tight\">\n        Trail your cursor.\n      </h1>\n    </RefractiveCursorLens>\n  );\n}"
       }
     ]
+  },
+  "ambient-glow-card": {
+    "slug": "ambient-glow-card",
+    "overview": "AmbientGlowCard is a single **`<article>`** that fills its parent column (**`w-full h-full`**). A single soft radial-gradient **blob** drifts between the four corners on a keyframe loop; the loop length is **`animationDuration`** seconds (clamped 6–120). Colour comes from **`blobColor`** — either a single CSS colour or a `[c0, c1, c2]` tuple. Content is plain JSX **`children`**; any `<h1>`–`<h6>` inside gets sensible tracking, balance, and theme colour but inherits the consumer's font family. The base tint is **`bg-neutral-100`** with **`dark:bg-neutral-900`** unless **`cardBackground`** overrides. Grain is inline SVG; reduced-motion pins the blob.",
+    "scenarios": [
+      {
+        "title": "Drop into any column",
+        "description": "Place inside a 2-column responsive grid — the card stretches to the cell.",
+        "code": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function Pair() {\n  return (\n    <div className=\"grid grid-cols-1 gap-5 md:grid-cols-2\">\n      <AmbientGlowCard blobColor={[\"#f9b8c4\", \"#f897ad\", \"#fcd1c1\"]}>\n        <h3>Software That Actually Scales</h3>\n        <p>Not code. Not prototypes. Real, live systems running in production from day one.</p>\n      </AmbientGlowCard>\n      <AmbientGlowCard blobColor={[\"#b4c8f4\", \"#9aa9eb\", \"#c4d5f5\"]} animationDuration={28}>\n        <h3>Infrastructure Built In</h3>\n        <p>Deployment, scaling, and runtime handled automatically. No DevOps, no setup, no friction.</p>\n      </AmbientGlowCard>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Single accent colour",
+        "description": "Pass `blobColor` as a string for a quick one-stop wash.",
+        "code": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function SingleColour() {\n  return (\n    <AmbientGlowCard blobColor=\"#a8d4a0\" animationDuration={32}>\n      <h3>AI That Owns the System</h3>\n      <p>AI doesn't just generate code — it builds, runs, and evolves the entire system end-to-end.</p>\n    </AmbientGlowCard>\n  );\n}"
+      },
+      {
+        "title": "Pause the drift",
+        "description": "Set `motionDisabled` to pin the blob to its starting corner — useful for static screenshots or motion-sensitive contexts.",
+        "code": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function Pinned() {\n  return (\n    <AmbientGlowCard blobColor={[\"#f5cf90\", \"#f1b063\", \"#ffd9a0\"]} motionDisabled>\n      <h3>Build &amp; Iterate Real Software</h3>\n      <p>Create, run, and improve real production systems — not one-shot prompts or demos.</p>\n    </AmbientGlowCard>\n  );\n}"
+      }
+    ]
   }
 };

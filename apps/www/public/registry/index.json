@@ -53,6 +53,7 @@
     "chromatic-aberration-reveal",
     "iridescent-foil-button",
     "kinetic-variable-headline",
-    "refractive-cursor-lens"
+    "refractive-cursor-lens",
+    "ambient-glow-card"
   ]
 }

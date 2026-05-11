@@ -486,4 +486,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "ambient-glow-card",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "ambient-glow-card/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

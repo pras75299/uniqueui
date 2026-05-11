@@ -69,6 +69,7 @@ import { IridescentFoilButton } from "@/components/ui/iridescent-foil-button";
 import { KineticVariableHeadline } from "@/components/ui/kinetic-variable-headline";
 import { CausticLightCard } from "@/components/ui/caustic-light-card";
 import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
+import { AmbientGlowCard } from "@/components/ui/ambient-glow-card";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3514,6 +3515,23 @@ export const componentDemos: Record<string, DemoComponent> = {
           </article>
         </div>
       </RefractiveCursorLens>
+    </div>
+  ),
+  "ambient-glow-card": () => (
+    <div className="mx-auto w-full max-w-xl px-4 sm:px-6">
+      <AmbientGlowCard
+        className="min-h-[15rem]"
+        blobColor={["#f9b8c4", "#f897ad", "#fcd1c1"]}
+        animationDuration={24}
+      >
+        <h3 className="text-xl font-semibold sm:text-2xl">
+          Software That Actually Scales
+        </h3>
+        <p>
+          Not code. Not prototypes. Real, live systems running in production
+          from day one.
+        </p>
+      </AmbientGlowCard>
     </div>
   ),
 };
