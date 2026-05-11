@@ -13,6 +13,17 @@ const endMarker = "<!-- DOCS_METADATA_FRICTION_LOG_END -->";
 const args = new Set(process.argv.slice(2));
 const shouldAppend = args.has("--append");
 
+function getArgValue(flag) {
+  const argv = process.argv.slice(2);
+  const index = argv.indexOf(flag);
+  if (index === -1) return null;
+  return argv[index + 1] ?? null;
+}
+
+function normalizeYesNoArg(value) {
+  return value === null ? null : value.trim().toLowerCase();
+}
+
 if (!fs.existsSync(docsJsonPath)) {
   console.error(`ERROR: Missing ${docsJsonPath}`);
   process.exit(1);
@@ -33,7 +44,11 @@ try {
   const gitOut = execFileSync(
     "git",
     ["log", "--since=30 days ago", "--pretty=format:%H", "--", "registry/docs.json"],
-    { cwd: repoRoot, encoding: "utf8" }
+    {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }
   ).trim();
   touches30d = gitOut ? gitOut.split(/\r?\n/).length : 0;
 } catch {
@@ -42,7 +57,36 @@ try {
 
 const c1Triggered = lineCount > 1500 || sizeKb > 200;
 const date = new Date().toISOString().slice(0, 10);
-const row = `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | TODO | TODO | TODO | TODO | TODO |`;
+const conflictsRaw = getArgValue("--conflicts");
+const ownershipNeed = normalizeYesNoArg(getArgValue("--ownership"));
+const toolingNeed = normalizeYesNoArg(getArgValue("--tooling"));
+const action = getArgValue("--action");
+const conflicts = conflictsRaw !== null ? Number.parseInt(conflictsRaw, 10) : null;
+const c2Triggered = conflicts !== null && Number.isFinite(conflicts) ? conflicts >= 3 : null;
+const c3Triggered = ownershipNeed === "yes" ? true : ownershipNeed === "no" ? false : null;
+const c4Triggered = toolingNeed === "yes" ? true : toolingNeed === "no" ? false : null;
+// Manual C2-C4 metadata is either omitted entirely, partially supplied (invalid), or fully supplied.
+const hasAnyManualField =
+  conflictsRaw !== null || ownershipNeed !== null || toolingNeed !== null || action !== null;
+const hasAllManualFields =
+  conflicts !== null &&
+  c3Triggered !== null &&
+  c4Triggered !== null &&
+  action;
+// metCount stays null until every manual condition is known, because partial input cannot produce a valid tally.
+const metCount =
+  c2Triggered === null || c3Triggered === null || c4Triggered === null
+    ? null
+    : [c1Triggered, c2Triggered, c3Triggered, c4Triggered].filter(Boolean).length;
+const row =
+  // No manual fields: append a row with placeholders for maintainers to fill later.
+  !hasAnyManualField
+    ? `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | pending | pending | pending | pending | pending |`
+    // Some manual fields are missing or invalid: refuse to build a partial row.
+    : !hasAllManualFields || metCount === null
+      ? null
+      // All manual fields are present: emit the fully populated log row.
+      : `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | ${conflicts} | ${ownershipNeed} | ${toolingNeed} | ${metCount} | ${action} |`;
 
 const summary = [
   "Docs metadata friction snapshot",
@@ -58,8 +102,19 @@ const summary = [
 
 if (!shouldAppend) {
   console.log(summary);
-  console.log(`\nProposed log row:\n${row}`);
+  if (hasAllManualFields && row) {
+    console.log(`\nProposed log row:\n${row}`);
+  } else if (!hasAnyManualField) {
+    console.log("\n`--append` will add a row with `pending` manual columns for maintainers to fill in.");
+  } else {
+    console.log("\nProvide --conflicts <n> --ownership <yes|no> --tooling <yes|no> --action <text> to generate an appendable log row.");
+  }
   process.exit(0);
+}
+
+if (!row) {
+  console.error("ERROR: Partial manual fields supplied. Provide all of --conflicts <n> --ownership <yes|no> --tooling <yes|no> --action <text>, or omit them all.");
+  process.exit(1);
 }
 
 const logRaw = fs.readFileSync(logPath, "utf8");

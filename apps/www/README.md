@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UniqueUI Docs App
 
-## Getting Started
+This workspace contains the public docs and demo site for UniqueUI.
 
-First, run the development server:
+## What Lives Here
+
+- `app/` — App Router pages and layouts
+- `components/` — docs UI and synced component previews
+- `config/` — generated docs metadata consumed by the site
+- `public/registry/` — generated registry payloads used by the docs experience
+- `public/r/` — generated shadcn-compatible registry payloads
+- `tests/` — docs-site and component integration tests
+
+## Running Locally
+
+From the repository root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or directly from this workspace:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Then open `http://localhost:3000`.
 
-## Learn More
+## Generated Files
 
-To learn more about Next.js, take a look at the following resources:
+Parts of this workspace are generated from the root `registry/` source of truth.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Do not hand-edit generated output under:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `components/ui/`
+- `config/components.ts`
+- `config/docs-scenarios.ts`
+- `config/demos.tsx`
+- `public/registry/`
+- `public/r/`
 
-## Deploy on Vercel
+Regenerate them from the repo root with:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm build:registry
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Common Tasks
+
+```bash
+# Run the docs app
+pnpm dev
+
+# Run docs tests
+pnpm test
+
+# Build the app
+pnpm build
+```
+
+## Source Of Truth
+
+If you are adding or changing a component, start in the repo root:
+
+- component source: `registry/<slug>/component.tsx`
+- docs metadata: `registry/docs.json`
+- demo mappings: `registry/demos.tsx`
+
+Contributor workflow details live in the root [`CONTRIBUTING.md`](../../CONTRIBUTING.md) and [`BUILD.md`](../../BUILD.md).

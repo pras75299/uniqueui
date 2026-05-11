@@ -1,0 +1,80 @@
+{
+  "$schema": "./node_modules/knip/schema.json",
+  "include": ["files", "exports"],
+  "ignoreExportsUsedInFile": true,
+  "ignoreFiles": [
+    "docs/**",
+    "e2e-components-test/**",
+    "e2e-shadcn-components-test/**",
+    "registry/**",
+    "utils/cn.ts",
+    "apps/www/components/ui/**",
+    "apps/www/config/components.ts",
+    "apps/www/config/demos.tsx",
+    "apps/www/config/docs-scenarios.ts",
+    "apps/www/public/r/**",
+    "apps/www/public/registry/**"
+  ],
+  "workspaces": {
+    ".": {
+      "entry": [
+        "scripts/**/*.mjs",
+        "scripts/**/*.ts"
+      ],
+      "project": [
+        "scripts/**/*.{mjs,ts}",
+        "utils/**/*.ts"
+      ]
+    },
+    "apps/www": {
+      "entry": [
+        "app/**/*.{ts,tsx}",
+        "components/**/*.{ts,tsx}",
+        "config/**/*.{ts,tsx}",
+        "contexts/**/*.{ts,tsx}",
+        "lib/**/*.{ts,tsx}",
+        "templates/**/*.{ts,tsx}",
+        "tests/**/*.{ts,tsx}",
+        "next.config.ts",
+        "vitest.config.ts",
+        "public/theme-init.js"
+      ],
+      "project": [
+        "app/**/*.{ts,tsx}",
+        "components/**/*.{ts,tsx}",
+        "config/**/*.{ts,tsx}",
+        "contexts/**/*.{ts,tsx}",
+        "lib/**/*.{ts,tsx}",
+        "templates/**/*.{ts,tsx}",
+        "tests/**/*.{ts,tsx}",
+        "next.config.ts",
+        "eslint.config.mjs",
+        "postcss.config.mjs",
+        "vitest.config.ts",
+        "public/theme-init.js"
+      ],
+      "ignore": [
+        ".next/**",
+        "components/ui/**",
+        "config/components.ts",
+        "config/demos.tsx",
+        "config/docs-scenarios.ts",
+        "public/r/**",
+        "public/registry/**"
+      ]
+    },
+    "packages/cli": {
+      "entry": [
+        "src/index.ts",
+        "src/debug.ts",
+        "src/**/*.test.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ],
+      "ignore": [
+        "dist/**"
+      ]
+    }
+  }
+}

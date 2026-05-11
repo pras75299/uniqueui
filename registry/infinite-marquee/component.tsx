@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
+import { motion, useAnimationFrame, useMotionValue, useReducedMotion } from "motion/react";
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useAnimationControls } from "motion/react";
 
 export interface InfiniteMarqueeProps {
   children: React.ReactNode;
@@ -27,7 +27,8 @@ export function InfiniteMarquee({
   const [segmentWidth, setSegmentWidth] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const controls = useAnimationControls();
+  const prefersReducedMotion = useReducedMotion();
+  const x = useMotionValue(0);
 
   useEffect(() => {
     const segment = segmentRef.current;
@@ -51,36 +52,33 @@ export function InfiniteMarquee({
     };
   }, [children, gap]);
 
-  const duration = segmentWidth / speed;
-  const startX = direction === "left" ? 0 : -segmentWidth;
-  const endX = direction === "left" ? -segmentWidth : 0;
+  const safeSpeed = Number.isFinite(speed) && speed > 0 ? speed : 40;
+  const isMotionPaused = Boolean(prefersReducedMotion) || (pauseOnHover && isPaused);
   const repeatCount =
     segmentWidth > 0 ? Math.max(2, Math.ceil(containerWidth / segmentWidth) + 1) : 2;
 
   useEffect(() => {
-    if (!segmentWidth) return;
-    controls.set({ x: startX });
-  }, [controls, startX, segmentWidth]);
-
-  useEffect(() => {
-    if (!segmentWidth) return;
-
-    if (isPaused) {
-      controls.stop();
+    if (prefersReducedMotion || direction === "left") {
+      x.set(0);
       return;
     }
 
-    controls.set({ x: startX });
-    controls.start({
-      x: endX,
-      transition: {
-        duration: duration || 20,
-        repeat: Infinity,
-        repeatType: "loop",
-        ease: "linear",
-      },
-    });
-  }, [controls, direction, duration, endX, isPaused, segmentWidth, startX]);
+    x.set(segmentWidth > 0 ? -segmentWidth : 0);
+  }, [direction, prefersReducedMotion, segmentWidth, x]);
+
+  useAnimationFrame((_, delta) => {
+    if (segmentWidth <= 0 || isMotionPaused) return;
+
+    const distance = safeSpeed * (delta / 1000);
+    if (direction === "left") {
+      const next = x.get() - distance;
+      x.set(next <= -segmentWidth ? next + segmentWidth : next);
+      return;
+    }
+
+    const next = x.get() + distance;
+    x.set(next >= 0 ? next - segmentWidth : next);
+  });
 
   return (
     <div
@@ -91,8 +89,9 @@ export function InfiniteMarquee({
     >
       <motion.div
         className="flex w-max"
-        style={{ x: startX }}
-        animate={controls}
+        data-marquee-track="true"
+        data-marquee-paused={String(isMotionPaused)}
+        style={{ x, willChange: "transform" }}
       >
         {/* Measured original segment */}
         <div

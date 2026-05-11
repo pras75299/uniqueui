@@ -1,5 +1,4 @@
 
-import { Command } from "commander";
 import fetch from "node-fetch";
 import path from "path";
 import fs from "fs-extra";
@@ -291,19 +290,6 @@ function getLegacyRegistryJsonCandidates(basePath: string): string[] {
     return [path.join(basePath, "registry.json")];
 }
 
-function getLegacyApiCandidates(basePath: string): string[] {
-    if (basePath.endsWith("/registry/index.json")) {
-        const registryDir = basePath.slice(0, -"/index.json".length);
-        return [path.join(registryDir, "api/registry"), path.join(getLegacyRegistryBase(basePath), "api/registry")];
-    }
-
-    if (basePath.endsWith("/registry")) {
-        return [path.join(basePath, "api/registry"), path.join(getLegacyRegistryBase(basePath), "api/registry")];
-    }
-
-    return [path.join(getLegacyRegistryBase(basePath), "api/registry")];
-}
-
 function joinUrlPath(baseUrl: string, suffix: string): string {
     return `${baseUrl.replace(/\/+$/, "")}/${suffix.replace(/^\/+/, "")}`;
 }
@@ -482,7 +468,7 @@ export async function add(componentName: string, options: { url: string; yes?: b
     let config;
     try {
         config = await fs.readJson("components.json");
-    } catch (e) {
+    } catch {
         console.error(chalk.red("components.json not found. Run 'init' first."));
         process.exit(1);
     }
@@ -540,7 +526,7 @@ export async function add(componentName: string, options: { url: string; yes?: b
                 ),
             );
         } else {
-        console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
+            console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
             try {
                 const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
                 const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
@@ -552,8 +538,10 @@ export async function add(componentName: string, options: { url: string; yes?: b
                 if (result.status !== 0) {
                     throw new Error(`package manager exited with code ${result.status}`);
                 }
-            } catch (e) {
+            } catch (error) {
                 console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
+                const errorDetails = error instanceof Error ? error.message : String(error);
+                console.warn(chalk.yellow(`Error details: ${errorDetails}`));
             }
         }
     }

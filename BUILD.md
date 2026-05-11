@@ -5,12 +5,20 @@
 - Node.js 24 LTS (recommended)
 - pnpm 10.33.0 — `npm install -g pnpm@10.33.0`
 
+## Package Manager Policy
+
+This repository is developed with **pnpm workspaces**.
+
+- Use `pnpm install` and `pnpm <script>` from the repo root
+- Treat `pnpm-lock.yaml` as the authoritative lockfile
+- Do not add or commit workspace `package-lock.json` files
+
 ## Quick Start
 
 ```bash
 pnpm install               # Install all workspace dependencies
 pnpm build:registry        # Rebuild registry artifacts and sync docs UI from registry/
-cd apps/www && pnpm dev    # Start docs site at localhost:3000
+pnpm dev                   # Start docs site at localhost:3000
 ```
 
 ## Building the CLI

@@ -197,11 +197,29 @@ describe("InfiniteMarquee", () => {
     );
 
     const outerContainer = container.firstChild as HTMLElement;
-    // Should not throw and state transition should be handled silently
-    expect(() => {
-      fireEvent.mouseEnter(outerContainer);
-      fireEvent.mouseLeave(outerContainer);
-    }).not.toThrow();
+    const animatedStrip = outerContainer.querySelector("[data-marquee-track='true']") as
+      | HTMLElement
+      | null;
+
+    expect(animatedStrip).not.toBeNull();
+    expect(animatedStrip).toHaveAttribute("data-marquee-paused", "false");
+
+    fireEvent.mouseEnter(outerContainer);
+    expect(animatedStrip).toHaveAttribute("data-marquee-paused", "true");
+
+    fireEvent.mouseLeave(outerContainer);
+    expect(animatedStrip).toHaveAttribute("data-marquee-paused", "false");
+  });
+
+  it("renders without injecting CSS keyframes", () => {
+    const { container } = render(
+      <InfiniteMarquee>
+        <MarqueeItem>Item C</MarqueeItem>
+      </InfiniteMarquee>
+    );
+
+    const styleTag = container.querySelector('style[data-uniqueui-marquee="true"]');
+    expect(styleTag).toBeNull();
   });
 
   it("does not pause on mouse enter when pauseOnHover is false", () => {
