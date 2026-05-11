@@ -69,10 +69,7 @@ import { IridescentFoilButton } from "@/components/ui/iridescent-foil-button";
 import { KineticVariableHeadline } from "@/components/ui/kinetic-variable-headline";
 import { CausticLightCard } from "@/components/ui/caustic-light-card";
 import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
-import {
-  AmbientGlassBento,
-  AMBIENT_GLASS_BENTO_SHOWCASE,
-} from "@/components/ui/ambient-glass-bento";
+import { AmbientGlowCard } from "@/components/ui/ambient-glow-card";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3520,12 +3517,21 @@ export const componentDemos: Record<string, DemoComponent> = {
       </RefractiveCursorLens>
     </div>
   ),
-  "ambient-glass-bento": () => (
-    <AmbientGlassBento
-      className="h-full min-h-0 w-full flex-1 px-2 sm:px-3 md:px-4"
-      columns={5}
-      meshRotationDuration={28}
-      items={AMBIENT_GLASS_BENTO_SHOWCASE}
-    />
+  "ambient-glow-card": () => (
+    <div className="mx-auto w-full max-w-xl px-4 sm:px-6">
+      <AmbientGlowCard
+        className="min-h-[15rem]"
+        blobColor={["#f9b8c4", "#f897ad", "#fcd1c1"]}
+        animationDuration={24}
+      >
+        <h3 className="text-xl font-semibold sm:text-2xl">
+          Software That Actually Scales
+        </h3>
+        <p>
+          Not code. Not prototypes. Real, live systems running in production
+          from day one.
+        </p>
+      </AmbientGlowCard>
+    </div>
   ),
 };

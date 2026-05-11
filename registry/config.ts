@@ -81,14 +81,6 @@ export const registry: Registry = [
         ],
     },
     {
-        name: "ambient-glass-bento",
-        dependencies: ["motion", "clsx", "tailwind-merge"],
-        files: [
-            { path: "ambient-glass-bento/component.tsx", type: "registry:ui" },
-            cnUtilFile,
-        ],
-    },
-    {
         name: "magnetic-button",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
@@ -491,6 +483,14 @@ export const registry: Registry = [
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
             { path: "refractive-cursor-lens/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "ambient-glow-card",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "ambient-glow-card/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },

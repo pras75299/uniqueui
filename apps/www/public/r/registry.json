@@ -130,24 +130,6 @@
       ]
     },
     {
-      "name": "ambient-glass-bento",
-      "type": "registry:ui",
-      "title": "Ambient Glass Bento",
-      "description": "Configurable bento grid: per-card title, description, solid cardBackground, animated spotColors, and md colSpan; grid columns, gap, equal-height rows, and mesh speed are root props. Motion uses transform-only rotate plus mirrored translate so the wash visibly moves.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/ambient-glass-bento.tsx",
-          "type": "registry:component",
-          "target": "components/ui/ambient-glass-bento.tsx"
-        }
-      ]
-    },
-    {
       "name": "magnetic-button",
       "type": "registry:ui",
       "title": "Magnetic Button",
@@ -1033,6 +1015,24 @@
           "path": "components/ui/refractive-cursor-lens.tsx",
           "type": "registry:component",
           "target": "components/ui/refractive-cursor-lens.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ambient-glow-card",
+      "type": "registry:ui",
+      "title": "Ambient Glow Card",
+      "description": "A single responsive card whose copy you write as normal JSX children. A soft radial-gradient blob slowly drifts between the four corners — colour and speed are props. Headings inherit the page font; paragraphs get muted body styling. Fills any parent column via w-full h-full.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ambient-glow-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/ambient-glow-card.tsx"
         }
       ]
     }

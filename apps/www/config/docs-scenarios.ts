@@ -1043,19 +1043,24 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       }
     ]
   },
-  "ambient-glass-bento": {
-    "slug": "ambient-glass-bento",
-    "overview": "AmbientGlassBento renders a CSS grid: mobile is a single column; from `md` up you set **`columns`** (2–12) for how many equal tracks exist, and each **`items[]`** entry sets **`colSpan`** (clamped to 1…columns), **`title`**, **`description`**, optional **`cardBackground`** for the solid surface, **`spotColors`** as a three-stop tuple driving the moving radial wash, plus optional **`cardClassName` / `titleClassName` / `descriptionClassName`** per tile. Root **`cardClassName`**, **`titleClassName`**, and **`descriptionClassName`** apply to all cards as defaults before per-item overrides. The wash animates with **linear `rotate`** and **mirrored `x`/`y`** keyframes (transform-only, `will-change: transform` on the mesh) so colour visibly drifts; **`meshRotationDuration`** scales those loops. **`equalHeightRows`** toggles `md:grid-auto-rows-[minmax(0,1fr)]` for preview-style equal row heights when a parent supplies height. Grain is inline SVG `feTurbulence`; no remote noise assets. Typography uses **`text-balance`** / **`text-pretty`** and **`antialiased`** on headings and body.",
+  "ambient-glow-card": {
+    "slug": "ambient-glow-card",
+    "overview": "AmbientGlowCard is a single **`<article>`** that fills its parent column (**`w-full h-full`**). A single soft radial-gradient **blob** drifts between the four corners on a keyframe loop; the loop length is **`animationDuration`** seconds (clamped 6–120). Colour comes from **`blobColor`** — either a single CSS colour or a `[c0, c1, c2]` tuple. Content is plain JSX **`children`**; any `<h1>`–`<h6>` inside gets sensible tracking, balance, and theme colour but inherits the consumer's font family. The base tint is **`bg-neutral-100`** with **`dark:bg-neutral-900`** unless **`cardBackground`** overrides. Grain is inline SVG; reduced-motion pins the blob.",
     "scenarios": [
       {
-        "title": "Four-column product grid",
-        "description": "Use columns={4} and colSpan values that sum to four per row for a denser marketing strip.",
-        "code": "import { AmbientGlassBento } from \"@/components/ui/ambient-glass-bento\";\n\nconst items = [\n  {\n    title: \"Ship\",\n    description: \"From idea to production in one pipeline.\",\n    colSpan: 2,\n    cardBackground: \"#0c0c0e\",\n    spotColors: [\"#a78bfa\", \"#6366f1\", \"#c4b5fd\"] as const,\n  },\n  {\n    title: \"Scale\",\n    description: \"Autoscaling without config drift.\",\n    colSpan: 2,\n    cardBackground: \"#0c0c0e\",\n    spotColors: [\"#38bdf8\", \"#0ea5e9\", \"#bae6fd\"] as const,\n  },\n];\n\nexport default function FourCols() {\n  return (\n    <div className=\"max-w-4xl p-4\">\n      <AmbientGlassBento columns={4} equalHeightRows={false} items={items} />\n    </div>\n  );\n}"
+        "title": "Drop into any column",
+        "description": "Place inside a 2-column responsive grid — the card stretches to the cell.",
+        "code": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function Pair() {\n  return (\n    <div className=\"grid grid-cols-1 gap-5 md:grid-cols-2\">\n      <AmbientGlowCard blobColor={[\"#f9b8c4\", \"#f897ad\", \"#fcd1c1\"]}>\n        <h3>Software That Actually Scales</h3>\n        <p>Not code. Not prototypes. Real, live systems running in production from day one.</p>\n      </AmbientGlowCard>\n      <AmbientGlowCard blobColor={[\"#b4c8f4\", \"#9aa9eb\", \"#c4d5f5\"]} animationDuration={28}>\n        <h3>Infrastructure Built In</h3>\n        <p>Deployment, scaling, and runtime handled automatically. No DevOps, no setup, no friction.</p>\n      </AmbientGlowCard>\n    </div>\n  );\n}"
       },
       {
-        "title": "Brand defaults + per-card overrides",
-        "description": "Set root titleClassName for all headings, then override a single hero tile with item.titleClassName.",
-        "code": "import { AmbientGlassBento } from \"@/components/ui/ambient-glass-bento\";\n\nconst items = [\n  {\n    title: \"Hero\",\n    description: \"Larger display treatment on one tile only.\",\n    colSpan: 3,\n    cardBackground: \"rgb(15 23 42)\",\n    spotColors: [\"#f472b6\", \"#e879f9\", \"#fda4af\"] as const,\n    titleClassName: \"text-3xl font-semibold tracking-tight text-white\",\n    descriptionClassName: \"text-neutral-300\",\n  },\n  {\n    title: \"Detail\",\n    description: \"Inherits root title styles.\",\n    colSpan: 2,\n    cardBackground: \"rgb(15 23 42)\",\n    spotColors: [\"#94a3b8\", \"#64748b\", \"#cbd5e1\"] as const,\n  },\n];\n\nexport default function Overrides() {\n  return (\n    <AmbientGlassBento\n      columns={5}\n      titleClassName=\"text-2xl font-medium text-white\"\n      descriptionClassName=\"text-sm text-neutral-400\"\n      items={items}\n    />\n  );\n}"
+        "title": "Single accent colour",
+        "description": "Pass `blobColor` as a string for a quick one-stop wash.",
+        "code": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function SingleColour() {\n  return (\n    <AmbientGlowCard blobColor=\"#a8d4a0\" animationDuration={32}>\n      <h3>AI That Owns the System</h3>\n      <p>AI doesn't just generate code — it builds, runs, and evolves the entire system end-to-end.</p>\n    </AmbientGlowCard>\n  );\n}"
+      },
+      {
+        "title": "Pause the drift",
+        "description": "Set `motionDisabled` to pin the blob to its starting corner — useful for static screenshots or motion-sensitive contexts.",
+        "code": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function Pinned() {\n  return (\n    <AmbientGlowCard blobColor={[\"#f5cf90\", \"#f1b063\", \"#ffd9a0\"]} motionDisabled>\n      <h3>Build &amp; Iterate Real Software</h3>\n      <p>Create, run, and improve real production systems — not one-shot prompts or demos.</p>\n    </AmbientGlowCard>\n  );\n}"
       }
     ]
   }

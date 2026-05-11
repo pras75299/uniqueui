@@ -6,7 +6,6 @@
     "spotlight-card",
     "aurora-background",
     "animated-tabs",
-    "ambient-glass-bento",
     "magnetic-button",
     "infinite-marquee",
     "scroll-reveal",
@@ -54,6 +53,7 @@
     "chromatic-aberration-reveal",
     "iridescent-foil-button",
     "kinetic-variable-headline",
-    "refractive-cursor-lens"
+    "refractive-cursor-lens",
+    "ambient-glow-card"
   ]
 }
