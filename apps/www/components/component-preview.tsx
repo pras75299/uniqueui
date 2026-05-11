@@ -22,6 +22,8 @@ export default function ComponentPreview({ slug }: { slug: string }) {
   const isDark = theme === "dark";
 
   const isOutlinedMegaMark = slug === "outlined-mega-mark";
+  const isAmbientGlassBento = slug === "ambient-glass-bento";
+  const isTallStretchPreview = isOutlinedMegaMark || isAmbientGlassBento;
 
   return (
     <motion.div
@@ -29,7 +31,9 @@ export default function ComponentPreview({ slug }: { slug: string }) {
         "w-full rounded-xl border relative flex",
         isOutlinedMegaMark
           ? "min-h-[min(32rem,82dvh)] flex-col items-stretch py-4 sm:py-6"
-          : "min-h-[300px] items-center justify-center",
+          : isAmbientGlassBento
+            ? "h-[min(38rem,78dvh)] min-h-[min(28rem,52dvh)] flex-col items-stretch py-4 sm:py-5"
+            : "min-h-[300px] items-center justify-center",
         hasOverflowHidden && "overflow-hidden",
         isDark ? "border-neutral-800 bg-neutral-950/50" : "border-neutral-200 bg-neutral-50/80"
       )}
@@ -52,8 +56,11 @@ export default function ComponentPreview({ slug }: { slug: string }) {
       <div
         className={cn(
           "relative z-10 w-full",
+          isTallStretchPreview &&
+            "flex min-h-0 flex-1 flex-col",
           isOutlinedMegaMark &&
-            "flex w-full flex-col items-center justify-center",
+            "items-center justify-center",
+          isAmbientGlassBento && "items-stretch",
         )}
       >
         <Demo theme={theme} />

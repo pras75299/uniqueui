@@ -36,7 +36,7 @@ export type AmbientGlassBentoProps = Omit<
 };
 
 const cardShell =
-  "group relative h-full w-full overflow-hidden rounded-2xl border-0 bg-neutral-200 p-0 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.55),0_1px_0_0_rgb(255_255_255/0.35)] dark:bg-neutral-800 dark:shadow-[inset_0_1px_0_0_rgb(0_0_0/0.45),0_1px_0_0_rgb(0_0_0/0.35)]";
+  "group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border-0 bg-neutral-200 p-0 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.55),0_1px_0_0_rgb(255_255_255/0.35)] dark:bg-neutral-900 dark:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.06),0_1px_0_0_rgb(0_0_0/0.45)]";
 
 /** Single soft mesh; slow linear rotation so colour washes move smoothly inside the card. */
 function AmbientMesh({
@@ -62,7 +62,7 @@ function AmbientMesh({
           className="h-full w-full blur-3xl"
           style={
             {
-              opacity: 0.92,
+              opacity: 0.72,
               background: `
                 radial-gradient(circle 40% at 30% 36%, ${c0}, transparent 70%),
                 radial-gradient(circle 36% at 70% 44%, ${c1}, transparent 70%),
@@ -162,7 +162,7 @@ function AmbientGlassBentoCard({
         }
       />
 
-      <div className="relative z-10 flex h-full min-h-[16rem] flex-col justify-end p-8">
+      <div className="relative z-10 flex h-full min-h-[14rem] flex-col justify-end p-6 sm:p-8 md:min-h-0">
         <div className={cn(item.tightCopy && "max-w-md")}>
           <h3 className="font-sans text-2xl font-medium tracking-tight text-neutral-900 dark:text-neutral-50">
             {item.title}
@@ -194,14 +194,17 @@ export function AmbientGlassBento({
     <div
       {...rest}
       className={cn(
-        "grid grid-cols-1 gap-4 md:auto-rows-[16rem] md:grid-cols-5",
+        "grid h-full w-full min-h-[26rem] grid-cols-1 gap-3 md:min-h-0 md:grid-cols-5 md:gap-4 md:[grid-template-rows:minmax(0,1fr)_minmax(0,1fr)]",
         className,
       )}
     >
       {items.map((item, i) => (
         <div
           key={`${item.title}-${i}`}
-          className={item.colSpan === 3 ? "md:col-span-3" : "md:col-span-2"}
+          className={cn(
+            "flex h-full min-h-[15rem] flex-col md:min-h-0",
+            item.colSpan === 3 ? "md:col-span-3" : "md:col-span-2",
+          )}
         >
           <AmbientGlassBentoCard
             item={item}
