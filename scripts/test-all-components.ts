@@ -164,6 +164,20 @@ async function run() {
         process.exit(1);
     }
 
+    // ── 4b. Ensure CLI deps exist (workspace; packages/cli/node_modules is not in git) ─
+    const cliDir = path.join(ROOT_DIR, 'packages/cli');
+    const commanderResolved = path.join(cliDir, 'node_modules', 'commander');
+    if (!fs.existsSync(commanderResolved)) {
+        console.log('📦  packages/cli dependencies missing — running pnpm install there (needed for ts-node CLI)...');
+        try {
+            execFileSync('pnpm', ['install'], { cwd: cliDir, stdio: 'inherit', env: { ...process.env, CI: '1' } });
+            console.log('    ✅ packages/cli dependencies installed.\n');
+        } catch (e: any) {
+            console.error('    ❌ pnpm install in packages/cli failed.');
+            process.exit(1);
+        }
+    }
+
     // ── 5. Create a fresh Next.js app ──────────────────────────────────────────
     const TEST_DIR = path.join(ROOT_DIR, 'e2e-components-test');
     if (fs.existsSync(TEST_DIR)) {
