@@ -538,8 +538,10 @@ export async function add(componentName: string, options: { url: string; yes?: b
                 if (result.status !== 0) {
                     throw new Error(`package manager exited with code ${result.status}`);
                 }
-            } catch {
+            } catch (error) {
                 console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
+                const errorDetails = error instanceof Error ? error.message : String(error);
+                console.warn(chalk.yellow(`Error details: ${errorDetails}`));
             }
         }
     }

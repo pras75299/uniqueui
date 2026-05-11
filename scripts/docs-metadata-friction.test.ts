@@ -61,4 +61,81 @@ describe("docs metadata friction script", () => {
     expect(rows).toHaveLength(1);
     expect(rows[0]).toContain("| pending | pending | pending | pending |");
   });
+
+  it("appends full row when all manual fields are provided", () => {
+    const repoRoot = createFixtureRepo();
+    const scriptPath = path.join(repoRoot, "scripts", "docs-metadata-friction.mjs");
+    const logPath = path.join(repoRoot, "docs", "maintainers", "docs-metadata-friction-log.md");
+
+    const output = execFileSync(
+      "node",
+      [
+        scriptPath,
+        "--append",
+        "--conflicts",
+        "5",
+        "--ownership",
+        "YES",
+        "--tooling",
+        "no",
+        "--action",
+        "Split metadata",
+      ],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
+      }
+    );
+
+    expect(output).toContain("Appended row");
+
+    const logContents = fs.readFileSync(logPath, "utf8");
+    const rows = logContents
+      .split("\n")
+      .filter((line) => line.startsWith("| 20") && line.includes("| 5 | yes | no |"));
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toContain("| Split metadata |");
+  });
+
+  it("errors when partial manual fields are provided in append mode", () => {
+    const repoRoot = createFixtureRepo();
+    const scriptPath = path.join(repoRoot, "scripts", "docs-metadata-friction.mjs");
+
+    expect(() =>
+      execFileSync("node", [scriptPath, "--append", "--conflicts", "5"], {
+        cwd: repoRoot,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      })
+    ).toThrowError(/Partial manual fields supplied/);
+  });
+
+  it("prints a proposed row for manual metadata without append", () => {
+    const repoRoot = createFixtureRepo();
+    const scriptPath = path.join(repoRoot, "scripts", "docs-metadata-friction.mjs");
+
+    const output = execFileSync(
+      "node",
+      [
+        scriptPath,
+        "--conflicts",
+        "4",
+        "--ownership",
+        "Yes",
+        "--tooling",
+        "NO",
+        "--action",
+        "Keep monitoring",
+      ],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
+      }
+    );
+
+    expect(output).toContain("Proposed log row:");
+    expect(output).toContain("| 4 | yes | no |");
+    expect(output).toContain("| Keep monitoring |");
+  });
 });

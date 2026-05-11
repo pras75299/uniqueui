@@ -91,6 +91,45 @@ describe('CLI: add command', () => {
         );
     });
 
+    it('logs dependency install error details when automatic installation fails', async () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        (fetch as any).mockImplementation((url: string) => {
+            if (url === 'http://example.com/registry/index.json') {
+                return Promise.resolve({
+                    ok: true,
+                    text: () => Promise.resolve(JSON.stringify(mockRegistryIndex))
+                });
+            }
+
+            if (url === 'http://example.com/registry/test-component.json') {
+                return Promise.resolve({
+                    ok: true,
+                    text: () => Promise.resolve(JSON.stringify(mockRegistryItem))
+                });
+            }
+
+            return Promise.resolve({
+                ok: false,
+                text: () => Promise.resolve(JSON.stringify(null))
+            });
+        });
+
+        (fs.existsSync as any).mockReturnValue(false);
+        (spawnSync as any).mockReturnValue({
+            status: 1,
+            error: new Error('network down'),
+            stdout: '',
+            stderr: ''
+        });
+
+        await add('test-component', { url: 'http://example.com/registry' });
+
+        expect(warnSpy).toHaveBeenCalledWith(
+            expect.stringContaining('Failed to install dependencies automatically. Please install them manually.')
+        );
+        expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('network down'));
+    });
+
     it('should load local directory registries via index.json and component json files', async () => {
         (fs.existsSync as any).mockReturnValue(false);
         (fs.readJson as any).mockImplementation((path: string) => {

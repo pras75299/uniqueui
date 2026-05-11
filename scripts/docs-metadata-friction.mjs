@@ -20,6 +20,10 @@ function getArgValue(flag) {
   return argv[index + 1] ?? null;
 }
 
+function normalizeYesNoArg(value) {
+  return value === null ? null : value.trim().toLowerCase();
+}
+
 if (!fs.existsSync(docsJsonPath)) {
   console.error(`ERROR: Missing ${docsJsonPath}`);
   process.exit(1);
@@ -54,13 +58,14 @@ try {
 const c1Triggered = lineCount > 1500 || sizeKb > 200;
 const date = new Date().toISOString().slice(0, 10);
 const conflictsRaw = getArgValue("--conflicts");
-const ownershipNeed = getArgValue("--ownership");
-const toolingNeed = getArgValue("--tooling");
+const ownershipNeed = normalizeYesNoArg(getArgValue("--ownership"));
+const toolingNeed = normalizeYesNoArg(getArgValue("--tooling"));
 const action = getArgValue("--action");
 const conflicts = conflictsRaw !== null ? Number.parseInt(conflictsRaw, 10) : null;
 const c2Triggered = conflicts !== null && Number.isFinite(conflicts) ? conflicts >= 3 : null;
 const c3Triggered = ownershipNeed === "yes" ? true : ownershipNeed === "no" ? false : null;
 const c4Triggered = toolingNeed === "yes" ? true : toolingNeed === "no" ? false : null;
+// Manual C2-C4 metadata is either omitted entirely, partially supplied (invalid), or fully supplied.
 const hasAnyManualField =
   conflictsRaw !== null || ownershipNeed !== null || toolingNeed !== null || action !== null;
 const hasAllManualFields =
@@ -68,15 +73,19 @@ const hasAllManualFields =
   c3Triggered !== null &&
   c4Triggered !== null &&
   action;
+// metCount stays null until every manual condition is known, because partial input cannot produce a valid tally.
 const metCount =
   c2Triggered === null || c3Triggered === null || c4Triggered === null
     ? null
     : [c1Triggered, c2Triggered, c3Triggered, c4Triggered].filter(Boolean).length;
 const row =
+  // No manual fields: append a row with placeholders for maintainers to fill later.
   !hasAnyManualField
     ? `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | pending | pending | pending | pending | pending |`
+    // Some manual fields are missing or invalid: refuse to build a partial row.
     : !hasAllManualFields || metCount === null
       ? null
+      // All manual fields are present: emit the fully populated log row.
       : `| ${date} | ${lineCount} | ${sizeKb} | ${touches30d} | ${c1Triggered ? "yes" : "no"} | ${conflicts} | ${ownershipNeed} | ${toolingNeed} | ${metCount} | ${action} |`;
 
 const summary = [

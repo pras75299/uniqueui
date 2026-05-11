@@ -43,6 +43,9 @@ jobs:
       - name: Run workspace tests
         run: pnpm test
 
+      - name: Run repo-level tests
+        run: pnpm -w run test:repo
+
       - name: Lint workspaces
         run: pnpm lint
 
