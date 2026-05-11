@@ -3520,21 +3520,12 @@ export const componentDemos: Record<string, DemoComponent> = {
       </RefractiveCursorLens>
     </div>
   ),
-  "ambient-glass-bento": ({ theme = "dark" }) => (
-    <div
-      className={cn(
-        "flex h-full min-h-0 w-full flex-1 flex-col rounded-lg p-3 sm:p-4 md:p-5",
-        theme === "dark" ? "bg-neutral-950" : "bg-neutral-100",
-      )}
-    >
-      <AmbientGlassBento
-        className="min-h-0 flex-1"
-        columns={5}
-        meshRotationDuration={36}
-        titleClassName="text-white"
-        descriptionClassName="text-neutral-400"
-        items={AMBIENT_GLASS_BENTO_SHOWCASE}
-      />
-    </div>
+  "ambient-glass-bento": () => (
+    <AmbientGlassBento
+      className="h-full min-h-0 w-full flex-1 px-2 sm:px-3 md:px-4"
+      columns={5}
+      meshRotationDuration={28}
+      items={AMBIENT_GLASS_BENTO_SHOWCASE}
+    />
   ),
 };

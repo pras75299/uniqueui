@@ -105,10 +105,10 @@ export type AmbientGlassBentoProps = Omit<
 };
 
 const cardShellBase =
-  "group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border-0 p-0 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.55),0_1px_0_0_rgb(255_255_255/0.35)] dark:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.06),0_1px_0_0_rgb(0_0_0/0.45)]";
+  "group relative isolate h-full min-h-0 w-full overflow-hidden rounded-2xl border border-neutral-200/90 p-0 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.75),0_1px_0_0_rgb(0_0_0/0.05)] dark:border-neutral-800 dark:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.06),0_1px_0_0_rgb(0_0_0/0.45)]";
 
 const defaultCardTint =
-  "bg-neutral-200 dark:bg-neutral-900";
+  "bg-neutral-100 dark:bg-neutral-900";
 
 const gapClass = {
   sm: "gap-2 md:gap-3",
@@ -116,7 +116,7 @@ const gapClass = {
   lg: "gap-4 md:gap-5",
 } as const;
 
-/** Moving colour field: linear spin + mirrored translate so motion reads clearly. */
+/** Moving colour field: linear spin + independent px drift (percent drift was too subtle on large layers). */
 function AmbientMesh({
   c0,
   c1,
@@ -132,25 +132,25 @@ function AmbientMesh({
 }) {
   const reduce = useReducedMotion();
   const off = reduce || !motionEnabled;
+  const drift = rotateDuration * 0.32;
 
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
       <div
-        className="absolute left-1/2 top-1/2 h-[220%] w-[220%]"
+        className="absolute left-1/2 top-1/2 h-[220%] min-h-[18rem] w-[220%] min-w-[18rem] sm:min-h-[28rem] sm:min-w-[28rem] md:min-h-[32rem] md:min-w-[32rem]"
         style={{ transform: "translate(-50%, -50%)" }}
       >
         <motion.div
-          className="h-full w-full will-change-transform blur-3xl"
+          className="h-full w-full opacity-90 mix-blend-overlay will-change-transform blur-3xl dark:opacity-[0.92] dark:mix-blend-screen"
           style={
             {
-              opacity: 0.82,
               background: `
-                radial-gradient(circle 42% at 34% 38%, ${c0}, transparent 70%),
-                radial-gradient(circle 38% at 68% 42%, ${c1}, transparent 70%),
-                radial-gradient(circle 36% at 48% 72%, ${c2}, transparent 72%)
+                radial-gradient(circle 44% at 36% 40%, ${c0}, transparent 58%),
+                radial-gradient(circle 40% at 66% 44%, ${c1}, transparent 58%),
+                radial-gradient(circle 38% at 50% 74%, ${c2}, transparent 60%)
               `,
             } as CSSProperties
           }
@@ -160,8 +160,8 @@ function AmbientMesh({
               ? undefined
               : {
                   rotate: [0, 360],
-                  x: ["-5%", "7%", "-4%", "5%", "-5%"],
-                  y: ["4%", "-6%", "5%", "-4%", "4%"],
+                  x: [-22, 32, -18, 26, -22],
+                  y: [18, -28, 22, -20, 18],
                 }
           }
           transition={
@@ -174,13 +174,13 @@ function AmbientMesh({
                     ease: "linear",
                   },
                   x: {
-                    duration: rotateDuration * 0.38,
+                    duration: drift,
                     repeat: Infinity,
                     repeatType: "mirror",
                     ease: [0.45, 0.05, 0.55, 0.95],
                   },
                   y: {
-                    duration: rotateDuration * 0.48,
+                    duration: drift * 1.15,
                     repeat: Infinity,
                     repeatType: "mirror",
                     ease: [0.45, 0.05, 0.55, 0.95],
@@ -361,7 +361,7 @@ export function AmbientGlassBento({
     <div
       {...rest}
       className={cn(
-        "grid h-full w-full min-h-[26rem] grid-cols-1 md:min-h-0",
+        "grid h-full w-full min-h-[22rem] grid-cols-1 sm:min-h-[24rem] md:min-h-0",
         mdCols,
         gapClass[gap],
         rowSizing,
@@ -376,7 +376,7 @@ export function AmbientGlassBento({
           <div
             key={`${item.title}-${i}`}
             className={cn(
-              "flex h-full min-h-[15rem] flex-col md:min-h-0",
+              "flex h-full min-h-[14rem] flex-col sm:min-h-[15rem] md:min-h-0",
               spanCls,
             )}
           >
@@ -396,7 +396,7 @@ export function AmbientGlassBento({
   );
 }
 
-/** Default four-tile marketing grid from the showcase reference. */
+/** Default four-tile marketing grid (uses theme surfaces; add `cardBackground` per item to pin a custom tint). */
 export const AMBIENT_GLASS_BENTO_SHOWCASE: readonly AmbientGlassBentoItem[] = [
   {
     title: "Software That Actually Scales",
@@ -404,7 +404,6 @@ export const AMBIENT_GLASS_BENTO_SHOWCASE: readonly AmbientGlassBentoItem[] = [
       "Not code. Not prototypes. Real, live systems running in production from day one.",
     colSpan: 3,
     tightCopy: true,
-    cardBackground: "rgb(23 23 23)",
     spotColors: ["rgb(255, 126, 179)", "rgb(255, 117, 140)", "rgb(255, 177, 153)"],
   },
   {
@@ -412,7 +411,6 @@ export const AMBIENT_GLASS_BENTO_SHOWCASE: readonly AmbientGlassBentoItem[] = [
     description:
       "Deployment, scaling, and runtime handled automatically. No DevOps, no setup, no friction.",
     colSpan: 2,
-    cardBackground: "rgb(23 23 23)",
     spotColors: ["rgb(130, 170, 240)", "rgb(100, 150, 255)", "rgb(180, 200, 255)"],
   },
   {
@@ -420,7 +418,6 @@ export const AMBIENT_GLASS_BENTO_SHOWCASE: readonly AmbientGlassBentoItem[] = [
     description:
       "Create, run, and improve real production systems — not one-shot prompts or demos.",
     colSpan: 2,
-    cardBackground: "rgb(23 23 23)",
     spotColors: ["rgb(255, 200, 100)", "rgb(255, 170, 80)", "rgb(255, 220, 150)"],
   },
   {
@@ -429,7 +426,6 @@ export const AMBIENT_GLASS_BENTO_SHOWCASE: readonly AmbientGlassBentoItem[] = [
       "AI doesn't just generate code — it builds, runs, and evolves the entire system end-to-end.",
     colSpan: 3,
     tightCopy: true,
-    cardBackground: "rgb(23 23 23)",
-    spotColors: ["rgb(200, 210, 220)", "rgb(160, 175, 190)", "rgb(230, 235, 240)"],
+    spotColors: ["rgb(120, 160, 200)", "rgb(90, 130, 170)", "rgb(190, 210, 230)"],
   },
 ] as const;
