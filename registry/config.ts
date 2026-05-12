@@ -502,4 +502,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "hero-noise-dot-field",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "blocks/hero/noise-dot-field/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

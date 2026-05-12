@@ -1084,5 +1084,26 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "import { ReferencePulseBackground } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <ReferencePulseBackground hue={210} speed={9} />\n      <div className=\"relative\">…your content…</div>\n    </section>\n  );\n}"
       }
     ]
+  },
+  "hero-noise-dot-field": {
+    "slug": "hero-noise-dot-field",
+    "overview": "Canvas-rendered dot-field hero. Background is a separate export and can be reused under any composition.",
+    "scenarios": [
+      {
+        "title": "Dense field",
+        "description": "Tighter grid spacing for a denser look.",
+        "code": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Dense() {\n  return <NoiseDotFieldHero backgroundProps={{ spacing: 18, pocketRadius: 220 }} />;\n}"
+      },
+      {
+        "title": "Tinted dots",
+        "description": "Pass any CSS color to recolor the dot field.",
+        "code": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Tinted() {\n  return (\n    <NoiseDotFieldHero backgroundProps={{ color: \"rgba(110, 231, 183, 0.85)\" }} />\n  );\n}"
+      },
+      {
+        "title": "Background only",
+        "description": "Layer the canvas behind a different composition.",
+        "code": "import { NoiseDotFieldBackground } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <NoiseDotFieldBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
+      }
+    ]
   }
 };

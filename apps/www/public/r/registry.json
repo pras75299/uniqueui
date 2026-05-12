@@ -1053,6 +1053,24 @@
           "target": "components/ui/hero-reference-pulse.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-noise-dot-field",
+      "type": "registry:ui",
+      "title": "Noise Dot Field Hero",
+      "description": "A canvas-rendered hero block. A dense dot grid is displaced by a sine-wave noise field and parts smoothly around the cursor with a falloff pocket. Honors `prefers-reduced-motion`, devicePixelRatio-aware, and ships with zero external animation deps beyond `motion`.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-noise-dot-field.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-noise-dot-field.tsx"
+        }
+      ]
     }
   ]
 }

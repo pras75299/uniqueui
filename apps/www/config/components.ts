@@ -16,6 +16,7 @@ import {
   Loader2,
   LucideAperture,
   LucideFocus,
+  LucideGrid3x3,
   LucideMaximize2,
   LucideMessageSquare,
   LucideMousePointer,
@@ -84,6 +85,7 @@ const iconMap = {
   Loader2,
   LucideAperture,
   LucideFocus,
+  LucideGrid3x3,
   LucideMaximize2,
   LucideMessageSquare,
   LucideMousePointer,
@@ -3088,6 +3090,33 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Demo() {\n  return <ReferencePulseHero />;\n}"
+  },
+  {
+    "slug": "hero-noise-dot-field",
+    "name": "Noise Dot Field Hero",
+    "description": "A canvas-rendered hero block. A dense dot grid is displaced by a sine-wave noise field and parts smoothly around the cursor with a falloff pocket. Honors `prefers-reduced-motion`, devicePixelRatio-aware, and ships with zero external animation deps beyond `motion`.",
+    "icon": "LucideGrid3x3",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-12",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Omit for the default headline + CTAs."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ spacing?: number; color?: string; pocketRadius?: number; className?: string }",
+        "description": "Forwarded to the canvas background layer."
+      }
+    ],
+    "usageCode": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Demo() {\n  return <NoiseDotFieldHero />;\n}"
   }
 ] satisfies ComponentDefinition[];
 
