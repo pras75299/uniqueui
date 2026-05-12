@@ -37,7 +37,7 @@ export default function BlockPreview({ slug, className }: { slug: string; classN
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
       <div className="relative min-h-[70svh] w-full">
-        <Demo />
+        <Demo theme={theme} />
       </div>
     </motion.div>
   );
