@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { useEffect, useId, useRef, type ComponentProps, type ReactNode } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +24,9 @@ export function LiquidAuroraMeshBackground({
   const sx = useSpring(px, { stiffness: 60, damping: 16, mass: 0.6 });
   const sy = useSpring(py, { stiffness: 60, damping: 16, mass: 0.6 });
   const filterId = useId();
-  const cycle = reduced ? 0 : speed;
+  // Clamp speed defensively — negative or non-finite values would yield invalid durations.
+  const safeSpeed = Number.isFinite(speed) && speed > 0 ? speed : 0;
+  const cycle = reduced ? 0 : safeSpeed;
 
   useEffect(() => {
     const el = ref.current;
@@ -106,9 +108,8 @@ export function LiquidAuroraMeshBackground({
   );
 }
 
-type LiquidAuroraMeshHeroProps = {
+type LiquidAuroraMeshHeroProps = Omit<ComponentProps<"section">, "children"> & {
   children?: ReactNode;
-  className?: string;
   backgroundProps?: LiquidAuroraMeshBackgroundProps;
 };
 
@@ -116,9 +117,11 @@ export function LiquidAuroraMeshHero({
   children,
   className,
   backgroundProps,
+  ...rest
 }: LiquidAuroraMeshHeroProps) {
   return (
     <section
+      {...rest}
       className={cn(
         "relative isolate flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#06060a] text-white",
         className,
