@@ -1053,6 +1053,24 @@
           "target": "components/ui/hero-reference-pulse.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-iridescent-sweep",
+      "type": "registry:ui",
+      "title": "Iridescent Sweep Hero",
+      "description": "An editorial, holographic-foil hero. Conic-gradient foil drifts under a turbulence grain; a soft sheen ribbon sweeps across on a slow cadence; the headline ships with a one-shot foil sheen on mount. CSS + SVG + motion only — no WebGL.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-iridescent-sweep.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-iridescent-sweep.tsx"
+        }
+      ]
     }
   ]
 }
