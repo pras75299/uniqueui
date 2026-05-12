@@ -155,21 +155,21 @@ function DefaultAuroraContent() {
         transition={{ delay: 0.54, type: "spring", stiffness: 110, damping: 18 }}
         className="mt-9 flex flex-wrap items-center justify-center gap-3"
       >
-        <a
-          href="#"
+        <button
+          type="button"
           className="group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px"
         >
           <span>Get started</span>
           <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
             →
           </span>
-        </a>
-        <a
-          href="#"
+        </button>
+        <button
+          type="button"
           className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 backdrop-blur transition-colors hover:bg-white/5"
         >
           See it move
-        </a>
+        </button>
       </motion.div>
     </>
   );
