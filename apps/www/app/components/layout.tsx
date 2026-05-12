@@ -125,12 +125,14 @@ export default function ComponentsLayout({
           <div className="h-full overflow-y-auto px-3 py-4">
             <div className="space-y-5">
               {Array.from(
-                componentsList.reduce((acc, component) => {
-                  const category = component.category ?? "Components";
-                  if (!acc.has(category)) acc.set(category, []);
-                  acc.get(category)!.push(component);
-                  return acc;
-                }, new Map<string, (typeof componentsList)[number][]>()),
+                componentsList
+                  .filter((c) => c.kind !== "block")
+                  .reduce((acc, component) => {
+                    const category = component.category ?? "Components";
+                    if (!acc.has(category)) acc.set(category, []);
+                    acc.get(category)!.push(component);
+                    return acc;
+                  }, new Map<string, (typeof componentsList)[number][]>()),
               ).map(([category, items]) => (
                 <div key={category} className="space-y-0.5">
                   <h4

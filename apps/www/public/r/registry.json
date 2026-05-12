@@ -1035,6 +1035,24 @@
           "target": "components/ui/ambient-glow-card.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-reference-pulse",
+      "type": "registry:ui",
+      "title": "Reference Pulse Hero",
+      "description": "A reference hero block. Conic-gradient halo rotating behind a radial pulse, with motion-driven entry on the headline. Drop your own children in to replace the default composition; the background also ships as a standalone export.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-reference-pulse.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-reference-pulse.tsx"
+        }
+      ]
     }
   ]
 }

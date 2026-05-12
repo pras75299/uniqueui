@@ -44,6 +44,8 @@ type RegistryDocsComponent = {
   description: string;
   icon: string;
   category?: string;
+  /** "block" routes the entry under /blocks instead of /components. Omitted = component. */
+  kind?: "block";
   /** ISO date (YYYY-MM-DD) — drives the "NEW" highlight for ~24h after add. */
   addedAt?: string;
   props: Array<{
@@ -99,6 +101,8 @@ export type ComponentItem = {
   description: string;
   icon: ElementType;
   category?: string;
+  /** "block" routes the entry under /blocks instead of /components. */
+  kind?: "block";
   /** ISO date (YYYY-MM-DD) component was added. Drives the "NEW" highlight for ~24h. */
   addedAt?: string;
   props?: {

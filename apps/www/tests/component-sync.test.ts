@@ -22,6 +22,25 @@ type RegistryDocsManifest = {
   }>;
 };
 
+type FullRegistryEntry = {
+  name: string;
+  files: Array<{ path: string; type: string; content: string }>;
+};
+
+/** Slug → on-disk source path for the registry:ui file. Reads from the
+ *  materialized registry.json so block paths (registry/blocks/...) are
+ *  honored alongside flat component paths. */
+function loadSourcePathsBySlug(): Map<string, string> {
+  const registryPath = path.resolve(process.cwd(), "public/registry.json");
+  const entries = JSON.parse(fs.readFileSync(registryPath, "utf-8")) as FullRegistryEntry[];
+  const map = new Map<string, string>();
+  for (const entry of entries) {
+    const ui = entry.files.find((f) => f.type === "registry:ui");
+    if (ui) map.set(entry.name, ui.path);
+  }
+  return map;
+}
+
 describe("Component metadata sync", () => {
   it("keeps docs components and registry component slugs aligned", () => {
     const docsSlugs = componentsList.map((component) => component.slug).sort();
@@ -100,11 +119,14 @@ describe("Component metadata sync", () => {
   });
 
   it("keeps docs ui component files mirrored from registry sources", () => {
+    const sourcePaths = loadSourcePathsBySlug();
     for (const slug of registryComponentSlugs) {
-      const registryPath = path.resolve(process.cwd(), "../../registry", slug, "component.tsx");
+      const sourceRel = sourcePaths.get(slug);
+      expect(sourceRel, `registry.json has no registry:ui file for ${slug}`).toBeDefined();
+      const registryPath = path.resolve(process.cwd(), "../../registry", sourceRel!);
       const docsPath = path.resolve(process.cwd(), "components/ui", `${slug}.tsx`);
 
-      expect(fs.existsSync(registryPath), `missing registry source for ${slug}`).toBe(true);
+      expect(fs.existsSync(registryPath), `missing registry source for ${slug} at ${sourceRel}`).toBe(true);
       expect(fs.existsSync(docsPath), `missing docs ui file for ${slug}`).toBe(true);
       expect(fs.readFileSync(docsPath, "utf-8")).toBe(fs.readFileSync(registryPath, "utf-8"));
     }
@@ -116,9 +138,12 @@ describe("Component metadata sync", () => {
 
     expect([...splitIndex.components].sort()).toEqual([...registryComponentSlugs].sort());
 
+    const sourcePaths = loadSourcePathsBySlug();
     for (const slug of splitIndex.components) {
+      const sourceRel = sourcePaths.get(slug);
+      expect(sourceRel, `registry.json has no registry:ui file for ${slug}`).toBeDefined();
       const splitPayloadPath = path.resolve(process.cwd(), "public/registry", `${slug}.json`);
-      const registrySourcePath = path.resolve(process.cwd(), "../../registry", slug, "component.tsx");
+      const registrySourcePath = path.resolve(process.cwd(), "../../registry", sourceRel!);
 
       expect(fs.existsSync(splitPayloadPath), `missing split registry payload for ${slug}`).toBe(true);
 
@@ -128,9 +153,9 @@ describe("Component metadata sync", () => {
       };
 
       expect(splitPayload.name).toBe(slug);
-      expect(splitPayload.files.some((file) => file.path === `${slug}/component.tsx`)).toBe(true);
+      expect(splitPayload.files.some((file) => file.path === sourceRel)).toBe(true);
       expect(
-        splitPayload.files.find((file) => file.path === `${slug}/component.tsx`)?.content.trimEnd()
+        splitPayload.files.find((file) => file.path === sourceRel)?.content.trimEnd()
       ).toBe(fs.readFileSync(registrySourcePath, "utf-8").trimEnd());
     }
   });
@@ -188,10 +213,10 @@ describe("Component metadata sync", () => {
       const splitPayloadPath = path.resolve(process.cwd(), "public/registry", `${slug}.json`);
       const splitPayload = JSON.parse(fs.readFileSync(splitPayloadPath, "utf-8")) as {
         name: string;
-        files: Array<{ path: string; content: string }>;
+        files: Array<{ path: string; content: string; type: string }>;
       };
-      const splitUi = splitPayload.files.find((f) => f.path === `${slug}/component.tsx`);
-      expect(splitUi, `split registry missing ${slug}/component.tsx`).toBeDefined();
+      const splitUi = splitPayload.files.find((f) => f.type === "registry:ui");
+      expect(splitUi, `split registry missing registry:ui file for ${slug}`).toBeDefined();
       expect(ui.content.trimEnd()).toBe(splitUi!.content.trimEnd());
 
       const manifestRow = manifest.items.find((i) => i.name === slug);

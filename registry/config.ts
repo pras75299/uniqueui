@@ -494,4 +494,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "hero-reference-pulse",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "blocks/hero/reference-pulse/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];
