@@ -85,7 +85,7 @@ export default function ComponentsIndex() {
             )}
           >
             <span className="h-1.5 w-1.5 rounded-full bg-purple-500 animate-pulse" />
-            {componentsList.length} components
+            {componentsOnly.length} components
           </span>
           <span
             className={cn(
@@ -211,9 +211,9 @@ export default function ComponentsIndex() {
         transition={{ duration: 0.2 }}
         className={cn("text-sm", isDark ? "text-neutral-600" : "text-neutral-400")}
       >
-        {filtered.length === componentsList.length
-          ? `All ${componentsList.length} components`
-          : `${filtered.length} of ${componentsList.length} components`}
+        {filtered.length === componentsOnly.length
+          ? `All ${componentsOnly.length} components`
+          : `${filtered.length} of ${componentsOnly.length} components`}
       </motion.p>
 
       {/* ── Grid ── */}

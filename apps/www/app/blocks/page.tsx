@@ -111,6 +111,7 @@ export default function BlocksIndex() {
                   key={cat}
                   type="button"
                   onClick={() => setActiveCategory(cat)}
+                  aria-pressed={isActive}
                   className={cn(
                     "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
                     isActive
@@ -190,6 +191,7 @@ export default function BlocksIndex() {
                           <h3 className="truncate text-sm font-medium">{block.name}</h3>
                           {isNew ? (
                             <span
+                              aria-label="New block"
                               className={cn(
                                 "rounded-full px-1.5 py-px text-[9px] font-bold uppercase tracking-wider",
                                 isDark

@@ -19,7 +19,9 @@ export function ReferencePulseBackground({
   ...rest
 }: ReferencePulseBackgroundProps) {
   const reduced = useReducedMotion();
-  const cycle = reduced ? 0 : speed;
+  // Clamp speed defensively — negative or non-finite values would yield invalid durations.
+  const safeSpeed = Number.isFinite(speed) && speed > 0 ? speed : 0;
+  const cycle = reduced ? 0 : safeSpeed;
 
   return (
     <div
@@ -63,9 +65,8 @@ export function ReferencePulseBackground({
   );
 }
 
-type ReferencePulseHeroProps = {
+type ReferencePulseHeroProps = Omit<ComponentProps<"section">, "children"> & {
   children?: ReactNode;
-  className?: string;
   backgroundProps?: ReferencePulseBackgroundProps;
 };
 
@@ -73,9 +74,11 @@ export function ReferencePulseHero({
   children,
   className,
   backgroundProps,
+  ...rest
 }: ReferencePulseHeroProps) {
   return (
     <section
+      {...rest}
       className={cn(
         "relative isolate flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#08080a] text-white",
         className,
