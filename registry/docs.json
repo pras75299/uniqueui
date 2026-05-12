@@ -4046,6 +4046,53 @@
           }
         ]
       }
+    },
+    {
+      "slug": "hero-liquid-aurora-mesh",
+      "name": "Liquid Aurora Mesh Hero",
+      "description": "An aurora-mesh hero whose colour ribbons drift through an SVG turbulence-displacement filter for an organic, fluid look. Mouse-reactive light pool follows the cursor with a spring; headline words rise on mount via per-word reveal. Pure CSS + SVG + motion — no WebGL deps.",
+      "icon": "LucideWaves",
+      "category": "Hero",
+      "kind": "block",
+      "addedAt": "2026-05-12",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Slotted hero content. Omit for the default headline + CTAs."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Classes for the outer `<section>`."
+        },
+        {
+          "name": "backgroundProps",
+          "type": "{ palette?: [string, string, string]; speed?: number; className?: string }",
+          "description": "Forwarded to the background layer."
+        }
+      ],
+      "usageCode": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Demo() {\n  return <LiquidAuroraMeshHero />;\n}",
+      "docs": {
+        "overview": "A displacement-warped aurora mesh hero. The background is a separate export, so it can layer behind any section.",
+        "scenarios": [
+          {
+            "title": "Custom palette",
+            "description": "Pass three accent stops to retune the aurora.",
+            "code": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Cool() {\n  return (\n    <LiquidAuroraMeshHero backgroundProps={{ palette: [\"#3b82f6\", \"#22d3ee\", \"#a78bfa\"], speed: 18 }} />\n  );\n}"
+          },
+          {
+            "title": "Override content",
+            "description": "Pass children to drop in your own headline / CTAs.",
+            "code": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Custom() {\n  return (\n    <LiquidAuroraMeshHero>\n      <h1 className=\"text-5xl font-semibold\">Ship it.</h1>\n    </LiquidAuroraMeshHero>\n  );\n}"
+          },
+          {
+            "title": "Background only",
+            "description": "Reuse just the layer behind a totally different composition.",
+            "code": "import { LiquidAuroraMeshBackground } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <LiquidAuroraMeshBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
+          }
+        ]
+      }
     }
   ]
 }

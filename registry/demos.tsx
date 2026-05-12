@@ -68,6 +68,7 @@ import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
 import { AmbientGlowCard } from "@/components/ui/ambient-glow-card";
 import { ReferencePulseHero } from "@/components/ui/hero-reference-pulse";
 import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
+import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3540,6 +3541,11 @@ export const componentDemos: Record<string, DemoComponent> = {
   "hero-iridescent-sweep": () => (
     <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <IridescentSweepHero className="min-h-full" />
+    </div>
+  ),
+  "hero-liquid-aurora-mesh": () => (
+    <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <LiquidAuroraMeshHero className="min-h-full" />
     </div>
   ),
 };

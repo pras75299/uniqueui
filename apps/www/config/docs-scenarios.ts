@@ -1105,5 +1105,26 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "import { IridescentSweepBackground } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <IridescentSweepBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
       }
     ]
+  },
+  "hero-liquid-aurora-mesh": {
+    "slug": "hero-liquid-aurora-mesh",
+    "overview": "A displacement-warped aurora mesh hero. The background is a separate export, so it can layer behind any section.",
+    "scenarios": [
+      {
+        "title": "Custom palette",
+        "description": "Pass three accent stops to retune the aurora.",
+        "code": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Cool() {\n  return (\n    <LiquidAuroraMeshHero backgroundProps={{ palette: [\"#3b82f6\", \"#22d3ee\", \"#a78bfa\"], speed: 18 }} />\n  );\n}"
+      },
+      {
+        "title": "Override content",
+        "description": "Pass children to drop in your own headline / CTAs.",
+        "code": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Custom() {\n  return (\n    <LiquidAuroraMeshHero>\n      <h1 className=\"text-5xl font-semibold\">Ship it.</h1>\n    </LiquidAuroraMeshHero>\n  );\n}"
+      },
+      {
+        "title": "Background only",
+        "description": "Reuse just the layer behind a totally different composition.",
+        "code": "import { LiquidAuroraMeshBackground } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <LiquidAuroraMeshBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
+      }
+    ]
   }
 };

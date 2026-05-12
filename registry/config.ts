@@ -510,4 +510,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "hero-liquid-aurora-mesh",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "blocks/hero/liquid-aurora-mesh/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];
