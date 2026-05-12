@@ -4093,6 +4093,53 @@
           }
         ]
       }
+    },
+    {
+      "slug": "hero-noise-dot-field",
+      "name": "Noise Dot Field Hero",
+      "description": "A canvas-rendered hero block. A dense dot grid is displaced by a sine-wave noise field and parts smoothly around the cursor with a falloff pocket. Honors `prefers-reduced-motion`, devicePixelRatio-aware, and ships with zero external animation deps beyond `motion`.",
+      "icon": "LucideGrid3x3",
+      "category": "Hero",
+      "kind": "block",
+      "addedAt": "2026-05-12",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Slotted hero content. Omit for the default headline + CTAs."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Classes for the outer `<section>`."
+        },
+        {
+          "name": "backgroundProps",
+          "type": "{ spacing?: number; color?: string; pocketRadius?: number; className?: string }",
+          "description": "Forwarded to the canvas background layer."
+        }
+      ],
+      "usageCode": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Demo() {\n  return <NoiseDotFieldHero />;\n}",
+      "docs": {
+        "overview": "Canvas-rendered dot-field hero. Background is a separate export and can be reused under any composition.",
+        "scenarios": [
+          {
+            "title": "Dense field",
+            "description": "Tighter grid spacing for a denser look.",
+            "code": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Dense() {\n  return <NoiseDotFieldHero backgroundProps={{ spacing: 18, pocketRadius: 220 }} />;\n}"
+          },
+          {
+            "title": "Tinted dots",
+            "description": "Pass any CSS color to recolor the dot field.",
+            "code": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Tinted() {\n  return (\n    <NoiseDotFieldHero backgroundProps={{ color: \"rgba(110, 231, 183, 0.85)\" }} />\n  );\n}"
+          },
+          {
+            "title": "Background only",
+            "description": "Layer the canvas behind a different composition.",
+            "code": "import { NoiseDotFieldBackground } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <NoiseDotFieldBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
+          }
+        ]
+      }
     }
   ]
 }

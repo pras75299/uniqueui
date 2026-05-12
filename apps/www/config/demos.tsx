@@ -73,6 +73,7 @@ import { AmbientGlowCard } from "@/components/ui/ambient-glow-card";
 import { ReferencePulseHero } from "@/components/ui/hero-reference-pulse";
 import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
 import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
+import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3550,6 +3551,11 @@ export const componentDemos: Record<string, DemoComponent> = {
   "hero-liquid-aurora-mesh": () => (
     <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <LiquidAuroraMeshHero className="min-h-full" />
+    </div>
+  ),
+  "hero-noise-dot-field": () => (
+    <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <NoiseDotFieldHero className="min-h-full" />
     </div>
   ),
 };
