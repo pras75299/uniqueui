@@ -502,4 +502,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "hero-iridescent-sweep",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "blocks/hero/iridescent-sweep/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

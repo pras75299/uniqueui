@@ -1084,5 +1084,26 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "import { ReferencePulseBackground } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <ReferencePulseBackground hue={210} speed={9} />\n      <div className=\"relative\">…your content…</div>\n    </section>\n  );\n}"
       }
     ]
+  },
+  "hero-iridescent-sweep": {
+    "slug": "hero-iridescent-sweep",
+    "overview": "Editorial holographic-foil hero. Pair with serifs or magazine-style typography in your override.",
+    "scenarios": [
+      {
+        "title": "Hue-shifted edition",
+        "description": "Shift the whole foil into a cooler register.",
+        "code": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Cool() {\n  return <IridescentSweepHero backgroundProps={{ hue: 140, speed: 28 }} />;\n}"
+      },
+      {
+        "title": "Lower grain",
+        "description": "Reduce the turbulence grain for a cleaner foil.",
+        "code": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Clean() {\n  return <IridescentSweepHero backgroundProps={{ grain: 0.12 }} />;\n}"
+      },
+      {
+        "title": "Background only",
+        "description": "Use just the foil layer behind a custom composition.",
+        "code": "import { IridescentSweepBackground } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <IridescentSweepBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
+      }
+    ]
   }
 };

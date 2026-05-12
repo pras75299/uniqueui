@@ -3088,6 +3088,33 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Demo() {\n  return <ReferencePulseHero />;\n}"
+  },
+  {
+    "slug": "hero-iridescent-sweep",
+    "name": "Iridescent Sweep Hero",
+    "description": "An editorial, holographic-foil hero. Conic-gradient foil drifts under a turbulence grain; a soft sheen ribbon sweeps across on a slow cadence; the headline ships with a one-shot foil sheen on mount. CSS + SVG + motion only — no WebGL.",
+    "icon": "LucideStars",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-12",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Omit for the default headline + CTAs."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ speed?: number; hue?: number; grain?: number; className?: string }",
+        "description": "Forwarded to the background layer."
+      }
+    ],
+    "usageCode": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Demo() {\n  return <IridescentSweepHero />;\n}"
   }
 ] satisfies ComponentDefinition[];
 
