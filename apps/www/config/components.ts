@@ -3088,6 +3088,33 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Demo() {\n  return <ReferencePulseHero />;\n}"
+  },
+  {
+    "slug": "hero-liquid-aurora-mesh",
+    "name": "Liquid Aurora Mesh Hero",
+    "description": "An aurora-mesh hero whose colour ribbons drift through an SVG turbulence-displacement filter for an organic, fluid look. Mouse-reactive light pool follows the cursor with a spring; headline words rise on mount via per-word reveal. Pure CSS + SVG + motion — no WebGL deps.",
+    "icon": "LucideWaves",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-12",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Omit for the default headline + CTAs."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ palette?: [string, string, string]; speed?: number; className?: string }",
+        "description": "Forwarded to the background layer."
+      }
+    ],
+    "usageCode": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Demo() {\n  return <LiquidAuroraMeshHero />;\n}"
   }
 ] satisfies ComponentDefinition[];
 

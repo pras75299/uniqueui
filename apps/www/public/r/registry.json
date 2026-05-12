@@ -1053,6 +1053,24 @@
           "target": "components/ui/hero-reference-pulse.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-liquid-aurora-mesh",
+      "type": "registry:ui",
+      "title": "Liquid Aurora Mesh Hero",
+      "description": "An aurora-mesh hero whose colour ribbons drift through an SVG turbulence-displacement filter for an organic, fluid look. Mouse-reactive light pool follows the cursor with a spring; headline words rise on mount via per-word reveal. Pure CSS + SVG + motion — no WebGL deps.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-liquid-aurora-mesh.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-liquid-aurora-mesh.tsx"
+        }
+      ]
     }
   ]
 }
