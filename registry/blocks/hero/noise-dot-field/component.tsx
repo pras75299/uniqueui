@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ComponentProps, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -129,9 +129,8 @@ export function NoiseDotFieldBackground({
   );
 }
 
-type NoiseDotFieldHeroProps = {
+type NoiseDotFieldHeroProps = Omit<ComponentProps<"section">, "children"> & {
   children?: ReactNode;
-  className?: string;
   backgroundProps?: NoiseDotFieldBackgroundProps;
 };
 
@@ -139,9 +138,11 @@ export function NoiseDotFieldHero({
   children,
   className,
   backgroundProps,
+  ...rest
 }: NoiseDotFieldHeroProps) {
   return (
     <section
+      {...rest}
       className={cn(
         "relative isolate flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#0a0a0c] text-white",
         className,
