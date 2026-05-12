@@ -191,21 +191,21 @@ function DefaultDotFieldContent() {
         transition={{ delay: 0.36, type: "spring", stiffness: 120, damping: 18 }}
         className="mt-9 flex flex-wrap items-center justify-center gap-3"
       >
-        <a
-          href="#"
+        <button
+          type="button"
           className="group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px"
         >
           <span>Read the spec</span>
           <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
             →
           </span>
-        </a>
-        <a
-          href="#"
+        </button>
+        <button
+          type="button"
           className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 font-mono text-xs uppercase tracking-[0.18em] text-white/85 backdrop-blur transition-colors hover:bg-white/5"
         >
           View source
-        </a>
+        </button>
       </motion.div>
     </>
   );
