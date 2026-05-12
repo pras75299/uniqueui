@@ -52,6 +52,8 @@ export type ComponentItem = {
   description: string;
   icon: ElementType;
   category?: string;
+  /** "block" routes the entry under /blocks instead of /components. */
+  kind?: "block";
   /** ISO date (YYYY-MM-DD) component was added. Drives the "NEW" highlight for ~24h. */
   addedAt?: string;
   props?: {
@@ -3059,6 +3061,60 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-md p-4\">\n      <AmbientGlowCard\n        blobColor={[\"#f9b8c4\", \"#f897ad\", \"#fcd1c1\"]}\n        animationDuration={24}\n      >\n        <h3>Software That Actually Scales</h3>\n        <p>Not code. Not prototypes. Real, live systems running in production from day one.</p>\n      </AmbientGlowCard>\n    </div>\n  );\n}\n"
+  },
+  {
+    "slug": "hero-reference-pulse",
+    "name": "Reference Pulse Hero",
+    "description": "A reference hero block. Conic-gradient halo rotating behind a radial pulse, with motion-driven entry on the headline. Drop your own children in to replace the default composition; the background also ships as a standalone export.",
+    "icon": "LucideSparkles",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-12",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Pass your own headline / CTA / nav. When omitted, a default composition renders."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ hue?: number; speed?: number; className?: string }",
+        "description": "Forwarded to the background layer."
+      }
+    ],
+    "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Demo() {\n  return <ReferencePulseHero />;\n}"
+  },
+  {
+    "slug": "hero-iridescent-sweep",
+    "name": "Iridescent Sweep Hero",
+    "description": "An editorial, holographic-foil hero. Conic-gradient foil drifts under a turbulence grain; a soft sheen ribbon sweeps across on a slow cadence; the headline ships with a one-shot foil sheen on mount. CSS + SVG + motion only — no WebGL.",
+    "icon": "LucideStars",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-12",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Omit for the default headline + CTAs."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ speed?: number; hue?: number; grain?: number; className?: string }",
+        "description": "Forwarded to the background layer."
+      }
+    ],
+    "usageCode": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Demo() {\n  return <IridescentSweepHero />;\n}"
   }
 ] satisfies ComponentDefinition[];
 

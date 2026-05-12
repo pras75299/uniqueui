@@ -39,9 +39,14 @@ export default function ComponentsIndex() {
   // Defer "NEW" pill to after hydration to avoid SSR/CSR drift.
   const hydrated = useIsClient();
 
+  const componentsOnly = useMemo(
+    () => componentsList.filter((c) => c.kind !== "block"),
+    [],
+  );
+
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
-    return componentsList.filter((c) => {
+    return componentsOnly.filter((c) => {
       const matchesCat = activeCategory === "All" || c.category === activeCategory;
       const matchesSearch =
         !q ||
@@ -50,16 +55,16 @@ export default function ComponentsIndex() {
         (c.category?.toLowerCase().includes(q) ?? false);
       return matchesCat && matchesSearch;
     });
-  }, [search, activeCategory]);
+  }, [search, activeCategory, componentsOnly]);
 
   const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = { All: componentsList.length };
-    componentsList.forEach((c) => {
+    const counts: Record<string, number> = { All: componentsOnly.length };
+    componentsOnly.forEach((c) => {
       const cat = c.category ?? "Other";
       counts[cat] = (counts[cat] ?? 0) + 1;
     });
     return counts;
-  }, []);
+  }, [componentsOnly]);
 
   return (
     <div className="space-y-10">
@@ -80,7 +85,7 @@ export default function ComponentsIndex() {
             )}
           >
             <span className="h-1.5 w-1.5 rounded-full bg-purple-500 animate-pulse" />
-            {componentsList.length} components
+            {componentsOnly.length} components
           </span>
           <span
             className={cn(
@@ -206,9 +211,9 @@ export default function ComponentsIndex() {
         transition={{ duration: 0.2 }}
         className={cn("text-sm", isDark ? "text-neutral-600" : "text-neutral-400")}
       >
-        {filtered.length === componentsList.length
-          ? `All ${componentsList.length} components`
-          : `${filtered.length} of ${componentsList.length} components`}
+        {filtered.length === componentsOnly.length
+          ? `All ${componentsOnly.length} components`
+          : `${filtered.length} of ${componentsOnly.length} components`}
       </motion.p>
 
       {/* ── Grid ── */}

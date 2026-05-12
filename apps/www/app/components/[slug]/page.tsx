@@ -9,11 +9,13 @@ import PropsTable from "@/components/props-table";
 import { codeToHtml } from "shiki";
 import { escapeHtml } from "@/lib/escape-html";
 
-// Generate static params for all components
+// Generate static params for all components (blocks live under /blocks).
 export function generateStaticParams() {
-  return componentsList.map((component) => ({
-    slug: component.slug,
-  }));
+  return componentsList
+    .filter((component) => component.kind !== "block")
+    .map((component) => ({
+      slug: component.slug,
+    }));
 }
 
 export const dynamicParams = true;

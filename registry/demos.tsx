@@ -66,6 +66,8 @@ import { KineticVariableHeadline } from "@/components/ui/kinetic-variable-headli
 import { CausticLightCard } from "@/components/ui/caustic-light-card";
 import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
 import { AmbientGlowCard } from "@/components/ui/ambient-glow-card";
+import { ReferencePulseHero } from "@/components/ui/hero-reference-pulse";
+import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3528,6 +3530,16 @@ export const componentDemos: Record<string, DemoComponent> = {
           from day one.
         </p>
       </AmbientGlowCard>
+    </div>
+  ),
+  "hero-reference-pulse": () => (
+    <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <ReferencePulseHero className="min-h-full" />
+    </div>
+  ),
+  "hero-iridescent-sweep": () => (
+    <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <IridescentSweepHero className="min-h-full" />
     </div>
   ),
 };

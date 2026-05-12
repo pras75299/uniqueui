@@ -3952,6 +3952,100 @@
           }
         ]
       }
+    },
+    {
+      "slug": "hero-reference-pulse",
+      "name": "Reference Pulse Hero",
+      "description": "A reference hero block. Conic-gradient halo rotating behind a radial pulse, with motion-driven entry on the headline. Drop your own children in to replace the default composition; the background also ships as a standalone export.",
+      "icon": "LucideSparkles",
+      "category": "Hero",
+      "kind": "block",
+      "addedAt": "2026-05-12",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Slotted hero content. Pass your own headline / CTA / nav. When omitted, a default composition renders."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra classes on the outer `<section>`."
+        },
+        {
+          "name": "backgroundProps",
+          "type": "{ hue?: number; speed?: number; className?: string }",
+          "description": "Forwarded to the background layer."
+        }
+      ],
+      "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Demo() {\n  return <ReferencePulseHero />;\n}",
+      "docs": {
+        "overview": "A minimal hero block that proves the slotted composition pattern. Background lives on its own; the hero accepts children for full content override.",
+        "scenarios": [
+          {
+            "title": "Default composition",
+            "description": "Drop the hero in and the default headline + CTAs render.",
+            "code": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Default() {\n  return <ReferencePulseHero />;\n}"
+          },
+          {
+            "title": "Custom content via children",
+            "description": "Pass your own children to override the default composition.",
+            "code": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Custom() {\n  return (\n    <ReferencePulseHero>\n      <h1 className=\"text-5xl font-semibold\">Your headline</h1>\n      <p className=\"mt-4 text-white/70\">Your subtitle goes here.</p>\n    </ReferencePulseHero>\n  );\n}"
+          },
+          {
+            "title": "Background only",
+            "description": "Compose your own section and use only the background layer.",
+            "code": "import { ReferencePulseBackground } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <ReferencePulseBackground hue={210} speed={9} />\n      <div className=\"relative\">…your content…</div>\n    </section>\n  );\n}"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "hero-iridescent-sweep",
+      "name": "Iridescent Sweep Hero",
+      "description": "An editorial, holographic-foil hero. Conic-gradient foil drifts under a turbulence grain; a soft sheen ribbon sweeps across on a slow cadence; the headline ships with a one-shot foil sheen on mount. CSS + SVG + motion only — no WebGL.",
+      "icon": "LucideStars",
+      "category": "Hero",
+      "kind": "block",
+      "addedAt": "2026-05-12",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Slotted hero content. Omit for the default headline + CTAs."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Classes for the outer `<section>`."
+        },
+        {
+          "name": "backgroundProps",
+          "type": "{ speed?: number; hue?: number; grain?: number; className?: string }",
+          "description": "Forwarded to the background layer."
+        }
+      ],
+      "usageCode": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Demo() {\n  return <IridescentSweepHero />;\n}",
+      "docs": {
+        "overview": "Editorial holographic-foil hero. Pair with serifs or magazine-style typography in your override.",
+        "scenarios": [
+          {
+            "title": "Hue-shifted edition",
+            "description": "Shift the whole foil into a cooler register.",
+            "code": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Cool() {\n  return <IridescentSweepHero backgroundProps={{ hue: 140, speed: 28 }} />;\n}"
+          },
+          {
+            "title": "Lower grain",
+            "description": "Reduce the turbulence grain for a cleaner foil.",
+            "code": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Clean() {\n  return <IridescentSweepHero backgroundProps={{ grain: 0.12 }} />;\n}"
+          },
+          {
+            "title": "Background only",
+            "description": "Use just the foil layer behind a custom composition.",
+            "code": "import { IridescentSweepBackground } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <IridescentSweepBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
+          }
+        ]
+      }
     }
   ]
 }
