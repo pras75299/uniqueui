@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type ReactNode } from "react";
+import { useId, type ComponentProps, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -80,9 +80,8 @@ export function IridescentSweepBackground({
   );
 }
 
-type IridescentSweepHeroProps = {
+type IridescentSweepHeroProps = Omit<ComponentProps<"section">, "children"> & {
   children?: ReactNode;
-  className?: string;
   backgroundProps?: IridescentSweepBackgroundProps;
 };
 
@@ -90,9 +89,11 @@ export function IridescentSweepHero({
   children,
   className,
   backgroundProps,
+  ...rest
 }: IridescentSweepHeroProps) {
   return (
     <section
+      {...rest}
       className={cn(
         "relative isolate flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#0e0a14] text-white",
         className,
