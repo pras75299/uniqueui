@@ -170,10 +170,10 @@ npx uniqueui add my-component --url https://my-registry.com/components
 
 ## Installing with the shadcn CLI
 
-The same components are published in **shadcn registry** format at **`https://uniqueui.com/r/<slug>.json`** (and `https://uniqueui.com/r/registry.json` for the full catalog). Use this if your app already follows the shadcn/ui workflow (`components.json`, `@/lib/utils` with `cn`, Tailwind v3-style config).
+The same components are published in **shadcn registry** format at **`https://uniqueui-platform.vercel.app/r/<slug>.json`** (and `https://uniqueui-platform.vercel.app/r/registry.json` for the full catalog). Use this if your app already follows the shadcn/ui workflow (`components.json`, `@/lib/utils` with `cn`, Tailwind v3-style config).
 
 ```bash
-npx shadcn@latest add https://uniqueui.com/r/moving-border.json -y
+npx shadcn@latest add https://uniqueui-platform.vercel.app/r/moving-border.json -y
 ```
 
 - Component snippets import **`@/lib/utils`** — the shadcn registry item does **not** ship a second `cn` file (your project should already have it from `shadcn init`).
@@ -599,7 +599,7 @@ Registry (GitHub)
        │        ▼
        │   Your project (UniqueUI components.json + utils/cn)
        │
-       └── npx shadcn add https://uniqueui.com/r/<slug>.json
+       └── npx shadcn add https://uniqueui-platform.vercel.app/r/<slug>.json
                 ▼
             Your project (shadcn components.json + @/lib/utils)
 ```

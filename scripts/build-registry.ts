@@ -336,7 +336,7 @@ async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDo
     {
       $schema: "https://ui.shadcn.com/schema/registry.json",
       name: "uniqueui",
-      homepage: "https://uniqueui.com",
+      homepage: "https://uniqueui-platform.vercel.app",
       items: shadcnItems,
     },
     { spaces: 2 },

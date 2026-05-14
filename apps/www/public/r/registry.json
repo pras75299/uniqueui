@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "uniqueui",
-  "homepage": "https://uniqueui.com",
+  "homepage": "https://uniqueui-platform.vercel.app",
   "items": [
     {
       "name": "moving-border",

@@ -1,7 +1,7 @@
 /**
  * E2E harness: install every UniqueUI component via the **shadcn CLI** using the
  * generated registry items in `apps/www/public/r/{slug}.json` (same URLs as production:
- * `https://uniqueui.com/r/{slug}.json`).
+ * `https://uniqueui-platform.vercel.app/r/{slug}.json`).
  *
  * Prereq: network access for `npx shadcn@latest` (and create-next-app on first run).
  *

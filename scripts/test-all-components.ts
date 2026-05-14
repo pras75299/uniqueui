@@ -228,7 +228,7 @@ async function run() {
     console.log('⚙️   Bootstrapping project config...');
 
     const configData = {
-        $schema: 'https://uniqueui.com/schema.json',
+        $schema: 'https://uniqueui-platform.vercel.app/schema.json',
         style: 'default',
         rsc: true,
         tsx: true,

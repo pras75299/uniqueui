@@ -58,7 +58,7 @@ export async function init(options: InitOptions = {}) {
     }
 
     const config = {
-        $schema: "https://uniqueui.com/schema.json",
+        $schema: "https://uniqueui-platform.vercel.app/schema.json",
         style: "default",
         rsc: true,
         tsx: response.typescript,

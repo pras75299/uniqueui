@@ -10,7 +10,7 @@ export const registryComponentSlugs = registryEntries.map((entry) => entry.name)
 export const registryComponentSlugSet = new Set(registryComponentSlugs);
 
 /** Production base URL for shadcn-format registry items (`/r/<slug>.json`). */
-export const SHADCN_REGISTRY_ORIGIN = "https://uniqueui.com/r";
+export const SHADCN_REGISTRY_ORIGIN = "https://uniqueui-platform.vercel.app/r";
 
 export function getInstallCommand(slug: string) {
   return `npx uniqueui add ${slug}`;
