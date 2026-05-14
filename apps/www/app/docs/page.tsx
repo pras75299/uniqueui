@@ -59,7 +59,7 @@ export default async function DocsOverview() {
   const installDepsHtml = await hl("npm install motion tailwindcss");
   const initHtml = await hl("npx uniqueui init");
   const addHtml = await hl("npx uniqueui add typewriter-text");
-  const shadcnAddHtml = await hl("npx shadcn@latest add https://uniqueui.com/r/typewriter-text.json -y");
+  const shadcnAddHtml = await hl("npx shadcn@latest add https://uniqueui-platform.vercel.app/r/typewriter-text.json -y");
   const usageHtml = await hl(
     `import { TypewriterText } from "@/components/ui/typewriter-text";
 
@@ -214,11 +214,11 @@ export default function Hero() {
           ). You need <code className="text-xs font-mono bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">shadcn init</code>{" "}
           and <code className="text-xs font-mono bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded">@/lib/utils</code>{" "}
           exporting <code className="text-xs font-mono">cn</code> — snippets import that path. Catalog:{" "}
-          <code className="text-xs font-mono break-all">https://uniqueui.com/r/registry.json</code>.
+          <code className="text-xs font-mono break-all">https://uniqueui-platform.vercel.app/r/registry.json</code>.
         </p>
         <CodeBlockShell
           html={shadcnAddHtml}
-          rawCode="npx shadcn@latest add https://uniqueui.com/r/typewriter-text.json -y"
+          rawCode="npx shadcn@latest add https://uniqueui-platform.vercel.app/r/typewriter-text.json -y"
           label="bash"
         />
       </section>
@@ -238,7 +238,7 @@ export default function Hero() {
             { cmd: "npx uniqueui add <component>", desc: "Download a component into components/ui" },
             { cmd: "npx uniqueui list", desc: "List all available components" },
             {
-              cmd: "npx shadcn@latest add https://uniqueui.com/r/<slug>.json -y",
+              cmd: "npx shadcn@latest add https://uniqueui-platform.vercel.app/r/<slug>.json -y",
               desc: "Same component via shadcn registry (requires shadcn init + @/lib/utils)",
             },
           ].map(({ cmd, desc }) => (

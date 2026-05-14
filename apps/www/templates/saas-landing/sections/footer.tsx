@@ -92,7 +92,7 @@ export default function Footer() {
           <p style={{ color: "#1E293B", fontSize: "0.8rem" }}>
             Built with{" "}
             <a
-              href="https://uniqueui.com"
+              href="https://uniqueui-platform.vercel.app"
               style={{ color: "#22D3EE", textDecoration: "none" }}
               target="_blank"
               rel="noreferrer"

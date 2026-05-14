@@ -90,7 +90,7 @@ export default config;
 
 const COMPONENTS_JSON = JSON.stringify(
   {
-    $schema: "https://uniqueui.com/schema.json",
+    $schema: "https://uniqueui-platform.vercel.app/schema.json",
     style: "default",
     rsc: true,
     tsx: true,
@@ -309,7 +309,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "${templateName}",
-  description: "Built with UniqueUI — uniqueui.com",
+  description: "Built with UniqueUI — uniqueui-platform.vercel.app",
 };
 
 export default function RootLayout({
@@ -386,7 +386,7 @@ Components in \`components/ui/\` are fully self-contained — edit them freely.
 
 ---
 
-Built with [UniqueUI](https://uniqueui.com)
+Built with [UniqueUI](https://uniqueui-platform.vercel.app)
 `;
 
 // ── Route handler ─────────────────────────────────────────────────────────────
