@@ -41,21 +41,28 @@ export function NoiseDotFieldBackground({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
+    // Listen on window so pointer events over foreground content (z-10 headline,
+    // buttons) still drive the dot pocket — the canvas sibling can't capture them.
     const onMove = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
+      const inside =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+      if (!inside) {
+        mouse.active = false;
+        return;
+      }
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
       mouse.active = true;
-    };
-    const onLeave = () => {
-      mouse.active = false;
     };
 
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
-    canvas.addEventListener("pointermove", onMove);
-    canvas.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointermove", onMove);
 
     const start = performance.now();
     const draw = (now: number) => {
@@ -116,8 +123,7 @@ export function NoiseDotFieldBackground({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      canvas.removeEventListener("pointermove", onMove);
-      canvas.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointermove", onMove);
     };
   }, [spacing, color, pocketRadius, reduced]);
 
