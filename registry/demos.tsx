@@ -3535,22 +3535,22 @@ export const componentDemos: Record<string, DemoComponent> = {
     </div>
   ),
   "hero-reference-pulse": () => (
-    <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <ReferencePulseHero className="min-h-full" />
     </div>
   ),
   "hero-iridescent-sweep": () => (
-    <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <IridescentSweepHero className="min-h-full" />
     </div>
   ),
   "hero-liquid-aurora-mesh": () => (
-    <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <LiquidAuroraMeshHero className="min-h-full" />
     </div>
   ),
   "hero-noise-dot-field": () => (
-    <div className="relative h-[60svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <NoiseDotFieldHero className="min-h-full" />
     </div>
   ),
