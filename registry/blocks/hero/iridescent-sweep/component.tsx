@@ -21,7 +21,9 @@ export function IridescentSweepBackground({
   grain = 0.35,
 }: IridescentSweepBackgroundProps) {
   const reduced = useReducedMotion();
-  const cycle = reduced ? 0 : speed;
+  // Clamp speed defensively — negative or non-finite values would yield invalid durations.
+  const safeSpeed = Number.isFinite(speed) && speed > 0 ? speed : 0;
+  const cycle = reduced ? 0 : safeSpeed;
   const filterId = useId();
 
   return (
