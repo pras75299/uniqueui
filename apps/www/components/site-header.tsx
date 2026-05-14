@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
@@ -67,11 +68,20 @@ export function SiteHeader({ trailing, className }: SiteHeaderProps) {
           )}
           <Link
             href="/"
+            aria-label="UniqueUI home"
             className={cn(
-              "flex min-w-0 shrink items-baseline gap-2 truncate font-bold text-lg tracking-tight",
+              "flex min-w-0 shrink items-center gap-2 truncate font-bold text-lg tracking-tight",
               isDark ? "text-white" : "text-neutral-900",
             )}
           >
+            <Image
+              src="/brand/uniqueui-mark.png"
+              alt=""
+              width={28}
+              height={28}
+              priority
+              className="h-7 w-7 shrink-0 rounded-md"
+            />
             <span className="truncate">UniqueUI</span>
             {isHome ? (
               <span className="shrink-0 font-mono text-[10px] font-normal tracking-normal text-neutral-500 sm:text-xs">
