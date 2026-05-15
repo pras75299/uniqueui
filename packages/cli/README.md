@@ -167,6 +167,9 @@ npx uniqueui add <component-name>
 | Flag | Description |
 |---|---|
 | `--url <url>` | Use a custom registry URL instead of the default GitHub registry |
+| `--dry-run` | Print every file that would be written + every dependency that would be installed, write nothing |
+| `--force` | Overwrite existing component files without prompting (default behavior is to prompt with a `skip` / `overwrite` / `diff` choice) |
+| `-y, --yes` | Skip the dependency-install confirmation prompt |
 
 **Examples:**
 
@@ -174,14 +177,17 @@ npx uniqueui add <component-name>
 # Add a single component
 npx uniqueui add aurora-background
 
-# Add multiple components in sequence
-npx uniqueui add moving-border
-npx uniqueui add magnetic-button
-npx uniqueui add animated-tabs
+# Preview what would change without writing anything
+npx uniqueui add moving-border --dry-run
+
+# Re-fetch and overwrite a component you've already customized (be careful)
+npx uniqueui add moving-border --force
 
 # Add from a custom registry
 npx uniqueui add my-component --url https://my-registry.com/components
 ```
+
+**Overwrite behavior:** When `add` finds an existing `components/ui/<slug>.tsx`, it prompts for `skip` / `overwrite` / `diff`. Choose `diff` to see a line-by-line comparison between your file and the registry version before deciding. In non-interactive shells (CI) the default is to skip — pass `--force` to overwrite.
 
 ---
 
