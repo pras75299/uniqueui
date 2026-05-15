@@ -4,6 +4,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { init } from "./commands/init";
 import { add } from "./commands/add";
+import { list } from "./commands/list";
 
 const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
 
@@ -30,5 +31,11 @@ program
     .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
     .option("-y, --yes", "Skip dependency install confirmation prompt")
     .action(add);
+
+program
+    .command("list")
+    .description("List components available in the registry")
+    .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
+    .action((opts) => list({ url: opts.url }));
 
 program.parse();

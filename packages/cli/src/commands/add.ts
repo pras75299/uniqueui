@@ -26,7 +26,7 @@ type RegistryLookupResult =
     | { status: "unavailable" };
 
 /** Reject malformed registry JSON before any property access (avoids throws from bad remote/local data). */
-function validateRegistryPayload(data: unknown): RegistryItem[] | null {
+export function validateRegistryPayload(data: unknown): RegistryItem[] | null {
     if (!Array.isArray(data)) {
         return null;
     }
@@ -82,7 +82,7 @@ function validateRegistryItemPayload(data: unknown): RegistryItem | null {
     return validated?.[0] ?? null;
 }
 
-function validateRegistryIndexPayload(data: unknown): RegistryIndex | null {
+export function validateRegistryIndexPayload(data: unknown): RegistryIndex | null {
     if (data === null || typeof data !== "object" || Array.isArray(data)) {
         return null;
     }
@@ -113,7 +113,7 @@ function isTrustedRegistryUrl(url: string): boolean {
     }
 }
 
-function warnIfUntrustedRegistry(url: string) {
+export function warnIfUntrustedRegistry(url: string) {
     if (process.env.UNIQUEUI_SKIP_REGISTRY_WARN) return;
     if (isLocalRegistrySource(url)) return;
     if (isTrustedRegistryUrl(url)) return;
@@ -145,7 +145,17 @@ function isObjectRecord(value: unknown): value is Record<string, unknown> {
     return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
+export type PackageManager = "bun" | "pnpm" | "yarn" | "npm";
+
+/** Detect the project's package manager by lockfile, ordered bun > pnpm > yarn > npm. */
+export function detectPackageManager(cwd: string = process.cwd()): PackageManager {
+    if (fs.existsSync(path.join(cwd, "bun.lock")) || fs.existsSync(path.join(cwd, "bun.lockb"))) return "bun";
+    if (fs.existsSync(path.join(cwd, "pnpm-lock.yaml"))) return "pnpm";
+    if (fs.existsSync(path.join(cwd, "yarn.lock"))) return "yarn";
+    return "npm";
+}
+
+export async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
     const controller = new AbortController();
     const timeoutHandle = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     try {
@@ -329,7 +339,7 @@ function getRemoteLegacyApiCandidates(baseUrl: string): string[] {
     return [joinUrlPath(getLegacyRegistryBase(baseUrl), "api/registry")];
 }
 
-function isLocalRegistrySource(source: string): boolean {
+export function isLocalRegistrySource(source: string): boolean {
     if (source.startsWith(".") || path.isAbsolute(source)) {
         return true;
     }
@@ -528,7 +538,7 @@ export async function add(componentName: string, options: { url: string; yes?: b
         } else {
             console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
             try {
-                const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
+                const pm = detectPackageManager();
                 const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
                 const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
                 if (result.error) throw result.error;
