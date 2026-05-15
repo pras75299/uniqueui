@@ -187,7 +187,7 @@ export default function BlocksIndex() {
                         className="pointer-events-none absolute inset-0 origin-top-left scale-[0.45] sm:scale-[0.55]"
                         style={{ width: "182%", height: "222%" }}
                       >
-                        <ComponentPreview slug={block.slug} />
+                        <ComponentPreview slug={block.slug} lazy />
                       </div>
                       <div
                         className={cn(

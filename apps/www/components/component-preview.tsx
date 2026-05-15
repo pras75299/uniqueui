@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useRef } from "react";
+import { motion, useInView } from "motion/react";
 import { componentDemos } from "@/config/demos";
 import { useTheme } from "@/contexts/theme-context";
 import { cn } from "@/lib/utils";
@@ -9,11 +10,26 @@ type ComponentPreviewProps = {
   slug: string;
   /** "block" suppresses the grid backdrop and uses a full-hero min-height. */
   variant?: "default" | "block";
+  /**
+   * When true, the inner demo only mounts while the preview is near or inside
+   * the viewport. Used by `/blocks` to keep dozens of motion timelines / RAF
+   * loops / pointer listeners from running on off-screen cards.
+   */
+  lazy?: boolean;
 };
 
-export default function ComponentPreview({ slug, variant = "default" }: ComponentPreviewProps) {
+export default function ComponentPreview({
+  slug,
+  variant = "default",
+  lazy = false,
+}: ComponentPreviewProps) {
   const { theme } = useTheme();
   const Demo = componentDemos[slug];
+  const cardRef = useRef<HTMLDivElement>(null);
+  // `once: false` → demo unmounts on exit, freeing RAF / pointer listeners.
+  // 200px margin warms the demo before the card scrolls into view.
+  const isInView = useInView(cardRef, { once: false, margin: "200px 0px" });
+  const shouldRender = !lazy || isInView;
 
   if (!Demo) {
     return (
@@ -31,6 +47,7 @@ export default function ComponentPreview({ slug, variant = "default" }: Componen
 
   return (
     <motion.div
+      ref={cardRef}
       className={cn(
         "w-full rounded-xl border relative flex",
         isBlock
@@ -72,7 +89,17 @@ export default function ComponentPreview({ slug, variant = "default" }: Componen
             "flex min-h-0 flex-1 flex-col items-center justify-center",
         )}
       >
-        <Demo theme={theme} />
+        {shouldRender ? (
+          <Demo theme={theme} />
+        ) : (
+          <div
+            aria-hidden
+            className={cn(
+              "h-full w-full",
+              isBlock ? "min-h-[70svh]" : "min-h-[300px]",
+            )}
+          />
+        )}
       </div>
     </motion.div>
   );
