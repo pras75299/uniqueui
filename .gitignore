@@ -32,3 +32,4 @@ entities.json
 
 # Local design/planning docs — keep on disk, do not version
 COMPONENT_PROMPTS.md
+backlogs.md

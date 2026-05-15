@@ -7,7 +7,7 @@ import { getInstallCommand, getShadcnInstallCommand } from "@/config/component-r
 import { escapeHtml } from "@/lib/escape-html";
 import PropsTable from "@/components/props-table";
 import ClientCopyButton from "@/app/components/[slug]/client-copy-button";
-import BlockPreview from "../block-preview";
+import ComponentPreview from "@/components/component-preview";
 
 export function generateStaticParams() {
   return componentsList
@@ -86,7 +86,7 @@ export default async function BlockPage(props: { params: Promise<{ slug: string 
 
       <section className="mb-12 space-y-4">
         <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Preview</h2>
-        <BlockPreview slug={block.slug} />
+        <ComponentPreview slug={block.slug} variant="block" />
       </section>
 
       {block.usageCode && (

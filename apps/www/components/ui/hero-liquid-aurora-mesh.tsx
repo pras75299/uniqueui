@@ -31,15 +31,19 @@ export function LiquidAuroraMeshBackground({
   useEffect(() => {
     const el = ref.current;
     if (!el || reduced) return;
+    // Listen on window so pointer events over foreground content (z-10 headline,
+    // buttons) still drive the pocket — siblings can't capture them otherwise.
     const onMove = (e: PointerEvent) => {
       const rect = el.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       const y = ((e.clientY - rect.top) / rect.height) * 100;
-      px.set(Math.max(0, Math.min(100, x)));
-      py.set(Math.max(0, Math.min(100, y)));
+      if (x < 0 || x > 100 || y < 0 || y > 100) return;
+      px.set(x);
+      py.set(y);
     };
-    el.addEventListener("pointermove", onMove);
-    return () => el.removeEventListener("pointermove", onMove);
+    window.addEventListener("pointermove", onMove);
+    return () => window.removeEventListener("pointermove", onMove);
   }, [px, py, reduced]);
 
   const [a, b, c] = palette;

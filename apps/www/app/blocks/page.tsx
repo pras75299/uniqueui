@@ -20,7 +20,12 @@ const cardVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { delay: i * 0.05, type: "spring" as const, stiffness: 260, damping: 24 },
+    transition: {
+      delay: i * 0.05,
+      type: "spring" as const,
+      stiffness: 260,
+      damping: 24,
+    },
   }),
 };
 
@@ -97,9 +102,9 @@ export default function BlocksIndex() {
                 isDark ? "text-white/65" : "text-neutral-600",
               )}
             >
-              Heroes, pricing, CTAs — each block ships as one file with a slotted{" "}
-              <code className="font-mono text-sm">children</code> prop and a
-              standalone background export.
+              Heroes, pricing, CTAs — each block ships as one file with a
+              slotted <code className="font-mono text-sm">children</code> prop
+              and a standalone background export.
             </p>
           </motion.div>
 
@@ -124,7 +129,12 @@ export default function BlocksIndex() {
                   )}
                 >
                   {cat}
-                  <span className={cn("text-[10px]", isActive ? "opacity-60" : "opacity-50")}>
+                  <span
+                    className={cn(
+                      "text-[10px]",
+                      isActive ? "opacity-60" : "opacity-50",
+                    )}
+                  >
                     {counts[cat] ?? 0}
                   </span>
                 </button>
@@ -173,7 +183,10 @@ export default function BlocksIndex() {
                         isDark ? "bg-neutral-950" : "bg-neutral-100",
                       )}
                     >
-                      <div className="pointer-events-none absolute inset-0 origin-top-left scale-[0.45] sm:scale-[0.55]" style={{ width: "222%", height: "222%" }}>
+                      <div
+                        className="pointer-events-none absolute inset-0 origin-top-left scale-[0.45] sm:scale-[0.55]"
+                        style={{ width: "182%", height: "222%" }}
+                      >
                         <ComponentPreview slug={block.slug} />
                       </div>
                       <div
@@ -188,7 +201,9 @@ export default function BlocksIndex() {
                     <div className="flex items-start justify-between gap-3 p-4">
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <h3 className="truncate text-sm font-medium">{block.name}</h3>
+                          <h3 className="truncate text-sm font-medium">
+                            {block.name}
+                          </h3>
                           {isNew ? (
                             <span
                               aria-label="New block"
