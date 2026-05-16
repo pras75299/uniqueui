@@ -9,6 +9,11 @@ import {
     writeRegistryUiFile,
 } from "./add";
 
+// Strip ANSI color codes (ESC [ … m). Built from a char code so the regex
+// literal doesn't contain a raw control character (eslint `no-control-regex`).
+const ANSI_RE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g");
+const stripAnsi = (s: string) => s.replace(ANSI_RE, "");
+
 let tmp: string;
 let logs: string[] = [];
 let originalNodeEnv: string | undefined;
@@ -81,7 +86,7 @@ describe("printUnifiedDiff", () => {
         const body = logs
             .join("\n")
             .split("\n")
-            .filter((l) => /^[+\-]\s/.test(l.replace(/\x1b\[[0-9;]*m/g, "")));
+            .filter((l) => /^[-+]\s/.test(stripAnsi(l)));
         expect(body).toEqual([]);
     });
 
@@ -95,7 +100,7 @@ describe("printUnifiedDiff", () => {
             "import b;\nimport a;",
             "x.tsx",
         );
-        const out = logs.join("\n").replace(/\x1b\[[0-9;]*m/g, "");
+        const out = stripAnsi(logs.join("\n"));
         // Index 0: a → b
         expect(out).toContain("- import a;");
         expect(out).toContain("+ import b;");
