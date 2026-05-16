@@ -217,12 +217,12 @@ export async function writeRegistryUiFile(
     }
 
     // CI / piped shells can't answer a prompt — skip with a clear hint instead
-    // of hanging. The NODE_ENV === "test" carve-out is *only* so add-helpers.test.ts
-    // can drive the helper via `prompts.inject()`; production code never enters
-    // the prompt path without a real TTY.
+    // of hanging. Tests that need to exercise the prompt path must explicitly
+    // set `process.stdin.isTTY = true` / `process.stdout.isTTY = true` (and use
+    // `prompts.inject()` for answers) so production code never has a test-env
+    // backdoor that could be tripped accidentally by `NODE_ENV=test` in CI.
     const isInteractive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
-    const inTest = process.env.NODE_ENV === "test";
-    if (!isInteractive && !inTest) {
+    if (!isInteractive) {
         console.warn(
             chalk.yellow(
                 `Skipping existing file ${rel}. Re-run with --force to overwrite or --dry-run to inspect.`,

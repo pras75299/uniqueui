@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import fs from "fs-extra";
 import path from "path";
 import os from "os";
+import { stripVTControlCharacters } from "util";
 import prompts from "prompts";
 import {
     detectPackageManager,
@@ -9,14 +10,10 @@ import {
     writeRegistryUiFile,
 } from "./add";
 
-// Strip ANSI color codes (ESC [ … m). Built from a char code so the regex
-// literal doesn't contain a raw control character (eslint `no-control-regex`).
-const ANSI_RE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g");
-const stripAnsi = (s: string) => s.replace(ANSI_RE, "");
-
 let tmp: string;
 let logs: string[] = [];
-let originalNodeEnv: string | undefined;
+let originalStdinIsTTY: boolean | undefined;
+let originalStdoutIsTTY: boolean | undefined;
 
 beforeEach(async () => {
     tmp = await fs.mkdtemp(path.join(os.tmpdir(), "uniqueui-add-"));
@@ -25,17 +22,27 @@ beforeEach(async () => {
         logs.push(args.map(String).join(" "));
     });
     vi.spyOn(console, "warn").mockImplementation(() => {});
-    originalNodeEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = "test";
+    // Pretend we're an interactive shell so writeRegistryUiFile takes the prompt
+    // branch; `prompts.inject()` supplies the answers from each test.
+    originalStdinIsTTY = process.stdin.isTTY;
+    originalStdoutIsTTY = process.stdout.isTTY;
+    Object.defineProperty(process.stdin, "isTTY", { value: true, configurable: true });
+    Object.defineProperty(process.stdout, "isTTY", { value: true, configurable: true });
 });
 
 afterEach(async () => {
     vi.restoreAllMocks();
-    // prompts.inject queue is global — clear any answers a failing test left behind
-    // so the next test doesn't inherit them.
+    // prompts.inject queue is global — clear any answers a failing test left
+    // behind so the next test doesn't inherit them.
     prompts.inject([]);
-    if (originalNodeEnv === undefined) delete process.env.NODE_ENV;
-    else process.env.NODE_ENV = originalNodeEnv;
+    Object.defineProperty(process.stdin, "isTTY", {
+        value: originalStdinIsTTY,
+        configurable: true,
+    });
+    Object.defineProperty(process.stdout, "isTTY", {
+        value: originalStdoutIsTTY,
+        configurable: true,
+    });
     await fs.remove(tmp);
 });
 
@@ -86,7 +93,7 @@ describe("printUnifiedDiff", () => {
         const body = logs
             .join("\n")
             .split("\n")
-            .filter((l) => /^[-+]\s/.test(stripAnsi(l)));
+            .filter((l) => /^[-+]\s/.test(stripVTControlCharacters(l)));
         expect(body).toEqual([]);
     });
 
@@ -100,7 +107,7 @@ describe("printUnifiedDiff", () => {
             "import b;\nimport a;",
             "x.tsx",
         );
-        const out = stripAnsi(logs.join("\n"));
+        const out = stripVTControlCharacters(logs.join("\n"));
         // Index 0: a → b
         expect(out).toContain("- import a;");
         expect(out).toContain("+ import b;");
