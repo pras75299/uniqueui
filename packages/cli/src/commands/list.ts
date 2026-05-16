@@ -50,41 +50,63 @@ async function readJsonSafe(filePath: string): Promise<unknown | null> {
     }
 }
 
-async function loadFromLocalSource(source: string): Promise<Entry[] | null> {
-    const base = trimRightSlash(source);
+/** Parse one already-fetched JSON payload through every known registry shape. */
+function entriesFromPayload(payload: unknown): Entry[] | null {
+    const shadcn = validateShadcnRegistry(payload);
+    if (shadcn) return shadcn;
 
-    // 1. Shadcn-style /r/registry.json (rich)
-    const shadcn = validateShadcnRegistry(await readJsonSafe(path.join(base, "r/registry.json")));
-    if (shadcn && shadcn.length) return shadcn;
-
-    // 2. Split /registry/index.json (names only)
-    const splitIndex = validateRegistryIndexPayload(
-        await readJsonSafe(path.join(base, "registry/index.json")),
-    );
+    const splitIndex = validateRegistryIndexPayload(payload);
     if (splitIndex) return splitIndex.components.map((name) => ({ name }));
 
-    // 3. Legacy /registry.json aggregate (names only)
-    const legacy = validateRegistryPayload(await readJsonSafe(path.join(base, "registry.json")));
+    const legacy = validateRegistryPayload(payload);
     if (legacy) return legacy.map((entry) => ({ name: entry.name }));
 
     return null;
 }
 
-async function loadFromRemoteSource(source: string): Promise<Entry[] | null> {
-    const base = trimRightSlash(source);
-
-    const shadcn = validateShadcnRegistry(await fetchJsonFromUrl(`${base}/r/registry.json`));
-    if (shadcn && shadcn.length) return shadcn;
-
-    const splitIndex = validateRegistryIndexPayload(
-        await fetchJsonFromUrl(`${base}/registry/index.json`),
-    );
-    if (splitIndex) return splitIndex.components.map((name) => ({ name }));
-
-    const legacy = validateRegistryPayload(await fetchJsonFromUrl(`${base}/registry.json`));
-    if (legacy) return legacy.map((entry) => ({ name: entry.name }));
-
+/**
+ * Probe sources in order: shadcn `/r/registry.json` → split `/registry/index.json` →
+ * legacy `/registry.json`. Each source is authoritative — if it returns a valid
+ * (even empty) payload, we don't fall through. Falling through on empty caused
+ * inconsistent behavior depending on which source happened to be reachable.
+ */
+async function probeSources(
+    candidates: Array<() => Promise<unknown | null>>,
+): Promise<Entry[] | null> {
+    for (const fetchOne of candidates) {
+        const payload = await fetchOne();
+        if (payload === null) continue;
+        const entries = entriesFromPayload(payload);
+        if (entries !== null) return entries;
+    }
     return null;
+}
+
+async function loadFromLocalSource(source: string): Promise<Entry[] | null> {
+    // Direct .json file path — caller already pointed us at the registry data.
+    if (source.endsWith(".json")) {
+        return entriesFromPayload(await readJsonSafe(source));
+    }
+
+    const base = trimRightSlash(source);
+    return probeSources([
+        () => readJsonSafe(path.join(base, "r/registry.json")),
+        () => readJsonSafe(path.join(base, "registry/index.json")),
+        () => readJsonSafe(path.join(base, "registry.json")),
+    ]);
+}
+
+async function loadFromRemoteSource(source: string): Promise<Entry[] | null> {
+    if (source.endsWith(".json")) {
+        return entriesFromPayload(await fetchJsonFromUrl(source));
+    }
+
+    const base = trimRightSlash(source);
+    return probeSources([
+        () => fetchJsonFromUrl(`${base}/r/registry.json`),
+        () => fetchJsonFromUrl(`${base}/registry/index.json`),
+        () => fetchJsonFromUrl(`${base}/registry.json`),
+    ]);
 }
 
 export async function loadRegistryEntries(source: string): Promise<Entry[] | null> {
@@ -93,26 +115,20 @@ export async function loadRegistryEntries(source: string): Promise<Entry[] | nul
         : loadFromRemoteSource(source);
 }
 
+/** Description is preferred when present (more informative); title is the fallback. */
 function formatRow(entry: Entry, nameWidth: number): string {
-    const slug = entry.name.padEnd(nameWidth);
-    const title = entry.title ?? "";
-    const desc = entry.description ?? "";
-    if (!title && !desc) return chalk.white(slug);
-    if (!desc) return `${chalk.white(slug)}  ${chalk.gray(title)}`;
-    return `${chalk.white(slug)}  ${chalk.gray(desc)}`;
+    const slug = chalk.white(entry.name.padEnd(nameWidth));
+    const tail = entry.description ?? entry.title ?? "";
+    return tail ? `${slug}  ${chalk.gray(tail)}` : slug;
 }
 
 export async function list(options: { url: string }) {
     warnIfUntrustedRegistry(options.url);
 
-    let entries: Entry[] | null = null;
-    try {
-        entries = await loadRegistryEntries(options.url);
-    } catch (error) {
-        console.error(chalk.red("Could not fetch registry data:"), error);
-        process.exitCode = 1;
-        return;
-    }
+    // loadRegistryEntries swallows fetch / read errors via readJsonSafe and
+    // fetchJsonFromUrl, so a null return covers both "unreachable" and "no
+    // recognized payload" — there's no separate throw path to catch.
+    const entries = await loadRegistryEntries(options.url);
 
     if (!entries || entries.length === 0) {
         console.error(chalk.red(`No components found at ${options.url}.`));

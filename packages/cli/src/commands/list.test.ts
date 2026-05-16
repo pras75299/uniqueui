@@ -108,4 +108,54 @@ describe("loadRegistryEntries — local source", () => {
         const entries = await loadRegistryEntries(tmp);
         expect(entries).toEqual([{ name: "only-in-split" }]);
     });
+
+    it("loads a direct shadcn JSON file path (no directory probing)", async () => {
+        const direct = path.join(tmp, "my-shadcn.json");
+        await fs.outputJson(direct, {
+            name: "uniqueui",
+            items: [
+                {
+                    name: "moving-border",
+                    type: "registry:ui",
+                    description: "Direct path.",
+                    files: [],
+                },
+            ],
+        });
+
+        const entries = await loadRegistryEntries(direct);
+        expect(entries).toEqual([{ name: "moving-border", description: "Direct path." }]);
+    });
+
+    it("loads a direct split-index JSON file path", async () => {
+        const direct = path.join(tmp, "registry-index.json");
+        await fs.outputJson(direct, { components: ["a", "b"] });
+
+        const entries = await loadRegistryEntries(direct);
+        expect(entries).toEqual([{ name: "a" }, { name: "b" }]);
+    });
+
+    it("treats an authoritative empty shadcn payload as an empty result, no fallback", async () => {
+        await fs.outputJson(path.join(tmp, "r/registry.json"), {
+            name: "uniqueui",
+            items: [],
+        });
+        await fs.outputJson(path.join(tmp, "registry/index.json"), {
+            components: ["leftover-from-split"],
+        });
+
+        const entries = await loadRegistryEntries(tmp);
+        // Authoritative empty wins — we don't silently fall through to a stale split.
+        expect(entries).toEqual([]);
+    });
+
+    it("treats an empty split index as an empty result, no fallback", async () => {
+        await fs.outputJson(path.join(tmp, "registry/index.json"), { components: [] });
+        await fs.outputJson(path.join(tmp, "registry.json"), [
+            { name: "leftover-legacy", dependencies: [], files: [] },
+        ]);
+
+        const entries = await loadRegistryEntries(tmp);
+        expect(entries).toEqual([]);
+    });
 });

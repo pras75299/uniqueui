@@ -216,18 +216,19 @@ export async function writeRegistryUiFile(
         return "overwritten";
     }
 
-    if (!process.stdin.isTTY || !process.stdout.isTTY || process.env.NODE_ENV === "test") {
-        // Only fall through to prompt if a test has explicitly injected an answer.
-        if (process.env.NODE_ENV === "test") {
-            // continue to prompt — prompts.inject() drives it
-        } else {
-            console.warn(
-                chalk.yellow(
-                    `Skipping existing file ${rel}. Re-run with --force to overwrite or --dry-run to inspect.`,
-                ),
-            );
-            return "skipped";
-        }
+    // CI / piped shells can't answer a prompt — skip with a clear hint instead
+    // of hanging. The NODE_ENV === "test" carve-out is *only* so add-helpers.test.ts
+    // can drive the helper via `prompts.inject()`; production code never enters
+    // the prompt path without a real TTY.
+    const isInteractive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+    const inTest = process.env.NODE_ENV === "test";
+    if (!isInteractive && !inTest) {
+        console.warn(
+            chalk.yellow(
+                `Skipping existing file ${rel}. Re-run with --force to overwrite or --dry-run to inspect.`,
+            ),
+        );
+        return "skipped";
     }
 
     let oldContent = "";
@@ -649,42 +650,45 @@ export async function add(
             const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
             console.log(chalk.cyan(`[dry-run] Would run: ${pm} ${args.join(" ")}`));
         } else {
-        const shouldInstall = await confirmDependencyInstall(item.dependencies, options);
-        if (!shouldInstall) {
-            console.log(
-                chalk.yellow(
-                    `Skipping dependency installation. Install manually: ${
-                        item.dependencies.join(" ")
-                    }`,
-                ),
-            );
-        } else {
-            console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
-            try {
-                const pm = detectPackageManager();
-                const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
-                const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
-                if (result.error) throw result.error;
-                if (result.signal) {
-                    throw new Error(`package manager terminated by signal ${result.signal}`);
+            const shouldInstall = await confirmDependencyInstall(item.dependencies, options);
+            if (!shouldInstall) {
+                console.log(
+                    chalk.yellow(
+                        `Skipping dependency installation. Install manually: ${
+                            item.dependencies.join(" ")
+                        }`,
+                    ),
+                );
+            } else {
+                console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
+                try {
+                    const pm = detectPackageManager();
+                    const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
+                    const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
+                    if (result.error) throw result.error;
+                    if (result.signal) {
+                        throw new Error(`package manager terminated by signal ${result.signal}`);
+                    }
+                    if (result.status !== 0) {
+                        throw new Error(`package manager exited with code ${result.status}`);
+                    }
+                } catch (error) {
+                    console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
+                    const errorDetails = error instanceof Error ? error.message : String(error);
+                    console.warn(chalk.yellow(`Error details: ${errorDetails}`));
                 }
-                if (result.status !== 0) {
-                    throw new Error(`package manager exited with code ${result.status}`);
-                }
-            } catch (error) {
-                console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
-                const errorDetails = error instanceof Error ? error.message : String(error);
-                console.warn(chalk.yellow(`Error details: ${errorDetails}`));
             }
-        }
         }
     }
 
     // 4. Update Tailwind Config
     if (item.tailwindConfig) {
         if (options.dryRun) {
-            const keys = Object.keys(item.tailwindConfig);
-            console.log(chalk.cyan(`[dry-run] Would merge tailwind.config keys: ${keys.join(", ") || "(none)"}`));
+            const preview = JSON.stringify(item.tailwindConfig, null, 2).split("\n");
+            const head = preview.slice(0, 12).join("\n");
+            const trailer = preview.length > 12 ? `\n${chalk.gray(`… (+${preview.length - 12} more lines)`)}` : "";
+            console.log(chalk.cyan(`[dry-run] Would merge into tailwind.config:`));
+            console.log(`${head}${trailer}`);
         } else {
             console.log(chalk.cyan("Updating tailwind.config..."));
             await updateTailwindConfig(config.tailwind.config, item.tailwindConfig);

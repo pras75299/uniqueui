@@ -11,6 +11,7 @@ import {
 
 let tmp: string;
 let logs: string[] = [];
+let originalNodeEnv: string | undefined;
 
 beforeEach(async () => {
     tmp = await fs.mkdtemp(path.join(os.tmpdir(), "uniqueui-add-"));
@@ -19,11 +20,17 @@ beforeEach(async () => {
         logs.push(args.map(String).join(" "));
     });
     vi.spyOn(console, "warn").mockImplementation(() => {});
+    originalNodeEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = "test";
 });
 
 afterEach(async () => {
     vi.restoreAllMocks();
+    // prompts.inject queue is global — clear any answers a failing test left behind
+    // so the next test doesn't inherit them.
+    prompts.inject([]);
+    if (originalNodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = originalNodeEnv;
     await fs.remove(tmp);
 });
 
