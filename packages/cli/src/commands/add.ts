@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import path from "path";
 import fs from "fs-extra";
 import chalk from "chalk";
+import prompts from "prompts";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
 import { spawnSync } from "child_process";
 import { createInterface } from "readline/promises";
@@ -26,7 +27,7 @@ type RegistryLookupResult =
     | { status: "unavailable" };
 
 /** Reject malformed registry JSON before any property access (avoids throws from bad remote/local data). */
-function validateRegistryPayload(data: unknown): RegistryItem[] | null {
+export function validateRegistryPayload(data: unknown): RegistryItem[] | null {
     if (!Array.isArray(data)) {
         return null;
     }
@@ -82,7 +83,7 @@ function validateRegistryItemPayload(data: unknown): RegistryItem | null {
     return validated?.[0] ?? null;
 }
 
-function validateRegistryIndexPayload(data: unknown): RegistryIndex | null {
+export function validateRegistryIndexPayload(data: unknown): RegistryIndex | null {
     if (data === null || typeof data !== "object" || Array.isArray(data)) {
         return null;
     }
@@ -113,7 +114,7 @@ function isTrustedRegistryUrl(url: string): boolean {
     }
 }
 
-function warnIfUntrustedRegistry(url: string) {
+export function warnIfUntrustedRegistry(url: string) {
     if (process.env.UNIQUEUI_SKIP_REGISTRY_WARN) return;
     if (isLocalRegistrySource(url)) return;
     if (isTrustedRegistryUrl(url)) return;
@@ -145,7 +146,128 @@ function isObjectRecord(value: unknown): value is Record<string, unknown> {
     return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
+export type PackageManager = "bun" | "pnpm" | "yarn" | "npm";
+
+/** Detect the project's package manager by lockfile, ordered bun > pnpm > yarn > npm. */
+export function detectPackageManager(cwd: string = process.cwd()): PackageManager {
+    if (fs.existsSync(path.join(cwd, "bun.lock")) || fs.existsSync(path.join(cwd, "bun.lockb"))) return "bun";
+    if (fs.existsSync(path.join(cwd, "pnpm-lock.yaml"))) return "pnpm";
+    if (fs.existsSync(path.join(cwd, "yarn.lock"))) return "yarn";
+    return "npm";
+}
+
+/**
+ * Per-index line diff (no external dep). Noisier than an LCS-based diff but
+ * faithful — every differing index emits its old and new line. Set-based
+ * dedup was intentionally removed because it silently hid changes whenever
+ * a line appeared anywhere on the other side (e.g. blank lines, repeated
+ * imports, JSX closers — common in `components/ui/*.tsx`).
+ */
+export function printUnifiedDiff(oldContent: string, newContent: string, label: string): void {
+    const oldLines = oldContent.split("\n");
+    const newLines = newContent.split("\n");
+    console.log(chalk.gray(`--- ${label} (current)`));
+    console.log(chalk.gray(`+++ ${label} (registry)`));
+    const max = Math.max(oldLines.length, newLines.length);
+    for (let i = 0; i < max; i++) {
+        const o = oldLines[i];
+        const n = newLines[i];
+        if (o === n) {
+            if (o !== undefined) console.log(`  ${o}`);
+            continue;
+        }
+        if (o !== undefined) console.log(chalk.red(`- ${o}`));
+        if (n !== undefined) console.log(chalk.green(`+ ${n}`));
+    }
+}
+
+export type WriteOutcome = "written" | "overwritten" | "skipped" | "dry-run";
+
+/**
+ * Write a `registry:ui` file with conflict-aware behavior.
+ *  - dryRun → no fs write; reports intended action.
+ *  - force  → overwrite without prompting.
+ *  - default on conflict → prompt y/N/diff. 'N' skips; 'diff' shows a diff then re-prompts.
+ *  - non-interactive terminal + no force + conflict → skip with warning.
+ */
+export async function writeRegistryUiFile(
+    targetPath: string,
+    content: string,
+    opts: { dryRun?: boolean; force?: boolean } = {},
+): Promise<WriteOutcome> {
+    const exists = fs.existsSync(targetPath);
+    const rel = path.relative(process.cwd(), targetPath) || targetPath;
+
+    if (opts.dryRun) {
+        if (exists) console.log(chalk.yellow(`[dry-run] Would overwrite ${rel}`));
+        else console.log(chalk.cyan(`[dry-run] Would create ${rel}`));
+        return "dry-run";
+    }
+
+    if (!exists) {
+        await fs.writeFile(targetPath, content);
+        console.log(chalk.green(`Created ${rel}`));
+        return "written";
+    }
+
+    if (opts.force) {
+        await fs.writeFile(targetPath, content);
+        console.log(chalk.yellow(`Overwrote ${rel}`));
+        return "overwritten";
+    }
+
+    // CI / piped shells can't answer a prompt — skip with a clear hint instead
+    // of hanging. Tests that need to exercise the prompt path must explicitly
+    // set `process.stdin.isTTY = true` / `process.stdout.isTTY = true` (and use
+    // `prompts.inject()` for answers) so production code never has a test-env
+    // backdoor that could be tripped accidentally by `NODE_ENV=test` in CI.
+    const isInteractive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+    if (!isInteractive) {
+        console.warn(
+            chalk.yellow(
+                `Skipping existing file ${rel}. Re-run with --force to overwrite or --dry-run to inspect.`,
+            ),
+        );
+        return "skipped";
+    }
+
+    let oldContent = "";
+    try {
+        oldContent = await fs.readFile(targetPath, "utf8");
+    } catch {
+        // proceed without diff
+    }
+
+    // Loop so 'diff' can show the diff and re-prompt.
+    for (;;) {
+        const { choice } = (await prompts({
+            type: "select",
+            name: "choice",
+            message: `${rel} exists. Overwrite?`,
+            choices: [
+                { title: "No, skip", value: "skip" },
+                { title: "Yes, overwrite", value: "overwrite" },
+                { title: "Show diff first", value: "diff" },
+            ],
+            initial: 0,
+        })) as { choice?: "skip" | "overwrite" | "diff" };
+
+        if (choice === "overwrite") {
+            await fs.writeFile(targetPath, content);
+            console.log(chalk.yellow(`Overwrote ${rel}`));
+            return "overwritten";
+        }
+        if (choice === "diff") {
+            printUnifiedDiff(oldContent, content, rel);
+            continue;
+        }
+        // default / skip / Ctrl-C
+        console.log(chalk.gray(`Skipped ${rel}`));
+        return "skipped";
+    }
+}
+
+export async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
     const controller = new AbortController();
     const timeoutHandle = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     try {
@@ -329,7 +451,7 @@ function getRemoteLegacyApiCandidates(baseUrl: string): string[] {
     return [joinUrlPath(getLegacyRegistryBase(baseUrl), "api/registry")];
 }
 
-function isLocalRegistrySource(source: string): boolean {
+export function isLocalRegistrySource(source: string): boolean {
     if (source.startsWith(".") || path.isAbsolute(source)) {
         return true;
     }
@@ -460,8 +582,15 @@ async function fetchRemoteRegistryItem(baseUrl: string, componentName: string): 
     return loadedRegistry ? { status: "missing" } : { status: "unavailable" };
 }
 
-export async function add(componentName: string, options: { url: string; yes?: boolean }) {
-    console.log(`Fetching ${componentName} from ${options.url}...`);
+export async function add(
+    componentName: string,
+    options: { url: string; yes?: boolean; dryRun?: boolean; force?: boolean },
+) {
+    if (options.dryRun) {
+        console.log(chalk.cyan(`[dry-run] Fetching ${componentName} from ${options.url}...`));
+    } else {
+        console.log(`Fetching ${componentName} from ${options.url}...`);
+    }
     warnIfUntrustedRegistry(options.url);
 
     // 1. Load config
@@ -516,40 +645,54 @@ export async function add(componentName: string, options: { url: string; yes?: b
             );
             process.exit(1);
         }
-        const shouldInstall = await confirmDependencyInstall(item.dependencies, options);
-        if (!shouldInstall) {
-            console.log(
-                chalk.yellow(
-                    `Skipping dependency installation. Install manually: ${
-                        item.dependencies.join(" ")
-                    }`,
-                ),
-            );
+        if (options.dryRun) {
+            const pm = detectPackageManager();
+            const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
+            console.log(chalk.cyan(`[dry-run] Would run: ${pm} ${args.join(" ")}`));
         } else {
-            console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
-            try {
-                const pm = fs.existsSync("pnpm-lock.yaml") ? "pnpm" : fs.existsSync("yarn.lock") ? "yarn" : "npm";
-                const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
-                const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
-                if (result.error) throw result.error;
-                if (result.signal) {
-                    throw new Error(`package manager terminated by signal ${result.signal}`);
+            const shouldInstall = await confirmDependencyInstall(item.dependencies, options);
+            if (!shouldInstall) {
+                console.log(
+                    chalk.yellow(
+                        `Skipping dependency installation. Install manually: ${
+                            item.dependencies.join(" ")
+                        }`,
+                    ),
+                );
+            } else {
+                console.log(chalk.cyan(`Installing dependencies: ${item.dependencies.join(", ")}`));
+                try {
+                    const pm = detectPackageManager();
+                    const args = pm === "npm" ? ["install", ...item.dependencies] : ["add", ...item.dependencies];
+                    const result = spawnSync(pm, args, { stdio: "inherit", shell: false, env: process.env });
+                    if (result.error) throw result.error;
+                    if (result.signal) {
+                        throw new Error(`package manager terminated by signal ${result.signal}`);
+                    }
+                    if (result.status !== 0) {
+                        throw new Error(`package manager exited with code ${result.status}`);
+                    }
+                } catch (error) {
+                    console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
+                    const errorDetails = error instanceof Error ? error.message : String(error);
+                    console.warn(chalk.yellow(`Error details: ${errorDetails}`));
                 }
-                if (result.status !== 0) {
-                    throw new Error(`package manager exited with code ${result.status}`);
-                }
-            } catch (error) {
-                console.warn(chalk.yellow("Failed to install dependencies automatically. Please install them manually."));
-                const errorDetails = error instanceof Error ? error.message : String(error);
-                console.warn(chalk.yellow(`Error details: ${errorDetails}`));
             }
         }
     }
 
     // 4. Update Tailwind Config
     if (item.tailwindConfig) {
-        console.log(chalk.cyan("Updating tailwind.config..."));
-        await updateTailwindConfig(config.tailwind.config, item.tailwindConfig);
+        if (options.dryRun) {
+            const preview = JSON.stringify(item.tailwindConfig, null, 2).split("\n");
+            const head = preview.slice(0, 12).join("\n");
+            const trailer = preview.length > 12 ? `\n${chalk.gray(`… (+${preview.length - 12} more lines)`)}` : "";
+            console.log(chalk.cyan(`[dry-run] Would merge into tailwind.config:`));
+            console.log(`${head}${trailer}`);
+        } else {
+            console.log(chalk.cyan("Updating tailwind.config..."));
+            await updateTailwindConfig(config.tailwind.config, item.tailwindConfig);
+        }
     }
 
     const allowedRegistryFile = (name: string) => /\.(tsx?|jsx?|mjs|cjs)$/i.test(name);
@@ -579,8 +722,10 @@ export async function add(componentName: string, options: { url: string; yes?: b
                 console.error(chalk.red(String(error)));
                 process.exit(1);
             }
-            await fs.writeFile(targetPath, file.content);
-            console.log(chalk.green(`Created ${fileName}`));
+            await writeRegistryUiFile(targetPath, file.content, {
+                dryRun: options.dryRun,
+                force: options.force,
+            });
         } else if (file.type === "registry:util") {
             const targetDir = path.resolve(config.paths.lib || "utils");
             await fs.ensureDir(targetDir);
@@ -597,10 +742,15 @@ export async function add(componentName: string, options: { url: string; yes?: b
                 process.exit(1);
             }
 
-            // Only create util if it doesn't exist
+            // Only create util if it doesn't exist (skip-if-exists is intentional — never clobber user's cn)
             if (!fs.existsSync(targetPath)) {
-                await fs.writeFile(targetPath, file.content);
-                console.log(chalk.green(`Created ${fileName}`));
+                if (options.dryRun) {
+                    const rel = path.relative(process.cwd(), targetPath) || targetPath;
+                    console.log(chalk.cyan(`[dry-run] Would create ${rel}`));
+                } else {
+                    await fs.writeFile(targetPath, file.content);
+                    console.log(chalk.green(`Created ${fileName}`));
+                }
             }
         }
     }

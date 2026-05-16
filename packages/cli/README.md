@@ -93,7 +93,9 @@ npx uniqueui <command>
 |---|---|
 | **Node.js** | ≥ 18 |
 | **React** | ≥ 18 |
-| **Tailwind CSS** | ≥ 3 |
+| **Tailwind CSS** | v3 (auto-merge into `tailwind.config.*`) or v4 (manual — see below) |
+
+> **Tailwind v4 note:** `uniqueui add` merges component animation tokens into a JS/TS `tailwind.config.*` file. v4 projects that store tokens in CSS (`@theme { ... }`) will see the merge no-op safely — copy the `tailwindConfig` block printed by `add` into your `globals.css` `@theme` block manually.
 
 > **Note:** All components use [Motion](https://motion.dev) (formerly Framer Motion). The CLI installs `motion` automatically when you add a component that needs it.
 
@@ -121,9 +123,24 @@ This creates a `components.json` file in your project root:
 
 ```json
 {
-  "componentsDir": "components/ui",
-  "typescript": true,
-  "tailwindConfig": "tailwind.config.ts"
+  "$schema": "https://uniqueui-platform.vercel.app/schema.json",
+  "style": "default",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.ts",
+    "css": "app/globals.css",
+    "baseColor": "slate",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/utils"
+  },
+  "paths": {
+    "components": "components/ui",
+    "lib": "utils"
+  }
 }
 ```
 
@@ -150,6 +167,9 @@ npx uniqueui add <component-name>
 | Flag | Description |
 |---|---|
 | `--url <url>` | Use a custom registry URL instead of the default GitHub registry |
+| `--dry-run` | Print every file that would be written + every dependency that would be installed, write nothing |
+| `--force` | Overwrite existing component files without prompting (default behavior is to prompt with a `skip` / `overwrite` / `diff` choice) |
+| `-y, --yes` | Skip the dependency-install confirmation prompt |
 
 **Examples:**
 
@@ -157,14 +177,17 @@ npx uniqueui add <component-name>
 # Add a single component
 npx uniqueui add aurora-background
 
-# Add multiple components in sequence
-npx uniqueui add moving-border
-npx uniqueui add magnetic-button
-npx uniqueui add animated-tabs
+# Preview what would change without writing anything
+npx uniqueui add moving-border --dry-run
+
+# Re-fetch and overwrite a component you've already customized (be careful)
+npx uniqueui add moving-border --force
 
 # Add from a custom registry
 npx uniqueui add my-component --url https://my-registry.com/components
 ```
+
+**Overwrite behavior:** When `add` finds an existing `components/ui/<slug>.tsx`, it prompts for `skip` / `overwrite` / `diff`. Choose `diff` to see a line-by-line comparison between your file and the registry version before deciding. In non-interactive shells (CI) the default is to skip — pass `--force` to overwrite.
 
 ---
 
@@ -186,11 +209,30 @@ Upstream repo: after `pnpm build:registry`, the same JSON files exist under `app
 
 ### `list`
 
-Display all components available in the registry.
+Display every component available in the registry, sorted alphabetically with descriptions when the source exposes them.
 
 ```bash
 npx uniqueui list
 ```
+
+**Options:**
+
+| Flag | Description |
+|---|---|
+| `--url <url>` | List from a custom registry URL or local path (e.g. `./apps/www/public`) instead of the default hosted registry |
+
+**Output:**
+
+```text
+UniqueUI components — 59 available
+Source: https://uniqueui-platform.vercel.app
+
+3d-tilt-card        Perspective-shifting card that tilts toward the cursor.
+aurora-background   Smooth aurora light background mimicking the northern lights.
+…
+```
+
+The command tries `<url>/r/registry.json` (shadcn format, has descriptions) first, falls back to `<url>/registry/index.json` (split index, names only), then `<url>/registry.json` (legacy aggregate).
 
 ---
 
@@ -653,17 +695,38 @@ Components are plain `.tsx` files — add variants, dark mode, responsive styles
 
 ```json
 {
-  "componentsDir": "components/ui",
-  "typescript": true,
-  "tailwindConfig": "tailwind.config.ts"
+  "$schema": "https://uniqueui-platform.vercel.app/schema.json",
+  "style": "default",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.ts",
+    "css": "app/globals.css",
+    "baseColor": "slate",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/utils"
+  },
+  "paths": {
+    "components": "components/ui",
+    "lib": "utils"
+  }
 }
 ```
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `componentsDir` | `string` | `components/ui` | Directory where component files are installed |
-| `typescript` | `boolean` | `true` | Use `.tsx` file extension for components |
-| `tailwindConfig` | `string` | `tailwind.config.ts` | Path to your Tailwind config for auto-merging animations |
+| `tsx` | `boolean` | `true` | Use `.tsx` file extension for components |
+| `tailwind.config` | `string` | `tailwind.config.ts` | Path to your Tailwind config for auto-merging animations (v3) |
+| `tailwind.css` | `string` | `app/globals.css` | Path to the global stylesheet |
+| `tailwind.baseColor` | `string` | `slate` | Tailwind color scale used for defaults |
+| `tailwind.cssVariables` | `boolean` | `true` | Whether the project uses CSS variables for theming |
+| `aliases.components` | `string` | `@/components` | Import alias for components |
+| `aliases.utils` | `string` | `@/utils` | Import alias for the `cn` helper |
+| `paths.components` | `string` | `components/ui` | Disk directory where component files are installed |
+| `paths.lib` | `string` | `utils` | Disk directory for `cn.ts` |
 
 ---
 

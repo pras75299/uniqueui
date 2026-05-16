@@ -4,6 +4,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { init } from "./commands/init";
 import { add } from "./commands/add";
+import { list } from "./commands/list";
 
 const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
 
@@ -29,6 +30,21 @@ program
     .argument("<component>", "the component to add")
     .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
     .option("-y, --yes", "Skip dependency install confirmation prompt")
-    .action(add);
+    .option("--dry-run", "Show what would be written and installed without modifying anything")
+    .option("--force", "Overwrite existing component files without prompting")
+    .action((componentName, opts) =>
+        add(componentName, {
+            url: opts.url,
+            yes: opts.yes,
+            dryRun: opts.dryRun,
+            force: opts.force,
+        }),
+    );
+
+program
+    .command("list")
+    .description("List components available in the registry")
+    .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
+    .action((opts) => list({ url: opts.url }));
 
 program.parse();
