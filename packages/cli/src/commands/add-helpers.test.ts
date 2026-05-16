@@ -77,6 +77,28 @@ describe("printUnifiedDiff", () => {
             .filter((l) => /^[+\-]\s/.test(l.replace(/\x1b\[[0-9;]*m/g, "")));
         expect(body).toEqual([]);
     });
+
+    // Regression: previously, set-membership dedup hid changes whenever a line
+    // appeared anywhere on the opposite side — e.g. blank lines, repeated
+    // imports, JSX closers — common in the very `components/ui/*.tsx` files
+    // this diff is used to compare. Per-index marking restores visibility.
+    it("marks every differing index even when lines repeat across sides", () => {
+        printUnifiedDiff(
+            "import a;\nimport b;\nimport a;",
+            "import b;\nimport a;",
+            "x.tsx",
+        );
+        const out = logs.join("\n").replace(/\x1b\[[0-9;]*m/g, "");
+        // Index 0: a → b
+        expect(out).toContain("- import a;");
+        expect(out).toContain("+ import b;");
+        // Index 1: b → a
+        expect(out).toContain("- import b;");
+        expect(out).toContain("+ import a;");
+        // Index 2: a → (no line)
+        const minusLines = out.split("\n").filter((l) => l.startsWith("- "));
+        expect(minusLines.length).toBeGreaterThanOrEqual(3);
+    });
 });
 
 describe("writeRegistryUiFile", () => {

@@ -156,12 +156,16 @@ export function detectPackageManager(cwd: string = process.cwd()): PackageManage
     return "npm";
 }
 
-/** Minimal line-by-line diff print (no external dep). Lines only present on one side are marked. */
+/**
+ * Per-index line diff (no external dep). Noisier than an LCS-based diff but
+ * faithful — every differing index emits its old and new line. Set-based
+ * dedup was intentionally removed because it silently hid changes whenever
+ * a line appeared anywhere on the other side (e.g. blank lines, repeated
+ * imports, JSX closers — common in `components/ui/*.tsx`).
+ */
 export function printUnifiedDiff(oldContent: string, newContent: string, label: string): void {
     const oldLines = oldContent.split("\n");
     const newLines = newContent.split("\n");
-    const oldSet = new Set(oldLines);
-    const newSet = new Set(newLines);
     console.log(chalk.gray(`--- ${label} (current)`));
     console.log(chalk.gray(`+++ ${label} (registry)`));
     const max = Math.max(oldLines.length, newLines.length);
@@ -170,10 +174,10 @@ export function printUnifiedDiff(oldContent: string, newContent: string, label: 
         const n = newLines[i];
         if (o === n) {
             if (o !== undefined) console.log(`  ${o}`);
-        } else {
-            if (o !== undefined && !newSet.has(o)) console.log(chalk.red(`- ${o}`));
-            if (n !== undefined && !oldSet.has(n)) console.log(chalk.green(`+ ${n}`));
+            continue;
         }
+        if (o !== undefined) console.log(chalk.red(`- ${o}`));
+        if (n !== undefined) console.log(chalk.green(`+ ${n}`));
     }
 }
 
