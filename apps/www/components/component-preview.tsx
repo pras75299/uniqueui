@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { forwardRef, useRef, type ForwardedRef } from "react";
 import { motion, useInView } from "motion/react";
 import { componentDemos } from "@/config/demos";
 import { useTheme } from "@/contexts/theme-context";
@@ -14,22 +14,39 @@ type ComponentPreviewProps = {
    * When true, the inner demo only mounts while the preview is near or inside
    * the viewport. Used by `/blocks` to keep dozens of motion timelines / RAF
    * loops / pointer listeners from running on off-screen cards.
+   *
+   * Implementation note: we split into Eager / Lazy components so the
+   * `useInView` hook (and its IntersectionObserver) only runs when actually
+   * needed. The default `/components` pages render ~60 previews and don't
+   * benefit from observing them.
    */
   lazy?: boolean;
 };
 
-export default function ComponentPreview({
-  slug,
-  variant = "default",
-  lazy = false,
-}: ComponentPreviewProps) {
-  const { theme } = useTheme();
-  const Demo = componentDemos[slug];
+export default function ComponentPreview(props: ComponentPreviewProps) {
+  return props.lazy ? <LazyPreview {...props} /> : <EagerPreview {...props} />;
+}
+
+function EagerPreview(props: ComponentPreviewProps) {
+  return <PreviewShell {...props} shouldRender />;
+}
+
+function LazyPreview(props: ComponentPreviewProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   // `once: false` → demo unmounts on exit, freeing RAF / pointer listeners.
-  // 200px margin warms the demo before the card scrolls into view.
+  // 200px above + below the viewport warms the demo before scroll reaches it.
   const isInView = useInView(cardRef, { once: false, margin: "200px 0px" });
-  const shouldRender = !lazy || isInView;
+  return <PreviewShell {...props} shouldRender={isInView} ref={cardRef} />;
+}
+
+type PreviewShellProps = ComponentPreviewProps & { shouldRender: boolean };
+
+const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function PreviewShell(
+  { slug, variant = "default", shouldRender },
+  ref: ForwardedRef<HTMLDivElement>,
+) {
+  const { theme } = useTheme();
+  const Demo = componentDemos[slug];
 
   if (!Demo) {
     return (
@@ -47,7 +64,7 @@ export default function ComponentPreview({
 
   return (
     <motion.div
-      ref={cardRef}
+      ref={ref}
       className={cn(
         "w-full rounded-xl border relative flex",
         isBlock
@@ -92,15 +109,36 @@ export default function ComponentPreview({
         {shouldRender ? (
           <Demo theme={theme} />
         ) : (
-          <div
-            aria-hidden
-            className={cn(
-              "h-full w-full",
-              isBlock ? "min-h-[70svh]" : "min-h-[300px]",
-            )}
-          />
+          <LazyPlaceholder isBlock={isBlock} isOutlinedMegaMark={isOutlinedMegaMark} />
         )}
       </div>
     </motion.div>
+  );
+});
+
+/**
+ * Placeholder mirrors the eager branch's min-height so the live demo can swap
+ * in without triggering a layout shift. Sizing is kept in lockstep with the
+ * `motion.div` className above (block / outlined-mega-mark / default).
+ */
+function LazyPlaceholder({
+  isBlock,
+  isOutlinedMegaMark,
+}: {
+  isBlock: boolean;
+  isOutlinedMegaMark: boolean;
+}) {
+  return (
+    <div
+      aria-hidden
+      className={cn(
+        "h-full w-full",
+        isBlock
+          ? "min-h-[70svh]"
+          : isOutlinedMegaMark
+            ? "min-h-[min(32rem,82dvh)]"
+            : "min-h-[300px]",
+      )}
+    />
   );
 }
