@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 
 type ComponentPreviewProps = {
   slug: string;
+  /** Extra class names merged on the root motion.div via `cn` (consumer style overrides). */
+  className?: string;
   /** "block" suppresses the grid backdrop and uses a full-hero min-height. */
   variant?: "default" | "block";
   /**
@@ -42,7 +44,7 @@ function LazyPreview(props: ComponentPreviewProps) {
 type PreviewShellProps = ComponentPreviewProps & { shouldRender: boolean };
 
 const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function PreviewShell(
-  { slug, variant = "default", shouldRender },
+  { slug, className, variant = "default", shouldRender },
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const { theme } = useTheme();
@@ -74,6 +76,7 @@ const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function Prev
             : "min-h-[300px] items-center justify-center",
         hasOverflowHidden && "overflow-hidden",
         isDark ? "border-neutral-800 bg-neutral-950/50" : "border-neutral-200 bg-neutral-50/80",
+        className,
       )}
       initial={false}
       animate={{

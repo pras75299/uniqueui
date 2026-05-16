@@ -223,7 +223,7 @@ npx uniqueui list
 
 **Output:**
 
-```
+```text
 UniqueUI components — 59 available
 Source: https://uniqueui-platform.vercel.app
 
