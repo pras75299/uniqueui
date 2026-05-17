@@ -199,17 +199,17 @@ What happens:
 
 ### Installing with the shadcn CLI
 
-Every component is also published in the [shadcn registry format](https://ui.shadcn.com/docs/registry) when the docs site is built. After `pnpm build:registry`, files appear under `apps/www/public/r/` in this repo; on production they are served from **`https://uniqueui.com/r/`**.
+Every component is also published in the [shadcn registry format](https://ui.shadcn.com/docs/registry) when the docs site is built. After `pnpm build:registry`, files appear under `apps/www/public/r/` in this repo; on production they are served from **`https://uniqueui-platform.vercel.app/r/`**.
 
 | Artifact | Purpose |
 |----------|---------|
-| `https://uniqueui.com/r/<slug>.json` | Single component ([registry-item](https://ui.shadcn.com/schema/registry-item.json) schema) |
-| `https://uniqueui.com/r/registry.json` | Full catalog ([registry](https://ui.shadcn.com/schema/registry.json) schema) |
+| `https://uniqueui-platform.vercel.app/r/<slug>.json` | Single component ([registry-item](https://ui.shadcn.com/schema/registry-item.json) schema) |
+| `https://uniqueui-platform.vercel.app/r/registry.json` | Full catalog ([registry](https://ui.shadcn.com/schema/registry.json) schema) |
 
 **Add one component:**
 
 ```bash
-npx shadcn@latest add https://uniqueui.com/r/moving-border.json -y
+npx shadcn@latest add https://uniqueui-platform.vercel.app/r/moving-border.json -y
 ```
 
 **Requirements:**
@@ -514,7 +514,7 @@ Registry (GitHub)
        │        ▼
        │   Your project (components.json paths, utils/cn)
        │
-       └── npx shadcn add https://uniqueui.com/r/<slug>.json
+       └── npx shadcn add https://uniqueui-platform.vercel.app/r/<slug>.json
                 ▼
             Your project (shadcn components.json, @/lib/utils)
 ```

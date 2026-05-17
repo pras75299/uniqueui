@@ -6,7 +6,7 @@ Accepted - 2026-04-16
 
 ## Context
 
-The docs system currently uses centralized metadata maps (for example `apps/www/config/docs-scenarios.ts`) and a single registry build pipeline (`pnpm build:registry`) that already generates shared artifacts (`registry.json`, `apps/www/public/registry.json`, per-component docs payloads under `apps/www/public/registry/`, and shadcn-format registry items under `apps/www/public/r/` for `https://uniqueui.com/r/<slug>.json`).
+The docs system currently uses centralized metadata maps (for example `apps/www/config/docs-scenarios.ts`) and a single registry build pipeline (`pnpm build:registry`) that already generates shared artifacts (`registry.json`, `apps/www/public/registry.json`, per-component docs payloads under `apps/www/public/registry/`, and shadcn-format registry items under `apps/www/public/r/` for `https://uniqueui-platform.vercel.app/r/<slug>.json`).
 
 We need a decision on whether `registry/docs.json` should remain one centralized file or be split into per-component metadata files.
 
