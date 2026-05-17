@@ -244,6 +244,7 @@ function buildMarkerBlock(slug: string, snippet: string): string {
 
 export type AppendCssOutcome =
     | "appended"
+    | "replaced"
     | "already-present"
     | "dry-run"
     | "missing-file"
@@ -253,14 +254,18 @@ export type AppendCssOutcome =
  * Append a registry-provided Tailwind v4 snippet to the user's globals CSS,
  * wrapped in uniqueui:start/end markers so re-runs are idempotent.
  *
- * Behavior:
- *  - File missing → return "missing-file" (caller logs guidance).
- *  - Slug marker already present → return "already-present" (no write).
- *  - dryRun → return "dry-run" (no write).
- *  - Otherwise append the marker block and return "appended".
+ * Behavior on an existing slug marker:
+ *  - default → return "already-present" (skip, preserve any local edits inside the block).
+ *  - force   → splice the old block out and write the new one ("replaced"); honors dryRun.
  *
- * The "force" option is currently unused (append is always safe relative to
- * other slugs) but accepted so call sites mirror writeRegistryUiFile.
+ * Other outcomes:
+ *  - File missing → "missing-file" (caller logs guidance).
+ *  - dryRun on a brand-new slug → "dry-run".
+ *  - First write → "appended".
+ *
+ * Skip-on-present is the safe default: a user may have hand-tuned values inside
+ * the block, and silently overwriting them on every `add` would frustrate them.
+ * `--force` opts in to authoritative replacement, matching writeRegistryUiFile.
  */
 export async function appendTailwindCss(
     cssPath: string,
@@ -268,7 +273,6 @@ export async function appendTailwindCss(
     slug: string,
     opts: { dryRun?: boolean; force?: boolean } = {},
 ): Promise<AppendCssOutcome> {
-    void opts.force;
     const rel = path.relative(process.cwd(), cssPath) || cssPath;
 
     if (!fs.existsSync(cssPath)) {
@@ -281,9 +285,44 @@ export async function appendTailwindCss(
     }
 
     const existing = await fs.readFile(cssPath, "utf8");
-    if (existing.includes(`${TAILWIND_CSS_MARKER_PREFIX} ${slug} */`)) {
-        // Idempotent: same slug already injected.
-        return "already-present";
+    const startMarker = `${TAILWIND_CSS_MARKER_PREFIX} ${slug} */`;
+    const endMarker = `/* uniqueui:end ${slug} */`;
+    const startIdx = existing.indexOf(startMarker);
+
+    if (startIdx !== -1) {
+        // Marker present — either skip (default) or replace (force).
+        if (!opts.force) {
+            return "already-present";
+        }
+
+        const endIdx = existing.indexOf(endMarker, startIdx);
+        if (endIdx === -1) {
+            // Truncated/edited marker pair — refuse to guess, leave the file alone.
+            console.warn(
+                chalk.yellow(
+                    `Found "${startMarker}" in ${rel} but no matching end marker. Leaving the file untouched — remove the partial block manually and re-run.`,
+                ),
+            );
+            return "skipped";
+        }
+
+        const block = buildMarkerBlock(slug, snippet);
+        const before = existing.slice(0, startIdx);
+        const after = existing.slice(endIdx + endMarker.length);
+        // buildMarkerBlock already brackets with newlines; collapse any
+        // accidental triple-newline at the seam to avoid creeping whitespace
+        // after repeated --force runs.
+        const stitched = `${before.replace(/\n+$/, "\n")}${block.replace(/^\n+/, "\n")}${after.replace(/^\n+/, "\n")}`;
+
+        if (opts.dryRun) {
+            console.log(chalk.cyan(`[dry-run] Would replace existing block for "${slug}" in ${rel} with:`));
+            console.log(block.trimEnd());
+            return "dry-run";
+        }
+
+        await fs.writeFile(cssPath, stitched);
+        console.log(chalk.yellow(`Replaced Tailwind v4 tokens for "${slug}" in ${rel}`));
+        return "replaced";
     }
 
     const block = buildMarkerBlock(slug, snippet);
