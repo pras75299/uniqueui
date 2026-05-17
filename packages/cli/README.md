@@ -3,6 +3,8 @@
 > Add beautiful, animated UI components to your React project with a single command.
 
 [![npm version](https://img.shields.io/npm/v/uniqueui-cli.svg)](https://www.npmjs.com/package/uniqueui-cli)
+[![npm total downloads](https://img.shields.io/npm/dt/uniqueui-cli.svg)](https://www.npmjs.com/package/uniqueui-cli)
+[![npm monthly downloads](https://img.shields.io/npm/dm/uniqueui-cli.svg)](https://www.npmjs.com/package/uniqueui-cli)
 [![license](https://img.shields.io/npm/l/uniqueui-cli.svg)](https://github.com/pras75299/uniqueui/blob/main/LICENSE)
 [![node](https://img.shields.io/node/v/uniqueui-cli.svg)](https://nodejs.org)
 

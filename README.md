@@ -9,6 +9,8 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/uniqueui-cli"><img src="https://img.shields.io/npm/v/uniqueui-cli.svg" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/uniqueui-cli"><img src="https://img.shields.io/npm/dt/uniqueui-cli.svg" alt="npm total downloads" /></a>
+  <a href="https://www.npmjs.com/package/uniqueui-cli"><img src="https://img.shields.io/npm/dm/uniqueui-cli.svg" alt="npm monthly downloads" /></a>
   <a href="https://github.com/pras75299/uniqueui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/uniqueui-cli.svg" alt="license" /></a>
   <a href="https://nodejs.org"><img src="https://img.shields.io/node/v/uniqueui-cli.svg" alt="node" /></a>
 </p>
