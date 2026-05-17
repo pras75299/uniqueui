@@ -15,6 +15,8 @@ export default defineConfig(async () => {
             environment: 'jsdom',
             globals: true,
             setupFiles: ['./tests/setup.ts'],
+            // Playwright E2E specs live in `./e2e` and must NOT be picked up by Vitest.
+            exclude: ['node_modules', 'dist', '.next', 'e2e/**'],
         },
     };
 });

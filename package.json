@@ -7,10 +7,12 @@
     "dev:docs": "pnpm --dir apps/www dev",
     "dev:cli": "pnpm --dir packages/cli dev",
     "build:registry": "ts-node scripts/build-registry.ts",
+    "registry:validate": "node scripts/validate-registry.mjs",
+    "test:e2e": "pnpm --dir apps/www test:e2e",
     "test:e2e:shadcn": "npx ts-node scripts/test-shadcn-all-components.ts",
     "test": "turbo run test",
     "test:ci": "pnpm --dir packages/cli test && pnpm --dir apps/www test && pnpm test:repo",
-    "test:repo": "pnpm exec vitest run scripts/docs-metadata-friction.test.ts",
+    "test:repo": "pnpm exec vitest run scripts/docs-metadata-friction.test.ts scripts/validate-registry.test.ts",
     "lint:cli": "pnpm --dir packages/cli exec eslint src --ext .ts --config eslint.config.mjs",
     "lint:docs": "pnpm --dir apps/www lint",
     "lint": "pnpm lint:cli && pnpm lint:docs",
@@ -52,7 +54,8 @@
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.46.2",
     "vitest": "^4.0.18",
-    "vitest-fetch-mock": "^0.4.5"
+    "vitest-fetch-mock": "^0.4.5",
+    "zod": "^3.25.76"
   },
   "engines": {
     "node": "24.x"
