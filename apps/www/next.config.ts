@@ -47,7 +47,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/docs/:slug",
+        // Legacy component URLs lived at /docs/<slug>; redirect them to /components/<slug>.
+        // Exclude /docs/compatibility (and any future first-class /docs/* pages) via negative lookahead.
+        source: "/docs/:slug((?!compatibility$).+)",
         destination: "/components/:slug",
         permanent: true,
       },
