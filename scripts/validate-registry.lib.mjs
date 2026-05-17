@@ -39,6 +39,7 @@ export const RegistryEntry = z.object({
   dependencies: z.array(NpmDep),
   files: z.array(RegistryFile).min(1),
   tailwindConfig: TailwindConfig.optional(),
+  tailwindCss: z.string().min(1).optional(),
 });
 
 export const RegistryArray = z.array(RegistryEntry).min(1);

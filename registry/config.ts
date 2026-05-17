@@ -3,7 +3,12 @@ export type Registry = Array<{
     name: string;
     dependencies: string[];
     files: Array<{ path: string; type: string; content?: string }>;
+    // Tailwind v3 path: merged into the user's tailwind.config.* by the CLI.
     tailwindConfig?: Record<string, any>;
+    // Tailwind v4 path: appended (wrapped in uniqueui markers) to the user's
+    // globals.css by the CLI. Should be self-contained CSS — typically a
+    // single @theme block with --animate-* tokens and embedded @keyframes.
+    tailwindCss?: string;
 }>;
 
 const cnUtilFile = {
@@ -39,6 +44,16 @@ export const registry: Registry = [
                 },
             },
         },
+        tailwindCss: `@theme {
+  --animate-border-spin: border-spin 3s linear infinite;
+
+  @keyframes border-spin {
+    100% {
+      transform: rotate(-360deg);
+    }
+  }
+}
+`,
     },
     {
         name: "typewriter-text",
@@ -168,6 +183,24 @@ export const registry: Registry = [
                 },
             },
         },
+        tailwindCss: `@theme {
+  --animate-meteor: meteor 5s linear infinite;
+
+  @keyframes meteor {
+    0% {
+      transform: rotate(215deg) translateX(0);
+      opacity: 1;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      transform: rotate(215deg) translateX(-500px);
+      opacity: 0;
+    }
+  }
+}
+`,
     },
     {
         name: "mini-mac-keyboard",

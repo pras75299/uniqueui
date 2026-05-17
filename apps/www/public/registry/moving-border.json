@@ -32,5 +32,6 @@
         }
       }
     }
-  }
+  },
+  "tailwindCss": "@theme {\n  --animate-border-spin: border-spin 3s linear infinite;\n\n  @keyframes border-spin {\n    100% {\n      transform: rotate(-360deg);\n    }\n  }\n}\n"
 }

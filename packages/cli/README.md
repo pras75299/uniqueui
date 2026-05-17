@@ -95,9 +95,9 @@ npx uniqueui <command>
 |---|---|---|
 | **Node.js** | ≥ 18 | 20 LTS / 22 LTS recommended. The UniqueUI monorepo itself pins Node 24 for contributors — that does **not** apply to end users of this CLI. |
 | **React** | 18 or 19 | Components target both. |
-| **Tailwind CSS** | 3.4+ or 4.x | v3: tokens auto-merge into `tailwind.config.*`. v4: copy keyframes/animation into your `@theme` block — see below. |
+| **Tailwind CSS** | 3.4+ or 4.x | The CLI detects your major (via `@tailwindcss/postcss`, a 4.x `tailwindcss` range, or `@import "tailwindcss"` in your CSS). v3: tokens auto-merge into `tailwind.config.*`. v4: a marker-wrapped `@theme` snippet is appended to `components.json#tailwind.css`. Idempotent + dry-run safe. |
 
-> **Tailwind v4 note:** `uniqueui add` merges component animation tokens into a JS/TS `tailwind.config.*` file. v4 projects that store tokens in CSS (`@theme { ... }`) will see the merge no-op safely — copy the `tailwindConfig` block printed by `add` into your `globals.css` `@theme` block manually. The full matrix lives at [`/docs/compatibility`](https://uniqueui-platform.vercel.app/docs/compatibility).
+> **Tailwind v4 note:** `uniqueui add` detects v4 projects and appends a marker-wrapped `@theme` snippet to the file pointed at by `components.json#tailwind.css` (default `app/globals.css`). Re-running is safe — slug markers make the append idempotent — and `--dry-run` prints the snippet without writing. On v3 projects the same command merges `theme.extend` into `tailwind.config.*` instead. The full matrix lives at [`/docs/compatibility`](https://uniqueui-platform.vercel.app/docs/compatibility).
 
 > **Note:** All components use [Motion](https://motion.dev) (formerly Framer Motion). The CLI installs `motion` automatically when you add a component that needs it.
 

@@ -99,9 +99,9 @@ const stack: Row[] = [
   {
     label: "Tailwind CSS v4",
     version: "≥ 4.0",
-    status: "manual",
+    status: "tested",
     notes:
-      "The docs site uses v4. The CLI's auto-merge still targets a v3-style config file. If your project is v4 CSS-first, copy the component's keyframes / theme tokens into your `@theme` block manually. We are tracking a first-class v4 path in the backlog.",
+      "The CLI detects v4 (via `@tailwindcss/postcss`, a 4.x `tailwindcss` range, or `@import \"tailwindcss\"` in your globals.css) and appends a marker-wrapped `@theme` snippet to your `tailwind.css` path. Idempotent across re-runs and respected by `--dry-run`.",
   },
   {
     label: "Motion (formerly Framer Motion)",
@@ -251,17 +251,23 @@ export default function CompatibilityPage() {
       <Matrix title="Frameworks" rows={frameworks} />
       <Matrix title="CLI flows" rows={cliFlows} />
 
-      <section className="space-y-3 rounded-xl border border-amber-300/60 bg-amber-50 p-5 text-sm leading-relaxed text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/5 dark:text-amber-200">
-        <p className="font-semibold">Tailwind v4 — what to do today</p>
+      <section className="space-y-3 rounded-xl border border-emerald-300/60 bg-emerald-50 p-5 text-sm leading-relaxed text-emerald-900 dark:border-emerald-500/20 dark:bg-emerald-500/5 dark:text-emerald-200">
+        <p className="font-semibold">Tailwind v4 — how it works</p>
         <p>
           A v4 project&apos;s tokens live in CSS (<code className="font-mono text-xs">@theme</code> in your global stylesheet),
-          not in a JS <code className="font-mono text-xs">tailwind.config</code>. When a UniqueUI component declares
-          custom keyframes (e.g. <code className="font-mono text-xs">moving-border</code>, <code className="font-mono text-xs">aurora-background</code>),
-          the CLI&apos;s automatic merge won&apos;t find a config object to write into, so you need to copy the
-          <code className="font-mono text-xs"> theme.extend.keyframes</code> and
-          <code className="font-mono text-xs"> theme.extend.animation</code> entries from the component&apos;s registry JSON
-          (<code className="font-mono text-xs">https://uniqueui-platform.vercel.app/registry/&lt;slug&gt;.json</code>) into your
-          <code className="font-mono text-xs"> @theme</code> block. A first-class v4 emission path is on the roadmap.
+          not in a JS <code className="font-mono text-xs">tailwind.config</code>. When you run
+          <code className="font-mono text-xs"> uniqueui add &lt;component&gt;</code>, the CLI detects v4 (from
+          <code className="font-mono text-xs"> @tailwindcss/postcss</code>, a 4.x <code className="font-mono text-xs">tailwindcss</code> range,
+          or <code className="font-mono text-xs">@import &quot;tailwindcss&quot;</code> in your CSS) and, if the component ships a
+          <code className="font-mono text-xs"> tailwindCss</code> snippet, appends it to the file at
+          <code className="font-mono text-xs"> components.json#tailwind.css</code> wrapped in
+          <code className="font-mono text-xs">{" /* uniqueui:start <slug> */ "}</code> markers. Re-runs are idempotent;
+          <code className="font-mono text-xs"> --dry-run</code> prints the snippet without writing.
+        </p>
+        <p>
+          On a v3 project the same command takes the legacy path and merges
+          <code className="font-mono text-xs"> theme.extend.animation</code> / <code className="font-mono text-xs">keyframes</code> into your
+          <code className="font-mono text-xs"> tailwind.config.{"{js,ts}"}</code>. You don&apos;t pick a mode — the CLI does.
         </p>
       </section>
 

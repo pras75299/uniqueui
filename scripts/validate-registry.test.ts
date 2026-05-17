@@ -77,6 +77,19 @@ describe("RegistryEntry", () => {
     const bad = { ...goodEntry, dependencies: ["motion react"] };
     expect(validate(RegistryEntry, bad).ok).toBe(false);
   });
+
+  it("accepts a tailwindCss snippet alongside tailwindConfig — the v4 dual-artifact path", () => {
+    const dual = {
+      ...goodEntry,
+      tailwindCss: "@theme {\n  --animate-x: x 1s linear infinite;\n}\n",
+    };
+    expect(validate(RegistryEntry, dual).ok).toBe(true);
+  });
+
+  it("rejects an empty tailwindCss string — an empty snippet would silently no-op on append", () => {
+    const bad = { ...goodEntry, tailwindCss: "" };
+    expect(validate(RegistryEntry, bad).ok).toBe(false);
+  });
 });
 
 describe("RegistryArray", () => {
