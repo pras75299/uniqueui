@@ -33,7 +33,8 @@
           }
         }
       }
-    }
+    },
+    "tailwindCss": "@theme {\n  --animate-border-spin: border-spin 3s linear infinite;\n\n  @keyframes border-spin {\n    100% {\n      transform: rotate(-360deg);\n    }\n  }\n}\n"
   },
   {
     "name": "typewriter-text",
@@ -336,7 +337,8 @@
           }
         }
       }
-    }
+    },
+    "tailwindCss": "@theme {\n  --animate-meteor: meteor 5s linear infinite;\n\n  @keyframes meteor {\n    0% {\n      transform: rotate(215deg) translateX(0);\n      opacity: 1;\n    }\n    70% {\n      opacity: 1;\n    }\n    100% {\n      transform: rotate(215deg) translateX(-500px);\n      opacity: 0;\n    }\n  }\n}\n"
   },
   {
     "name": "mini-mac-keyboard",

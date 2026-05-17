@@ -103,7 +103,7 @@ If you are exploring or contributing to the repository, these are the main place
 |---|---|---|
 | **Node.js (CLI users)** | ≥ 18 | 20 LTS / 22 LTS recommended. The monorepo itself uses Node 24 — that's for contributors only and does not affect end users of `uniqueui-cli`. |
 | **React** | 18 or 19 | Components are written to run on both. |
-| **Tailwind CSS** | 3.4+ or 4.x | The CLI auto-merges `theme.extend` into a `tailwind.config.*` file (v3 model). On v4 (CSS-first `@theme`) copy keyframes/animation from the component's registry JSON into your `@theme` block manually — see the [compatibility matrix](https://uniqueui-platform.vercel.app/docs/compatibility). |
+| **Tailwind CSS** | 3.4+ or 4.x | The CLI detects which major you're on. v3: merges `theme.extend` into your `tailwind.config.*`. v4: appends a marker-wrapped `@theme` snippet to the file at `components.json#tailwind.css`. Idempotent on re-runs; respects `--dry-run`. See the [compatibility matrix](https://uniqueui-platform.vercel.app/docs/compatibility). |
 
 > All components use [Motion](https://motion.dev) (formerly Framer Motion). The CLI installs `motion` automatically.
 

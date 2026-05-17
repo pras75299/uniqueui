@@ -15,6 +15,7 @@ type RegistryItem = {
     dependencies: string[];
     files: Array<{ path: string; type: string; content: string }>;
     tailwindConfig?: Record<string, any>;
+    tailwindCss?: string;
 };
 
 type RegistryIndex = {
@@ -73,7 +74,19 @@ export function validateRegistryPayload(data: unknown): RegistryItem[] | null {
             }
             tailwindConfig = o.tailwindConfig as Record<string, any>;
         }
-        out.push({ name: o.name, dependencies, files, tailwindConfig });
+        let tailwindCss: string | undefined;
+        if (o.tailwindCss !== undefined) {
+            if (typeof o.tailwindCss !== "string" || o.tailwindCss.length === 0) {
+                return null;
+            }
+            // Cap snippet size — appended to a user CSS file, so a hostile
+            // registry could otherwise inflate globals.css indefinitely.
+            if (o.tailwindCss.length > 16_384) {
+                return null;
+            }
+            tailwindCss = o.tailwindCss;
+        }
+        out.push({ name: o.name, dependencies, files, tailwindConfig, tailwindCss });
     }
     return out;
 }
@@ -154,6 +167,139 @@ export function detectPackageManager(cwd: string = process.cwd()): PackageManage
     if (fs.existsSync(path.join(cwd, "pnpm-lock.yaml"))) return "pnpm";
     if (fs.existsSync(path.join(cwd, "yarn.lock"))) return "yarn";
     return "npm";
+}
+
+export type TailwindMajor = "v3" | "v4" | "unknown";
+
+/**
+ * Detect whether the user's project uses Tailwind v3 or v4 — used to choose
+ * between the JS-config merge path and the CSS-append path.
+ *
+ * Signals, in priority order:
+ *  1. `package.json` declares `@tailwindcss/postcss` / `@tailwindcss/vite` /
+ *     `@tailwindcss/cli` — those packages are v4-only.
+ *  2. `package.json` declares `tailwindcss` and the version range starts with
+ *     "4" (e.g. ^4, ~4.0, 4.0.0, >=4).
+ *  3. Same `tailwindcss` field starting with "3" or "2" → v3.
+ *  4. Fallback: inspect the configured CSS file. `@import "tailwindcss"` is
+ *     the v4 entrypoint; `@tailwind base` / `@tailwind utilities` are v3.
+ *  5. Otherwise "unknown" — caller should default to the v3 path.
+ *
+ * `cssPath` is optional; pass `components.json#tailwind.css` when available so
+ * detection can fall back to the CSS file when package.json is ambiguous.
+ */
+export function detectTailwindMajor(cwd: string = process.cwd(), cssPath?: string): TailwindMajor {
+    const pkgPath = path.join(cwd, "package.json");
+    if (fs.existsSync(pkgPath)) {
+        try {
+            const pkg = fs.readJsonSync(pkgPath) as {
+                dependencies?: Record<string, string>;
+                devDependencies?: Record<string, string>;
+            };
+            const allDeps = { ...(pkg.dependencies ?? {}), ...(pkg.devDependencies ?? {}) };
+            // v4-only sibling packages — strongest signal.
+            if (
+                "@tailwindcss/postcss" in allDeps ||
+                "@tailwindcss/vite" in allDeps ||
+                "@tailwindcss/cli" in allDeps
+            ) {
+                return "v4";
+            }
+            const twRange = allDeps["tailwindcss"];
+            if (typeof twRange === "string") {
+                const m = twRange.match(/(\d+)/);
+                if (m) {
+                    const major = Number(m[1]);
+                    if (major >= 4) return "v4";
+                    if (major <= 3) return "v3";
+                }
+            }
+        } catch {
+            // ignore — fall through to CSS sniff
+        }
+    }
+
+    if (cssPath) {
+        const absCss = path.isAbsolute(cssPath) ? cssPath : path.join(cwd, cssPath);
+        if (fs.existsSync(absCss)) {
+            try {
+                const css = fs.readFileSync(absCss, "utf8");
+                if (/@import\s+["']tailwindcss["']/.test(css)) return "v4";
+                if (/@tailwind\s+(base|components|utilities)\b/.test(css)) return "v3";
+            } catch {
+                // ignore — fall through
+            }
+        }
+    }
+
+    return "unknown";
+}
+
+const TAILWIND_CSS_MARKER_PREFIX = "/* uniqueui:start";
+
+function buildMarkerBlock(slug: string, snippet: string): string {
+    const trimmed = snippet.endsWith("\n") ? snippet : `${snippet}\n`;
+    return `\n/* uniqueui:start ${slug} */\n${trimmed}/* uniqueui:end ${slug} */\n`;
+}
+
+export type AppendCssOutcome =
+    | "appended"
+    | "already-present"
+    | "dry-run"
+    | "missing-file"
+    | "skipped";
+
+/**
+ * Append a registry-provided Tailwind v4 snippet to the user's globals CSS,
+ * wrapped in uniqueui:start/end markers so re-runs are idempotent.
+ *
+ * Behavior:
+ *  - File missing → return "missing-file" (caller logs guidance).
+ *  - Slug marker already present → return "already-present" (no write).
+ *  - dryRun → return "dry-run" (no write).
+ *  - Otherwise append the marker block and return "appended".
+ *
+ * The "force" option is currently unused (append is always safe relative to
+ * other slugs) but accepted so call sites mirror writeRegistryUiFile.
+ */
+export async function appendTailwindCss(
+    cssPath: string,
+    snippet: string,
+    slug: string,
+    opts: { dryRun?: boolean; force?: boolean } = {},
+): Promise<AppendCssOutcome> {
+    void opts.force;
+    const rel = path.relative(process.cwd(), cssPath) || cssPath;
+
+    if (!fs.existsSync(cssPath)) {
+        console.warn(
+            chalk.yellow(
+                `Tailwind globals CSS not found at ${rel}. Skipping v4 token append — copy the snippet manually into your @theme block:\n${snippet}`,
+            ),
+        );
+        return "missing-file";
+    }
+
+    const existing = await fs.readFile(cssPath, "utf8");
+    if (existing.includes(`${TAILWIND_CSS_MARKER_PREFIX} ${slug} */`)) {
+        // Idempotent: same slug already injected.
+        return "already-present";
+    }
+
+    const block = buildMarkerBlock(slug, snippet);
+
+    if (opts.dryRun) {
+        console.log(chalk.cyan(`[dry-run] Would append the following CSS to ${rel}:`));
+        console.log(block.trimEnd());
+        return "dry-run";
+    }
+
+    // Ensure separation from prior content even if the user's file has no
+    // trailing newline.
+    const sep = existing.endsWith("\n") ? "" : "\n";
+    await fs.writeFile(cssPath, `${existing}${sep}${block}`);
+    console.log(chalk.green(`Appended Tailwind v4 tokens for "${slug}" to ${rel}`));
+    return "appended";
 }
 
 /**
@@ -681,17 +827,48 @@ export async function add(
         }
     }
 
-    // 4. Update Tailwind Config
-    if (item.tailwindConfig) {
-        if (options.dryRun) {
-            const preview = JSON.stringify(item.tailwindConfig, null, 2).split("\n");
-            const head = preview.slice(0, 12).join("\n");
-            const trailer = preview.length > 12 ? `\n${chalk.gray(`… (+${preview.length - 12} more lines)`)}` : "";
-            console.log(chalk.cyan(`[dry-run] Would merge into tailwind.config:`));
-            console.log(`${head}${trailer}`);
-        } else {
-            console.log(chalk.cyan("Updating tailwind.config..."));
-            await updateTailwindConfig(config.tailwind.config, item.tailwindConfig);
+    // 4. Update Tailwind tokens — dual-path:
+    //    - v4 project + registry ships tailwindCss → append CSS snippet to globals.
+    //    - v3 project (or no v4 signal) + registry ships tailwindConfig → JS-config merge.
+    //    - Mismatch (v4 user, only tailwindConfig OR vice versa) → warn with copy/paste hint.
+    if (item.tailwindCss || item.tailwindConfig) {
+        const cssRel: string | undefined = config?.tailwind?.css;
+        const major = detectTailwindMajor(process.cwd(), cssRel);
+
+        if (major === "v4" && item.tailwindCss) {
+            const cssAbs = path.resolve(cssRel || "app/globals.css");
+            await appendTailwindCss(cssAbs, item.tailwindCss, item.name, {
+                dryRun: options.dryRun,
+                force: options.force,
+            });
+        } else if (major === "v4" && !item.tailwindCss && item.tailwindConfig) {
+            console.warn(
+                chalk.yellow(
+                    `Tailwind v4 detected, but "${item.name}" only ships a JS-config snippet. ` +
+                    `Translate the keyframes/animation below into your @theme block manually:\n` +
+                    JSON.stringify(item.tailwindConfig, null, 2),
+                ),
+            );
+        } else if (item.tailwindConfig) {
+            // v3 (or unknown — safe default is the JS-config merge).
+            if (options.dryRun) {
+                const preview = JSON.stringify(item.tailwindConfig, null, 2).split("\n");
+                const head = preview.slice(0, 12).join("\n");
+                const trailer = preview.length > 12 ? `\n${chalk.gray(`… (+${preview.length - 12} more lines)`)}` : "";
+                console.log(chalk.cyan(`[dry-run] Would merge into tailwind.config:`));
+                console.log(`${head}${trailer}`);
+            } else {
+                console.log(chalk.cyan("Updating tailwind.config..."));
+                await updateTailwindConfig(config.tailwind.config, item.tailwindConfig);
+            }
+        } else if (item.tailwindCss) {
+            // v3 user, registry only ships v4 snippet — rare, but explain.
+            console.warn(
+                chalk.yellow(
+                    `"${item.name}" ships Tailwind v4 CSS tokens but no v3 JS-config equivalent. ` +
+                    `If you are on Tailwind v3, translate the snippet into theme.extend manually:\n${item.tailwindCss}`,
+                ),
+            );
         }
     }
 
