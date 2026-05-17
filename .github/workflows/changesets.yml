@@ -33,7 +33,8 @@ jobs:
           version: pnpm version-packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Skip the local-dev markdown / test pre-commit hook; this CI commit
-          # only touches generated CHANGELOG.md + version bumps, and the resulting
-          # release PR is validated by the standard CI workflow.
-          HUSKY: "0"
+          # The pre-commit hook (scripts/pre-commit.sh) refuses to commit
+          # Markdown files without explicit approval. The changesets action
+          # commits regenerated CHANGELOG.md files programmatically, so opt
+          # into the documented escape hatch. Tests + lint still run.
+          ALLOW_MD: "1"
