@@ -3,6 +3,8 @@
 > Add beautiful, animated UI components to your React project with a single command.
 
 [![npm version](https://img.shields.io/npm/v/uniqueui-cli.svg)](https://www.npmjs.com/package/uniqueui-cli)
+[![npm total downloads](https://img.shields.io/npm/dt/uniqueui-cli.svg)](https://www.npmjs.com/package/uniqueui-cli)
+[![npm monthly downloads](https://img.shields.io/npm/dm/uniqueui-cli.svg)](https://www.npmjs.com/package/uniqueui-cli)
 [![license](https://img.shields.io/npm/l/uniqueui-cli.svg)](https://github.com/pras75299/uniqueui/blob/main/LICENSE)
 [![node](https://img.shields.io/node/v/uniqueui-cli.svg)](https://nodejs.org)
 
@@ -89,13 +91,13 @@ npx uniqueui <command>
 
 ## Requirements
 
-| Requirement | Version |
-|---|---|
-| **Node.js** | ≥ 18 |
-| **React** | ≥ 18 |
-| **Tailwind CSS** | v3 (auto-merge into `tailwind.config.*`) or v4 (manual — see below) |
+| Requirement | Version | Notes |
+|---|---|---|
+| **Node.js** | ≥ 18 | 20 LTS / 22 LTS recommended. The UniqueUI monorepo itself pins Node 24 for contributors — that does **not** apply to end users of this CLI. |
+| **React** | 18 or 19 | Components target both. |
+| **Tailwind CSS** | 3.4+ or 4.x | v3: tokens auto-merge into `tailwind.config.*`. v4: copy keyframes/animation into your `@theme` block — see below. |
 
-> **Tailwind v4 note:** `uniqueui add` merges component animation tokens into a JS/TS `tailwind.config.*` file. v4 projects that store tokens in CSS (`@theme { ... }`) will see the merge no-op safely — copy the `tailwindConfig` block printed by `add` into your `globals.css` `@theme` block manually.
+> **Tailwind v4 note:** `uniqueui add` merges component animation tokens into a JS/TS `tailwind.config.*` file. v4 projects that store tokens in CSS (`@theme { ... }`) will see the merge no-op safely — copy the `tailwindConfig` block printed by `add` into your `globals.css` `@theme` block manually. The full matrix lives at [`/docs/compatibility`](https://uniqueui-platform.vercel.app/docs/compatibility).
 
 > **Note:** All components use [Motion](https://motion.dev) (formerly Framer Motion). The CLI installs `motion` automatically when you add a component that needs it.
 
