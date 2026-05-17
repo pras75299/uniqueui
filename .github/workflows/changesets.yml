@@ -33,3 +33,7 @@ jobs:
           version: pnpm version-packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Skip the local-dev markdown / test pre-commit hook; this CI commit
+          # only touches generated CHANGELOG.md + version bumps, and the resulting
+          # release PR is validated by the standard CI workflow.
+          HUSKY: "0"
