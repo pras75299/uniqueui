@@ -33,3 +33,8 @@ jobs:
           version: pnpm version-packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The pre-commit hook (scripts/pre-commit.sh) refuses to commit
+          # Markdown files without explicit approval. The changesets action
+          # commits regenerated CHANGELOG.md files programmatically, so opt
+          # into the documented escape hatch. Tests + lint still run.
+          ALLOW_MD: "1"

@@ -89,7 +89,7 @@ pnpm build:registry    # Reads registry/<slug>/component.tsx sources → writes 
                        # Also writes apps/www/public/registry.json
                        # Also splits per-component files into apps/www/public/registry/
                        # Also writes shadcn-format registry items to apps/www/public/r/
-                       #    (per-component *.json + r/registry.json for https://uniqueui.com/r/)
+                       #    (per-component *.json + r/registry.json for https://uniqueui-platform.vercel.app/r/)
                        # Also syncs docs copies into apps/www/components/ui/
                        # Also generates apps/www/config/{components,docs-scenarios,demos}.ts*
 ```

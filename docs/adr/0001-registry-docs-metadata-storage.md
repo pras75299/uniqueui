@@ -60,3 +60,7 @@ To reduce subjective decision-making while staying on the centralized model:
 3. Keep generating a compatibility `registry/docs.json` artifact for one transition phase.
 4. Add CI checks to prevent drift between per-component sources and aggregate output.
 5. Remove compatibility path only after CLI/docs consumers are fully switched.
+
+## Amendments
+
+- **2026-05-17** — The Context paragraph references `https://uniqueui.com/r/<slug>.json` as it stood at the time this ADR was accepted. The current production registry host is `https://uniqueui-platform.vercel.app/r/<slug>.json`; `uniqueui.com` remains the intended future apex but is not live. This amendment does not change the decision or its rationale.

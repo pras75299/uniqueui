@@ -79,7 +79,7 @@ Default to surfacing uncertainty, not hiding it.
 
 ## Repository Overview
 
-UniqueUI is a monorepo for an animated React component library built on a copy-paste model (similar to shadcn/ui). Users install components via **`npx uniqueui add <component>`** or via the **shadcn CLI** using published URLs such as `https://uniqueui.com/r/<slug>.json` (generated under `apps/www/public/r/` by `pnpm build:registry`).
+UniqueUI is a monorepo for an animated React component library built on a copy-paste model (similar to shadcn/ui). Users install components via **`npx uniqueui add <component>`** or via the **shadcn CLI** using published URLs such as `https://uniqueui-platform.vercel.app/r/<slug>.json` (generated under `apps/www/public/r/` by `pnpm build:registry`).
 
 **Package manager**: pnpm 10.33.0 with workspaces (`pnpm-workspace.yaml`)
 
@@ -150,7 +150,7 @@ apps/www/components/ui/*.tsx      ← auto-synced docs UI copies
 user's project/components/ui/     ← files written to the end-user's codebase
 ```
 
-`registry.json` is also served at `https://uniqueui.com/registry.json` for the UniqueUI CLI. **Never edit generated manifests by hand** — always run `pnpm build:registry`.
+`registry.json` is also served at `https://uniqueui-platform.vercel.app/registry.json` for the UniqueUI CLI. **Never edit generated manifests by hand** — always run `pnpm build:registry`.
 
 ### Showcase Site (`apps/www`)
 
