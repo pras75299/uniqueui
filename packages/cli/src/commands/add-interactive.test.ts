@@ -83,7 +83,7 @@ describe("add --interactive", () => {
         });
 
         // Should reach the dry-run fetch banner after the picker resolved.
-        const logged = logSpy.mock.calls.map((c) => String(c[0])).join("\n");
+        const logged = logSpy.mock.calls.map((c: unknown[]) => String(c[0])).join("\n");
         expect(logged).toContain("[dry-run] Fetching moving-border");
     });
 

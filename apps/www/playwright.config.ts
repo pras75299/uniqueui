@@ -12,15 +12,35 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["list"]] : "list",
   timeout: 30_000,
-  expect: { timeout: 5_000 },
+  expect: {
+    timeout: 5_000,
+    toHaveScreenshot: {
+      // A few sub-pixel changes shouldn't fail us; fonts and AA jitter cheaply.
+      maxDiffPixelRatio: 0.02,
+      animations: "disabled",
+    },
+  },
   use: {
     baseURL: BASE_URL,
     trace: "retain-on-failure",
   },
   projects: [
     {
-      name: "chromium",
+      name: "smoke",
+      testMatch: /smoke\.spec\.ts/,
       use: { ...devices["Desktop Chrome"] },
+    },
+    // Visual regression runs only when explicitly opted into (via
+    // `pnpm test:visual` / CI matrix entry) so missing baselines don't break
+    // the default smoke job.
+    {
+      name: "visual",
+      testMatch: /visual\.spec\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1280, height: 800 },
+        deviceScaleFactor: 1,
+      },
     },
   ],
   webServer: {

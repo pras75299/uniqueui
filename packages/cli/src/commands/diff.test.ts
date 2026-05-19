@@ -77,7 +77,7 @@ describe("diff command", () => {
         );
         await diff("moving-border", { url: tmp });
         expect(process.exitCode).toBe(1);
-        const out = logSpy.mock.calls.map((c) => String(c[0])).join("\n");
+        const out = logSpy.mock.calls.map((c: unknown[]) => String(c[0])).join("\n");
         expect(out).toContain("differ from upstream");
     });
 
@@ -88,7 +88,7 @@ describe("diff command", () => {
         );
         await diff("moving-border", { url: tmp });
         expect(process.exitCode).not.toBe(1);
-        const out = logSpy.mock.calls.map((c) => String(c[0])).join("\n");
+        const out = logSpy.mock.calls.map((c: unknown[]) => String(c[0])).join("\n");
         expect(out).toContain("in sync");
     });
 

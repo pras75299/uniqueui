@@ -100,7 +100,7 @@ describe("formatters", () => {
 describe("theme command (local registry)", () => {
     it("emits a v3 preset by default for components with tailwindConfig", async () => {
         await theme({ url: tmp, format: "v3" });
-        const out = logSpy.mock.calls.map((c) => String(c[0])).join("\n");
+        const out = logSpy.mock.calls.map((c: unknown[]) => String(c[0])).join("\n");
         expect(out).toContain("module.exports");
         expect(out).toContain("border-spin");
         expect(out).toContain("shimmer");
@@ -108,14 +108,14 @@ describe("theme command (local registry)", () => {
 
     it("emits a v4 @theme snippet on --format v4", async () => {
         await theme({ url: tmp, format: "v4" });
-        const out = logSpy.mock.calls.map((c) => String(c[0])).join("\n");
+        const out = logSpy.mock.calls.map((c: unknown[]) => String(c[0])).join("\n");
         expect(out).toContain("/* uniqueui:start moving-border */");
         expect(out).toContain("--animate-border-spin");
     });
 
     it("scopes to a single component with --component", async () => {
         await theme({ url: tmp, format: "v3", component: "moving-border" });
-        const out = logSpy.mock.calls.map((c) => String(c[0])).join("\n");
+        const out = logSpy.mock.calls.map((c: unknown[]) => String(c[0])).join("\n");
         expect(out).toContain("border-spin");
         expect(out).not.toContain("shimmer");
     });
