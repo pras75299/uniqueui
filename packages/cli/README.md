@@ -21,6 +21,9 @@ UniqueUI is a collection of **copy-paste animated components** built with React,
   - [init](#init)
   - [add](#add-component)
   - [list](#list)
+  - [info](#info-component)
+  - [doctor](#doctor)
+  - [search](#search-query)
 - [Installing with the shadcn CLI](#installing-with-the-shadcn-cli)
 - [Project Setup Guide](#project-setup-guide)
   - [Next.js](#nextjs-setup)
@@ -235,6 +238,94 @@ aurora-background   Smooth aurora light background mimicking the northern lights
 ```
 
 The command tries `<url>/r/registry.json` (shadcn format, has descriptions) first, falls back to `<url>/registry/index.json` (split index, names only), then `<url>/registry.json` (legacy aggregate).
+
+### `info <component>`
+
+Print metadata for a single registry component without writing anything to disk — useful for previewing dependencies, files, and Tailwind requirements before `add`.
+
+```bash
+npx uniqueui info moving-border
+```
+
+**Options:**
+
+| Flag | Description |
+|---|---|
+| `--url <url>` | Look up the component in a custom registry URL or local path instead of the default hosted registry |
+
+**Output:**
+
+```text
+moving-border — Moving Border
+SVG-path-tracing animated border that orbits a button or card.
+Source: https://uniqueui-platform.vercel.app/registry/moving-border.json
+
+Dependencies
+  - motion
+  - clsx
+  - tailwind-merge
+
+Files
+  - moving-border/component.tsx (registry:ui)
+  - utils/cn.ts (registry:util)
+
+Tailwind
+  v3 JS config: 1 animation(s), 1 keyframe(s)
+    animations: border-spin
+    keyframes:  border-spin
+  v4 CSS snippet: 151 bytes (appended to globals.css on add)
+
+Add it with: npx uniqueui add moving-border
+```
+
+Exits non-zero when the slug is not found in the registry source.
+
+### `doctor`
+
+Diagnose your project's setup for UniqueUI. Reads only — never writes — and prints a checklist with hints for anything that would block `add`.
+
+```bash
+npx uniqueui doctor
+```
+
+**What it checks:**
+
+- **Node.js** — must be ≥ 18 (fails the run otherwise).
+- **Package manager** — which lockfile is present (`bun` → `pnpm` → `yarn` → `npm`).
+- **Framework** — Next, Vite, Remix, or Astro (informational).
+- **`components.json`** — present and valid JSON object.
+- **Tailwind** — v3 (config file present) or v4 (globals CSS path resolves), with hints when the configured path is missing.
+- **`tsconfig.json` paths** — `@/*` alias is defined so registry imports like `@/utils/cn` resolve.
+- **`cn` helper** — `utils/cn.ts` (UniqueUI default) or `lib/utils.ts` (shadcn convention) exists.
+- **Components directory** — informational; created on first `add` if missing.
+
+Exits `1` when any check fails, `0` otherwise.
+
+### `search <query>`
+
+Search the registry by name, title, or description and rank results. Useful when you know roughly what you want but not the exact slug.
+
+```bash
+npx uniqueui search border
+npx uniqueui search "cursor follow" --limit 5
+```
+
+**Options:**
+
+| Flag | Description |
+|---|---|
+| `--url <url>` | Search a custom registry URL or local path instead of the default hosted registry |
+| `--limit <n>` | Maximum results to show (default 20). A truncation hint prints when more results exist. |
+
+**Ranking (highest to lowest):**
+
+1. Exact name match
+2. Name starts with the query
+3. Name contains the query
+4. Title contains the query
+5. Description contains the query
+
+Within the same tier, shorter fields rank higher (tighter match), and ties break alphabetically by name for deterministic output. Exits non-zero only on registry-load failure or empty query.
 
 ---
 

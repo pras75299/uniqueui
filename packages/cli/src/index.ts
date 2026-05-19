@@ -5,6 +5,9 @@ import { join } from "path";
 import { init } from "./commands/init";
 import { add } from "./commands/add";
 import { list } from "./commands/list";
+import { info } from "./commands/info";
+import { doctor } from "./commands/doctor";
+import { search } from "./commands/search";
 
 const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
 
@@ -46,5 +49,25 @@ program
     .description("List components available in the registry")
     .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
     .action((opts) => list({ url: opts.url }));
+
+program
+    .command("info")
+    .description("Show metadata for a registry component")
+    .argument("<component>", "the component slug")
+    .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
+    .action((componentName, opts) => info(componentName, { url: opts.url }));
+
+program
+    .command("doctor")
+    .description("Diagnose your project's setup for UniqueUI (Node, Tailwind, components.json, aliases)")
+    .action(() => doctor());
+
+program
+    .command("search")
+    .description("Search registry components by name, title, or description")
+    .argument("<query>", "search query")
+    .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
+    .option("--limit <n>", "max results to show (default 20)", (v) => Number.parseInt(v, 10))
+    .action((query, opts) => search(query, { url: opts.url, limit: opts.limit }));
 
 program.parse();

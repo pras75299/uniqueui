@@ -1,0 +1,114 @@
+name: Bug report
+description: Something is broken in a UniqueUI component, the CLI, or the docs site.
+title: "bug: <short summary>"
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill in as much detail as you can — the more we have, the faster we can reproduce and fix.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where is the bug?
+      options:
+        - A registry component (animation, layout, props, etc.)
+        - CLI (uniqueui init / add / list / info / doctor / search)
+        - Docs site (apps/www)
+        - Registry build / publishing
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: component
+    attributes:
+      label: Component or CLI command (if applicable)
+      placeholder: "e.g. moving-border, or `uniqueui add --dry-run`"
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Minimal, numbered steps that someone else can follow start to finish.
+      placeholder: |
+        1. `npx create-next-app@latest demo --tailwind --app`
+        2. `cd demo && npx uniqueui init`
+        3. `npx uniqueui add moving-border`
+        4. Open `/` — observe the border never animates.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include error messages, stack traces, and screenshots / video where helpful.
+    validations:
+      required: true
+  - type: input
+    id: repro-link
+    attributes:
+      label: Minimal reproduction (StackBlitz, CodeSandbox, GitHub repo)
+      placeholder: https://stackblitz.com/edit/...
+  - type: input
+    id: node-version
+    attributes:
+      label: Node version
+      placeholder: "e.g. v20.11.0 (output of `node --version`)"
+    validations:
+      required: true
+  - type: input
+    id: package-manager
+    attributes:
+      label: Package manager + version
+      placeholder: "e.g. pnpm 9.10.0, npm 10.5.0, yarn 4.1.1, bun 1.1.30"
+    validations:
+      required: true
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Framework
+      options:
+        - Next.js (App Router)
+        - Next.js (Pages Router)
+        - Vite + React
+        - Remix
+        - Astro
+        - Other / standalone React
+    validations:
+      required: true
+  - type: input
+    id: framework-version
+    attributes:
+      label: Framework version
+      placeholder: "e.g. next@16.0.3, vite@5.4.10"
+  - type: dropdown
+    id: tailwind
+    attributes:
+      label: Tailwind version
+      options:
+        - Tailwind v3
+        - Tailwind v4
+        - Not using Tailwind
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: cli-version
+    attributes:
+      label: uniqueui-cli version (if CLI bug)
+      placeholder: "Output of `npx uniqueui --version`"
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `npx uniqueui doctor` (if CLI / setup bug)
+      render: text
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Logs, screenshots, related issues, workarounds you tried.
