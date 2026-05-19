@@ -37,4 +37,17 @@ describe("next.config /docs redirect", () => {
     expect(re.test("compatibility")).toBe(false);
     expect(re.test("theming")).toBe(false);
   });
+
+  it("excludes only the exact reserved name, not prefixes", async () => {
+    // Defensive: the `$` anchor in `(?!compatibility$|theming$)` is what makes
+    // the exclusion exact. Without it, `compatibility-deprecated` would also
+    // be excluded and 404. This guards against the anchor being dropped.
+    const redirects = await nextConfig.redirects?.();
+    const legacy = redirects?.find((r) => r.destination === "/components/:slug");
+    const sourcePattern = legacy?.source ?? "";
+    const innerPattern = sourcePattern.replace(/^\/docs\/:slug\((.+)\)$/, "$1");
+    const re = new RegExp(`^${innerPattern}$`);
+    expect(re.test("compatibility-deprecated")).toBe(true);
+    expect(re.test("theming-tokens")).toBe(true);
+  });
 });
