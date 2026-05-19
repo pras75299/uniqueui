@@ -8,6 +8,7 @@ import { list } from "./commands/list";
 import { info } from "./commands/info";
 import { doctor } from "./commands/doctor";
 import { search } from "./commands/search";
+import { validateRegistry } from "./commands/registry";
 
 const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
 
@@ -69,5 +70,12 @@ program
     .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
     .option("--limit <n>", "max results to show (default 20)", (v) => Number.parseInt(v, 10))
     .action((query, opts) => search(query, { url: opts.url, limit: opts.limit }));
+
+const registry = program.command("registry").description("Registry maintenance commands");
+registry
+    .command("validate")
+    .description("Validate a registry (split index + per-slug entries) against the UniqueUI schema")
+    .option("--url <url>", "the base URL or local path of the registry", "https://uniqueui-platform.vercel.app")
+    .action((opts) => validateRegistry({ url: opts.url }));
 
 program.parse();
