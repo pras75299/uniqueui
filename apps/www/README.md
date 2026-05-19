@@ -57,7 +57,28 @@ pnpm test
 
 # Build the app
 pnpm build
+
+# Playwright smoke (top-level routes render under `next start`)
+pnpm test:e2e
+
+# Visual regression (opt-in — requires committed baselines)
+pnpm test:visual            # validate against e2e/visual.spec.ts-snapshots/
+pnpm test:visual:update     # regenerate baselines after intentional UI changes
 ```
+
+## Visual regression workflow
+
+The `visual` Playwright project is **opt-in**: it doesn't run in the default
+CI matrix, only via the `visual-regression.yml` workflow (manual dispatch, or
+add the `visual-regression` label to a PR).
+
+When you ship an intentional visual change:
+
+1. Run `pnpm build && pnpm test:visual:update` locally.
+2. Inspect the regenerated PNGs under `e2e/visual.spec.ts-snapshots/` — they
+   are the new contract.
+3. Commit them alongside the code change. CI (when run) will diff against the
+   committed baselines.
 
 ## Source Of Truth
 

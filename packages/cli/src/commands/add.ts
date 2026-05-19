@@ -8,6 +8,7 @@ import { Project, SyntaxKind, QuoteKind } from "ts-morph";
 import { spawnSync } from "child_process";
 import { createInterface } from "readline/promises";
 import { assertSafeNpmDependencies } from "../npm-dependency-name";
+import { writeCachedItem } from "../cache";
 
 // Type definition for Registry (matching what we built)
 type RegistryItem = {
@@ -767,10 +768,50 @@ async function fetchRemoteRegistryItem(baseUrl: string, componentName: string): 
     return loadedRegistry ? { status: "missing" } : { status: "unavailable" };
 }
 
+async function pickComponentInteractively(url: string): Promise<string | null> {
+    const { loadRegistryEntries } = await import("./list");
+    console.log(chalk.cyan(`Loading components from ${url}...`));
+    const entries = await loadRegistryEntries(url);
+    if (!entries || entries.length === 0) {
+        console.error(chalk.red(`No components available at ${url}.`));
+        return null;
+    }
+    const sorted = [...entries].sort((a, b) => a.name.localeCompare(b.name));
+    const { slug } = (await prompts({
+        type: "autocomplete",
+        name: "slug",
+        message: "Pick a component to add",
+        choices: sorted.map((e) => ({
+            title: e.title ? `${e.name} — ${e.title}` : e.name,
+            description: e.description,
+            value: e.name,
+        })),
+    })) as { slug?: string };
+    return slug ?? null;
+}
+
 export async function add(
-    componentName: string,
-    options: { url: string; yes?: boolean; dryRun?: boolean; force?: boolean },
+    componentName: string | undefined,
+    options: { url: string; yes?: boolean; dryRun?: boolean; force?: boolean; interactive?: boolean },
 ) {
+    const isInteractive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+    // Picker fires only when no slug was provided. `-i` documents intent but
+    // never overrides an explicit slug — that surprised users in early
+    // testing and made non-TTY automation flag falsely.
+    if (!componentName) {
+        if (!isInteractive) {
+            console.error(
+                chalk.red("Interactive selection requires a TTY. Pass a component slug or run in a real terminal."),
+            );
+            process.exit(1);
+        }
+        const picked = await pickComponentInteractively(options.url);
+        if (!picked) {
+            process.exit(1);
+        }
+        componentName = picked;
+    }
+
     if (options.dryRun) {
         console.log(chalk.cyan(`[dry-run] Fetching ${componentName} from ${options.url}...`));
     } else {
@@ -968,6 +1009,16 @@ export async function add(
                     console.log(chalk.green(`Created ${fileName}`));
                 }
             }
+        }
+    }
+
+    // 6. Record the canonical upstream snapshot so `uniqueui diff` / `update` can compare
+    // user-on-disk vs last-fetched without re-fetching. Skipped on dry-run.
+    if (!options.dryRun) {
+        try {
+            await writeCachedItem(item.name, item, sourceLabel);
+        } catch {
+            // Cache write is best-effort — never fail the add over it.
         }
     }
 }

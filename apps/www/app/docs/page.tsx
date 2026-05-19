@@ -237,6 +237,7 @@ export default function Hero() {
             { cmd: "npx uniqueui init", desc: "Create config file and set up your project" },
             { cmd: "npx uniqueui add <component>", desc: "Download a component into components/ui" },
             { cmd: "npx uniqueui list", desc: "List all available components" },
+            { cmd: "npx uniqueui theme --format auto", desc: "Print the Tailwind preset (v3) or @theme snippet (v4) for every component" },
             {
               cmd: "npx shadcn@latest add https://uniqueui-platform.vercel.app/r/<slug>.json -y",
               desc: "Same component via shadcn registry (requires shadcn init + @/lib/utils)",
@@ -288,6 +289,23 @@ export default function Hero() {
           ))}
         </div>
       </section>
+
+      {/* ── Theming CTA ── */}
+      <div className="animate-fade-in-up animate-delay-300 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <p className="font-semibold text-neutral-900 dark:text-white">Theming</p>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            How tokens flow into Tailwind v3 presets and v4 <code className="font-mono text-xs">@theme</code> blocks, and how to use the new <code className="font-mono text-xs">uniqueui theme</code> command.
+          </p>
+        </div>
+        <Link
+          href="/docs/theming"
+          className="shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm border border-neutral-200 bg-white text-neutral-900 hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:text-white dark:hover:bg-neutral-800 transition-colors"
+        >
+          Read theming guide
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
 
       {/* ── Compatibility CTA ── */}
       <div className="animate-fade-in-up animate-delay-325 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
