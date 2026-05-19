@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or discussion
+    url: https://github.com/pras75299/uniqueui/discussions
+    about: Ask a question, share an idea, or start a discussion.
+  - name: Security report
+    url: https://github.com/pras75299/uniqueui/security/policy
+    about: Report a vulnerability privately — please do NOT open a public issue.

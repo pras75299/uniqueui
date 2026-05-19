@@ -1,0 +1,71 @@
+name: Component / block request
+description: Suggest a new component or block for the registry.
+title: "component: <name>"
+labels: ["enhancement", "component-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea for a new UniqueUI component? Tell us what it should do and why. Visual references help a lot.
+  - type: input
+    id: name
+    attributes:
+      label: Proposed slug
+      description: Lowercase kebab-case — this becomes the folder under `registry/` and the CLI argument.
+      placeholder: "e.g. magnetic-button"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Component (button, card, input, etc.)
+        - Block / hero (full marketing section)
+        - Effect / animation (background, overlay)
+        - Utility (hook, helper)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What does it do?
+      description: One paragraph — what it looks like, what it animates, what problem it solves.
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: Visual references
+      description: Links to dribbble / x / codepen / videos, or attach an image/clip. Don't link to copyrighted production sites you don't own.
+    validations:
+      required: true
+  - type: textarea
+    id: props
+    attributes:
+      label: Proposed props / API (rough)
+      placeholder: |
+        - `intensity?: number` — how strong the magnetic pull is (default 0.4)
+        - `disabled?: boolean` — bypass the effect (respects reduced motion automatically)
+  - type: textarea
+    id: deps
+    attributes:
+      label: Likely npm dependencies
+      placeholder: "motion, clsx, tailwind-merge"
+  - type: checkboxes
+    id: motion
+    attributes:
+      label: Motion / accessibility considerations
+      description: Tick anything that applies — these inform the quality gate at PR time.
+      options:
+        - label: Has continuous / ambient animation → must honor `useReducedMotion`
+        - label: Uses canvas / WebGL → must guard SSR
+        - label: Is interactive (button, dialog, tabs) → must be keyboard operable with visible focus
+        - label: Could shift surrounding layout on mount → needs reserved space / skeleton
+  - type: checkboxes
+    id: willing
+    attributes:
+      label: Are you willing to contribute this yourself?
+      options:
+        - label: Yes — I can open a PR.
+        - label: I can help with feedback / review but not the implementation.

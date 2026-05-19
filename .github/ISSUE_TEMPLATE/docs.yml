@@ -1,0 +1,42 @@
+name: Documentation
+description: Something on the docs site or in the READMEs is wrong, missing, or unclear.
+title: "docs: <short summary>"
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Spotted a typo, broken link, or a section that left you stuck? Tell us where and what would have helped.
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where is the docs issue?
+      options:
+        - Root README.md
+        - CLI README (packages/cli/README.md)
+        - Docs site (apps/www)
+        - CONTRIBUTING.md
+        - SECURITY.md
+        - CLAUDE.md / BUILD.md
+        - ADR (docs/adr/*)
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: url-or-path
+    attributes:
+      label: URL or file path
+      placeholder: "e.g. https://uniqueui-platform.vercel.app/docs/compatibility, or packages/cli/README.md#tailwind"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's wrong or missing?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change (optional)
+      description: A proposed wording or a sketch is great. A PR is even better.

@@ -163,6 +163,9 @@ export default function Page() {
 | `uniqueui init` | Set up UniqueUI config for your project — creates `components.json`, installs base dependencies, and adds the `cn` utility |
 | `uniqueui add <component>` | Fetch a component from the registry, install dependencies, and write it to your project |
 | `uniqueui list` | Display all components available in the registry |
+| `uniqueui info <component>` | Print metadata (deps, files, Tailwind requirements) for one component without writing anything |
+| `uniqueui doctor` | Diagnose your project's setup (Node, Tailwind, `components.json`, `@/*` alias, `cn` helper) |
+| `uniqueui search <query>` | Fuzzy search registry components by name, title, or description |
 
 ### `init` details
 
