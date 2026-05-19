@@ -31,17 +31,19 @@ program
 program
     .command("add")
     .description("Add a component to your project")
-    .argument("<component>", "the component to add")
+    .argument("[component]", "the component to add (omit with -i for an interactive picker)")
     .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
     .option("-y, --yes", "Skip dependency install confirmation prompt")
     .option("--dry-run", "Show what would be written and installed without modifying anything")
     .option("--force", "Overwrite existing component files without prompting")
+    .option("-i, --interactive", "Pick a component from a TTY autocomplete list")
     .action((componentName, opts) =>
         add(componentName, {
             url: opts.url,
             yes: opts.yes,
             dryRun: opts.dryRun,
             force: opts.force,
+            interactive: opts.interactive,
         }),
     );
 

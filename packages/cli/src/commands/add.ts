@@ -767,10 +767,47 @@ async function fetchRemoteRegistryItem(baseUrl: string, componentName: string): 
     return loadedRegistry ? { status: "missing" } : { status: "unavailable" };
 }
 
+async function pickComponentInteractively(url: string): Promise<string | null> {
+    const { loadRegistryEntries } = await import("./list");
+    console.log(chalk.cyan(`Loading components from ${url}...`));
+    const entries = await loadRegistryEntries(url);
+    if (!entries || entries.length === 0) {
+        console.error(chalk.red(`No components available at ${url}.`));
+        return null;
+    }
+    const sorted = [...entries].sort((a, b) => a.name.localeCompare(b.name));
+    const { slug } = (await prompts({
+        type: "autocomplete",
+        name: "slug",
+        message: "Pick a component to add",
+        choices: sorted.map((e) => ({
+            title: e.title ? `${e.name} — ${e.title}` : e.name,
+            description: e.description,
+            value: e.name,
+        })),
+    })) as { slug?: string };
+    return slug ?? null;
+}
+
 export async function add(
-    componentName: string,
-    options: { url: string; yes?: boolean; dryRun?: boolean; force?: boolean },
+    componentName: string | undefined,
+    options: { url: string; yes?: boolean; dryRun?: boolean; force?: boolean; interactive?: boolean },
 ) {
+    const isInteractive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+    if (!componentName || options.interactive) {
+        if (!isInteractive) {
+            console.error(
+                chalk.red("Interactive selection requires a TTY. Pass a component slug or run in a real terminal."),
+            );
+            process.exit(1);
+        }
+        const picked = await pickComponentInteractively(options.url);
+        if (!picked) {
+            process.exit(1);
+        }
+        componentName = picked;
+    }
+
     if (options.dryRun) {
         console.log(chalk.cyan(`[dry-run] Fetching ${componentName} from ${options.url}...`));
     } else {
