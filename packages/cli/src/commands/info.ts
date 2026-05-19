@@ -34,6 +34,18 @@ function trimRightSlash(s: string): string {
     return s.replace(/\/+$/, "");
 }
 
+function deriveBase(source: string): string {
+    const trimmed = trimRightSlash(source);
+    const normalized = trimmed.replace(/\\/g, "/");
+    if (normalized.endsWith("/registry/index.json")) {
+        return trimmed.slice(0, -"/registry/index.json".length);
+    }
+    if (normalized.endsWith("/index.json")) {
+        return trimmed.slice(0, -"/index.json".length);
+    }
+    return trimmed;
+}
+
 async function readJsonSafe(filePath: string): Promise<unknown | null> {
     try {
         return await fs.readJson(filePath);
@@ -83,7 +95,7 @@ async function loadFromLocal(source: string, slug: string): Promise<InfoRecord |
         return item ? { item, source } : null;
     }
 
-    const base = trimRightSlash(source);
+    const base = deriveBase(source);
     // Try split first (richer payload — includes tailwindCss).
     const splitIndex = validateRegistryIndexPayload(await readJsonSafe(path.join(base, "registry/index.json")));
     if (splitIndex && splitIndex.components.includes(slug)) {
@@ -119,25 +131,26 @@ async function loadFromRemote(source: string, slug: string): Promise<InfoRecord 
         return item ? { item, source: normalized } : null;
     }
 
+    const base = deriveBase(normalized);
     // Split first.
-    const splitUrl = `${normalized}/registry/index.json`;
+    const splitUrl = `${base}/registry/index.json`;
     const splitIndex = validateRegistryIndexPayload(await fetchJsonFromUrl(splitUrl));
     if (splitIndex && splitIndex.components.includes(slug)) {
-        const itemUrl = `${normalized}/registry/${slug}.json`;
+        const itemUrl = `${base}/registry/${slug}.json`;
         const item = validateRegistryItemPayload(await fetchJsonFromUrl(itemUrl));
         if (item) {
-            const meta = await loadShadcnMetadataRemote(normalized, slug);
+            const meta = await loadShadcnMetadataRemote(base, slug);
             return { item, source: itemUrl, ...meta };
         }
     }
 
     // Legacy.
-    const legacyUrl = `${normalized}/registry.json`;
+    const legacyUrl = `${base}/registry.json`;
     const legacy = validateRegistryPayload(await fetchJsonFromUrl(legacyUrl));
     if (legacy) {
         const item = legacy.find((e) => e.name === slug);
         if (item) {
-            const meta = await loadShadcnMetadataRemote(normalized, slug);
+            const meta = await loadShadcnMetadataRemote(base, slug);
             return { item, source: legacyUrl, ...meta };
         }
     }

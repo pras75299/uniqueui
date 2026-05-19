@@ -78,6 +78,14 @@ describe("loadRegistryInfo — local source", () => {
         expect(record).not.toBeNull();
         expect(record!.item.dependencies).toEqual(["motion", "clsx"]);
     });
+
+    it("resolves split index when source points directly at registry/index.json", async () => {
+        await fs.outputJson(path.join(tmp, "registry/index.json"), { components: ["moving-border"] });
+        await fs.outputJson(path.join(tmp, "registry/moving-border.json"), SAMPLE_ITEM);
+        const record = await loadRegistryInfo(path.join(tmp, "registry/index.json"), "moving-border");
+        expect(record).not.toBeNull();
+        expect(record!.item.name).toBe("moving-border");
+    });
 });
 
 describe("formatInfo", () => {
