@@ -43,10 +43,17 @@ function trimRightSlash(s: string): string {
 }
 
 function deriveSplitBase(url: string): string {
-    const t = trimRightSlash(url).replace(/\\/g, "/");
-    if (t.endsWith("/registry/index.json")) return url.slice(0, -"/registry/index.json".length);
-    if (t.endsWith("/registry")) return url.slice(0, -"/registry".length);
-    return trimRightSlash(url);
+    // Slice from the trimmed (slash-normalized) source so trailing-slash variants
+    // collapse to the same base rather than leaving stray `/` in the output.
+    const trimmed = trimRightSlash(url);
+    const normalized = trimmed.replace(/\\/g, "/");
+    if (normalized.endsWith("/registry/index.json")) {
+        return trimmed.slice(0, -"/registry/index.json".length);
+    }
+    if (normalized.endsWith("/registry")) {
+        return trimmed.slice(0, -"/registry".length);
+    }
+    return trimmed;
 }
 
 function joinPathOrUrl(base: string, ...parts: string[]): string {
@@ -62,62 +69,71 @@ export async function validateRegistry(options: { url: string }): Promise<void> 
     const failures: Failure[] = [];
     const base = deriveSplitBase(url);
     const indexLoc = joinPathOrUrl(base, "registry", "index.json");
+    const monoLoc = joinPathOrUrl(base, "registry.json");
 
+    // Try the split index first (canonical for hosted UniqueUI registries) but
+    // accept a mono-only registry too — that's a legitimate shape for third
+    // parties, and the existing `add` command supports it as a fallback.
     const indexLoad = await loadJson(indexLoc);
-    if (!indexLoad.ok) {
-        failures.push({ source: indexLoc, messages: [indexLoad.error] });
+    const monoLoad = await loadJson(monoLoc);
+
+    if (!indexLoad.ok && !monoLoad.ok) {
+        failures.push({
+            source: `${indexLoc} or ${monoLoc}`,
+            messages: ["neither split index nor mono registry.json could be loaded"],
+        });
         reportAndExit(failures, 0);
         return;
     }
 
-    const splitIndex = check(indexLoc, SplitIndex, indexLoad.data, failures) as
-        | { components: string[] }
-        | null;
-    if (!splitIndex) {
-        reportAndExit(failures, 0);
-        return;
+    let splitIndex: { components: string[] } | null = null;
+    if (indexLoad.ok) {
+        splitIndex = check(indexLoc, SplitIndex, indexLoad.data, failures) as { components: string[] } | null;
     }
 
     let validated = 0;
-    for (const slug of splitIndex.components) {
-        const entryLoc = joinPathOrUrl(base, "registry", `${slug}.json`);
-        const entryLoad = await loadJson(entryLoc);
-        if (!entryLoad.ok) {
-            failures.push({ source: entryLoc, messages: [entryLoad.error] });
-            continue;
+    if (splitIndex) {
+        for (const slug of splitIndex.components) {
+            const entryLoc = joinPathOrUrl(base, "registry", `${slug}.json`);
+            const entryLoad = await loadJson(entryLoc);
+            if (!entryLoad.ok) {
+                failures.push({ source: entryLoc, messages: [entryLoad.error] });
+                continue;
+            }
+            const entry = check(entryLoc, RegistryEntry, entryLoad.data, failures) as
+                | { name: string }
+                | null;
+            if (!entry) continue;
+            if (entry.name !== slug) {
+                failures.push({
+                    source: entryLoc,
+                    messages: [`name "${entry.name}" does not match index slug "${slug}"`],
+                });
+                continue;
+            }
+            validated += 1;
         }
-        const entry = check(entryLoc, RegistryEntry, entryLoad.data, failures) as
-            | { name: string }
-            | null;
-        if (!entry) continue;
-        if (entry.name !== slug) {
-            failures.push({
-                source: entryLoc,
-                messages: [`name "${entry.name}" does not match index slug "${slug}"`],
-            });
-            continue;
-        }
-        validated += 1;
     }
 
-    // Optional: root registry.json (monolithic) if present.
-    const monoLoc = joinPathOrUrl(base, "registry.json");
-    const monoLoad = await loadJson(monoLoc);
+    let mono: Array<{ name: string }> | null = null;
     if (monoLoad.ok) {
-        const mono = check(monoLoc, RegistryArray, monoLoad.data, failures) as
-            | Array<{ name: string }>
-            | null;
-        if (mono) {
-            const monoSlugs = new Set(mono.map((e) => e.name));
-            const missing = splitIndex.components.filter((s) => !monoSlugs.has(s));
-            const extra = mono.map((e) => e.name).filter((s) => !splitIndex.components.includes(s));
-            if (missing.length || extra.length) {
-                const msgs: string[] = [];
-                if (missing.length) msgs.push(`split index has slugs not in mono: ${missing.join(", ")}`);
-                if (extra.length) msgs.push(`mono has slugs not in split index: ${extra.join(", ")}`);
-                failures.push({ source: "cross-check", messages: msgs });
-            }
+        mono = check(monoLoc, RegistryArray, monoLoad.data, failures) as Array<{ name: string }> | null;
+    }
+
+    if (mono && splitIndex) {
+        const monoSlugs = new Set(mono.map((e) => e.name));
+        const missing = splitIndex.components.filter((s) => !monoSlugs.has(s));
+        const extra = mono.map((e) => e.name).filter((s) => !splitIndex.components.includes(s));
+        if (missing.length || extra.length) {
+            const msgs: string[] = [];
+            if (missing.length) msgs.push(`split index has slugs not in mono: ${missing.join(", ")}`);
+            if (extra.length) msgs.push(`mono has slugs not in split index: ${extra.join(", ")}`);
+            failures.push({ source: "cross-check", messages: msgs });
         }
+    } else if (mono && !splitIndex) {
+        // Mono-only registry — count entries as validated (the schema check above
+        // already enforced every entry's shape).
+        validated = mono.length;
     }
 
     reportAndExit(failures, validated);

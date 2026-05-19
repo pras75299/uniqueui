@@ -90,4 +90,26 @@ describe("uniqueui registry validate (local)", () => {
 
         expect(process.exitCode).not.toBe(1);
     });
+
+    it("validates a mono-only registry (no split index)", async () => {
+        // Some third-party registries ship only registry.json. The CLI's `add`
+        // command already supports this shape — `registry validate` must too.
+        await fs.outputJson(path.join(tmp, "registry.json"), [VALID_ENTRY]);
+
+        await validateRegistry({ url: tmp });
+
+        expect(process.exitCode).not.toBe(1);
+        expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("Registry OK"));
+    });
+
+    it("normalises a trailing-slash source so the base doesn't carry stray /", async () => {
+        await fs.outputJson(path.join(tmp, "registry/index.json"), { components: ["moving-border"] });
+        await fs.outputJson(path.join(tmp, "registry/moving-border.json"), VALID_ENTRY);
+
+        // Passing the directory with a trailing slash used to slice from the
+        // raw URL and leak the slash into the derived base.
+        await validateRegistry({ url: `${tmp}/` });
+
+        expect(process.exitCode).not.toBe(1);
+    });
 });

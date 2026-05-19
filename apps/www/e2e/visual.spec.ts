@@ -4,9 +4,10 @@
 //
 // Baselines live under apps/www/e2e/visual.spec.ts-snapshots/ and ARE committed
 // so CI can fail on unintended visual drift. Animations are disabled via the
-// playwright.config `toHaveScreenshot.animations` setting; deterministic
-// hash-driven hero variants must therefore use the `?seed` query convention
-// rather than time-based randomness for stable diffs.
+// playwright.config `toHaveScreenshot.animations` setting. Heroes that key
+// off real time or `Math.random()` will produce flaky diffs — convert them
+// to deterministic input (a seeded value, a pinned timestamp) before adding
+// them to the matrix below.
 
 import { test, expect } from "@playwright/test";
 

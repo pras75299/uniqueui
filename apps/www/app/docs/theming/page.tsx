@@ -92,7 +92,7 @@ module.exports = {
         <p className="text-neutral-600 dark:text-neutral-400">
           The default is <Code>--format auto</Code>: the CLI reads <Code>components.json</Code>,
           looks at the file it points at via <Code>tailwind.css</Code>, and at your project&apos;s
-          <Code> tailwindcss</Code> range and PostCSS plugins. If the project is on v4 you get the
+          {" "}<Code>tailwindcss</Code> range and PostCSS plugins. If the project is on v4 you get the
           CSS snippet; on v3 you get the JS preset. Same logic <Code>uniqueui doctor</Code> uses
           for its diagnostic.
         </p>

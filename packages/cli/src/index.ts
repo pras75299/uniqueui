@@ -105,7 +105,18 @@ program
     .description("Print the Tailwind preset (v3) or @theme snippet (v4) for registry components")
     .option("--url <url>", "the base URL or local path of the registry", "https://uniqueui-platform.vercel.app")
     .option("--component <slug>", "scope to a single component instead of every entry")
-    .option("--format <mode>", "v3 | v4 | auto (default: auto, derived from components.json + project)", "auto")
+    .option(
+        "--format <mode>",
+        "v3 | v4 | auto (default: auto, derived from components.json + project)",
+        (raw) => {
+            const allowed = ["v3", "v4", "auto"] as const;
+            if (!(allowed as readonly string[]).includes(raw)) {
+                throw new Error(`Invalid --format "${raw}". Expected one of: ${allowed.join(", ")}`);
+            }
+            return raw;
+        },
+        "auto",
+    )
     .option("--out <path>", "write to a file instead of stdout")
     .action((opts) =>
         theme({

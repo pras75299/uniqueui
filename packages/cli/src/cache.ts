@@ -1,20 +1,24 @@
 import path from "path";
 import fs from "fs-extra";
+import { SLUG_RE } from "./validators/registry-schema";
 
 export const CACHE_DIR = ".uniqueui/cache";
 
-type CachedItem = {
+type RegistryItemLike = {
     name: string;
     dependencies: string[];
     files: Array<{ path: string; type: string; content: string }>;
     tailwindConfig?: Record<string, unknown>;
     tailwindCss?: string;
+};
+
+type CachedItem = RegistryItemLike & {
     fetchedAt: string;
     sourceUrl: string;
 };
 
 function isSafeSlug(slug: string): boolean {
-    return /^[a-z0-9][a-z0-9-]*$/.test(slug);
+    return SLUG_RE.test(slug);
 }
 
 export function cachePath(slug: string, cwd: string = process.cwd()): string {
@@ -24,7 +28,7 @@ export function cachePath(slug: string, cwd: string = process.cwd()): string {
 
 export async function writeCachedItem(
     slug: string,
-    item: Omit<CachedItem, "fetchedAt" | "sourceUrl"> & { fetchedAt?: string; sourceUrl?: string },
+    item: RegistryItemLike,
     sourceUrl: string,
     cwd: string = process.cwd(),
 ): Promise<void> {

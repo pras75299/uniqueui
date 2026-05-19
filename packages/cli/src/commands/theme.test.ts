@@ -134,4 +134,17 @@ describe("theme command (local registry)", () => {
         expect(process.exitCode).toBe(1);
         await fs.remove(empty);
     });
+
+    it("warns and exits non-zero when --format v4 is requested but no component has tailwindCss", async () => {
+        const dir = await fs.mkdtemp(path.join(os.tmpdir(), "uniqueui-theme-v3only-"));
+        const noCss = { ...ENTRY_V3_B }; // ENTRY_V3_B has tailwindConfig but no tailwindCss
+        await fs.outputJson(path.join(dir, "registry/index.json"), { components: ["shimmer-button"] });
+        await fs.outputJson(path.join(dir, "registry/shimmer-button.json"), noCss);
+
+        await theme({ url: dir, format: "v4" });
+
+        expect(process.exitCode).toBe(1);
+        expect(errSpy).toHaveBeenCalledWith(expect.stringContaining("v4 tailwindCss snippet"));
+        await fs.remove(dir);
+    });
 });

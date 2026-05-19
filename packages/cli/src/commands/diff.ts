@@ -43,9 +43,13 @@ export async function computeDiff(slug: string, url: string): Promise<DiffResult
     if (!record) return { slug, perFile: [], notFound: true };
 
     const perFile: DiffResult["perFile"] = [];
+    const skipped: string[] = [];
     for (const f of record.item.files) {
         const target = resolveTargetPath(slug, f, cfg);
-        if (!target) continue;
+        if (!target) {
+            skipped.push(`${f.path} (type: ${f.type})`);
+            continue;
+        }
         let current = "";
         let status: "missing" | "same" | "changed";
         if (!(await fs.pathExists(target))) {
@@ -55,6 +59,13 @@ export async function computeDiff(slug: string, url: string): Promise<DiffResult
             status = current === f.content ? "same" : "changed";
         }
         perFile.push({ targetPath: target, status, current, upstream: f.content });
+    }
+    if (skipped.length) {
+        console.warn(
+            chalk.yellow(
+                `diff: skipped ${skipped.length} unsupported file(s) — only registry:ui and registry:util are tracked on disk:\n  ${skipped.join("\n  ")}`,
+            ),
+        );
     }
     return { slug, perFile };
 }

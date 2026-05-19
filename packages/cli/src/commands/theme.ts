@@ -134,6 +134,29 @@ export async function theme(options: ThemeOptions): Promise<void> {
         return;
     }
 
+    if (format === "v4" && items.every((i) => !i.tailwindCss)) {
+        console.error(
+            chalk.yellow(
+                options.component
+                    ? `Component "${options.component}" ships no v4 tailwindCss snippet. Try --format v3.`
+                    : "No registry components ship a v4 tailwindCss snippet. Try --format v3.",
+            ),
+        );
+        process.exitCode = 1;
+        return;
+    }
+    if (format === "v3" && items.every((i) => !i.tailwindConfig)) {
+        console.error(
+            chalk.yellow(
+                options.component
+                    ? `Component "${options.component}" ships no v3 tailwindConfig. Try --format v4.`
+                    : "No registry components ship a v3 tailwindConfig. Try --format v4.",
+            ),
+        );
+        process.exitCode = 1;
+        return;
+    }
+
     const output = format === "v4" ? formatV4Snippet(items) : formatV3Preset(items);
 
     if (options.out) {
