@@ -10,6 +10,8 @@ import { doctor } from "./commands/doctor";
 import { search } from "./commands/search";
 import { validateRegistry } from "./commands/registry";
 import { theme } from "./commands/theme";
+import { diff } from "./commands/diff";
+import { update } from "./commands/update";
 
 const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
 
@@ -73,6 +75,30 @@ program
     .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
     .option("--limit <n>", "max results to show (default 20)", (v) => Number.parseInt(v, 10))
     .action((query, opts) => search(query, { url: opts.url, limit: opts.limit }));
+
+program
+    .command("diff")
+    .description("Show a unified diff between your local component files and the upstream registry")
+    .argument("<component>", "the component slug")
+    .option("--url <url>", "the base URL or local path of the registry", "https://uniqueui-platform.vercel.app")
+    .action((componentName, opts) => diff(componentName, { url: opts.url }));
+
+program
+    .command("update")
+    .description("Re-fetch a component from the registry and overwrite (with conflict prompts)")
+    .argument("<component>", "the component slug")
+    .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
+    .option("-y, --yes", "Skip dependency install confirmation prompt")
+    .option("--dry-run", "Show what would be written and installed without modifying anything")
+    .option("--force", "Overwrite existing component files without prompting")
+    .action((componentName, opts) =>
+        update(componentName, {
+            url: opts.url,
+            yes: opts.yes,
+            dryRun: opts.dryRun,
+            force: opts.force,
+        }),
+    );
 
 program
     .command("theme")

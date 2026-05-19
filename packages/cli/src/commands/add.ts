@@ -8,6 +8,7 @@ import { Project, SyntaxKind, QuoteKind } from "ts-morph";
 import { spawnSync } from "child_process";
 import { createInterface } from "readline/promises";
 import { assertSafeNpmDependencies } from "../npm-dependency-name";
+import { writeCachedItem } from "../cache";
 
 // Type definition for Registry (matching what we built)
 type RegistryItem = {
@@ -1005,6 +1006,16 @@ export async function add(
                     console.log(chalk.green(`Created ${fileName}`));
                 }
             }
+        }
+    }
+
+    // 6. Record the canonical upstream snapshot so `uniqueui diff` / `update` can compare
+    // user-on-disk vs last-fetched without re-fetching. Skipped on dry-run.
+    if (!options.dryRun) {
+        try {
+            await writeCachedItem(item.name, item, sourceLabel);
+        } catch {
+            // Cache write is best-effort — never fail the add over it.
         }
     }
 }
