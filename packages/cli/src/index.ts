@@ -9,6 +9,7 @@ import { info } from "./commands/info";
 import { doctor } from "./commands/doctor";
 import { search } from "./commands/search";
 import { validateRegistry } from "./commands/registry";
+import { theme } from "./commands/theme";
 
 const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
 
@@ -72,6 +73,22 @@ program
     .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
     .option("--limit <n>", "max results to show (default 20)", (v) => Number.parseInt(v, 10))
     .action((query, opts) => search(query, { url: opts.url, limit: opts.limit }));
+
+program
+    .command("theme")
+    .description("Print the Tailwind preset (v3) or @theme snippet (v4) for registry components")
+    .option("--url <url>", "the base URL or local path of the registry", "https://uniqueui-platform.vercel.app")
+    .option("--component <slug>", "scope to a single component instead of every entry")
+    .option("--format <mode>", "v3 | v4 | auto (default: auto, derived from components.json + project)", "auto")
+    .option("--out <path>", "write to a file instead of stdout")
+    .action((opts) =>
+        theme({
+            url: opts.url,
+            component: opts.component,
+            format: opts.format,
+            out: opts.out,
+        }),
+    );
 
 const registry = program.command("registry").description("Registry maintenance commands");
 registry
