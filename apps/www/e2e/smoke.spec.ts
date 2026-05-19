@@ -73,4 +73,15 @@ test.describe("smoke", () => {
     await expect(page.getByRole("heading", { name: "Runtime", level: 2 })).toBeVisible();
     expect(fatal).toEqual([]);
   });
+
+  test("/docs/theming renders the theming guide (not redirected into /components)", async ({ page }) => {
+    // Regression: the legacy /docs/<slug> -> /components/<slug> redirect once
+    // captured this route and 308'd to a non-existent /components/theming.
+    const fatal = trackFatalConsoleErrors(page);
+    const response = await page.goto("/docs/theming");
+    expect(response?.status()).toBe(200);
+    expect(new URL(page.url()).pathname).toBe("/docs/theming");
+    await expect(page.getByRole("heading", { name: "Theming", level: 1 })).toBeVisible();
+    expect(fatal).toEqual([]);
+  });
 });

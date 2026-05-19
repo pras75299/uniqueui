@@ -45,11 +45,18 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
+    // First-class /docs/* pages (not component slugs) must be excluded from
+    // the legacy /docs/<slug> -> /components/<slug> redirect. Add new doc
+    // route names here when you create them — missing one sends real docs
+    // pages into the redirect and produces a 404 at /components/<name>.
+    const reservedDocsRoutes = ["compatibility", "theming"];
+    // Escape so route names containing regex metacharacters (e.g. a future
+    // `auth.flows` page) can't accidentally widen or break the pattern.
+    const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const exclusionPattern = reservedDocsRoutes.map((r) => `${escapeRegex(r)}$`).join("|");
     return [
       {
-        // Legacy component URLs lived at /docs/<slug>; redirect them to /components/<slug>.
-        // Exclude /docs/compatibility (and any future first-class /docs/* pages) via negative lookahead.
-        source: "/docs/:slug((?!compatibility$).+)",
+        source: `/docs/:slug((?!${exclusionPattern}).+)`,
         destination: "/components/:slug",
         permanent: true,
       },
