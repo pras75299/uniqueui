@@ -45,11 +45,14 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
+    // First-class /docs/* pages (not component slugs) must be excluded from
+    // the legacy /docs/<slug> -> /components/<slug> redirect. Add new doc
+    // route names here when you create them — missing one sends real docs
+    // pages into the redirect and produces a 404 at /components/<name>.
+    const reservedDocsRoutes = ["compatibility", "theming"];
     return [
       {
-        // Legacy component URLs lived at /docs/<slug>; redirect them to /components/<slug>.
-        // Exclude /docs/compatibility (and any future first-class /docs/* pages) via negative lookahead.
-        source: "/docs/:slug((?!compatibility$).+)",
+        source: `/docs/:slug((?!${reservedDocsRoutes.map((r) => `${r}$`).join("|")}).+)`,
         destination: "/components/:slug",
         permanent: true,
       },
