@@ -46,18 +46,16 @@ async function gatherItems(options: ThemeOptions): Promise<Item[] | null> {
     }
     const entries = await loadRegistryEntries(options.url);
     if (!entries) return null;
-    const items: Item[] = [];
-    for (const e of entries) {
-        const record = await loadRegistryInfo(options.url, e.name);
-        if (record) {
-            items.push({
-                name: record.item.name,
-                tailwindConfig: record.item.tailwindConfig,
-                tailwindCss: record.item.tailwindCss,
-            });
-        }
-    }
-    return items;
+    // Parallel fetch — a typical registry has dozens of components, and
+    // serial requests turned the no-component path into a multi-second wait.
+    const records = await Promise.all(entries.map((e) => loadRegistryInfo(options.url, e.name)));
+    return records
+        .filter((r): r is NonNullable<typeof r> => r !== null)
+        .map((r) => ({
+            name: r.item.name,
+            tailwindConfig: r.item.tailwindConfig,
+            tailwindCss: r.item.tailwindCss,
+        }));
 }
 
 function isObject(v: unknown): v is Record<string, unknown> {

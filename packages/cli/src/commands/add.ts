@@ -795,7 +795,10 @@ export async function add(
     options: { url: string; yes?: boolean; dryRun?: boolean; force?: boolean; interactive?: boolean },
 ) {
     const isInteractive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
-    if (!componentName || options.interactive) {
+    // Picker fires only when no slug was provided. `-i` documents intent but
+    // never overrides an explicit slug — that surprised users in early
+    // testing and made non-TTY automation flag falsely.
+    if (!componentName) {
         if (!isInteractive) {
             console.error(
                 chalk.red("Interactive selection requires a TTY. Pass a component slug or run in a real terminal."),

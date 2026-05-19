@@ -1,4 +1,5 @@
 import path from "path";
+import { fileURLToPath } from "url";
 import fs from "fs-extra";
 import chalk from "chalk";
 import { fetchJsonFromUrl, isLocalRegistrySource, warnIfUntrustedRegistry } from "./add";
@@ -57,7 +58,12 @@ function deriveSplitBase(url: string): string {
 }
 
 function joinPathOrUrl(base: string, ...parts: string[]): string {
-    if (isLocalRegistrySource(base)) return path.join(base, ...parts);
+    if (isLocalRegistrySource(base)) {
+        // `isLocalRegistrySource` accepts both bare filesystem paths and `file://` URLs.
+        // Joining a `file://` URL as a string produces an invalid path; convert first.
+        const localBase = base.startsWith("file:") ? fileURLToPath(base) : base;
+        return path.join(localBase, ...parts);
+    }
     return parts.reduce((acc, p) => `${acc.replace(/\/+$/, "")}/${p.replace(/^\/+/, "")}`, trimRightSlash(base));
 }
 

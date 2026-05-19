@@ -13,11 +13,13 @@ export async function update(slug: string, options: UpdateOptions): Promise<void
     const result = await computeDiff(slug, options.url);
     if (!result) {
         console.error(chalk.red("components.json not found. Run `uniqueui init` first."));
-        process.exit(1);
+        process.exitCode = 1;
+        return;
     }
     if (result.notFound) {
         console.error(chalk.red(`Component "${slug}" not found in registry at ${options.url}.`));
-        process.exit(1);
+        process.exitCode = 1;
+        return;
     }
 
     const allMissing = result.perFile.length > 0 && result.perFile.every((f) => f.status === "missing");

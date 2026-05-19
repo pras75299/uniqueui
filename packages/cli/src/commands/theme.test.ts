@@ -6,6 +6,7 @@ import { theme, aggregateV3, formatV3Preset, formatV4Snippet } from "./theme";
 
 let tmp: string;
 let cwd: string;
+let prevSkipRegistryWarn: string | undefined;
 let logSpy: ReturnType<typeof vi.spyOn>;
 let errSpy: ReturnType<typeof vi.spyOn>;
 
@@ -40,6 +41,7 @@ const ENTRY_V3_B = {
 
 beforeEach(async () => {
     cwd = process.cwd();
+    prevSkipRegistryWarn = process.env.UNIQUEUI_SKIP_REGISTRY_WARN;
     tmp = await fs.mkdtemp(path.join(os.tmpdir(), "uniqueui-theme-"));
     process.chdir(tmp);
     process.env.UNIQUEUI_SKIP_REGISTRY_WARN = "1";
@@ -58,6 +60,8 @@ beforeEach(async () => {
 afterEach(async () => {
     process.chdir(cwd);
     await fs.remove(tmp);
+    if (prevSkipRegistryWarn === undefined) delete process.env.UNIQUEUI_SKIP_REGISTRY_WARN;
+    else process.env.UNIQUEUI_SKIP_REGISTRY_WARN = prevSkipRegistryWarn;
     logSpy.mockRestore();
     errSpy.mockRestore();
     process.exitCode = 0;

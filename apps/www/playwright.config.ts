@@ -36,6 +36,9 @@ export default defineConfig({
     {
       name: "visual",
       testMatch: /visual\.spec\.ts/,
+      // Serialise screenshots — parallel workers can race on shared font
+      // rendering / GPU layers and cause spurious sub-pixel diffs.
+      workers: 1,
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 1280, height: 800 },

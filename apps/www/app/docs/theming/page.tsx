@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const metadata = {
   title: "Theming — UniqueUI",
@@ -7,15 +8,22 @@ export const metadata = {
     "How UniqueUI components consume Tailwind tokens in v3 (JS preset) and v4 (CSS @theme), and how the new `uniqueui theme` command stitches them into your project.",
 };
 
-function Code({ children }: { children: React.ReactNode }) {
+function Code({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <code className="font-mono text-[12px] text-purple-700 dark:text-purple-300">{children}</code>
+    <code className={cn("font-mono text-[12px] text-purple-700 dark:text-purple-300", className)}>
+      {children}
+    </code>
   );
 }
 
-function Block({ children }: { children: React.ReactNode }) {
+function Block({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <pre className="overflow-x-auto rounded-lg border border-neutral-200 bg-neutral-950 p-4 text-[12px] leading-relaxed text-neutral-200 dark:border-neutral-800">
+    <pre
+      className={cn(
+        "overflow-x-auto rounded-lg border border-neutral-200 bg-neutral-950 p-4 text-[12px] leading-relaxed text-neutral-200 dark:border-neutral-800",
+        className,
+      )}
+    >
       <code>{children}</code>
     </pre>
   );

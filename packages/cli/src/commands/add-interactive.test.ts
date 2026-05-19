@@ -12,6 +12,8 @@ let errSpy: ReturnType<typeof vi.spyOn>;
 let exitSpy: ReturnType<typeof vi.spyOn>;
 let originalTTYIn: boolean | undefined;
 let originalTTYOut: boolean | undefined;
+let originalSkipRegistryWarn: string | undefined;
+let originalNodeEnv: string | undefined;
 
 const ENTRY = {
     name: "moving-border",
@@ -34,6 +36,8 @@ beforeEach(async () => {
     await fs.outputJson(path.join(tmp, "registry/index.json"), { components: ["moving-border"] });
     await fs.outputJson(path.join(tmp, "registry/moving-border.json"), ENTRY);
 
+    originalSkipRegistryWarn = process.env.UNIQUEUI_SKIP_REGISTRY_WARN;
+    originalNodeEnv = process.env.NODE_ENV;
     process.env.UNIQUEUI_SKIP_REGISTRY_WARN = "1";
     process.env.NODE_ENV = "test";
 
@@ -52,6 +56,10 @@ afterEach(async () => {
     await fs.remove(tmp);
     (process.stdin as { isTTY?: boolean }).isTTY = originalTTYIn;
     (process.stdout as { isTTY?: boolean }).isTTY = originalTTYOut;
+    if (originalSkipRegistryWarn === undefined) delete process.env.UNIQUEUI_SKIP_REGISTRY_WARN;
+    else process.env.UNIQUEUI_SKIP_REGISTRY_WARN = originalSkipRegistryWarn;
+    if (originalNodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = originalNodeEnv;
     logSpy.mockRestore();
     errSpy.mockRestore();
     exitSpy.mockRestore();
