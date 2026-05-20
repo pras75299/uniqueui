@@ -8,16 +8,12 @@ import { componentsList, isNewComponent } from "@/config/components";
 import { useTheme } from "@/contexts/theme-context";
 import { useIsClient } from "@/lib/use-is-client";
 import { cn } from "@/lib/utils";
+import { BLOCK_THUMBNAIL_SLUG } from "@/config/block-thumbnail-slugs";
 import ComponentPreview from "@/components/component-preview";
 
 const blocksList = componentsList.filter((c) => c.kind === "block");
 
 const ALL = "All";
-
-/** Index-card preview slugs (differs from detail page when crop needs a simpler frame). */
-const BLOCK_THUMBNAIL_SLUG: Partial<Record<string, string>> = {
-  "hero-logo-marquee": "hero-logo-marquee-thumbnail",
-};
 
 function BlockCardThumbnail({
   slug,

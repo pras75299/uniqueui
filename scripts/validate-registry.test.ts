@@ -15,9 +15,12 @@ import {
   SplitIndex,
   crossCheckChangelogs,
   crossCheckSlugs,
+  resolvePathUnderDir,
   validate,
   // @ts-expect-error — .mjs module without ambient types
 } from "./validate-registry.lib.mjs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const goodChangelog = [
   { version: "1.0.0", date: "2026-05-20", changes: ["Initial release."] },
@@ -277,5 +280,25 @@ describe("crossCheckChangelogs", () => {
     };
     const result = crossCheckChangelogs({ root, changelogs });
     expect(result.some((m) => m.includes("meta.version mismatch") && m.includes('"b"'))).toBe(true);
+  });
+});
+
+describe("resolvePathUnderDir", () => {
+  const root = path.resolve(fileURLToPath(new URL(".", import.meta.url)), "..", "registry");
+
+  it("resolves a normal registry component path under the root", () => {
+    const resolved = resolvePathUnderDir(root, "blocks/hero/logo-marquee/component.tsx");
+    expect(resolved).toBe(path.join(root, "blocks/hero/logo-marquee/component.tsx"));
+  });
+
+  it("rejects path traversal outside the registry root", () => {
+    expect(() => resolvePathUnderDir(root, "../package.json")).toThrow(/escapes registry root/);
+    expect(() => resolvePathUnderDir(root, "blocks/../../package.json")).toThrow(
+      /escapes registry root/,
+    );
+  });
+
+  it("rejects absolute paths", () => {
+    expect(() => resolvePathUnderDir(root, "/etc/passwd")).toThrow(/must be relative/);
   });
 });

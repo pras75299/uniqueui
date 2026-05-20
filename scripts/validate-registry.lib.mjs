@@ -2,6 +2,7 @@
 // Split out so the schemas can be exercised by unit tests without spawning
 // the CLI runner.
 
+import path from "path";
 import { z } from "zod";
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
@@ -56,6 +57,29 @@ export const ChangelogEntry = z.object({
  * Compare two MAJOR.MINOR.PATCH strings. Returns >0 if `a > b`, <0 if `a < b`,
  * 0 if equal. Assumes both strings already match SEMVER_RE.
  */
+/**
+ * Resolve `relativePath` under `rootDir` and reject path traversal (`..`, absolute
+ * segments). Used by `build-registry.ts` when reading component sources.
+ */
+export function resolvePathUnderDir(rootDir, relativePath) {
+  if (typeof relativePath !== "string" || relativePath.length === 0) {
+    throw new Error("Registry file path must be a non-empty string");
+  }
+  if (path.isAbsolute(relativePath)) {
+    throw new Error(`Registry file path must be relative: ${relativePath}`);
+  }
+  const normalized = path.normalize(relativePath);
+  if (normalized === ".." || normalized.startsWith(`..${path.sep}`) || path.isAbsolute(normalized)) {
+    throw new Error(`Registry file path escapes registry root: ${relativePath}`);
+  }
+  const rootResolved = path.resolve(rootDir);
+  const resolved = path.resolve(rootResolved, normalized);
+  if (resolved !== rootResolved && !resolved.startsWith(`${rootResolved}${path.sep}`)) {
+    throw new Error(`Registry file path escapes registry root: ${relativePath}`);
+  }
+  return resolved;
+}
+
 export function compareSemver(a, b) {
   const [aMaj, aMin, aPat] = a.split(".").map(Number);
   const [bMaj, bMin, bPat] = b.split(".").map(Number);

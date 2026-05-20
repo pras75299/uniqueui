@@ -610,6 +610,55 @@ function withDemoFreezeExtras<T extends Record<string, unknown>>(rows: T[]) {
   }));
 }
 
+/** Keep in sync with `usageCode` in registry/docs.json for hero-logo-marquee. */
+const LOGO_MARQUEE_DEMO_LOGOS = [
+  "Acme",
+  "Globex",
+  "Soylent",
+  "Initech",
+  "Hooli",
+  "Umbrella",
+  "Stark",
+  "Wayne",
+  "Cyberdyne",
+  "Wonka",
+  "Tyrell",
+  "Aperture",
+] as const;
+
+const LOGO_MARQUEE_DEMO_SECONDARY_LOGOS = [
+  "Aperture",
+  "Tyrell",
+  "Wonka",
+  "Cyberdyne",
+  "Wayne",
+  "Stark",
+  "Umbrella",
+  "Hooli",
+  "Initech",
+  "Soylent",
+  "Globex",
+  "Acme",
+] as const;
+
+function LogoMarqueeDemoHeadline() {
+  return (
+    <>
+      <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
+        <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
+        Trusted across teams
+      </span>
+      <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
+        The platform shipping teams ship with.
+      </h1>
+      <p className="mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg">
+        From scrappy seed startups to public companies — UniqueUI components
+        ship in production every day.
+      </p>
+    </>
+  );
+}
+
 export const componentDemos: Record<string, DemoComponent> = {
   "animated-glowing-text-outline": () => (
     <div className="flex flex-col items-center justify-center p-10 min-h-[400px] w-full bg-background gap-16 border border-border rounded-xl overflow-hidden relative">
@@ -3729,77 +3778,22 @@ export const componentDemos: Record<string, DemoComponent> = {
   ),
   "hero-logo-marquee": () => (
     <LogoMarqueeHero
-      logos={[
-        "Acme",
-        "Globex",
-        "Soylent",
-        "Initech",
-        "Hooli",
-        "Umbrella",
-        "Stark",
-        "Wayne",
-        "Cyberdyne",
-        "Wonka",
-        "Tyrell",
-        "Aperture",
-      ]}
-      secondaryLogos={[
-        "Aperture",
-        "Tyrell",
-        "Wonka",
-        "Cyberdyne",
-        "Wayne",
-        "Stark",
-        "Umbrella",
-        "Hooli",
-        "Initech",
-        "Soylent",
-        "Globex",
-        "Acme",
-      ]}
+      logos={[...LOGO_MARQUEE_DEMO_LOGOS]}
+      secondaryLogos={[...LOGO_MARQUEE_DEMO_SECONDARY_LOGOS]}
       speed={32}
     >
-      <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
-        <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
-        Trusted across teams
-      </span>
-      <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
-        The platform shipping teams ship with.
-      </h1>
-      <p className="mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg">
-        From scrappy seed startups to public companies — UniqueUI components
-        ship in production every day.
-      </p>
+      <LogoMarqueeDemoHeadline />
     </LogoMarqueeHero>
   ),
   // `/blocks` index thumbnail — headline only (dual marquee rows skew the crop).
   "hero-logo-marquee-thumbnail": () => (
     <LogoMarqueeHero
-      logos={[
-        "Acme",
-        "Globex",
-        "Soylent",
-        "Initech",
-        "Hooli",
-        "Umbrella",
-        "Stark",
-        "Wayne",
-      ]}
+      logos={LOGO_MARQUEE_DEMO_LOGOS.slice(0, 8)}
       secondaryLogos={null}
       speed={28}
       className="min-h-[100svh] [&_[data-slot=marquee]]:hidden"
     >
-      <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
-        <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
-        Trusted across teams
-      </span>
-      <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
-        The platform shipping teams ship with.
-      </h1>
-      <p className="mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg">
-        From scrappy seed startups to public companies — UniqueUI components
-        ship in production every day.
-      </p>
+      <LogoMarqueeDemoHeadline />
     </LogoMarqueeHero>
   ),
 };

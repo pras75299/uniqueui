@@ -2,6 +2,8 @@
 import fs from "fs-extra";
 import path from "path";
 import { registry, type RegistryChangelogEntry } from "../registry/config";
+// @ts-expect-error — .mjs module without ambient types
+import { resolvePathUnderDir } from "./validate-registry.lib.mjs";
 
 const REGISTRY_DIR = path.join(__dirname, "../registry");
 const REGISTRY_DOCS_FILE = path.join(REGISTRY_DIR, "docs.json");
@@ -198,7 +200,10 @@ export const docsScenarios: Record<string, ComponentDocs> = ${JSON.stringify(doc
 }
 
 async function renderDemosConfig(manifest: RegistryDocsManifest) {
-  const demosSourcePath = path.join(__dirname, "..", manifest.demos.sourceFile);
+  const demosSourcePath = resolvePathUnderDir(
+    path.join(__dirname, ".."),
+    manifest.demos.sourceFile,
+  );
   if (!(await fs.pathExists(demosSourcePath))) {
     throw new Error(`Missing demos source at ${demosSourcePath}`);
   }
@@ -480,7 +485,7 @@ async function buildRegistry() {
         continue;
       }
 
-      const filePath = path.join(REGISTRY_DIR, file.path);
+      const filePath = resolvePathUnderDir(REGISTRY_DIR, file.path);
       try {
         const content = await fs.readFile(filePath, "utf-8");
         componentFiles.push({

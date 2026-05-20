@@ -3,6 +3,7 @@ import "@testing-library/jest-dom/vitest";
 import fs from "fs";
 import path from "path";
 import { describe, expect, it } from "vitest";
+import { BLOCK_THUMBNAIL_SLUG } from "../config/block-thumbnail-slugs";
 import { componentsList } from "../config/components";
 import { componentDemos } from "../config/demos";
 import { docsScenarios } from "../config/docs-scenarios";
@@ -244,6 +245,21 @@ describe("Component metadata sync", () => {
 // resolve to a real entry in `componentDemos`. A typo in registry/docs.json
 // would otherwise silently render the "Preview not available" placeholder
 // until someone happened to navigate to the page.
+describe("Block thumbnail slug parity", () => {
+  it("every BLOCK_THUMBNAIL_SLUG value resolves to a componentDemos entry", () => {
+    const missing: string[] = [];
+    for (const [blockSlug, demoSlug] of Object.entries(BLOCK_THUMBNAIL_SLUG)) {
+      if (!demoSlug || !(demoSlug in componentDemos)) {
+        missing.push(`${blockSlug} → "${demoSlug ?? ""}"`);
+      }
+    }
+    expect(
+      missing,
+      `Unresolved block thumbnail slug(s) — add matching entries to registry/demos.tsx:\n${missing.join("\n")}`,
+    ).toEqual([]);
+  });
+});
+
 describe("Scenario demoKey parity", () => {
   it("every scenario.demoKey resolves to a componentDemos entry", () => {
     const missing: string[] = [];
