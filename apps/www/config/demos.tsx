@@ -3545,7 +3545,20 @@ export const componentDemos: Record<string, DemoComponent> = {
   // staggered entrance polish for full code transparency — every <span>,
   // <h1>, <p>, and <button> the user sees is the exact one they copy.
   "hero-reference-pulse": () => (
-    <ReferencePulseHero>
+    <ReferencePulseHero
+      className="bg-[#08080a] text-white"
+      backgroundProps={{
+        speed: 7,
+        baseColor: "#08080a",
+        conicPalette: [
+          "hsla(268, 95%, 62%, 0.55)",
+          "hsla(328, 95%, 60%, 0.35)",
+          "hsla(228, 95%, 60%, 0.55)",
+          "hsla(268, 95%, 62%, 0.55)",
+        ],
+        pulseColor: "hsla(268, 95%, 70%, 0.45)",
+      }}
+    >
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
         <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
         Hero block
@@ -3577,7 +3590,16 @@ export const componentDemos: Record<string, DemoComponent> = {
     </ReferencePulseHero>
   ),
   "hero-iridescent-sweep": () => (
-    <IridescentSweepHero>
+    <IridescentSweepHero
+      className="bg-[#0e0a14] text-white"
+      backgroundProps={{
+        hue: 0,
+        speed: 22,
+        grain: 0.35,
+        baseColor: "#0e0a14",
+        palette: ["#ff9bd1", "#ffd66b", "#9bffd6", "#6bb5ff", "#c89bff", "#ff9bd1"],
+      }}
+    >
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-white/85 backdrop-blur">
         <span
           aria-hidden
@@ -3625,7 +3647,12 @@ export const componentDemos: Record<string, DemoComponent> = {
     </IridescentSweepHero>
   ),
   "hero-liquid-aurora-mesh": () => (
-    <LiquidAuroraMeshHero>
+    <LiquidAuroraMeshHero
+      backgroundProps={{
+        palette: ["#9b6bff", "#3effd0", "#ff77c4"],
+        speed: 14,
+      }}
+    >
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
         <span
           aria-hidden
@@ -3660,7 +3687,13 @@ export const componentDemos: Record<string, DemoComponent> = {
     </LiquidAuroraMeshHero>
   ),
   "hero-noise-dot-field": () => (
-    <NoiseDotFieldHero>
+    <NoiseDotFieldHero
+      backgroundProps={{
+        spacing: 28,
+        color: "rgba(255,255,255,0.85)",
+        pocketRadius: 180,
+      }}
+    >
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 backdrop-blur">
         <span
           aria-hidden
@@ -3695,7 +3728,37 @@ export const componentDemos: Record<string, DemoComponent> = {
     </NoiseDotFieldHero>
   ),
   "hero-logo-marquee": () => (
-    <LogoMarqueeHero>
+    <LogoMarqueeHero
+      logos={[
+        "Acme",
+        "Globex",
+        "Soylent",
+        "Initech",
+        "Hooli",
+        "Umbrella",
+        "Stark",
+        "Wayne",
+        "Cyberdyne",
+        "Wonka",
+        "Tyrell",
+        "Aperture",
+      ]}
+      secondaryLogos={[
+        "Aperture",
+        "Tyrell",
+        "Wonka",
+        "Cyberdyne",
+        "Wayne",
+        "Stark",
+        "Umbrella",
+        "Hooli",
+        "Initech",
+        "Soylent",
+        "Globex",
+        "Acme",
+      ]}
+      speed={32}
+    >
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
         <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
         Trusted across teams

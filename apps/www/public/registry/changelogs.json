@@ -496,6 +496,20 @@
   ],
   "hero-reference-pulse": [
     {
+      "version": "1.2.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Added `backgroundProps.conicPalette` and `backgroundProps.pulseColor` for explicit rotating halo colors."
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Added `backgroundProps.baseColor` for the vignette / section base tint."
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-05-20",
       "changes": [
@@ -504,6 +518,13 @@
     }
   ],
   "hero-iridescent-sweep": [
+    {
+      "version": "1.1.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Added `backgroundProps.baseColor` and `backgroundProps.palette` for foil colors."
+      ]
+    },
     {
       "version": "1.0.0",
       "date": "2026-05-20",

@@ -4,6 +4,15 @@ import { useId, type ComponentProps, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
+const DEFAULT_FOIL_PALETTE = [
+  "#ff9bd1",
+  "#ffd66b",
+  "#9bffd6",
+  "#6bb5ff",
+  "#c89bff",
+  "#ff9bd1",
+] as const;
+
 type IridescentSweepBackgroundProps = {
   className?: string;
   /** Conic-gradient rotation cycle in seconds. */
@@ -12,6 +21,10 @@ type IridescentSweepBackgroundProps = {
   hue?: number;
   /** Grain intensity 0–1. */
   grain?: number;
+  /** Section / vignette base (e.g. `#0e0a14`). */
+  baseColor?: string;
+  /** Holographic foil stops for the rotating conic gradient. */
+  palette?: ReadonlyArray<string>;
 };
 
 export function IridescentSweepBackground({
@@ -19,6 +32,8 @@ export function IridescentSweepBackground({
   speed = 22,
   hue = 0,
   grain = 0.35,
+  baseColor = "#0e0a14",
+  palette = DEFAULT_FOIL_PALETTE,
 }: IridescentSweepBackgroundProps) {
   const reduced = useReducedMotion();
   // Clamp speed defensively — negative or non-finite values would yield invalid durations.
@@ -29,8 +44,8 @@ export function IridescentSweepBackground({
   return (
     <div
       aria-hidden
-      className={cn("absolute inset-0 overflow-hidden bg-[#0e0a14]", className)}
-      style={{ filter: `hue-rotate(${hue}deg)` }}
+      className={cn("absolute inset-0 overflow-hidden", className)}
+      style={{ backgroundColor: baseColor, filter: `hue-rotate(${hue}deg)` }}
     >
       <svg className="absolute -z-10 h-0 w-0" aria-hidden>
         <filter id={filterId}>
@@ -42,8 +57,7 @@ export function IridescentSweepBackground({
       <motion.div
         className="absolute inset-[-20%]"
         style={{
-          background:
-            "conic-gradient(from 0deg at 50% 50%, #ff9bd1, #ffd66b, #9bffd6, #6bb5ff, #c89bff, #ff9bd1)",
+          background: `conic-gradient(from 0deg at 50% 50%, ${palette.join(", ")})`,
           filter: "blur(60px) saturate(1.4)",
           mixBlendMode: "screen",
           opacity: 0.85,
@@ -63,7 +77,12 @@ export function IridescentSweepBackground({
         animate={cycle ? { x: "60%" } : { x: "0%" }}
         transition={cycle ? { duration: 6, ease: "easeInOut", repeat: Infinity, repeatDelay: 1.4 } : undefined}
       />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_30%,_#0e0a14_92%)]" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(ellipse at center, transparent 30%, ${baseColor} 92%)`,
+        }}
+      />
       <div
         className="pointer-events-none absolute inset-0 mix-blend-overlay"
         style={{ filter: `url(#${filterId})`, opacity: grain }}
