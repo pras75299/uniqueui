@@ -3539,49 +3539,29 @@ export const componentDemos: Record<string, DemoComponent> = {
       </AmbientGlowCard>
     </div>
   ),
-  "hero-reference-pulse": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <ReferencePulseHero className="min-h-full" />
-    </div>
-  ),
-  "hero-iridescent-sweep": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <IridescentSweepHero className="min-h-full" />
-    </div>
-  ),
-  "hero-liquid-aurora-mesh": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <LiquidAuroraMeshHero className="min-h-full" />
-    </div>
-  ),
-  "hero-noise-dot-field": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <NoiseDotFieldHero className="min-h-full" />
-    </div>
-  ),
-  "hero-logo-marquee": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <LogoMarqueeHero className="min-h-full" />
-    </div>
-  ),
+  // Main hero demos — render the literal JSX from each block's `usageCode`
+  // so the Preview at the top of /blocks/[slug] matches the Usage snippet
+  // exactly. Each hero supplies its own `min-h-[100svh]` and background.
+  "hero-reference-pulse": () => <ReferencePulseHero />,
+  "hero-iridescent-sweep": () => <IridescentSweepHero />,
+  "hero-liquid-aurora-mesh": () => <LiquidAuroraMeshHero />,
+  "hero-noise-dot-field": () => <NoiseDotFieldHero />,
+  "hero-logo-marquee": () => <LogoMarqueeHero />,
 
   // ─── Scenario previews for /blocks/[slug] docs pages ───────────────────────
-  // Keys follow the convention `<slug>:<scenario-key>`. Each entry mirrors the
-  // code snippet shown beside the preview so what users see equals what they
-  // copy. The wrapping <div> with `h-[70svh] min-h-[420px]` matches the
-  // ComponentPreview block variant min-height.
+  // Keys follow the convention `<slug>:<scenario-key>`. Each demo body is the
+  // literal JSX shown in the scenario's `code` snippet — what users see in
+  // the preview equals what they copy.
 
   // hero-reference-pulse
   "hero-reference-pulse:custom": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <ReferencePulseHero className="min-h-full">
-        <h1 className="text-5xl font-semibold">Your headline</h1>
-        <p className="mt-4 text-white/70">Your subtitle goes here.</p>
-      </ReferencePulseHero>
-    </div>
+    <ReferencePulseHero>
+      <h1 className="text-5xl font-semibold">Your headline</h1>
+      <p className="mt-4 text-white/70">Your subtitle goes here.</p>
+    </ReferencePulseHero>
   ),
   "hero-reference-pulse:bg": () => (
-    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a] text-white">
+    <section className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white">
       <ReferencePulseBackground hue={210} speed={9} />
       <div className="relative text-sm text-white/55">…your content…</div>
     </section>
@@ -3589,17 +3569,13 @@ export const componentDemos: Record<string, DemoComponent> = {
 
   // hero-iridescent-sweep
   "hero-iridescent-sweep:hue": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <IridescentSweepHero className="min-h-full" backgroundProps={{ hue: 140, speed: 28 }} />
-    </div>
+    <IridescentSweepHero backgroundProps={{ hue: 140, speed: 28 }} />
   ),
   "hero-iridescent-sweep:grain": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <IridescentSweepHero className="min-h-full" backgroundProps={{ grain: 0.12 }} />
-    </div>
+    <IridescentSweepHero backgroundProps={{ grain: 0.12 }} />
   ),
   "hero-iridescent-sweep:bg": () => (
-    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a] text-white">
+    <section className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white">
       <IridescentSweepBackground />
       <div className="relative text-sm text-white/55">…your content…</div>
     </section>
@@ -3607,22 +3583,17 @@ export const componentDemos: Record<string, DemoComponent> = {
 
   // hero-liquid-aurora-mesh
   "hero-liquid-aurora-mesh:palette": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <LiquidAuroraMeshHero
-        className="min-h-full"
-        backgroundProps={{ palette: ["#3b82f6", "#22d3ee", "#a78bfa"], speed: 18 }}
-      />
-    </div>
+    <LiquidAuroraMeshHero
+      backgroundProps={{ palette: ["#3b82f6", "#22d3ee", "#a78bfa"], speed: 18 }}
+    />
   ),
   "hero-liquid-aurora-mesh:custom": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <LiquidAuroraMeshHero className="min-h-full">
-        <h1 className="text-5xl font-semibold">Ship it.</h1>
-      </LiquidAuroraMeshHero>
-    </div>
+    <LiquidAuroraMeshHero>
+      <h1 className="text-5xl font-semibold">Ship it.</h1>
+    </LiquidAuroraMeshHero>
   ),
   "hero-liquid-aurora-mesh:bg": () => (
-    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a] text-white">
+    <section className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white">
       <LiquidAuroraMeshBackground />
       <div className="relative text-sm text-white/55">…your content…</div>
     </section>
@@ -3630,20 +3601,13 @@ export const componentDemos: Record<string, DemoComponent> = {
 
   // hero-noise-dot-field
   "hero-noise-dot-field:dense": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <NoiseDotFieldHero className="min-h-full" backgroundProps={{ spacing: 18, pocketRadius: 220 }} />
-    </div>
+    <NoiseDotFieldHero backgroundProps={{ spacing: 18, pocketRadius: 220 }} />
   ),
   "hero-noise-dot-field:tinted": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <NoiseDotFieldHero
-        className="min-h-full"
-        backgroundProps={{ color: "rgba(110, 231, 183, 0.85)" }}
-      />
-    </div>
+    <NoiseDotFieldHero backgroundProps={{ color: "rgba(110, 231, 183, 0.85)" }} />
   ),
   "hero-noise-dot-field:bg": () => (
-    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a] text-white">
+    <section className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white">
       <NoiseDotFieldBackground />
       <div className="relative text-sm text-white/55">…your content…</div>
     </section>
@@ -3651,21 +3615,18 @@ export const componentDemos: Record<string, DemoComponent> = {
 
   // hero-logo-marquee
   "hero-logo-marquee:brands": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <LogoMarqueeHero
-        className="min-h-full"
-        logos={["Vercel", "Linear", "Stripe", "Figma", "Notion", "Loom", "Raycast", "Arc"]}
-      />
-    </div>
+    <LogoMarqueeHero
+      logos={["Vercel", "Linear", "Stripe", "Figma", "Notion", "Loom", "Raycast", "Arc"]}
+    />
   ),
-  "hero-logo-marquee:single": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <LogoMarqueeHero className="min-h-full" secondaryLogos={null} />
-    </div>
-  ),
+  "hero-logo-marquee:single": () => <LogoMarqueeHero secondaryLogos={null} />,
   "hero-logo-marquee:row-only": () => (
-    <section className="relative flex h-[70svh] min-h-[420px] w-full items-center overflow-hidden rounded-xl bg-[#08080a] py-12 text-white">
-      <LogoMarqueeRow logos={["Vercel", "Linear", "Stripe"]} speed={28} label="Trusted by" />
+    <section className="relative flex items-center overflow-hidden bg-[#08080a] py-12 text-white">
+      <LogoMarqueeRow
+        logos={["Vercel", "Linear", "Stripe"]}
+        speed={28}
+        label="Trusted by"
+      />
     </section>
   ),
 };

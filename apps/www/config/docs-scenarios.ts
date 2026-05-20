@@ -1071,11 +1071,6 @@ export const docsScenarios: Record<string, ComponentDocs> = {
     "overview": "A minimal hero block that proves the slotted composition pattern. Background lives on its own; the hero accepts children for full content override.",
     "scenarios": [
       {
-        "title": "Default composition",
-        "description": "Drop the hero in and the default headline + CTAs render.",
-        "code": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Default() {\n  return <ReferencePulseHero />;\n}"
-      },
-      {
         "title": "Custom content via children",
         "description": "Pass your own children to override the default composition.",
         "code": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Custom() {\n  return (\n    <ReferencePulseHero>\n      <h1 className=\"text-5xl font-semibold\">Your headline</h1>\n      <p className=\"mt-4 text-white/70\">Your subtitle goes here.</p>\n    </ReferencePulseHero>\n  );\n}",
@@ -1165,11 +1160,6 @@ export const docsScenarios: Record<string, ComponentDocs> = {
     "slug": "hero-logo-marquee",
     "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
     "scenarios": [
-      {
-        "title": "Default composition",
-        "description": "Renders the default headline plus two ticker rows.",
-        "code": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Default() {\n  return <LogoMarqueeHero />;\n}"
-      },
       {
         "title": "Real brand names",
         "description": "Pass your own customer / partner names.",
