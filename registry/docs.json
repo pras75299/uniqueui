@@ -4140,6 +4140,69 @@
           }
         ]
       }
+    },
+    {
+      "slug": "hero-logo-marquee",
+      "name": "Logo Marquee Hero",
+      "description": "A classic SaaS hero: bold headline above two ticker rows of partner / customer logos scrolling in opposite directions. CSS mask softens the edges, reduced-motion freezes the rows, and the brand list is fully customizable.",
+      "icon": "LucideBuilding2",
+      "category": "Hero",
+      "kind": "block",
+      "addedAt": "2026-05-20",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Slotted hero content above the marquee rows. Pass your own headline / subhead / CTAs. When omitted, a default composition renders."
+        },
+        {
+          "name": "logos",
+          "type": "ReadonlyArray<string>",
+          "description": "Brand names rendered as the ticker items. Defaults to a placeholder list."
+        },
+        {
+          "name": "secondaryLogos",
+          "type": "ReadonlyArray<string> | null",
+          "description": "Optional second row. `undefined` (default) reverses the primary list; `null` hides the second row."
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "default": "32",
+          "description": "Loop duration in seconds for the primary row. The second row runs slightly slower for visual interest."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra classes on the outer `<section>`."
+        }
+      ],
+      "usageCode": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Demo() {\n  return <LogoMarqueeHero />;\n}",
+      "docs": {
+        "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
+        "scenarios": [
+          {
+            "title": "Default composition",
+            "description": "Renders the default headline plus two ticker rows.",
+            "code": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Default() {\n  return <LogoMarqueeHero />;\n}"
+          },
+          {
+            "title": "Real brand names",
+            "description": "Pass your own customer / partner names.",
+            "code": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Customers() {\n  return (\n    <LogoMarqueeHero\n      logos={[\"Vercel\", \"Linear\", \"Stripe\", \"Figma\", \"Notion\", \"Loom\", \"Raycast\", \"Arc\"]}\n    />\n  );\n}"
+          },
+          {
+            "title": "Single row only",
+            "description": "Pass `secondaryLogos={null}` to hide the second row.",
+            "code": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function OneRow() {\n  return <LogoMarqueeHero secondaryLogos={null} />;\n}"
+          },
+          {
+            "title": "Row only",
+            "description": "Use the marquee row standalone inside your own section.",
+            "code": "import { LogoMarqueeRow } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function RowOnly() {\n  return (\n    <section className=\"py-12\">\n      <LogoMarqueeRow logos={[\"Vercel\", \"Linear\", \"Stripe\"]} speed={28} />\n    </section>\n  );\n}"
+          }
+        ]
+      }
     }
   ]
 }

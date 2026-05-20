@@ -1147,5 +1147,31 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "import { NoiseDotFieldBackground } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <NoiseDotFieldBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
       }
     ]
+  },
+  "hero-logo-marquee": {
+    "slug": "hero-logo-marquee",
+    "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
+    "scenarios": [
+      {
+        "title": "Default composition",
+        "description": "Renders the default headline plus two ticker rows.",
+        "code": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Default() {\n  return <LogoMarqueeHero />;\n}"
+      },
+      {
+        "title": "Real brand names",
+        "description": "Pass your own customer / partner names.",
+        "code": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Customers() {\n  return (\n    <LogoMarqueeHero\n      logos={[\"Vercel\", \"Linear\", \"Stripe\", \"Figma\", \"Notion\", \"Loom\", \"Raycast\", \"Arc\"]}\n    />\n  );\n}"
+      },
+      {
+        "title": "Single row only",
+        "description": "Pass `secondaryLogos={null}` to hide the second row.",
+        "code": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function OneRow() {\n  return <LogoMarqueeHero secondaryLogos={null} />;\n}"
+      },
+      {
+        "title": "Row only",
+        "description": "Use the marquee row standalone inside your own section.",
+        "code": "import { LogoMarqueeRow } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function RowOnly() {\n  return (\n    <section className=\"py-12\">\n      <LogoMarqueeRow logos={[\"Vercel\", \"Linear\", \"Stripe\"]} speed={28} />\n    </section>\n  );\n}"
+      }
+    ]
   }
 };

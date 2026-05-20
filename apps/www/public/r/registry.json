@@ -1107,6 +1107,24 @@
           "target": "components/ui/hero-noise-dot-field.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-logo-marquee",
+      "type": "registry:ui",
+      "title": "Logo Marquee Hero",
+      "description": "A classic SaaS hero: bold headline above two ticker rows of partner / customer logos scrolling in opposite directions. CSS mask softens the edges, reduced-motion freezes the rows, and the brand list is fully customizable.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-logo-marquee.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-logo-marquee.tsx"
+        }
+      ]
     }
   ]
 }

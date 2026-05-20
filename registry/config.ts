@@ -569,4 +569,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "hero-logo-marquee",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "blocks/hero/logo-marquee/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

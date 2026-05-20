@@ -74,6 +74,7 @@ import { ReferencePulseHero } from "@/components/ui/hero-reference-pulse";
 import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
 import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
+import { LogoMarqueeHero } from "@/components/ui/hero-logo-marquee";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3556,6 +3557,11 @@ export const componentDemos: Record<string, DemoComponent> = {
   "hero-noise-dot-field": () => (
     <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <NoiseDotFieldHero className="min-h-full" />
+    </div>
+  ),
+  "hero-logo-marquee": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <LogoMarqueeHero className="min-h-full" />
     </div>
   ),
 };

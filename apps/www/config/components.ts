@@ -15,6 +15,7 @@ import {
   LayoutGrid,
   Loader2,
   LucideAperture,
+  LucideBuilding2,
   LucideFocus,
   LucideGrid3x3,
   LucideMaximize2,
@@ -84,6 +85,7 @@ const iconMap = {
   LayoutGrid,
   Loader2,
   LucideAperture,
+  LucideBuilding2,
   LucideFocus,
   LucideGrid3x3,
   LucideMaximize2,
@@ -3171,6 +3173,44 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Demo() {\n  return <NoiseDotFieldHero />;\n}"
+  },
+  {
+    "slug": "hero-logo-marquee",
+    "name": "Logo Marquee Hero",
+    "description": "A classic SaaS hero: bold headline above two ticker rows of partner / customer logos scrolling in opposite directions. CSS mask softens the edges, reduced-motion freezes the rows, and the brand list is fully customizable.",
+    "icon": "LucideBuilding2",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-20",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content above the marquee rows. Pass your own headline / subhead / CTAs. When omitted, a default composition renders."
+      },
+      {
+        "name": "logos",
+        "type": "ReadonlyArray<string>",
+        "description": "Brand names rendered as the ticker items. Defaults to a placeholder list."
+      },
+      {
+        "name": "secondaryLogos",
+        "type": "ReadonlyArray<string> | null",
+        "description": "Optional second row. `undefined` (default) reverses the primary list; `null` hides the second row."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "32",
+        "description": "Loop duration in seconds for the primary row. The second row runs slightly slower for visual interest."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the outer `<section>`."
+      }
+    ],
+    "usageCode": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Demo() {\n  return <LogoMarqueeHero />;\n}"
   }
 ] satisfies ComponentDefinition[];
 
