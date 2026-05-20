@@ -145,7 +145,7 @@ export function LogoMarqueeHero({
   );
 }
 
-function DefaultMarqueeContent() {
+export function DefaultMarqueeContent() {
   return (
     <>
       <motion.span

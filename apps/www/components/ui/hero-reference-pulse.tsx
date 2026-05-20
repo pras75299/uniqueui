@@ -92,7 +92,7 @@ export function ReferencePulseHero({
   );
 }
 
-function DefaultPulseContent() {
+export function DefaultPulseContent() {
   return (
     <>
       <motion.span

@@ -70,11 +70,31 @@ import { KineticVariableHeadline } from "@/components/ui/kinetic-variable-headli
 import { CausticLightCard } from "@/components/ui/caustic-light-card";
 import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
 import { AmbientGlowCard } from "@/components/ui/ambient-glow-card";
-import { ReferencePulseHero, ReferencePulseBackground } from "@/components/ui/hero-reference-pulse";
-import { IridescentSweepHero, IridescentSweepBackground } from "@/components/ui/hero-iridescent-sweep";
-import { LiquidAuroraMeshHero, LiquidAuroraMeshBackground } from "@/components/ui/hero-liquid-aurora-mesh";
-import { NoiseDotFieldHero, NoiseDotFieldBackground } from "@/components/ui/hero-noise-dot-field";
-import { LogoMarqueeHero, LogoMarqueeRow } from "@/components/ui/hero-logo-marquee";
+import {
+  ReferencePulseHero,
+  ReferencePulseBackground,
+  DefaultPulseContent,
+} from "@/components/ui/hero-reference-pulse";
+import {
+  IridescentSweepHero,
+  IridescentSweepBackground,
+  DefaultSweepContent,
+} from "@/components/ui/hero-iridescent-sweep";
+import {
+  LiquidAuroraMeshHero,
+  LiquidAuroraMeshBackground,
+  DefaultAuroraContent,
+} from "@/components/ui/hero-liquid-aurora-mesh";
+import {
+  NoiseDotFieldHero,
+  NoiseDotFieldBackground,
+  DefaultDotFieldContent,
+} from "@/components/ui/hero-noise-dot-field";
+import {
+  LogoMarqueeHero,
+  LogoMarqueeRow,
+  DefaultMarqueeContent,
+} from "@/components/ui/hero-logo-marquee";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3541,12 +3561,34 @@ export const componentDemos: Record<string, DemoComponent> = {
   ),
   // Main hero demos — render the literal JSX from each block's `usageCode`
   // so the Preview at the top of /blocks/[slug] matches the Usage snippet
-  // exactly. Each hero supplies its own `min-h-[100svh]` and background.
-  "hero-reference-pulse": () => <ReferencePulseHero />,
-  "hero-iridescent-sweep": () => <IridescentSweepHero />,
-  "hero-liquid-aurora-mesh": () => <LiquidAuroraMeshHero />,
-  "hero-noise-dot-field": () => <NoiseDotFieldHero />,
-  "hero-logo-marquee": () => <LogoMarqueeHero />,
+  // exactly. `Default*Content` makes the content explicit (the hero used to
+  // render the same content via an internal fallback, which hid it from the
+  // Usage snippet and broke the "what I see is what I copy" contract).
+  "hero-reference-pulse": () => (
+    <ReferencePulseHero>
+      <DefaultPulseContent />
+    </ReferencePulseHero>
+  ),
+  "hero-iridescent-sweep": () => (
+    <IridescentSweepHero>
+      <DefaultSweepContent />
+    </IridescentSweepHero>
+  ),
+  "hero-liquid-aurora-mesh": () => (
+    <LiquidAuroraMeshHero>
+      <DefaultAuroraContent />
+    </LiquidAuroraMeshHero>
+  ),
+  "hero-noise-dot-field": () => (
+    <NoiseDotFieldHero>
+      <DefaultDotFieldContent />
+    </NoiseDotFieldHero>
+  ),
+  "hero-logo-marquee": () => (
+    <LogoMarqueeHero>
+      <DefaultMarqueeContent />
+    </LogoMarqueeHero>
+  ),
 
   // ─── Scenario previews for /blocks/[slug] docs pages ───────────────────────
   // Keys follow the convention `<slug>:<scenario-key>`. Each demo body is the

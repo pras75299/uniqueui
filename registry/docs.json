@@ -3978,7 +3978,7 @@
           "description": "Forwarded to the background layer."
         }
       ],
-      "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Demo() {\n  return <ReferencePulseHero />;\n}",
+      "usageCode": "import { ReferencePulseHero, DefaultPulseContent } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Hero() {\n  return (\n    <ReferencePulseHero>\n      <DefaultPulseContent />\n    </ReferencePulseHero>\n  );\n}",
       "docs": {
         "overview": "A minimal hero block that proves the slotted composition pattern. Background lives on its own; the hero accepts children for full content override.",
         "scenarios": [
@@ -4022,7 +4022,7 @@
           "description": "Forwarded to the background layer."
         }
       ],
-      "usageCode": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Demo() {\n  return <IridescentSweepHero />;\n}",
+      "usageCode": "import { IridescentSweepHero, DefaultSweepContent } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Hero() {\n  return (\n    <IridescentSweepHero>\n      <DefaultSweepContent />\n    </IridescentSweepHero>\n  );\n}",
       "docs": {
         "overview": "Editorial holographic-foil hero. Pair with serifs or magazine-style typography in your override.",
         "scenarios": [
@@ -4072,7 +4072,7 @@
           "description": "Forwarded to the background layer."
         }
       ],
-      "usageCode": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Demo() {\n  return <LiquidAuroraMeshHero />;\n}",
+      "usageCode": "import { LiquidAuroraMeshHero, DefaultAuroraContent } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Hero() {\n  return (\n    <LiquidAuroraMeshHero>\n      <DefaultAuroraContent />\n    </LiquidAuroraMeshHero>\n  );\n}",
       "docs": {
         "overview": "A displacement-warped aurora mesh hero. The background is a separate export, so it can layer behind any section.",
         "scenarios": [
@@ -4122,7 +4122,7 @@
           "description": "Forwarded to the canvas background layer."
         }
       ],
-      "usageCode": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Demo() {\n  return <NoiseDotFieldHero />;\n}",
+      "usageCode": "import { NoiseDotFieldHero, DefaultDotFieldContent } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Hero() {\n  return (\n    <NoiseDotFieldHero>\n      <DefaultDotFieldContent />\n    </NoiseDotFieldHero>\n  );\n}",
       "docs": {
         "overview": "Canvas-rendered dot-field hero. Background is a separate export and can be reused under any composition.",
         "scenarios": [
@@ -4183,7 +4183,7 @@
           "description": "Extra classes on the outer `<section>`."
         }
       ],
-      "usageCode": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Demo() {\n  return <LogoMarqueeHero />;\n}",
+      "usageCode": "import { LogoMarqueeHero, DefaultMarqueeContent } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Hero() {\n  return (\n    <LogoMarqueeHero>\n      <DefaultMarqueeContent />\n    </LogoMarqueeHero>\n  );\n}",
       "docs": {
         "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
         "scenarios": [

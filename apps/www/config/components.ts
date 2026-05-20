@@ -3091,7 +3091,7 @@ const componentDefinitions = [
         "description": "Forwarded to the background layer."
       }
     ],
-    "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Demo() {\n  return <ReferencePulseHero />;\n}"
+    "usageCode": "import { ReferencePulseHero, DefaultPulseContent } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Hero() {\n  return (\n    <ReferencePulseHero>\n      <DefaultPulseContent />\n    </ReferencePulseHero>\n  );\n}"
   },
   {
     "slug": "hero-iridescent-sweep",
@@ -3118,7 +3118,7 @@ const componentDefinitions = [
         "description": "Forwarded to the background layer."
       }
     ],
-    "usageCode": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Demo() {\n  return <IridescentSweepHero />;\n}"
+    "usageCode": "import { IridescentSweepHero, DefaultSweepContent } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Hero() {\n  return (\n    <IridescentSweepHero>\n      <DefaultSweepContent />\n    </IridescentSweepHero>\n  );\n}"
   },
   {
     "slug": "hero-liquid-aurora-mesh",
@@ -3145,7 +3145,7 @@ const componentDefinitions = [
         "description": "Forwarded to the background layer."
       }
     ],
-    "usageCode": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Demo() {\n  return <LiquidAuroraMeshHero />;\n}"
+    "usageCode": "import { LiquidAuroraMeshHero, DefaultAuroraContent } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Hero() {\n  return (\n    <LiquidAuroraMeshHero>\n      <DefaultAuroraContent />\n    </LiquidAuroraMeshHero>\n  );\n}"
   },
   {
     "slug": "hero-noise-dot-field",
@@ -3172,7 +3172,7 @@ const componentDefinitions = [
         "description": "Forwarded to the canvas background layer."
       }
     ],
-    "usageCode": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Demo() {\n  return <NoiseDotFieldHero />;\n}"
+    "usageCode": "import { NoiseDotFieldHero, DefaultDotFieldContent } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Hero() {\n  return (\n    <NoiseDotFieldHero>\n      <DefaultDotFieldContent />\n    </NoiseDotFieldHero>\n  );\n}"
   },
   {
     "slug": "hero-logo-marquee",
@@ -3210,7 +3210,7 @@ const componentDefinitions = [
         "description": "Extra classes on the outer `<section>`."
       }
     ],
-    "usageCode": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Demo() {\n  return <LogoMarqueeHero />;\n}"
+    "usageCode": "import { LogoMarqueeHero, DefaultMarqueeContent } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Hero() {\n  return (\n    <LogoMarqueeHero>\n      <DefaultMarqueeContent />\n    </LogoMarqueeHero>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 
