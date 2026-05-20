@@ -1,10 +1,11 @@
 
 import fs from "fs-extra";
 import path from "path";
-import { registry } from "../registry/config";
+import { registry, type RegistryChangelogEntry } from "../registry/config";
 
 const REGISTRY_DIR = path.join(__dirname, "../registry");
 const REGISTRY_DOCS_FILE = path.join(REGISTRY_DIR, "docs.json");
+const REGISTRY_CHANGELOGS_FILE = path.join(REGISTRY_DIR, "changelogs.json");
 const OUTPUT_FILE = path.join(__dirname, "../registry.json");
 const APP_PUBLIC_DIR = path.join(__dirname, "../apps/www/public");
 const APP_PUBLIC_OUTPUT_FILE = path.join(APP_PUBLIC_DIR, "registry.json");
@@ -16,13 +17,21 @@ const APP_COMPONENTS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "components.ts");
 const APP_DOCS_SCENARIOS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "docs-scenarios.ts");
 const APP_DEMOS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "demos.tsx");
 
+// Loose semver — full prerelease/build syntax not required for component versions.
+const SEMVER_RE = /^\d+\.\d+\.\d+$/;
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 type RegistryEntry = (typeof registry)[number] & {
   files: Array<{
     path: string;
     content: string;
     type: string;
   }>;
+  meta: { version: string };
+  changelog: RegistryChangelogEntry[];
 };
+
+type Changelogs = Record<string, RegistryChangelogEntry[]>;
 
 type RegistryDocsVariant = {
   id: string;
@@ -198,6 +207,97 @@ async function renderDemosConfig(manifest: RegistryDocsManifest) {
   return `${generatedBanner}\n\n${bodyWithoutBanner}`;
 }
 
+function compareSemver(a: string, b: string): number {
+  const [aMaj, aMin, aPat] = a.split(".").map(Number);
+  const [bMaj, bMin, bPat] = b.split(".").map(Number);
+  if (aMaj !== bMaj) return aMaj - bMaj;
+  if (aMin !== bMin) return aMin - bMin;
+  return aPat - bPat;
+}
+
+// `loadChangelogs` mirrors the shape-level rules of the `Changelogs` zod
+// schema in `scripts/validate-registry.lib.mjs`. Both must stay in sync:
+// the build script is the fast-feedback path for contributors, the zod
+// validator is the post-build CI gate. If you add a rule here, mirror it
+// in the zod schema (and vice versa).
+async function loadChangelogs(slugs: string[]): Promise<Changelogs> {
+  if (!(await fs.pathExists(REGISTRY_CHANGELOGS_FILE))) {
+    throw new Error(`Missing changelog source at ${REGISTRY_CHANGELOGS_FILE}`);
+  }
+  const raw = (await fs.readJson(REGISTRY_CHANGELOGS_FILE)) as unknown;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+    throw new Error("registry/changelogs.json must be an object keyed by slug");
+  }
+  const changelogs = raw as Record<string, unknown>;
+
+  const errors: string[] = [];
+  const out: Changelogs = {};
+
+  for (const slug of slugs) {
+    const entries = changelogs[slug];
+    if (!Array.isArray(entries) || entries.length === 0) {
+      errors.push(`changelogs.json: missing or empty entry for "${slug}"`);
+      continue;
+    }
+    const normalized: RegistryChangelogEntry[] = [];
+    for (const [i, entry] of entries.entries()) {
+      const where = `${slug}[${i}]`;
+      if (!entry || typeof entry !== "object") {
+        errors.push(`changelogs.json: ${where} must be an object`);
+        continue;
+      }
+      const e = entry as Record<string, unknown>;
+      if (typeof e.version !== "string" || !SEMVER_RE.test(e.version)) {
+        errors.push(`changelogs.json: ${where}.version must match \\d+.\\d+.\\d+ (got ${JSON.stringify(e.version)})`);
+        continue;
+      }
+      if (typeof e.date !== "string" || !ISO_DATE_RE.test(e.date)) {
+        errors.push(`changelogs.json: ${where}.date must be YYYY-MM-DD (got ${JSON.stringify(e.date)})`);
+        continue;
+      }
+      if (
+        !Array.isArray(e.changes) ||
+        e.changes.length === 0 ||
+        !e.changes.every((c) => typeof c === "string" && c.trim().length > 0)
+      ) {
+        errors.push(`changelogs.json: ${where}.changes must be a non-empty array of non-empty strings`);
+        continue;
+      }
+      normalized.push({
+        version: e.version,
+        date: e.date,
+        changes: e.changes as string[],
+      });
+    }
+    // Enforce newest-first ordering: build script reads entries[0] as the
+    // current meta.version, so an out-of-order array would silently demote.
+    for (let i = 1; i < normalized.length; i++) {
+      if (compareSemver(normalized[i - 1].version, normalized[i].version) <= 0) {
+        errors.push(
+          `changelogs.json: "${slug}" entries must be newest-first (descending semver); ` +
+            `index ${i - 1} (${normalized[i - 1].version}) is not greater than index ${i} (${normalized[i].version})`,
+        );
+        break;
+      }
+    }
+    out[slug] = normalized;
+  }
+
+  // Catch stray slugs in changelogs.json that don't exist in the registry.
+  const slugSet = new Set(slugs);
+  for (const key of Object.keys(changelogs)) {
+    if (!slugSet.has(key)) {
+      errors.push(`changelogs.json: stray entry "${key}" has no matching registry component`);
+    }
+  }
+
+  if (errors.length > 0) {
+    throw new Error(`Changelog validation failed:\n  - ${errors.join("\n  - ")}`);
+  }
+
+  return out;
+}
+
 async function loadRegistryDocsManifest(entries: RegistryEntry[]) {
   if (!(await fs.pathExists(REGISTRY_DOCS_FILE))) {
     throw new Error(`Missing docs metadata source at ${REGISTRY_DOCS_FILE}`);
@@ -223,7 +323,7 @@ async function loadRegistryDocsManifest(entries: RegistryEntry[]) {
   return manifest;
 }
 
-async function syncDocsRegistryArtifacts(entries: RegistryEntry[]) {
+async function syncDocsRegistryArtifacts(entries: RegistryEntry[], changelogs: Changelogs) {
   await fs.outputJson(APP_PUBLIC_OUTPUT_FILE, entries, { spaces: 2 });
   await fs.emptyDir(APP_PUBLIC_REGISTRY_DIR);
   await fs.outputJson(
@@ -236,6 +336,14 @@ async function syncDocsRegistryArtifacts(entries: RegistryEntry[]) {
     entries.map((entry) =>
       fs.outputJson(path.join(APP_PUBLIC_REGISTRY_DIR, `${entry.name}.json`), entry, { spaces: 2 }),
     ),
+  );
+
+  // Publish the aggregate changelog so future `uniqueui update`/`diff` can
+  // resolve per-slug history with a single fetch.
+  await fs.outputJson(
+    path.join(APP_PUBLIC_REGISTRY_DIR, "changelogs.json"),
+    changelogs,
+    { spaces: 2 },
   );
 }
 
@@ -346,6 +454,9 @@ async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDo
 async function buildRegistry() {
   console.log("Building registry...");
 
+  const slugs = registry.map((entry) => entry.name);
+  const changelogs = await loadChangelogs(slugs);
+
   const result: RegistryEntry[] = [];
 
   for (const component of registry) {
@@ -375,16 +486,21 @@ async function buildRegistry() {
       }
     }
 
+    const entryChangelog = changelogs[component.name];
+    // Latest entry is first in changelog (newest at top, like a release-notes file).
+    const latest = entryChangelog[0];
     result.push({
       ...component,
       files: componentFiles,
+      meta: { version: latest.version },
+      changelog: entryChangelog,
     });
   }
 
   const docsManifest = await loadRegistryDocsManifest(result);
 
   await fs.outputJson(OUTPUT_FILE, result, { spaces: 2 });
-  await syncDocsRegistryArtifacts(result);
+  await syncDocsRegistryArtifacts(result, changelogs);
   await syncDocsUiComponents(result);
   await syncDocsConfig(docsManifest);
   await syncShadcnRegistry(result, docsManifest);

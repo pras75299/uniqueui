@@ -11,6 +11,16 @@ export type Registry = Array<{
     tailwindCss?: string;
 }>;
 
+// Shape of a single changelog entry as emitted into built artifacts.
+// Source of truth lives in `registry/changelogs.json`; the build script
+// injects `meta.version` and `changelog` onto every entry from there so
+// component versions can be bumped without touching this file.
+export type RegistryChangelogEntry = {
+    version: string;
+    date: string;
+    changes: string[];
+};
+
 const cnUtilFile = {
     path: "utils/cn.ts",
     type: "registry:util",

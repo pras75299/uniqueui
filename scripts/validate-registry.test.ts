@@ -6,15 +6,22 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  ChangelogEntry,
+  Changelogs,
   RegistryArray,
   RegistryEntry,
   ShadcnItem,
   ShadcnManifest,
   SplitIndex,
+  crossCheckChangelogs,
   crossCheckSlugs,
   validate,
   // @ts-expect-error — .mjs module without ambient types
 } from "./validate-registry.lib.mjs";
+
+const goodChangelog = [
+  { version: "1.0.0", date: "2026-05-20", changes: ["Initial release."] },
+];
 
 const goodEntry = {
   name: "moving-border",
@@ -27,6 +34,8 @@ const goodEntry = {
     },
   ],
   tailwindConfig: { theme: { extend: { animation: { x: "y 1s" } } } },
+  meta: { version: "1.0.0" },
+  changelog: goodChangelog,
 };
 
 const goodShadcnItem = {
@@ -160,5 +169,113 @@ describe("crossCheckSlugs", () => {
       shadcnManifest: { items: [{ name: "a" }] },
     });
     expect(result.some((m) => m.includes('shadcn manifest missing "b"'))).toBe(true);
+  });
+});
+
+describe("RegistryEntry: meta.version + changelog (Phase 8a)", () => {
+  it("rejects an entry missing meta — every registry item must carry a version", () => {
+    const { meta: _meta, ...bad } = goodEntry;
+    const r = validate(RegistryEntry, bad);
+    expect(r.ok).toBe(false);
+    expect(r.errors.join("\n")).toMatch(/meta/);
+  });
+
+  it("rejects a non-semver meta.version — 'latest' or branch labels would silently propagate", () => {
+    const bad = { ...goodEntry, meta: { version: "latest" } };
+    const r = validate(RegistryEntry, bad);
+    expect(r.ok).toBe(false);
+    expect(r.errors.join("\n")).toMatch(/MAJOR\.MINOR\.PATCH/);
+  });
+
+  it("rejects an entry whose changelog is empty — version with no history is meaningless", () => {
+    const bad = { ...goodEntry, changelog: [] };
+    expect(validate(RegistryEntry, bad).ok).toBe(false);
+  });
+});
+
+describe("Changelogs / ChangelogEntry", () => {
+  it("accepts a well-formed changelogs map", () => {
+    const data = { "moving-border": goodChangelog };
+    expect(validate(Changelogs, data).ok).toBe(true);
+  });
+
+  it("rejects a bad ISO date — drives release timeline UI; bad dates would mis-sort", () => {
+    const bad = { version: "1.0.0", date: "May 20, 2026", changes: ["x"] };
+    const r = validate(ChangelogEntry, bad);
+    expect(r.ok).toBe(false);
+    expect(r.errors.join("\n")).toMatch(/YYYY-MM-DD/);
+  });
+
+  it("rejects empty change strings — UI renders these as empty bullets", () => {
+    const bad = { version: "1.0.0", date: "2026-05-20", changes: ["  "] };
+    expect(validate(ChangelogEntry, bad).ok).toBe(false);
+  });
+
+  it("rejects out-of-order changelog entries — newest-first ordering is load-bearing for meta.version", () => {
+    // 1.0.0 before 1.1.0 = ascending = wrong. Newest must come first.
+    const bad = {
+      a: [
+        { version: "1.0.0", date: "2026-05-20", changes: ["init"] },
+        { version: "1.1.0", date: "2026-05-21", changes: ["feature"] },
+      ],
+    };
+    const r = validate(Changelogs, bad);
+    expect(r.ok).toBe(false);
+    expect(r.errors.join("\n")).toMatch(/newest-first/);
+  });
+
+  it("rejects duplicate versions within a slug — version reuse breaks `update` warnings", () => {
+    const bad = {
+      a: [
+        { version: "1.0.0", date: "2026-05-21", changes: ["second"] },
+        { version: "1.0.0", date: "2026-05-20", changes: ["first"] },
+      ],
+    };
+    expect(validate(Changelogs, bad).ok).toBe(false);
+  });
+});
+
+describe("crossCheckChangelogs", () => {
+  const root = [
+    { name: "a", meta: { version: "1.0.0" } },
+    { name: "b", meta: { version: "1.2.0" } },
+  ];
+
+  it("returns no mismatches when versions line up with changelog heads", () => {
+    const changelogs = {
+      a: [{ version: "1.0.0", date: "2026-05-20", changes: ["init"] }],
+      b: [
+        { version: "1.2.0", date: "2026-05-21", changes: ["feature"] },
+        { version: "1.1.0", date: "2026-05-20", changes: ["init"] },
+      ],
+    };
+    expect(crossCheckChangelogs({ root, changelogs })).toEqual([]);
+  });
+
+  it("flags a registry slug with no changelog — would orphan version history", () => {
+    const changelogs = {
+      a: [{ version: "1.0.0", date: "2026-05-20", changes: ["init"] }],
+    };
+    const result = crossCheckChangelogs({ root, changelogs });
+    expect(result.some((m) => m.includes('missing "b"'))).toBe(true);
+  });
+
+  it("flags a stray changelog slug — guards against renames leaving dead history behind", () => {
+    const changelogs = {
+      a: [{ version: "1.0.0", date: "2026-05-20", changes: ["init"] }],
+      b: [{ version: "1.2.0", date: "2026-05-21", changes: ["feature"] }],
+      ghost: [{ version: "1.0.0", date: "2026-05-20", changes: ["init"] }],
+    };
+    const result = crossCheckChangelogs({ root, changelogs });
+    expect(result.some((m) => m.includes('stray "ghost"'))).toBe(true);
+  });
+
+  it("flags meta.version that doesn't match the changelog head — drives `uniqueui update` warnings", () => {
+    const changelogs = {
+      a: [{ version: "1.0.0", date: "2026-05-20", changes: ["init"] }],
+      b: [{ version: "1.0.0", date: "2026-05-20", changes: ["init"] }],
+    };
+    const result = crossCheckChangelogs({ root, changelogs });
+    expect(result.some((m) => m.includes("meta.version mismatch") && m.includes('"b"'))).toBe(true);
   });
 });

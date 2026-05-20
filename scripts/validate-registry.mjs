@@ -15,11 +15,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  Changelogs,
   RegistryArray,
   RegistryEntry,
   ShadcnItem,
   ShadcnManifest,
   SplitIndex,
+  crossCheckChangelogs,
   crossCheckSlugs,
   validate,
 } from "./validate-registry.lib.mjs";
@@ -98,6 +100,23 @@ const mismatches = crossCheckSlugs({
   shadcnManifest,
 });
 for (const m of mismatches) failures.push(`cross-check: ${m}`);
+
+const sourceChangelogs = check(
+  "registry/changelogs.json",
+  Changelogs,
+  readJson("registry/changelogs.json"),
+);
+const publicChangelogs = check(
+  "apps/www/public/registry/changelogs.json",
+  Changelogs,
+  readJson("apps/www/public/registry/changelogs.json"),
+);
+
+const changelogMismatches = crossCheckChangelogs({
+  root: rootRegistry,
+  changelogs: publicChangelogs ?? sourceChangelogs,
+});
+for (const m of changelogMismatches) failures.push(`cross-check: ${m}`);
 
 if (failures.length > 0) {
   console.error("Registry validation failed:\n");
