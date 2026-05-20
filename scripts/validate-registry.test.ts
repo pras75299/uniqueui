@@ -214,6 +214,19 @@ describe("Changelogs / ChangelogEntry", () => {
     expect(validate(ChangelogEntry, bad).ok).toBe(false);
   });
 
+  it("rejects regex-valid but impossible calendar dates — 'YYYY-MM-DD' shape isn't enough", () => {
+    // Month 13 and day 40 pass the regex but aren't real dates.
+    for (const date of ["2026-13-40", "2026-02-30", "2023-02-29"]) {
+      const bad = { version: "1.0.0", date, changes: ["x"] };
+      expect(validate(ChangelogEntry, bad).ok, `expected ${date} to fail`).toBe(false);
+    }
+  });
+
+  it("accepts Feb 29 in leap years — the calendar refinement must not over-reject", () => {
+    const good = { version: "1.0.0", date: "2024-02-29", changes: ["leap day"] };
+    expect(validate(ChangelogEntry, good).ok).toBe(true);
+  });
+
   it("rejects out-of-order changelog entries — newest-first ordering is load-bearing for meta.version", () => {
     // 1.0.0 before 1.1.0 = ascending = wrong. Newest must come first.
     const bad = {

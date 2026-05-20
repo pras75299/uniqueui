@@ -15,7 +15,22 @@ const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 export const Slug = z.string().regex(SLUG_RE, "slug must be kebab-case (a-z0-9-)");
 export const NpmDep = z.string().regex(NPM_DEP_RE, "invalid npm dependency name");
 export const SemverVersion = z.string().regex(SEMVER_RE, "version must be MAJOR.MINOR.PATCH");
-export const IsoDate = z.string().regex(ISO_DATE_RE, "date must be YYYY-MM-DD");
+// Shape-check first, then refine for calendar reality: a regex-pass like
+// "2026-13-40" should still fail (month 13 / day 40 don't exist). Round-trip
+// the parts through Date.UTC and compare to catch invalid month/day combos
+// including leap-year February.
+export const IsoDate = z
+  .string()
+  .regex(ISO_DATE_RE, "date must be YYYY-MM-DD")
+  .refine((s) => {
+    const [y, m, d] = s.split("-").map(Number);
+    const date = new Date(Date.UTC(y, m - 1, d));
+    return (
+      date.getUTCFullYear() === y &&
+      date.getUTCMonth() === m - 1 &&
+      date.getUTCDate() === d
+    );
+  }, "date must be a real calendar date (YYYY-MM-DD)");
 
 export const RegistryFileType = z.enum([
   "registry:ui",

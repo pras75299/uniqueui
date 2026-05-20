@@ -46,7 +46,11 @@ export function ReferencePulseBackground({
   // Clamp speed defensively — negative or non-finite values would yield invalid durations.
   const safeSpeed = Number.isFinite(speed) && speed > 0 ? speed : 0;
   const cycle = reduced ? 0 : safeSpeed;
-  const resolvedConic = conicPalette ?? conicPaletteFromHue(hue);
+  // `??` only fires on null/undefined — an empty array would yield
+  // `conic-gradient(from 0deg, )`, which is invalid CSS. Treat an empty array
+  // as "no palette supplied" and fall back to the hue-derived stops.
+  const resolvedConic =
+    conicPalette && conicPalette.length > 0 ? conicPalette : conicPaletteFromHue(hue);
   const conicGradient = `conic-gradient(from 0deg, ${resolvedConic.join(", ")})`;
 
   return (

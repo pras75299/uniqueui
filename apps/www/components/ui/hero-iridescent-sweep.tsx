@@ -40,6 +40,10 @@ export function IridescentSweepBackground({
   const safeSpeed = Number.isFinite(speed) && speed > 0 ? speed : 0;
   const cycle = reduced ? 0 : safeSpeed;
   const filterId = useId();
+  // Default-only fires on undefined; treat an explicit empty array as "no
+  // palette" so `palette.join(", ")` can't produce an invalid `conic-gradient(...)`.
+  const resolvedPalette =
+    palette && palette.length > 0 ? palette : DEFAULT_FOIL_PALETTE;
 
   return (
     <div
@@ -57,7 +61,7 @@ export function IridescentSweepBackground({
       <motion.div
         className="absolute inset-[-20%]"
         style={{
-          background: `conic-gradient(from 0deg at 50% 50%, ${palette.join(", ")})`,
+          background: `conic-gradient(from 0deg at 50% 50%, ${resolvedPalette.join(", ")})`,
           filter: "blur(60px) saturate(1.4)",
           mixBlendMode: "screen",
           opacity: 0.85,
