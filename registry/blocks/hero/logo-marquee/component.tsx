@@ -26,12 +26,19 @@ type LogoMarqueeRowProps = Omit<ComponentProps<"div">, "children"> & {
   speed?: number;
   /** Scroll direction. */
   direction?: "left" | "right";
+  /**
+   * Accessible name for the marquee. Surfaces to screen readers as the
+   * row's label (e.g. "Customer logos", "Trusted by"). Defaults to a
+   * sensible generic so the row isn't anonymous in AT output.
+   */
+  label?: string;
 };
 
 export function LogoMarqueeRow({
   logos = DEFAULT_LOGOS,
   speed = 32,
   direction = "left",
+  label = "Customer logos",
   className,
   ...rest
 }: LogoMarqueeRowProps) {
@@ -53,6 +60,7 @@ export function LogoMarqueeRow({
       {...rest}
     >
       <motion.ul
+        aria-label={label}
         className="flex w-max items-center gap-12 whitespace-nowrap text-base font-medium text-white/55"
         initial={false}
         animate={reduced ? { x: "0%" } : { x: xRange }}
@@ -118,9 +126,19 @@ export function LogoMarqueeHero({
           showSecondary ? "sm:mt-16" : "sm:mt-20",
         )}
       >
-        <LogoMarqueeRow logos={logos} speed={speed} direction="left" />
+        <LogoMarqueeRow
+          logos={logos}
+          speed={speed}
+          direction="left"
+          label="Customer logos"
+        />
         {showSecondary && resolvedSecondary && resolvedSecondary.length > 0 ? (
-          <LogoMarqueeRow logos={resolvedSecondary} speed={speed * 1.15} direction="right" />
+          <LogoMarqueeRow
+            logos={resolvedSecondary}
+            speed={speed * 1.15}
+            direction="right"
+            label="More customer logos"
+          />
         ) : null}
       </div>
     </section>

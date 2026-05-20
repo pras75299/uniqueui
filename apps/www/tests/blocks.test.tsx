@@ -187,6 +187,22 @@ describe("LogoMarqueeHero — logo wiring", () => {
         const { container } = render(<LogoMarqueeRow logos={["A", "B"]} />);
         expect(container.querySelectorAll("li")).toHaveLength(4);
     });
+
+    it("LogoMarqueeRow exposes a default accessible name — screen readers must not get an anonymous ticker", () => {
+        const { getByRole } = render(<LogoMarqueeRow logos={["A", "B"]} />);
+        expect(getByRole("list", { name: "Customer logos" })).toBeInTheDocument();
+    });
+
+    it("LogoMarqueeRow honors a custom `label` prop", () => {
+        const { getByRole } = render(<LogoMarqueeRow logos={["A"]} label="Trusted by" />);
+        expect(getByRole("list", { name: "Trusted by" })).toBeInTheDocument();
+    });
+
+    it("LogoMarqueeHero distinguishes its two rows by label — avoids identical SR announcements", () => {
+        const { getByRole } = render(<LogoMarqueeHero logos={["A", "B"]} />);
+        expect(getByRole("list", { name: "Customer logos" })).toBeInTheDocument();
+        expect(getByRole("list", { name: "More customer logos" })).toBeInTheDocument();
+    });
 });
 
 describe("Hero blocks — pointer listeners do not throw", () => {

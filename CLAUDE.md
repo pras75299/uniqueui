@@ -177,9 +177,10 @@ Three config files drive the entire docs site:
 2. Add entry to `registry/config.ts` (name, dependencies, files array, optional `tailwindConfig` for custom keyframes)
 3. Add docs metadata to `registry/docs.json`
 4. Add demo to `apps/www/config/demos.tsx` (`componentDemos`)
-5. Run `pnpm build:registry` from root to regenerate `registry.json`, refresh `apps/www/public/registry/*` and **`apps/www/public/r/*`**, sync `apps/www/components/ui/{component-name}.tsx`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
+5. Add an entry to `registry/changelogs.json` under the new slug — at minimum `[{ "version": "1.0.0", "date": "YYYY-MM-DD", "changes": ["Initial release."] }]`. The build script reads `entries[0]` as the component's `meta.version`; entries must be newest-first (descending semver).
+6. Run `pnpm build:registry` from root to regenerate `registry.json`, refresh `apps/www/public/registry/*` and **`apps/www/public/r/*`**, sync `apps/www/components/ui/{component-name}.tsx`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
 
-When editing an existing component, update `registry/{component}/component.tsx` and then run `pnpm build:registry` to refresh the generated docs copies and registry artifacts.
+When editing an existing component, update `registry/{component}/component.tsx` and — if the change is user-visible — prepend a new entry to that slug's array in `registry/changelogs.json` with a bumped semver. Then run `pnpm build:registry` to refresh the generated docs copies and registry artifacts.
 
 ## Component Design Rules
 

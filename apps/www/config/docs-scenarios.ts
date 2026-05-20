@@ -1169,8 +1169,8 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       },
       {
         "title": "Row only",
-        "description": "Use the marquee row standalone inside your own section.",
-        "code": "import { LogoMarqueeRow } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function RowOnly() {\n  return (\n    <section className=\"py-12\">\n      <LogoMarqueeRow logos={[\"Vercel\", \"Linear\", \"Stripe\"]} speed={28} />\n    </section>\n  );\n}"
+        "description": "Use the marquee row standalone inside your own section. Pass `label` to give screen readers a domain-specific name (defaults to `\"Customer logos\"`).",
+        "code": "import { LogoMarqueeRow } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function RowOnly() {\n  return (\n    <section className=\"py-12\">\n      <LogoMarqueeRow\n        logos={[\"Vercel\", \"Linear\", \"Stripe\"]}\n        speed={28}\n        label=\"Trusted by\"\n      />\n    </section>\n  );\n}"
       }
     ]
   }
