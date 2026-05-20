@@ -3575,13 +3575,13 @@ export const componentDemos: Record<string, DemoComponent> = {
   "hero-reference-pulse:custom": () => (
     <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <ReferencePulseHero className="min-h-full">
-        <h1 className="text-5xl font-semibold text-white">Your headline</h1>
+        <h1 className="text-5xl font-semibold">Your headline</h1>
         <p className="mt-4 text-white/70">Your subtitle goes here.</p>
       </ReferencePulseHero>
     </div>
   ),
   "hero-reference-pulse:bg": () => (
-    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a]">
+    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a] text-white">
       <ReferencePulseBackground hue={210} speed={9} />
       <div className="relative text-sm text-white/55">…your content…</div>
     </section>
@@ -3599,7 +3599,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     </div>
   ),
   "hero-iridescent-sweep:bg": () => (
-    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a]">
+    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a] text-white">
       <IridescentSweepBackground />
       <div className="relative text-sm text-white/55">…your content…</div>
     </section>
@@ -3617,12 +3617,12 @@ export const componentDemos: Record<string, DemoComponent> = {
   "hero-liquid-aurora-mesh:custom": () => (
     <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <LiquidAuroraMeshHero className="min-h-full">
-        <h1 className="text-5xl font-semibold text-white">Ship it.</h1>
+        <h1 className="text-5xl font-semibold">Ship it.</h1>
       </LiquidAuroraMeshHero>
     </div>
   ),
   "hero-liquid-aurora-mesh:bg": () => (
-    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a]">
+    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a] text-white">
       <LiquidAuroraMeshBackground />
       <div className="relative text-sm text-white/55">…your content…</div>
     </section>
@@ -3643,7 +3643,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     </div>
   ),
   "hero-noise-dot-field:bg": () => (
-    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a]">
+    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a] text-white">
       <NoiseDotFieldBackground />
       <div className="relative text-sm text-white/55">…your content…</div>
     </section>

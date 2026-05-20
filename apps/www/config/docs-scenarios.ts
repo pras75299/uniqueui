@@ -1084,7 +1084,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Background only",
         "description": "Compose your own section and use only the background layer.",
-        "code": "import { ReferencePulseBackground } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <ReferencePulseBackground hue={210} speed={9} />\n      <div className=\"relative\">…your content…</div>\n    </section>\n  );\n}",
+        "code": "import { ReferencePulseBackground } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white\">\n      <ReferencePulseBackground hue={210} speed={9} />\n      <div className=\"relative text-sm text-white/55\">…your content…</div>\n    </section>\n  );\n}",
         "demoKey": "hero-reference-pulse:bg"
       }
     ]
@@ -1108,7 +1108,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Background only",
         "description": "Use just the foil layer behind a custom composition.",
-        "code": "import { IridescentSweepBackground } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <IridescentSweepBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}",
+        "code": "import { IridescentSweepBackground } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white\">\n      <IridescentSweepBackground />\n      <div className=\"relative text-sm text-white/55\">…your content…</div>\n    </section>\n  );\n}",
         "demoKey": "hero-iridescent-sweep:bg"
       }
     ]
@@ -1132,7 +1132,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Background only",
         "description": "Reuse just the layer behind a totally different composition.",
-        "code": "import { LiquidAuroraMeshBackground } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <LiquidAuroraMeshBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}",
+        "code": "import { LiquidAuroraMeshBackground } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white\">\n      <LiquidAuroraMeshBackground />\n      <div className=\"relative text-sm text-white/55\">…your content…</div>\n    </section>\n  );\n}",
         "demoKey": "hero-liquid-aurora-mesh:bg"
       }
     ]
@@ -1156,7 +1156,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Background only",
         "description": "Layer the canvas behind a different composition.",
-        "code": "import { NoiseDotFieldBackground } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <NoiseDotFieldBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}",
+        "code": "import { NoiseDotFieldBackground } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white\">\n      <NoiseDotFieldBackground />\n      <div className=\"relative text-sm text-white/55\">…your content…</div>\n    </section>\n  );\n}",
         "demoKey": "hero-noise-dot-field:bg"
       }
     ]
@@ -1185,7 +1185,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       {
         "title": "Row only",
         "description": "Use the marquee row standalone inside your own section. Pass `label` to give screen readers a domain-specific name (defaults to `\"Customer logos\"`).",
-        "code": "import { LogoMarqueeRow } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function RowOnly() {\n  return (\n    <section className=\"py-12\">\n      <LogoMarqueeRow\n        logos={[\"Vercel\", \"Linear\", \"Stripe\"]}\n        speed={28}\n        label=\"Trusted by\"\n      />\n    </section>\n  );\n}",
+        "code": "import { LogoMarqueeRow } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function RowOnly() {\n  return (\n    <section className=\"relative flex items-center overflow-hidden bg-[#08080a] py-12 text-white\">\n      <LogoMarqueeRow\n        logos={[\"Vercel\", \"Linear\", \"Stripe\"]}\n        speed={28}\n        label=\"Trusted by\"\n      />\n    </section>\n  );\n}",
         "demoKey": "hero-logo-marquee:row-only"
       }
     ]
