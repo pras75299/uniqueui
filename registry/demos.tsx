@@ -3768,4 +3768,34 @@ export const componentDemos: Record<string, DemoComponent> = {
       </p>
     </LogoMarqueeHero>
   ),
+  // `/blocks` index thumbnail — headline only (dual marquee rows skew the crop).
+  "hero-logo-marquee-thumbnail": () => (
+    <LogoMarqueeHero
+      logos={[
+        "Acme",
+        "Globex",
+        "Soylent",
+        "Initech",
+        "Hooli",
+        "Umbrella",
+        "Stark",
+        "Wayne",
+      ]}
+      secondaryLogos={null}
+      speed={28}
+      className="min-h-[100svh] [&_[data-slot=marquee]]:hidden"
+    >
+      <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
+        <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
+        Trusted across teams
+      </span>
+      <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
+        The platform shipping teams ship with.
+      </h1>
+      <p className="mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg">
+        From scrappy seed startups to public companies — UniqueUI components
+        ship in production every day.
+      </p>
+    </LogoMarqueeHero>
+  ),
 };

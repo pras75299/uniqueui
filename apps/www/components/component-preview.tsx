@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useRef, type ForwardedRef } from "react";
+import { forwardRef, useRef, type ForwardedRef, type RefObject } from "react";
 import { motion, useInView } from "motion/react";
 import { componentDemos } from "@/config/demos";
 import { useTheme } from "@/contexts/theme-context";
@@ -11,7 +11,8 @@ type ComponentPreviewProps = {
   /** Extra class names merged on the root motion.div via `cn` (consumer style overrides). */
   className?: string;
   /** "block" suppresses the grid backdrop and uses a full-hero min-height. */
-  variant?: "default" | "block";
+  /** "thumbnail" — `/blocks` index cards: full hero height, content optically centered in crop. */
+  variant?: "default" | "block" | "thumbnail";
   /**
    * When true, the inner demo only mounts while the preview is near or inside
    * the viewport. Used by `/blocks` to keep dozens of motion timelines / RAF
@@ -23,6 +24,12 @@ type ComponentPreviewProps = {
    * benefit from observing them.
    */
   lazy?: boolean;
+  /**
+   * When `lazy` is set, observe this root for intersection (e.g. the card
+   * frame). Avoids missed mounts when the preview sits inside a transformed
+   * scale wrapper on `/blocks`.
+   */
+  lazyRoot?: RefObject<Element | null>;
 };
 
 export default function ComponentPreview(props: ComponentPreviewProps) {
@@ -33,11 +40,14 @@ function EagerPreview(props: ComponentPreviewProps) {
   return <PreviewShell {...props} shouldRender />;
 }
 
-function LazyPreview(props: ComponentPreviewProps) {
+function LazyPreview({ lazyRoot, ...props }: ComponentPreviewProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   // `once: false` → demo unmounts on exit, freeing RAF / pointer listeners.
   // 200px above + below the viewport warms the demo before scroll reaches it.
-  const isInView = useInView(cardRef, { once: false, margin: "200px 0px" });
+  const isInView = useInView(lazyRoot ?? cardRef, {
+    once: false,
+    margin: "200px 0px",
+  });
   return <PreviewShell {...props} shouldRender={isInView} ref={cardRef} />;
 }
 
@@ -60,38 +70,47 @@ const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function Prev
 
   const isDark = theme === "dark";
   const isBlock = variant === "block";
+  const isThumbnail = variant === "thumbnail";
+  const isHeroFrame = isBlock || isThumbnail;
   const hasOverflowHidden =
-    isBlock || (slug !== "horizontal-scroll-gallery" && slug !== "outlined-mega-mark");
-  const isOutlinedMegaMark = !isBlock && slug === "outlined-mega-mark";
+    isHeroFrame || (slug !== "horizontal-scroll-gallery" && slug !== "outlined-mega-mark");
+  const isOutlinedMegaMark = !isHeroFrame && slug === "outlined-mega-mark";
 
   return (
     <motion.div
       ref={ref}
       className={cn(
         "w-full rounded-xl border relative flex",
-        isBlock
-          ? "min-h-[70svh] items-stretch"
-          : isOutlinedMegaMark
-            ? "min-h-[min(32rem,82dvh)] flex-col items-stretch py-4 sm:py-6"
-            : "min-h-[300px] items-center justify-center",
+        isThumbnail
+          ? "min-h-[100svh] items-center justify-center"
+          : isBlock
+            ? "min-h-[70svh] items-stretch"
+            : isOutlinedMegaMark
+              ? "min-h-[min(32rem,82dvh)] flex-col items-stretch py-4 sm:py-6"
+              : "min-h-[300px] items-center justify-center",
         hasOverflowHidden && "overflow-hidden",
+        isThumbnail && "rounded-none border-0",
         isDark ? "border-neutral-800 bg-neutral-950/50" : "border-neutral-200 bg-neutral-50/80",
         className,
       )}
       initial={false}
       animate={{
-        backgroundColor: isBlock
+        backgroundColor: isHeroFrame
           ? isDark
             ? "rgb(10,10,10)"
             : "rgb(255,255,255)"
           : isDark
             ? "rgba(10,10,10,0.5)"
             : "rgba(250,250,250,0.8)",
-        borderColor: isDark ? "rgb(38,38,38)" : "rgb(229,229,229)",
+        borderColor: isThumbnail
+          ? "transparent"
+          : isDark
+            ? "rgb(38,38,38)"
+            : "rgb(229,229,229)",
       }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      {!isBlock && (
+      {!isHeroFrame && (
         <div
           className={cn(
             "absolute inset-0 z-0 opacity-20 pointer-events-none [background-size:24px_24px]",
@@ -112,7 +131,11 @@ const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function Prev
         {shouldRender ? (
           <Demo theme={theme} />
         ) : (
-          <LazyPlaceholder isBlock={isBlock} isOutlinedMegaMark={isOutlinedMegaMark} />
+          <LazyPlaceholder
+            isBlock={isBlock}
+            isThumbnail={isThumbnail}
+            isOutlinedMegaMark={isOutlinedMegaMark}
+          />
         )}
       </div>
     </motion.div>
@@ -126,9 +149,11 @@ const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function Prev
  */
 function LazyPlaceholder({
   isBlock,
+  isThumbnail,
   isOutlinedMegaMark,
 }: {
   isBlock: boolean;
+  isThumbnail: boolean;
   isOutlinedMegaMark: boolean;
 }) {
   return (
@@ -136,11 +161,13 @@ function LazyPlaceholder({
       aria-hidden
       className={cn(
         "h-full w-full",
-        isBlock
-          ? "min-h-[70svh]"
-          : isOutlinedMegaMark
-            ? "min-h-[min(32rem,82dvh)]"
-            : "min-h-[300px]",
+        isThumbnail
+          ? "min-h-[100svh]"
+          : isBlock
+            ? "min-h-[70svh]"
+            : isOutlinedMegaMark
+              ? "min-h-[min(32rem,82dvh)]"
+              : "min-h-[300px]",
       )}
     />
   );

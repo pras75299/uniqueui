@@ -121,6 +121,7 @@ export function LogoMarqueeHero({
         {children ?? <DefaultMarqueeContent />}
       </div>
       <div
+        data-slot="marquee"
         className={cn(
           "relative z-10 mt-12 flex w-full flex-col gap-6",
           showSecondary ? "sm:mt-16" : "sm:mt-20",

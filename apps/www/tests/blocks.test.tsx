@@ -183,6 +183,11 @@ describe("LogoMarqueeHero — logo wiring", () => {
         expect(container.querySelectorAll("ul")).toHaveLength(1);
     });
 
+    it("exposes data-slot=marquee so /blocks thumbnails can hide the ticker region", () => {
+        const { container } = render(<LogoMarqueeHero />);
+        expect(container.querySelector('[data-slot="marquee"]')).toBeInTheDocument();
+    });
+
     it("LogoMarqueeRow renders standalone with custom logos", () => {
         const { container } = render(<LogoMarqueeRow logos={["A", "B"]} />);
         expect(container.querySelectorAll("li")).toHaveLength(4);

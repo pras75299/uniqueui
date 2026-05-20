@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, Blocks as BlocksIcon } from "lucide-react";
 import { componentsList, isNewComponent } from "@/config/components";
@@ -13,6 +13,47 @@ import ComponentPreview from "@/components/component-preview";
 const blocksList = componentsList.filter((c) => c.kind === "block");
 
 const ALL = "All";
+
+/** Index-card preview slugs (differs from detail page when crop needs a simpler frame). */
+const BLOCK_THUMBNAIL_SLUG: Partial<Record<string, string>> = {
+  "hero-logo-marquee": "hero-logo-marquee-thumbnail",
+};
+
+function BlockCardThumbnail({
+  slug,
+  isDark,
+}: {
+  slug: string;
+  isDark: boolean;
+}) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      ref={frameRef}
+      className={cn(
+        "relative aspect-[16/10] overflow-hidden",
+        isDark ? "bg-neutral-950" : "bg-neutral-100",
+      )}
+    >
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[100svh] w-[240%] max-w-none -translate-x-1/2 -translate-y-1/2 origin-center scale-[0.4] sm:scale-[0.48]">
+        <ComponentPreview
+          slug={slug}
+          lazy
+          lazyRoot={frameRef}
+          variant="thumbnail"
+        />
+      </div>
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-0",
+          isDark
+            ? "bg-gradient-to-t from-black/40 via-transparent to-transparent"
+            : "bg-gradient-to-t from-white/30 via-transparent to-transparent",
+        )}
+      />
+    </div>
+  );
+}
 
 const cardVariants = {
   hidden: { opacity: 0, y: 18, scale: 0.97 },
@@ -177,27 +218,10 @@ export default function BlocksIndex() {
                         : "border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-lg",
                     )}
                   >
-                    <div
-                      className={cn(
-                        "relative aspect-[16/10] overflow-hidden",
-                        isDark ? "bg-neutral-950" : "bg-neutral-100",
-                      )}
-                    >
-                      <div
-                        className="pointer-events-none absolute inset-0 origin-top-left scale-[0.45] sm:scale-[0.55]"
-                        style={{ width: "182%", height: "222%" }}
-                      >
-                        <ComponentPreview slug={block.slug} lazy />
-                      </div>
-                      <div
-                        className={cn(
-                          "pointer-events-none absolute inset-0",
-                          isDark
-                            ? "bg-gradient-to-t from-black/40 via-transparent to-transparent"
-                            : "bg-gradient-to-t from-white/30 via-transparent to-transparent",
-                        )}
-                      />
-                    </div>
+                    <BlockCardThumbnail
+                      slug={BLOCK_THUMBNAIL_SLUG[block.slug] ?? block.slug}
+                      isDark={isDark}
+                    />
                     <div className="flex items-start justify-between gap-3 p-4">
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
