@@ -3981,20 +3981,7 @@
       "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Hero() {\n  return (\n    <ReferencePulseHero>\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span className=\"h-1.5 w-1.5 rounded-full bg-white/80\" aria-hidden />\n        Hero block\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Build with light, not boxes.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A reference hero block. Drop in your own children to override the\n        default composition \u2014 the background lives on its own as well.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group relative inline-flex h-11 items-center gap-2 overflow-hidden rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Get started</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            \u2192\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          Read docs\n        </button>\n      </div>\n    </ReferencePulseHero>\n  );\n}",
       "docs": {
         "overview": "A minimal hero block that proves the slotted composition pattern. Background lives on its own; the hero accepts children for full content override.",
-        "scenarios": [
-          {
-            "title": "Custom content via children",
-            "description": "Pass your own children to override the default composition.",
-            "code": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Custom() {\n  return (\n    <ReferencePulseHero>\n      <h1 className=\"text-5xl font-semibold\">Your headline</h1>\n      <p className=\"mt-4 text-white/70\">Your subtitle goes here.</p>\n    </ReferencePulseHero>\n  );\n}",
-            "demoKey": "hero-reference-pulse:custom"
-          },
-          {
-            "title": "Background only",
-            "description": "Compose your own section and use only the background layer.",
-            "code": "import { ReferencePulseBackground } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white\">\n      <ReferencePulseBackground hue={210} speed={9} />\n      <div className=\"relative text-sm text-white/55\">\u2026your content\u2026</div>\n    </section>\n  );\n}",
-            "demoKey": "hero-reference-pulse:bg"
-          }
-        ]
+        "scenarios": []
       }
     },
     {
@@ -4025,26 +4012,7 @@
       "usageCode": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Hero() {\n  return (\n    <IridescentSweepHero>\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-white/85 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full\"\n          style={{\n            background:\n              \"conic-gradient(from 0deg, #ff9bd1, #ffd66b, #9bffd6, #6bb5ff, #c89bff, #ff9bd1)\",\n            boxShadow: \"0 0 12px 2px rgba(255,255,255,0.4)\",\n          }}\n        />\n        Edition \u00b7 MMXXVI\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        <span\n          className=\"bg-clip-text text-transparent\"\n          style={{\n            backgroundImage:\n              \"linear-gradient(120deg, #ffffff 0%, #f5e6ff 28%, #ffe9c2 50%, #c8f1ff 72%, #ffffff 100%)\",\n          }}\n        >\n          Pressed in light.\n        </span>\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/75 sm:text-lg\">\n        Conic foil under a turbulence grain, with a sheen that sweeps across\n        the type on a slow cadence. Editorial energy, zero plug-ins.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-neutral-900 transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Reserve a copy</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            \u2192\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/25 px-6 text-sm font-medium text-white/90 backdrop-blur transition-colors hover:bg-white/10\"\n        >\n          Read the editorial\n        </button>\n      </div>\n    </IridescentSweepHero>\n  );\n}",
       "docs": {
         "overview": "Editorial holographic-foil hero. Pair with serifs or magazine-style typography in your override.",
-        "scenarios": [
-          {
-            "title": "Hue-shifted edition",
-            "description": "Shift the whole foil into a cooler register.",
-            "code": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Cool() {\n  return <IridescentSweepHero backgroundProps={{ hue: 140, speed: 28 }} />;\n}",
-            "demoKey": "hero-iridescent-sweep:hue"
-          },
-          {
-            "title": "Lower grain",
-            "description": "Reduce the turbulence grain for a cleaner foil.",
-            "code": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Clean() {\n  return <IridescentSweepHero backgroundProps={{ grain: 0.12 }} />;\n}",
-            "demoKey": "hero-iridescent-sweep:grain"
-          },
-          {
-            "title": "Background only",
-            "description": "Use just the foil layer behind a custom composition.",
-            "code": "import { IridescentSweepBackground } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white\">\n      <IridescentSweepBackground />\n      <div className=\"relative text-sm text-white/55\">\u2026your content\u2026</div>\n    </section>\n  );\n}",
-            "demoKey": "hero-iridescent-sweep:bg"
-          }
-        ]
+        "scenarios": []
       }
     },
     {
@@ -4075,26 +4043,7 @@
       "usageCode": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Hero() {\n  return (\n    <LiquidAuroraMeshHero>\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full bg-emerald-300/90 shadow-[0_0_12px_2px] shadow-emerald-300/40\"\n        />\n        Liquid \u00b7 Aurora \u00b7 Mesh\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Light, made fluid.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A displacement-warped aurora mesh that drifts behind your headline.\n        Mouse where you want the light to pool.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Get started</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            \u2192\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          See it move\n        </button>\n      </div>\n    </LiquidAuroraMeshHero>\n  );\n}",
       "docs": {
         "overview": "A displacement-warped aurora mesh hero. The background is a separate export, so it can layer behind any section.",
-        "scenarios": [
-          {
-            "title": "Custom palette",
-            "description": "Pass three accent stops to retune the aurora.",
-            "code": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Cool() {\n  return (\n    <LiquidAuroraMeshHero backgroundProps={{ palette: [\"#3b82f6\", \"#22d3ee\", \"#a78bfa\"], speed: 18 }} />\n  );\n}",
-            "demoKey": "hero-liquid-aurora-mesh:palette"
-          },
-          {
-            "title": "Override content",
-            "description": "Pass children to drop in your own headline / CTAs.",
-            "code": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Custom() {\n  return (\n    <LiquidAuroraMeshHero>\n      <h1 className=\"text-5xl font-semibold\">Ship it.</h1>\n    </LiquidAuroraMeshHero>\n  );\n}",
-            "demoKey": "hero-liquid-aurora-mesh:custom"
-          },
-          {
-            "title": "Background only",
-            "description": "Reuse just the layer behind a totally different composition.",
-            "code": "import { LiquidAuroraMeshBackground } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white\">\n      <LiquidAuroraMeshBackground />\n      <div className=\"relative text-sm text-white/55\">\u2026your content\u2026</div>\n    </section>\n  );\n}",
-            "demoKey": "hero-liquid-aurora-mesh:bg"
-          }
-        ]
+        "scenarios": []
       }
     },
     {
@@ -4125,26 +4074,7 @@
       "usageCode": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Hero() {\n  return (\n    <NoiseDotFieldHero>\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full bg-cyan-300/90 shadow-[0_0_10px_2px] shadow-cyan-300/40\"\n        />\n        Field \u00b7 0x004\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Engineered, down to the pixel.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A canvas-rendered dot grid that displaces with a sine-wave noise field\n        and parts around your cursor. No external animation deps.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Read the spec</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            \u2192\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 font-mono text-xs uppercase tracking-[0.18em] text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          View source\n        </button>\n      </div>\n    </NoiseDotFieldHero>\n  );\n}",
       "docs": {
         "overview": "Canvas-rendered dot-field hero. Background is a separate export and can be reused under any composition.",
-        "scenarios": [
-          {
-            "title": "Dense field",
-            "description": "Tighter grid spacing for a denser look.",
-            "code": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Dense() {\n  return <NoiseDotFieldHero backgroundProps={{ spacing: 18, pocketRadius: 220 }} />;\n}",
-            "demoKey": "hero-noise-dot-field:dense"
-          },
-          {
-            "title": "Tinted dots",
-            "description": "Pass any CSS color to recolor the dot field.",
-            "code": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Tinted() {\n  return (\n    <NoiseDotFieldHero backgroundProps={{ color: \"rgba(110, 231, 183, 0.85)\" }} />\n  );\n}",
-            "demoKey": "hero-noise-dot-field:tinted"
-          },
-          {
-            "title": "Background only",
-            "description": "Layer the canvas behind a different composition.",
-            "code": "import { NoiseDotFieldBackground } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white\">\n      <NoiseDotFieldBackground />\n      <div className=\"relative text-sm text-white/55\">\u2026your content\u2026</div>\n    </section>\n  );\n}",
-            "demoKey": "hero-noise-dot-field:bg"
-          }
-        ]
+        "scenarios": []
       }
     },
     {
@@ -4186,26 +4116,7 @@
       "usageCode": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Hero() {\n  return (\n    <LogoMarqueeHero>\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span className=\"h-1.5 w-1.5 rounded-full bg-white/80\" aria-hidden />\n        Trusted across teams\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        The platform shipping teams ship with.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        From scrappy seed startups to public companies \u2014 UniqueUI components\n        ship in production every day.\n      </p>\n    </LogoMarqueeHero>\n  );\n}",
       "docs": {
         "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
-        "scenarios": [
-          {
-            "title": "Real brand names",
-            "description": "Pass your own customer / partner names.",
-            "code": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Customers() {\n  return (\n    <LogoMarqueeHero\n      logos={[\"Vercel\", \"Linear\", \"Stripe\", \"Figma\", \"Notion\", \"Loom\", \"Raycast\", \"Arc\"]}\n    />\n  );\n}",
-            "demoKey": "hero-logo-marquee:brands"
-          },
-          {
-            "title": "Single row only",
-            "description": "Pass `secondaryLogos={null}` to hide the second row.",
-            "code": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function OneRow() {\n  return <LogoMarqueeHero secondaryLogos={null} />;\n}",
-            "demoKey": "hero-logo-marquee:single"
-          },
-          {
-            "title": "Row only",
-            "description": "Use the marquee row standalone inside your own section. Pass `label` to give screen readers a domain-specific name (defaults to `\"Customer logos\"`).",
-            "code": "import { LogoMarqueeRow } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function RowOnly() {\n  return (\n    <section className=\"relative flex items-center overflow-hidden bg-[#08080a] py-12 text-white\">\n      <LogoMarqueeRow\n        logos={[\"Vercel\", \"Linear\", \"Stripe\"]}\n        speed={28}\n        label=\"Trusted by\"\n      />\n    </section>\n  );\n}",
-            "demoKey": "hero-logo-marquee:row-only"
-          }
-        ]
+        "scenarios": []
       }
     }
   ]

@@ -70,11 +70,11 @@ import { KineticVariableHeadline } from "@/components/ui/kinetic-variable-headli
 import { CausticLightCard } from "@/components/ui/caustic-light-card";
 import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
 import { AmbientGlowCard } from "@/components/ui/ambient-glow-card";
-import { ReferencePulseHero, ReferencePulseBackground } from "@/components/ui/hero-reference-pulse";
-import { IridescentSweepHero, IridescentSweepBackground } from "@/components/ui/hero-iridescent-sweep";
-import { LiquidAuroraMeshHero, LiquidAuroraMeshBackground } from "@/components/ui/hero-liquid-aurora-mesh";
-import { NoiseDotFieldHero, NoiseDotFieldBackground } from "@/components/ui/hero-noise-dot-field";
-import { LogoMarqueeHero, LogoMarqueeRow } from "@/components/ui/hero-logo-marquee";
+import { ReferencePulseHero } from "@/components/ui/hero-reference-pulse";
+import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
+import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
+import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
+import { LogoMarqueeHero } from "@/components/ui/hero-logo-marquee";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3708,87 +3708,5 @@ export const componentDemos: Record<string, DemoComponent> = {
         ship in production every day.
       </p>
     </LogoMarqueeHero>
-  ),
-
-  // ─── Scenario previews for /blocks/[slug] docs pages ───────────────────────
-  // Keys follow the convention `<slug>:<scenario-key>`. Each demo body is the
-  // literal JSX shown in the scenario's `code` snippet — what users see in
-  // the preview equals what they copy.
-
-  // hero-reference-pulse
-  "hero-reference-pulse:custom": () => (
-    <ReferencePulseHero>
-      <h1 className="text-5xl font-semibold">Your headline</h1>
-      <p className="mt-4 text-white/70">Your subtitle goes here.</p>
-    </ReferencePulseHero>
-  ),
-  "hero-reference-pulse:bg": () => (
-    <section className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white">
-      <ReferencePulseBackground hue={210} speed={9} />
-      <div className="relative text-sm text-white/55">…your content…</div>
-    </section>
-  ),
-
-  // hero-iridescent-sweep
-  "hero-iridescent-sweep:hue": () => (
-    <IridescentSweepHero backgroundProps={{ hue: 140, speed: 28 }} />
-  ),
-  "hero-iridescent-sweep:grain": () => (
-    <IridescentSweepHero backgroundProps={{ grain: 0.12 }} />
-  ),
-  "hero-iridescent-sweep:bg": () => (
-    <section className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white">
-      <IridescentSweepBackground />
-      <div className="relative text-sm text-white/55">…your content…</div>
-    </section>
-  ),
-
-  // hero-liquid-aurora-mesh
-  "hero-liquid-aurora-mesh:palette": () => (
-    <LiquidAuroraMeshHero
-      backgroundProps={{ palette: ["#3b82f6", "#22d3ee", "#a78bfa"], speed: 18 }}
-    />
-  ),
-  "hero-liquid-aurora-mesh:custom": () => (
-    <LiquidAuroraMeshHero>
-      <h1 className="text-5xl font-semibold">Ship it.</h1>
-    </LiquidAuroraMeshHero>
-  ),
-  "hero-liquid-aurora-mesh:bg": () => (
-    <section className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white">
-      <LiquidAuroraMeshBackground />
-      <div className="relative text-sm text-white/55">…your content…</div>
-    </section>
-  ),
-
-  // hero-noise-dot-field
-  "hero-noise-dot-field:dense": () => (
-    <NoiseDotFieldHero backgroundProps={{ spacing: 18, pocketRadius: 220 }} />
-  ),
-  "hero-noise-dot-field:tinted": () => (
-    <NoiseDotFieldHero backgroundProps={{ color: "rgba(110, 231, 183, 0.85)" }} />
-  ),
-  "hero-noise-dot-field:bg": () => (
-    <section className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08080a] text-white">
-      <NoiseDotFieldBackground />
-      <div className="relative text-sm text-white/55">…your content…</div>
-    </section>
-  ),
-
-  // hero-logo-marquee
-  "hero-logo-marquee:brands": () => (
-    <LogoMarqueeHero
-      logos={["Vercel", "Linear", "Stripe", "Figma", "Notion", "Loom", "Raycast", "Arc"]}
-    />
-  ),
-  "hero-logo-marquee:single": () => <LogoMarqueeHero secondaryLogos={null} />,
-  "hero-logo-marquee:row-only": () => (
-    <section className="relative flex items-center overflow-hidden bg-[#08080a] py-12 text-white">
-      <LogoMarqueeRow
-        logos={["Vercel", "Linear", "Stripe"]}
-        speed={28}
-        label="Trusted by"
-      />
-    </section>
   ),
 };
