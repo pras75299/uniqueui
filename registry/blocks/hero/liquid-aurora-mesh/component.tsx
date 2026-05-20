@@ -62,6 +62,7 @@ export function LiquidAuroraMeshBackground({
       </svg>
 
       <div className="absolute inset-0" style={{ filter: `url(#${filterId})` }}>
+        {/* Anchor `initial` to the first keyframe — motion v12 skips repeat:Infinity loops if SSR bakes in the target frame. */}
         <motion.div
           className="absolute inset-[-20%]"
           style={{
@@ -70,7 +71,7 @@ export function LiquidAuroraMeshBackground({
               radial-gradient(70% 70% at 50% 90%, ${c}88 0%, transparent 60%)`,
             mixBlendMode: "screen",
           }}
-          initial={false}
+          initial={{ rotate: 0, scale: 1 }}
           animate={cycle ? { rotate: [0, 360], scale: [1, 1.08, 1] } : { rotate: 0 }}
           transition={cycle ? { duration: cycle, ease: "linear", repeat: Infinity } : undefined}
         />
@@ -80,7 +81,8 @@ export function LiquidAuroraMeshBackground({
             background: `conic-gradient(from 90deg at 50% 50%, ${a}55, ${b}55, ${c}55, ${a}55)`,
             mixBlendMode: "screen",
           }}
-          initial={false}
+          // Match `animate` when reduced so reduced-motion users land static at 0deg instead of spinning once.
+          initial={cycle ? { rotate: 360 } : { rotate: 0 }}
           animate={cycle ? { rotate: [360, 0] } : { rotate: 0 }}
           transition={cycle ? { duration: cycle * 1.6, ease: "linear", repeat: Infinity } : undefined}
         />

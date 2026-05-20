@@ -66,7 +66,8 @@ export function IridescentSweepBackground({
           mixBlendMode: "screen",
           opacity: 0.85,
         }}
-        initial={false}
+        // Anchor `initial` to 0deg — motion v12 skips repeat:Infinity loops if SSR bakes in the target frame.
+        initial={{ rotate: 0 }}
         animate={cycle ? { rotate: 360 } : { rotate: 0 }}
         transition={cycle ? { duration: cycle, ease: "linear", repeat: Infinity } : undefined}
       />

@@ -62,7 +62,8 @@ export function LogoMarqueeRow({
       <motion.ul
         aria-label={label}
         className="flex w-max items-center gap-12 whitespace-nowrap text-base font-medium text-white/55"
-        initial={false}
+        // Anchor `initial` to the first keyframe — motion v12 skips repeat:Infinity loops if SSR bakes in the target frame. Reduced motion freezes statically at 0%.
+        initial={reduced ? { x: "0%" } : { x: xRange[0] }}
         animate={reduced ? { x: "0%" } : { x: xRange }}
         transition={
           reduced
