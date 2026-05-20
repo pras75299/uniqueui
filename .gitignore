@@ -33,3 +33,8 @@ entities.json
 # Local design/planning docs — keep on disk, do not version
 COMPONENT_PROMPTS.md
 backlogs.md
+
+# Locally-installed agent skills (via `npx skills add ...`) — per-developer, do not version
+.agents/
+.claude/skills/
+skills-lock.json
