@@ -70,11 +70,11 @@ import { KineticVariableHeadline } from "@/components/ui/kinetic-variable-headli
 import { CausticLightCard } from "@/components/ui/caustic-light-card";
 import { RefractiveCursorLens } from "@/components/ui/refractive-cursor-lens";
 import { AmbientGlowCard } from "@/components/ui/ambient-glow-card";
-import { ReferencePulseHero } from "@/components/ui/hero-reference-pulse";
-import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
-import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
-import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
-import { LogoMarqueeHero } from "@/components/ui/hero-logo-marquee";
+import { ReferencePulseHero, ReferencePulseBackground } from "@/components/ui/hero-reference-pulse";
+import { IridescentSweepHero, IridescentSweepBackground } from "@/components/ui/hero-iridescent-sweep";
+import { LiquidAuroraMeshHero, LiquidAuroraMeshBackground } from "@/components/ui/hero-liquid-aurora-mesh";
+import { NoiseDotFieldHero, NoiseDotFieldBackground } from "@/components/ui/hero-noise-dot-field";
+import { LogoMarqueeHero, LogoMarqueeRow } from "@/components/ui/hero-logo-marquee";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3563,5 +3563,109 @@ export const componentDemos: Record<string, DemoComponent> = {
     <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
       <LogoMarqueeHero className="min-h-full" />
     </div>
+  ),
+
+  // ─── Scenario previews for /blocks/[slug] docs pages ───────────────────────
+  // Keys follow the convention `<slug>:<scenario-key>`. Each entry mirrors the
+  // code snippet shown beside the preview so what users see equals what they
+  // copy. The wrapping <div> with `h-[70svh] min-h-[420px]` matches the
+  // ComponentPreview block variant min-height.
+
+  // hero-reference-pulse
+  "hero-reference-pulse:custom": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <ReferencePulseHero className="min-h-full">
+        <h1 className="text-5xl font-semibold text-white">Your headline</h1>
+        <p className="mt-4 text-white/70">Your subtitle goes here.</p>
+      </ReferencePulseHero>
+    </div>
+  ),
+  "hero-reference-pulse:bg": () => (
+    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a]">
+      <ReferencePulseBackground hue={210} speed={9} />
+      <div className="relative text-sm text-white/55">…your content…</div>
+    </section>
+  ),
+
+  // hero-iridescent-sweep
+  "hero-iridescent-sweep:hue": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <IridescentSweepHero className="min-h-full" backgroundProps={{ hue: 140, speed: 28 }} />
+    </div>
+  ),
+  "hero-iridescent-sweep:grain": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <IridescentSweepHero className="min-h-full" backgroundProps={{ grain: 0.12 }} />
+    </div>
+  ),
+  "hero-iridescent-sweep:bg": () => (
+    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a]">
+      <IridescentSweepBackground />
+      <div className="relative text-sm text-white/55">…your content…</div>
+    </section>
+  ),
+
+  // hero-liquid-aurora-mesh
+  "hero-liquid-aurora-mesh:palette": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <LiquidAuroraMeshHero
+        className="min-h-full"
+        backgroundProps={{ palette: ["#3b82f6", "#22d3ee", "#a78bfa"], speed: 18 }}
+      />
+    </div>
+  ),
+  "hero-liquid-aurora-mesh:custom": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <LiquidAuroraMeshHero className="min-h-full">
+        <h1 className="text-5xl font-semibold text-white">Ship it.</h1>
+      </LiquidAuroraMeshHero>
+    </div>
+  ),
+  "hero-liquid-aurora-mesh:bg": () => (
+    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a]">
+      <LiquidAuroraMeshBackground />
+      <div className="relative text-sm text-white/55">…your content…</div>
+    </section>
+  ),
+
+  // hero-noise-dot-field
+  "hero-noise-dot-field:dense": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <NoiseDotFieldHero className="min-h-full" backgroundProps={{ spacing: 18, pocketRadius: 220 }} />
+    </div>
+  ),
+  "hero-noise-dot-field:tinted": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <NoiseDotFieldHero
+        className="min-h-full"
+        backgroundProps={{ color: "rgba(110, 231, 183, 0.85)" }}
+      />
+    </div>
+  ),
+  "hero-noise-dot-field:bg": () => (
+    <section className="relative isolate flex h-[70svh] min-h-[420px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#08080a]">
+      <NoiseDotFieldBackground />
+      <div className="relative text-sm text-white/55">…your content…</div>
+    </section>
+  ),
+
+  // hero-logo-marquee
+  "hero-logo-marquee:brands": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <LogoMarqueeHero
+        className="min-h-full"
+        logos={["Vercel", "Linear", "Stripe", "Figma", "Notion", "Loom", "Raycast", "Arc"]}
+      />
+    </div>
+  ),
+  "hero-logo-marquee:single": () => (
+    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
+      <LogoMarqueeHero className="min-h-full" secondaryLogos={null} />
+    </div>
+  ),
+  "hero-logo-marquee:row-only": () => (
+    <section className="relative flex h-[70svh] min-h-[420px] w-full items-center overflow-hidden rounded-xl bg-[#08080a] py-12 text-white">
+      <LogoMarqueeRow logos={["Vercel", "Linear", "Stripe"]} speed={28} label="Trusted by" />
+    </section>
   ),
 };

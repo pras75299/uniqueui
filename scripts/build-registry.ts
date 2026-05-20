@@ -45,6 +45,12 @@ type RegistryDocsScenario = {
   title: string;
   description: string;
   code: string;
+  /**
+   * Optional key into `componentDemos`. When set, the docs page renders a
+   * live preview above the code block. Convention: `<slug>:<scenario-key>`,
+   * with the corresponding entry registered in `registry/demos.tsx`.
+   */
+  demoKey?: string;
 };
 
 type RegistryDocsComponent = {
@@ -177,6 +183,8 @@ function renderDocsScenariosConfig(manifest: RegistryDocsManifest) {
   title: string;
   description: string;
   code: string;
+  /** Optional key into \`componentDemos\` — when set, the docs page renders a live preview. */
+  demoKey?: string;
 };
 
 export type ComponentDocs = {

@@ -239,3 +239,25 @@ describe("Component metadata sync", () => {
     }
   });
 });
+
+// Scenario `demoKey` parity: every demoKey referenced from a scenario must
+// resolve to a real entry in `componentDemos`. A typo in registry/docs.json
+// would otherwise silently render the "Preview not available" placeholder
+// until someone happened to navigate to the page.
+describe("Scenario demoKey parity", () => {
+  it("every scenario.demoKey resolves to a componentDemos entry", () => {
+    const missing: string[] = [];
+    for (const [slug, doc] of Object.entries(docsScenarios)) {
+      for (const scenario of doc.scenarios ?? []) {
+        if (!scenario.demoKey) continue;
+        if (!(scenario.demoKey in componentDemos)) {
+          missing.push(`${slug} :: "${scenario.title}" → demoKey="${scenario.demoKey}"`);
+        }
+      }
+    }
+    expect(
+      missing,
+      `Unresolved demoKey(s) — add a matching entry to registry/demos.tsx:\n${missing.join("\n")}`,
+    ).toEqual([]);
+  });
+});
