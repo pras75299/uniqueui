@@ -15,6 +15,7 @@ import {
   LayoutGrid,
   Loader2,
   LucideAperture,
+  LucideBuilding2,
   LucideFocus,
   LucideGrid3x3,
   LucideMaximize2,
@@ -84,6 +85,7 @@ const iconMap = {
   LayoutGrid,
   Loader2,
   LucideAperture,
+  LucideBuilding2,
   LucideFocus,
   LucideGrid3x3,
   LucideMaximize2,
@@ -3085,11 +3087,11 @@ const componentDefinitions = [
       },
       {
         "name": "backgroundProps",
-        "type": "{ hue?: number; speed?: number; className?: string }",
-        "description": "Forwarded to the background layer."
+        "type": "{ conicPalette?: string[]; pulseColor?: string; speed?: number; baseColor?: string; hue?: number; className?: string }",
+        "description": "Forwarded to the background layer. Use `conicPalette` + `pulseColor` for the rotating halo (defaults match preview); `baseColor` is the dark vignette (`#08080a`)."
       }
     ],
-    "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Demo() {\n  return <ReferencePulseHero />;\n}"
+    "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Hero() {\n  return (\n    <ReferencePulseHero\n      className=\"bg-[#08080a] text-white\"\n      backgroundProps={{\n        speed: 7,\n        baseColor: \"#08080a\",\n        conicPalette: [\n          \"hsla(268, 95%, 62%, 0.55)\",\n          \"hsla(328, 95%, 60%, 0.35)\",\n          \"hsla(228, 95%, 60%, 0.55)\",\n          \"hsla(268, 95%, 62%, 0.55)\",\n        ],\n        pulseColor: \"hsla(268, 95%, 70%, 0.45)\",\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span className=\"h-1.5 w-1.5 rounded-full bg-white/80\" aria-hidden />\n        Hero block\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Build with light, not boxes.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A reference hero block. Drop in your own children to override the\n        default composition — the background lives on its own as well.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group relative inline-flex h-11 items-center gap-2 overflow-hidden rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Get started</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          Read docs\n        </button>\n      </div>\n    </ReferencePulseHero>\n  );\n}"
   },
   {
     "slug": "hero-iridescent-sweep",
@@ -3112,11 +3114,11 @@ const componentDefinitions = [
       },
       {
         "name": "backgroundProps",
-        "type": "{ speed?: number; hue?: number; grain?: number; className?: string }",
-        "description": "Forwarded to the background layer."
+        "type": "{ speed?: number; hue?: number; grain?: number; baseColor?: string; palette?: string[]; className?: string }",
+        "description": "Forwarded to the background layer (`baseColor` + `palette` control the foil; `hue` rotates the whole layer)."
       }
     ],
-    "usageCode": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Demo() {\n  return <IridescentSweepHero />;\n}"
+    "usageCode": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Hero() {\n  return (\n    <IridescentSweepHero\n      className=\"bg-[#0e0a14] text-white\"\n      backgroundProps={{\n        hue: 0,\n        speed: 22,\n        grain: 0.35,\n        baseColor: \"#0e0a14\",\n        palette: [\"#ff9bd1\", \"#ffd66b\", \"#9bffd6\", \"#6bb5ff\", \"#c89bff\", \"#ff9bd1\"],\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-white/85 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full\"\n          style={{\n            background:\n              \"conic-gradient(from 0deg, #ff9bd1, #ffd66b, #9bffd6, #6bb5ff, #c89bff, #ff9bd1)\",\n            boxShadow: \"0 0 12px 2px rgba(255,255,255,0.4)\",\n          }}\n        />\n        Edition · MMXXVI\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        <span\n          className=\"bg-clip-text text-transparent\"\n          style={{\n            backgroundImage:\n              \"linear-gradient(120deg, #ffffff 0%, #f5e6ff 28%, #ffe9c2 50%, #c8f1ff 72%, #ffffff 100%)\",\n          }}\n        >\n          Pressed in light.\n        </span>\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/75 sm:text-lg\">\n        Conic foil under a turbulence grain, with a sheen that sweeps across\n        the type on a slow cadence. Editorial energy, zero plug-ins.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-neutral-900 transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Reserve a copy</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/25 px-6 text-sm font-medium text-white/90 backdrop-blur transition-colors hover:bg-white/10\"\n        >\n          Read the editorial\n        </button>\n      </div>\n    </IridescentSweepHero>\n  );\n}"
   },
   {
     "slug": "hero-liquid-aurora-mesh",
@@ -3143,7 +3145,7 @@ const componentDefinitions = [
         "description": "Forwarded to the background layer."
       }
     ],
-    "usageCode": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Demo() {\n  return <LiquidAuroraMeshHero />;\n}"
+    "usageCode": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Hero() {\n  return (\n    <LiquidAuroraMeshHero\n      backgroundProps={{\n        palette: [\"#9b6bff\", \"#3effd0\", \"#ff77c4\"],\n        speed: 14,\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full bg-emerald-300/90 shadow-[0_0_12px_2px] shadow-emerald-300/40\"\n        />\n        Liquid · Aurora · Mesh\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Light, made fluid.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A displacement-warped aurora mesh that drifts behind your headline.\n        Mouse where you want the light to pool.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Get started</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          See it move\n        </button>\n      </div>\n    </LiquidAuroraMeshHero>\n  );\n}"
   },
   {
     "slug": "hero-noise-dot-field",
@@ -3170,7 +3172,45 @@ const componentDefinitions = [
         "description": "Forwarded to the canvas background layer."
       }
     ],
-    "usageCode": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Demo() {\n  return <NoiseDotFieldHero />;\n}"
+    "usageCode": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Hero() {\n  return (\n    <NoiseDotFieldHero\n      backgroundProps={{\n        spacing: 28,\n        color: \"rgba(255,255,255,0.85)\",\n        pocketRadius: 180,\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full bg-cyan-300/90 shadow-[0_0_10px_2px] shadow-cyan-300/40\"\n        />\n        Field · 0x004\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Engineered, down to the pixel.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A canvas-rendered dot grid that displaces with a sine-wave noise field\n        and parts around your cursor. No external animation deps.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Read the spec</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 font-mono text-xs uppercase tracking-[0.18em] text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          View source\n        </button>\n      </div>\n    </NoiseDotFieldHero>\n  );\n}"
+  },
+  {
+    "slug": "hero-logo-marquee",
+    "name": "Logo Marquee Hero",
+    "description": "A classic SaaS hero: bold headline above two ticker rows of partner / customer logos scrolling in opposite directions. CSS mask softens the edges, reduced-motion freezes the rows, and the brand list is fully customizable.",
+    "icon": "LucideBuilding2",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-20",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content above the marquee rows. Pass your own headline / subhead / CTAs. When omitted, a default composition renders."
+      },
+      {
+        "name": "logos",
+        "type": "ReadonlyArray<string>",
+        "description": "Brand names rendered as the ticker items. Defaults to a placeholder list."
+      },
+      {
+        "name": "secondaryLogos",
+        "type": "ReadonlyArray<string> | null",
+        "description": "Optional second row. `undefined` (default) reverses the primary list; `null` hides the second row."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "32",
+        "description": "Loop duration in seconds for the primary row. The second row runs slightly slower for visual interest."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the outer `<section>`."
+      }
+    ],
+    "usageCode": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Hero() {\n  return (\n    <LogoMarqueeHero\n      logos={[\n        \"Acme\",\n        \"Globex\",\n        \"Soylent\",\n        \"Initech\",\n        \"Hooli\",\n        \"Umbrella\",\n        \"Stark\",\n        \"Wayne\",\n        \"Cyberdyne\",\n        \"Wonka\",\n        \"Tyrell\",\n        \"Aperture\",\n      ]}\n      secondaryLogos={[\n        \"Aperture\",\n        \"Tyrell\",\n        \"Wonka\",\n        \"Cyberdyne\",\n        \"Wayne\",\n        \"Stark\",\n        \"Umbrella\",\n        \"Hooli\",\n        \"Initech\",\n        \"Soylent\",\n        \"Globex\",\n        \"Acme\",\n      ]}\n      speed={32}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span className=\"h-1.5 w-1.5 rounded-full bg-white/80\" aria-hidden />\n        Trusted across teams\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        The platform shipping teams ship with.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        From scrappy seed startups to public companies — UniqueUI components\n        ship in production every day.\n      </p>\n    </LogoMarqueeHero>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 

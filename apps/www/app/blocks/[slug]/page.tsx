@@ -108,11 +108,17 @@ export default async function BlockPage(props: { params: Promise<{ slug: string 
       {docs?.scenarios?.length ? (
         <section className="mb-12 space-y-6 border-t border-neutral-200 pt-8 dark:border-neutral-800">
           <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Scenarios</h2>
-          <div className="space-y-8">
+          <div className="space-y-10">
             {docs.scenarios.map((s, i) => (
               <article key={s.title} className="space-y-3">
                 <h3 className="text-base font-medium text-neutral-900 dark:text-white">{s.title}</h3>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">{s.description}</p>
+                {s.demoKey ? (
+                  // Lazy-mount: /blocks slug pages stack multiple full-height
+                  // hero demos. Without IO gating, every off-screen scenario
+                  // would run RAF / pointer listeners at once.
+                  <ComponentPreview slug={s.demoKey} variant="block" lazy />
+                ) : null}
                 <div className="group relative overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950">
                   <div
                     className="overflow-x-auto p-4 text-sm font-mono [&>pre]:!bg-transparent [&>pre]:!p-0"

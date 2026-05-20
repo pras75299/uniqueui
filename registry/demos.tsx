@@ -70,6 +70,7 @@ import { ReferencePulseHero } from "@/components/ui/hero-reference-pulse";
 import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
 import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
+import { LogoMarqueeHero } from "@/components/ui/hero-logo-marquee";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -603,6 +604,55 @@ function withDemoFreezeExtras<T extends Record<string, unknown>>(rows: T[]) {
       index % DATA_TABLE_FREEZE_EXTRA_FIELDS.length
     ],
   }));
+}
+
+/** Keep in sync with `usageCode` in registry/docs.json for hero-logo-marquee. */
+const LOGO_MARQUEE_DEMO_LOGOS = [
+  "Acme",
+  "Globex",
+  "Soylent",
+  "Initech",
+  "Hooli",
+  "Umbrella",
+  "Stark",
+  "Wayne",
+  "Cyberdyne",
+  "Wonka",
+  "Tyrell",
+  "Aperture",
+] as const;
+
+const LOGO_MARQUEE_DEMO_SECONDARY_LOGOS = [
+  "Aperture",
+  "Tyrell",
+  "Wonka",
+  "Cyberdyne",
+  "Wayne",
+  "Stark",
+  "Umbrella",
+  "Hooli",
+  "Initech",
+  "Soylent",
+  "Globex",
+  "Acme",
+] as const;
+
+function LogoMarqueeDemoHeadline() {
+  return (
+    <>
+      <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
+        <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
+        Trusted across teams
+      </span>
+      <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
+        The platform shipping teams ship with.
+      </h1>
+      <p className="mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg">
+        From scrappy seed startups to public companies — UniqueUI components
+        ship in production every day.
+      </p>
+    </>
+  );
 }
 
 export const componentDemos: Record<string, DemoComponent> = {
@@ -3534,24 +3584,212 @@ export const componentDemos: Record<string, DemoComponent> = {
       </AmbientGlowCard>
     </div>
   ),
+  // Main hero demos — render the same inline JSX shown in each block's
+  // `usageCode` (registry/docs.json) so the Preview and Usage produce byte-
+  // identical DOM. The plain-JSX form (no motion.* wrappers) trades the
+  // staggered entrance polish for full code transparency — every <span>,
+  // <h1>, <p>, and <button> the user sees is the exact one they copy.
   "hero-reference-pulse": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <ReferencePulseHero className="min-h-full" />
-    </div>
+    <ReferencePulseHero
+      className="bg-[#08080a] text-white"
+      backgroundProps={{
+        speed: 7,
+        baseColor: "#08080a",
+        conicPalette: [
+          "hsla(268, 95%, 62%, 0.55)",
+          "hsla(328, 95%, 60%, 0.35)",
+          "hsla(228, 95%, 60%, 0.55)",
+          "hsla(268, 95%, 62%, 0.55)",
+        ],
+        pulseColor: "hsla(268, 95%, 70%, 0.45)",
+      }}
+    >
+      <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
+        <span className="h-1.5 w-1.5 rounded-full bg-white/80" aria-hidden />
+        Hero block
+      </span>
+      <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
+        Build with light, not boxes.
+      </h1>
+      <p className="mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg">
+        A reference hero block. Drop in your own children to override the
+        default composition — the background lives on its own as well.
+      </p>
+      <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          className="group relative inline-flex h-11 items-center gap-2 overflow-hidden rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px"
+        >
+          <span>Get started</span>
+          <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
+            →
+          </span>
+        </button>
+        <button
+          type="button"
+          className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 backdrop-blur transition-colors hover:bg-white/5"
+        >
+          Read docs
+        </button>
+      </div>
+    </ReferencePulseHero>
   ),
   "hero-iridescent-sweep": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <IridescentSweepHero className="min-h-full" />
-    </div>
+    <IridescentSweepHero
+      className="bg-[#0e0a14] text-white"
+      backgroundProps={{
+        hue: 0,
+        speed: 22,
+        grain: 0.35,
+        baseColor: "#0e0a14",
+        palette: ["#ff9bd1", "#ffd66b", "#9bffd6", "#6bb5ff", "#c89bff", "#ff9bd1"],
+      }}
+    >
+      <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-white/85 backdrop-blur">
+        <span
+          aria-hidden
+          className="h-1.5 w-1.5 rounded-full"
+          style={{
+            background:
+              "conic-gradient(from 0deg, #ff9bd1, #ffd66b, #9bffd6, #6bb5ff, #c89bff, #ff9bd1)",
+            boxShadow: "0 0 12px 2px rgba(255,255,255,0.4)",
+          }}
+        />
+        Edition · MMXXVI
+      </span>
+      <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
+        <span
+          className="bg-clip-text text-transparent"
+          style={{
+            backgroundImage:
+              "linear-gradient(120deg, #ffffff 0%, #f5e6ff 28%, #ffe9c2 50%, #c8f1ff 72%, #ffffff 100%)",
+          }}
+        >
+          Pressed in light.
+        </span>
+      </h1>
+      <p className="mt-5 max-w-xl text-pretty text-base text-white/75 sm:text-lg">
+        Conic foil under a turbulence grain, with a sheen that sweeps across
+        the type on a slow cadence. Editorial energy, zero plug-ins.
+      </p>
+      <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          className="group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-neutral-900 transition-transform duration-200 hover:-translate-y-px"
+        >
+          <span>Reserve a copy</span>
+          <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
+            →
+          </span>
+        </button>
+        <button
+          type="button"
+          className="inline-flex h-11 items-center gap-2 rounded-full border border-white/25 px-6 text-sm font-medium text-white/90 backdrop-blur transition-colors hover:bg-white/10"
+        >
+          Read the editorial
+        </button>
+      </div>
+    </IridescentSweepHero>
   ),
   "hero-liquid-aurora-mesh": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <LiquidAuroraMeshHero className="min-h-full" />
-    </div>
+    <LiquidAuroraMeshHero
+      backgroundProps={{
+        palette: ["#9b6bff", "#3effd0", "#ff77c4"],
+        speed: 14,
+      }}
+    >
+      <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur">
+        <span
+          aria-hidden
+          className="h-1.5 w-1.5 rounded-full bg-emerald-300/90 shadow-[0_0_12px_2px] shadow-emerald-300/40"
+        />
+        Liquid · Aurora · Mesh
+      </span>
+      <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
+        Light, made fluid.
+      </h1>
+      <p className="mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg">
+        A displacement-warped aurora mesh that drifts behind your headline.
+        Mouse where you want the light to pool.
+      </p>
+      <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          className="group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px"
+        >
+          <span>Get started</span>
+          <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
+            →
+          </span>
+        </button>
+        <button
+          type="button"
+          className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 backdrop-blur transition-colors hover:bg-white/5"
+        >
+          See it move
+        </button>
+      </div>
+    </LiquidAuroraMeshHero>
   ),
   "hero-noise-dot-field": () => (
-    <div className="relative h-[70svh] min-h-[420px] w-full overflow-hidden rounded-xl">
-      <NoiseDotFieldHero className="min-h-full" />
-    </div>
+    <NoiseDotFieldHero
+      backgroundProps={{
+        spacing: 28,
+        color: "rgba(255,255,255,0.85)",
+        pocketRadius: 180,
+      }}
+    >
+      <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 backdrop-blur">
+        <span
+          aria-hidden
+          className="h-1.5 w-1.5 rounded-full bg-cyan-300/90 shadow-[0_0_10px_2px] shadow-cyan-300/40"
+        />
+        Field · 0x004
+      </span>
+      <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
+        Engineered, down to the pixel.
+      </h1>
+      <p className="mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg">
+        A canvas-rendered dot grid that displaces with a sine-wave noise field
+        and parts around your cursor. No external animation deps.
+      </p>
+      <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          className="group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px"
+        >
+          <span>Read the spec</span>
+          <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
+            →
+          </span>
+        </button>
+        <button
+          type="button"
+          className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 font-mono text-xs uppercase tracking-[0.18em] text-white/85 backdrop-blur transition-colors hover:bg-white/5"
+        >
+          View source
+        </button>
+      </div>
+    </NoiseDotFieldHero>
+  ),
+  "hero-logo-marquee": () => (
+    <LogoMarqueeHero
+      logos={[...LOGO_MARQUEE_DEMO_LOGOS]}
+      secondaryLogos={[...LOGO_MARQUEE_DEMO_SECONDARY_LOGOS]}
+      speed={32}
+    >
+      <LogoMarqueeDemoHeadline />
+    </LogoMarqueeHero>
+  ),
+  // `/blocks` index thumbnail — headline only (dual marquee rows skew the crop).
+  "hero-logo-marquee-thumbnail": () => (
+    <LogoMarqueeHero
+      logos={LOGO_MARQUEE_DEMO_LOGOS.slice(0, 8)}
+      secondaryLogos={null}
+      speed={28}
+      className="min-h-[100svh] [&_[data-slot=marquee]]:hidden"
+    >
+      <LogoMarqueeDemoHeadline />
+    </LogoMarqueeHero>
   ),
 };

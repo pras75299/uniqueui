@@ -4,16 +4,40 @@ import type { ComponentProps, ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
+const DEFAULT_PULSE_COLOR = "hsla(268, 95%, 70%, 0.45)";
+
+/** Build halo stops from a single hue (used when `conicPalette` is omitted). */
+function conicPaletteFromHue(hue: number): string[] {
+  return [
+    `hsla(${hue}, 95%, 62%, 0.55)`,
+    `hsla(${hue + 60}, 95%, 60%, 0.35)`,
+    `hsla(${hue - 40}, 95%, 60%, 0.55)`,
+    `hsla(${hue}, 95%, 62%, 0.55)`,
+  ];
+}
+
 type ReferencePulseBackgroundProps = ComponentProps<"div"> & {
-  /** Hue rotation in degrees applied to the layered gradients. */
+  /**
+   * Hue in degrees — generates the conic halo when `conicPalette` is omitted.
+   * Prefer explicit `conicPalette` stops in docs / copy-paste examples.
+   */
   hue?: number;
   /** Pulse cycle in seconds. Lower = faster heartbeat. */
   speed?: number;
+  /** Dark vignette / section base (e.g. `#08080a`). */
+  baseColor?: string;
+  /** Rotating conic-gradient halo stops (violet / magenta / blue by default). */
+  conicPalette?: ReadonlyArray<string>;
+  /** Radial pulse glow at center. */
+  pulseColor?: string;
 };
 
 export function ReferencePulseBackground({
   hue = 268,
   speed = 7,
+  baseColor = "#08080a",
+  conicPalette,
+  pulseColor = DEFAULT_PULSE_COLOR,
   className,
   style,
   ...rest
@@ -22,20 +46,30 @@ export function ReferencePulseBackground({
   // Clamp speed defensively — negative or non-finite values would yield invalid durations.
   const safeSpeed = Number.isFinite(speed) && speed > 0 ? speed : 0;
   const cycle = reduced ? 0 : safeSpeed;
+  // `??` only fires on null/undefined — an empty array would yield
+  // `conic-gradient(from 0deg, )`, which is invalid CSS. Treat an empty array
+  // as "no palette supplied" and fall back to the hue-derived stops.
+  const resolvedConic =
+    conicPalette && conicPalette.length > 0 ? conicPalette : conicPaletteFromHue(hue);
+  const conicGradient = `conic-gradient(from 0deg, ${resolvedConic.join(", ")})`;
 
   return (
     <div
       aria-hidden
       className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
-      style={{ ["--rp-hue" as string]: `${hue}deg`, ...style }}
+      style={style}
       {...rest}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(10,10,12,0)_0%,_#08080a_72%)]" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(ellipse at center, rgba(10,10,12,0) 0%, ${baseColor} 72%)`,
+        }}
+      />
       <motion.div
         className="absolute left-1/2 top-1/2 h-[120vmax] w-[120vmax] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
-          background:
-            "conic-gradient(from 0deg, hsl(var(--rp-hue) 95% 62% / 0.55), hsl(calc(var(--rp-hue) + 60deg) 95% 60% / 0.35), hsl(calc(var(--rp-hue) - 40deg) 95% 60% / 0.55), hsl(var(--rp-hue) 95% 62% / 0.55))",
+          background: conicGradient,
           filter: "blur(80px)",
         }}
         initial={false}
@@ -45,8 +79,7 @@ export function ReferencePulseBackground({
       <motion.div
         className="absolute left-1/2 top-1/2 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
-          background:
-            "radial-gradient(circle at center, hsl(var(--rp-hue) 95% 70% / 0.45), transparent 65%)",
+          background: `radial-gradient(circle at center, ${pulseColor}, transparent 65%)`,
           filter: "blur(40px)",
         }}
         initial={{ scale: 0.85, opacity: 0.7 }}

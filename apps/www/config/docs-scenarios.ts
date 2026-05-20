@@ -5,6 +5,8 @@ export type DocScenario = {
   title: string;
   description: string;
   code: string;
+  /** Optional key into `componentDemos` — when set, the docs page renders a live preview. */
+  demoKey?: string;
 };
 
 export type ComponentDocs = {
@@ -1067,85 +1069,26 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   "hero-reference-pulse": {
     "slug": "hero-reference-pulse",
     "overview": "A minimal hero block that proves the slotted composition pattern. Background lives on its own; the hero accepts children for full content override.",
-    "scenarios": [
-      {
-        "title": "Default composition",
-        "description": "Drop the hero in and the default headline + CTAs render.",
-        "code": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Default() {\n  return <ReferencePulseHero />;\n}"
-      },
-      {
-        "title": "Custom content via children",
-        "description": "Pass your own children to override the default composition.",
-        "code": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Custom() {\n  return (\n    <ReferencePulseHero>\n      <h1 className=\"text-5xl font-semibold\">Your headline</h1>\n      <p className=\"mt-4 text-white/70\">Your subtitle goes here.</p>\n    </ReferencePulseHero>\n  );\n}"
-      },
-      {
-        "title": "Background only",
-        "description": "Compose your own section and use only the background layer.",
-        "code": "import { ReferencePulseBackground } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <ReferencePulseBackground hue={210} speed={9} />\n      <div className=\"relative\">…your content…</div>\n    </section>\n  );\n}"
-      }
-    ]
+    "scenarios": []
   },
   "hero-iridescent-sweep": {
     "slug": "hero-iridescent-sweep",
     "overview": "Editorial holographic-foil hero. Pair with serifs or magazine-style typography in your override.",
-    "scenarios": [
-      {
-        "title": "Hue-shifted edition",
-        "description": "Shift the whole foil into a cooler register.",
-        "code": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Cool() {\n  return <IridescentSweepHero backgroundProps={{ hue: 140, speed: 28 }} />;\n}"
-      },
-      {
-        "title": "Lower grain",
-        "description": "Reduce the turbulence grain for a cleaner foil.",
-        "code": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Clean() {\n  return <IridescentSweepHero backgroundProps={{ grain: 0.12 }} />;\n}"
-      },
-      {
-        "title": "Background only",
-        "description": "Use just the foil layer behind a custom composition.",
-        "code": "import { IridescentSweepBackground } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <IridescentSweepBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
-      }
-    ]
+    "scenarios": []
   },
   "hero-liquid-aurora-mesh": {
     "slug": "hero-liquid-aurora-mesh",
     "overview": "A displacement-warped aurora mesh hero. The background is a separate export, so it can layer behind any section.",
-    "scenarios": [
-      {
-        "title": "Custom palette",
-        "description": "Pass three accent stops to retune the aurora.",
-        "code": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Cool() {\n  return (\n    <LiquidAuroraMeshHero backgroundProps={{ palette: [\"#3b82f6\", \"#22d3ee\", \"#a78bfa\"], speed: 18 }} />\n  );\n}"
-      },
-      {
-        "title": "Override content",
-        "description": "Pass children to drop in your own headline / CTAs.",
-        "code": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Custom() {\n  return (\n    <LiquidAuroraMeshHero>\n      <h1 className=\"text-5xl font-semibold\">Ship it.</h1>\n    </LiquidAuroraMeshHero>\n  );\n}"
-      },
-      {
-        "title": "Background only",
-        "description": "Reuse just the layer behind a totally different composition.",
-        "code": "import { LiquidAuroraMeshBackground } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <LiquidAuroraMeshBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
-      }
-    ]
+    "scenarios": []
   },
   "hero-noise-dot-field": {
     "slug": "hero-noise-dot-field",
     "overview": "Canvas-rendered dot-field hero. Background is a separate export and can be reused under any composition.",
-    "scenarios": [
-      {
-        "title": "Dense field",
-        "description": "Tighter grid spacing for a denser look.",
-        "code": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Dense() {\n  return <NoiseDotFieldHero backgroundProps={{ spacing: 18, pocketRadius: 220 }} />;\n}"
-      },
-      {
-        "title": "Tinted dots",
-        "description": "Pass any CSS color to recolor the dot field.",
-        "code": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Tinted() {\n  return (\n    <NoiseDotFieldHero backgroundProps={{ color: \"rgba(110, 231, 183, 0.85)\" }} />\n  );\n}"
-      },
-      {
-        "title": "Background only",
-        "description": "Layer the canvas behind a different composition.",
-        "code": "import { NoiseDotFieldBackground } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function BgOnly() {\n  return (\n    <section className=\"relative isolate min-h-screen\">\n      <NoiseDotFieldBackground />\n      <div className=\"relative\">…</div>\n    </section>\n  );\n}"
-      }
-    ]
+    "scenarios": []
+  },
+  "hero-logo-marquee": {
+    "slug": "hero-logo-marquee",
+    "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
+    "scenarios": []
   }
 };

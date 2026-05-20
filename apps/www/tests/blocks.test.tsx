@@ -94,6 +94,7 @@ import { ReferencePulseHero } from "@/components/ui/hero-reference-pulse";
 import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
 import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
+import { LogoMarqueeHero, LogoMarqueeRow } from "@/components/ui/hero-logo-marquee";
 
 // Two contracts every hero block must keep:
 //  1. Render a single <h1> headline (semantic structure used by SEO + a11y).
@@ -107,6 +108,7 @@ describe("Hero blocks — render contract", () => {
         { name: "IridescentSweepHero", Component: IridescentSweepHero },
         { name: "LiquidAuroraMeshHero", Component: LiquidAuroraMeshHero },
         { name: "NoiseDotFieldHero", Component: NoiseDotFieldHero },
+        { name: "LogoMarqueeHero", Component: LogoMarqueeHero },
     ])("$name exposes a single <h1> heading via the default-content slot", ({ Component }) => {
         const { getAllByRole } = render(<Component />);
         const headings = getAllByRole("heading", { level: 1 });
@@ -121,6 +123,7 @@ describe("Hero blocks — render contract", () => {
         { name: "IridescentSweepHero", Component: IridescentSweepHero },
         { name: "LiquidAuroraMeshHero", Component: LiquidAuroraMeshHero },
         { name: "NoiseDotFieldHero", Component: NoiseDotFieldHero },
+        { name: "LogoMarqueeHero", Component: LogoMarqueeHero },
     ])("$name renders children in place of the default copy", ({ Component }) => {
         const { getByTestId, queryByRole } = render(
             <Component>
@@ -153,6 +156,57 @@ describe("Hero blocks — render contract", () => {
         expect(render(<NoiseDotFieldHero />).container.textContent).toContain(
             "Engineered, down to the pixel.",
         );
+        cleanup();
+        expect(render(<LogoMarqueeHero />).container.textContent).toContain(
+            "The platform shipping teams ship with.",
+        );
+    });
+});
+
+describe("LogoMarqueeHero — logo wiring", () => {
+    it("renders each logo twice (seamless loop relies on a duplicated list)", () => {
+        const logos = ["Vercel", "Linear", "Stripe"];
+        const { container } = render(<LogoMarqueeHero logos={logos} secondaryLogos={null} />);
+        // Match the brand text inside list items. The component renders 2x logos.length
+        // <li> children for the primary row; secondaryLogos={null} disables the second row.
+        const items = container.querySelectorAll("li");
+        expect(items.length).toBe(logos.length * 2);
+        for (const brand of logos) {
+            const matches = Array.from(items).filter((li) => li.textContent?.includes(brand));
+            expect(matches.length).toBe(2);
+        }
+    });
+
+    it("hides the second row when secondaryLogos={null}", () => {
+        const { container } = render(<LogoMarqueeHero secondaryLogos={null} />);
+        // Each row renders one <ul>; only the primary row should be present.
+        expect(container.querySelectorAll("ul")).toHaveLength(1);
+    });
+
+    it("exposes data-slot=marquee so /blocks thumbnails can hide the ticker region", () => {
+        const { container } = render(<LogoMarqueeHero />);
+        expect(container.querySelector('[data-slot="marquee"]')).toBeInTheDocument();
+    });
+
+    it("LogoMarqueeRow renders standalone with custom logos", () => {
+        const { container } = render(<LogoMarqueeRow logos={["A", "B"]} />);
+        expect(container.querySelectorAll("li")).toHaveLength(4);
+    });
+
+    it("LogoMarqueeRow exposes a default accessible name — screen readers must not get an anonymous ticker", () => {
+        const { getByRole } = render(<LogoMarqueeRow logos={["A", "B"]} />);
+        expect(getByRole("list", { name: "Customer logos" })).toBeInTheDocument();
+    });
+
+    it("LogoMarqueeRow honors a custom `label` prop", () => {
+        const { getByRole } = render(<LogoMarqueeRow logos={["A"]} label="Trusted by" />);
+        expect(getByRole("list", { name: "Trusted by" })).toBeInTheDocument();
+    });
+
+    it("LogoMarqueeHero distinguishes its two rows by label — avoids identical SR announcements", () => {
+        const { getByRole } = render(<LogoMarqueeHero logos={["A", "B"]} />);
+        expect(getByRole("list", { name: "Customer logos" })).toBeInTheDocument();
+        expect(getByRole("list", { name: "More customer logos" })).toBeInTheDocument();
     });
 });
 
