@@ -162,7 +162,7 @@ export function NoiseDotFieldHero({
   );
 }
 
-export function DefaultDotFieldContent() {
+function DefaultDotFieldContent() {
   return (
     <>
       <motion.span

@@ -139,7 +139,7 @@ export function LiquidAuroraMeshHero({
   );
 }
 
-export function DefaultAuroraContent() {
+function DefaultAuroraContent() {
   return (
     <>
       <ChipReveal>Liquid · Aurora · Mesh</ChipReveal>

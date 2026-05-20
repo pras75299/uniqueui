@@ -109,7 +109,7 @@ export function IridescentSweepHero({
   );
 }
 
-export function DefaultSweepContent() {
+function DefaultSweepContent() {
   return (
     <>
       <motion.span
