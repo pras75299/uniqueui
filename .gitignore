@@ -34,7 +34,12 @@ entities.json
 COMPONENT_PROMPTS.md
 backlogs.md
 
-# Locally-installed agent skills (via `npx skills add ...`) — per-developer, do not version
+# Locally-installed agent skills (via `npx skills add ...`) — per-developer, do not version.
+# Whitelist project-tracked slash-commands so the intent stays explicit alongside the ignore.
 .agents/
 .claude/skills/
+!.claude/skills/debug-issue.md
+!.claude/skills/explore-codebase.md
+!.claude/skills/refactor-safely.md
+!.claude/skills/review-changes.md
 skills-lock.json
