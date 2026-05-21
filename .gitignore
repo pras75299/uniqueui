@@ -34,6 +34,10 @@ entities.json
 COMPONENT_PROMPTS.md
 backlogs.md
 
+# Local-only Remotion promo workspace — do not version or publish to GitHub.
+# Excluded from pnpm-workspace.yaml as well; install deps from inside the dir.
+/apps/promo/
+
 # Locally-installed agent skills (via `npx skills add ...`) — per-developer, do not version.
 # Whitelist project-tracked slash-commands so the intent stays explicit alongside the ignore.
 .agents/
