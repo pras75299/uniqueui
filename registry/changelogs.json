@@ -590,6 +590,13 @@
   ],
   "hero-magnetic-letters": [
     {
+      "version": "1.1.0",
+      "date": "2026-05-22",
+      "changes": [
+        "Replaced the rotating conic backdrop with a four-layer silver-vapor composition: cool-teal + warm-amber blurred blobs drifting on asymmetric paths (mix-blend: screen, lavender bloom at overlap, radially masked away from the central headline region), a subtle drifting dot-grid foundation, an SVG film-grain overlay, and a single diagonal filament hairline whose opacity breathes over 12s. All layers freeze under prefers-reduced-motion. Base color shifted from `#08080a` to a cooler `#06080c`."
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-05-22",
       "changes": [
