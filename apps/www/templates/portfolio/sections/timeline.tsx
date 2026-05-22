@@ -14,6 +14,7 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import { usePortfolioTheme, getPortfolioTokens, portfolioFonts } from "../components/theme";
+import { cn } from "@/lib/utils";
 
 type Milestone = {
   year: string;
@@ -64,7 +65,7 @@ const TIMELINE: Milestone[] = [
   },
 ];
 
-export default function Timeline() {
+export default function Timeline({ className }: { className?: string }) {
   const { theme } = usePortfolioTheme();
   const portfolioTokens = getPortfolioTokens(theme);
   const reduce = useReducedMotion();
@@ -78,6 +79,7 @@ export default function Timeline() {
   return (
     <section
       id="timeline"
+      className={cn(className)}
       style={{
         position: "relative",
         padding: "6rem 0 5rem",

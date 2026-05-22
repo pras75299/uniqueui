@@ -10,6 +10,7 @@
  */
 
 import { usePortfolioTheme, getPortfolioTokens, portfolioFonts } from "../components/theme";
+import { cn } from "@/lib/utils";
 
 // Hoisted out of render: `new Date().getFullYear()` inside JSX risks a
 // server↔client hydration mismatch around year boundaries, and was being
@@ -17,11 +18,12 @@ import { usePortfolioTheme, getPortfolioTokens, portfolioFonts } from "../compon
 // a footer copyright — the page reloads at year change anyway.
 const COPYRIGHT_YEAR = new Date().getFullYear();
 
-export default function Footer() {
+export default function Footer({ className }: { className?: string }) {
   const { theme } = usePortfolioTheme();
   const portfolioTokens = getPortfolioTokens(theme);
   return (
     <footer
+      className={cn(className)}
       style={{
         position: "relative",
         padding: "2.5rem 0 3rem",

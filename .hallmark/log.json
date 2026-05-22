@@ -11,17 +11,6 @@
     "vibe": "dark editorial · magazine profile · warm metal · now dual-mode",
     "enrichment": "none — typography-led (subtle Aurora corner-only)",
     "motion": "hairline-draw · type-settle · italic-beat · orbiting-glow (1 orb, full revolution 50s, brass↔ink-blue per theme)",
-    "brief": "Inkline · redesign hero motion (drop typewriter) + add light/dark theme toggle"
-  },
-  {
-    "date": "2026-05-21",
-    "macrostructure": "Long Document",
-    "nav": "N7 Hairline-text",
-    "footer": "Ft6 Colophon",
-    "theme": "custom",
-    "theme_axes": "dark / italic-serif / warm",
-    "vibe": "dark editorial · magazine profile · warm metal",
-    "enrichment": "none — typography-led (subtle Aurora corner-only)",
-    "brief": "Inkline · Developer Portfolio template for senior IC engineers"
+    "brief": "Inkline · Developer Portfolio template for senior IC engineers — dual-mode with redesigned hero motion (drop typewriter) and light/dark theme toggle"
   }
 ]

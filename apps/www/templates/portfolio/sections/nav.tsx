@@ -12,6 +12,7 @@
 
 import { useState } from "react";
 import { usePortfolioTheme, getPortfolioTokens, portfolioFonts, ThemeToggle } from "../components/theme";
+import { cn } from "@/lib/utils";
 
 const LINKS = [
   { label: "Work",     href: "#work"     },
@@ -19,7 +20,7 @@ const LINKS = [
   { label: "Writing",  href: "#writing"  },
 ];
 
-export default function Nav() {
+export default function Nav({ className }: { className?: string }) {
   const { theme } = usePortfolioTheme();
   const portfolioTokens = getPortfolioTokens(theme);
   // Sticky nav background opacity needs the hex+alpha trick; pre-compute it
@@ -28,6 +29,7 @@ export default function Nav() {
   return (
     <nav
       aria-label="Primary"
+      className={cn(className)}
       style={{
         position: "sticky",
         top: 0,

@@ -33,11 +33,12 @@
 import { motion, useReducedMotion } from "motion/react";
 import type { Variants } from "motion/react";
 import { usePortfolioTheme, getPortfolioTokens, portfolioFonts } from "../components/theme";
+import { cn } from "@/lib/utils";
 
 const STATUS_LINE = "building a distributed lock service · reading G. Bertrand";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-export default function Hero() {
+export default function Hero({ className }: { className?: string }) {
   const { theme } = usePortfolioTheme();
   const tokens = getPortfolioTokens(theme);
   const reduce = useReducedMotion();
@@ -79,7 +80,7 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="portfolio-hero"
+      className={cn("portfolio-hero", className)}
       style={{
         position: "relative",
         overflow: "hidden",

@@ -45,14 +45,16 @@ import Writing    from "./sections/writing";
 import Contact    from "./sections/contact";
 import Footer     from "./sections/footer";
 import { usePortfolioTheme, getPortfolioTokens, portfolioFonts } from "./components/theme";
+import { cn } from "@/lib/utils";
 
-export default function Portfolio() {
+export default function Portfolio({ className }: { className?: string }) {
   const { theme } = usePortfolioTheme();
   const tokens = getPortfolioTokens(theme);
 
   return (
     <div
       data-portfolio-theme={theme}
+      className={cn(className)}
       style={{
         fontFamily: portfolioFonts.body,
         backgroundColor: tokens.paper,

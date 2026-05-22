@@ -17,6 +17,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import { usePortfolioTheme, getPortfolioTokens, portfolioFonts } from "../components/theme";
+import { cn } from "@/lib/utils";
 
 type Project = {
   year: string;
@@ -81,12 +82,13 @@ const PROJECTS: Project[] = [
   },
 ];
 
-export default function Work() {
+export default function Work({ className }: { className?: string }) {
   const { theme } = usePortfolioTheme();
   const portfolioTokens = getPortfolioTokens(theme);
   return (
     <section
       id="work"
+      className={cn(className)}
       style={{
         position: "relative",
         padding: "6rem 0 4rem",

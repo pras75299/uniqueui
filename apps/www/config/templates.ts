@@ -60,11 +60,11 @@ export const TEMPLATES: TemplateConfig[] = [
     id: "portfolio",
     name: "Developer Portfolio",
     description:
-      "Editorial dark portfolio for senior IC engineers. Long-document layout, magazine-style project index with hover-reveal, animated career timeline, and a colophon footer. Warm-brass accent on near-black paper.",
+      "Editorial portfolio for senior IC engineers with dual light/dark mode (Inkline). Long-document layout, magazine-style project index with hover-reveal, animated career timeline, and a colophon footer. Warm-brass accent anchors both modes.",
     niche: "Portfolio",
     difficulty: "Pro",
     status: "available",
-    components: ["Aurora Background", "3D Tilt Card", "Hover Reveal Card", "Animated Timeline", "Typewriter Text"],
+    components: ["Aurora Background", "3D Tilt Card", "Hover Reveal Card", "Animated Timeline", "Theme Toggle"],
     componentFiles: [
       "aurora-background",
       "3d-tilt-card",

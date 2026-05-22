@@ -11,6 +11,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import { usePortfolioTheme, getPortfolioTokens, portfolioFonts } from "../components/theme";
+import { cn } from "@/lib/utils";
 
 type Essay = {
   title: string;
@@ -65,12 +66,13 @@ const KIND_LABEL: Record<Essay["kind"], string> = {
   talk: "talk",
 };
 
-export default function Writing() {
+export default function Writing({ className }: { className?: string }) {
   const { theme } = usePortfolioTheme();
   const portfolioTokens = getPortfolioTokens(theme);
   return (
     <section
       id="writing"
+      className={cn(className)}
       style={{
         position: "relative",
         padding: "6rem 0 5rem",

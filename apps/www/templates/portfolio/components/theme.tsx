@@ -25,6 +25,7 @@ import {
   useEffect,
   useSyncExternalStore,
 } from "react";
+import { cn } from "@/lib/utils";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -188,7 +189,7 @@ export function usePortfolioTheme() {
 
 // ── ThemeToggle — small button used in nav ──────────────────────────────────
 
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const { theme, toggleTheme } = usePortfolioTheme();
   const tokens = getPortfolioTokens(theme);
   const isDark = theme === "dark";
@@ -199,7 +200,7 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={!isDark}
-      className="portfolio-theme-toggle"
+      className={cn("portfolio-theme-toggle", className)}
       style={{
         display: "inline-flex",
         alignItems: "center",

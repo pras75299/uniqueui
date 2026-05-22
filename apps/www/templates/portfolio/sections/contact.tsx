@@ -12,6 +12,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import { usePortfolioTheme, getPortfolioTokens, portfolioFonts } from "../components/theme";
+import { cn } from "@/lib/utils";
 
 const EMAIL = "hello@inkline.dev";
 const SOCIALS = [
@@ -19,7 +20,7 @@ const SOCIALS = [
   { label: "bluesky", href: "https://bsky.app" },
 ];
 
-export default function Contact() {
+export default function Contact({ className }: { className?: string }) {
   const { theme } = usePortfolioTheme();
   const portfolioTokens = getPortfolioTokens(theme);
   const reduce = useReducedMotion();
@@ -30,6 +31,7 @@ export default function Contact() {
 
   return (
     <section
+      className={cn(className)}
       style={{
         position: "relative",
         padding: "6rem 0 7rem",

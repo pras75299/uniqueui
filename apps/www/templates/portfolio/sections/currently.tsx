@@ -10,6 +10,7 @@
 import { motion, useReducedMotion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useRef, type MouseEvent } from "react";
 import { usePortfolioTheme, getPortfolioTokens, portfolioFonts } from "../components/theme";
+import { cn } from "@/lib/utils";
 
 type Entry = {
   kind: "writing" | "shipping" | "reading";
@@ -40,12 +41,13 @@ const ENTRIES: Entry[] = [
   },
 ];
 
-export default function Currently() {
+export default function Currently({ className }: { className?: string }) {
   const { theme } = usePortfolioTheme();
   const portfolioTokens = getPortfolioTokens(theme);
   return (
     <section
       id="currently"
+      className={cn(className)}
       style={{
         position: "relative",
         padding: "5rem 0 5rem",
