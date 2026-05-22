@@ -585,4 +585,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "magnetic-text",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "magnetic-text/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

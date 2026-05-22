@@ -10,6 +10,7 @@ import { InfiniteMarquee, MarqueeItem } from "../components/ui/infinite-marquee"
 import { FlipCard } from "../components/ui/flip-card";
 import { SkeletonShimmer, SkeletonCard } from "../components/ui/skeleton-shimmer";
 import { TypewriterText } from "../components/ui/typewriter-text";
+import { MagneticText } from "../components/ui/magnetic-text";
 
 // ─── Browser API mocks ────────────────────────────────────────────────────────
 
@@ -389,4 +390,50 @@ describe("TypewriterText", () => {
     expect(outerSpan.className).toContain("text-purple-500");
   });
 
+});
+
+// ─── MagneticText ─────────────────────────────────────────────────────────────
+
+describe("MagneticText", () => {
+  it("exposes the full text via aria-label on the wrapper", () => {
+    const { container } = render(<MagneticText text="Hello world" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper.getAttribute("aria-label")).toBe("Hello world");
+  });
+
+  it("renders one aria-hidden span per non-space glyph so AT does not spell the word", () => {
+    const { container } = render(<MagneticText text="abc" />);
+    const animatedGlyphs = container.querySelectorAll(
+      "span[aria-hidden=\"true\"]",
+    );
+    // Three letters → three aria-hidden glyph spans.
+    expect(animatedGlyphs.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("renders as the requested tag via the `as` prop", () => {
+    const { container } = render(<MagneticText as="h2" text="Heading" />);
+    expect(container.querySelector("h2")).not.toBeNull();
+  });
+
+  it("survives a pointermove on its wrapper without throwing", () => {
+    const { container } = render(<MagneticText text="ABCDE" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(() => {
+      wrapper.dispatchEvent(
+        new PointerEvent("pointermove", {
+          clientX: 50,
+          clientY: 20,
+          bubbles: true,
+        }),
+      );
+    }).not.toThrow();
+  });
+
+  it("forwards className to the wrapper", () => {
+    const { container } = render(
+      <MagneticText text="X" className="text-fuchsia-500" />,
+    );
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper.className).toContain("text-fuchsia-500");
+  });
 });

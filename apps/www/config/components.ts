@@ -776,6 +776,57 @@ const componentDefinitions = [
     "usageCode": "import { ScrambleText } from \"@/components/ui/scramble-text\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-6 text-center p-10 text-white\">\n      <ScrambleText text=\"UNIQUEUI COMPONENTS\" className=\"text-3xl font-bold tracking-wider text-emerald-400\" />\n      <ScrambleText\n        text=\"Hover to scramble again\"\n        triggerOnView={false}\n        className=\"text-lg text-neutral-400 cursor-pointer\"\n      />\n    </div>\n  );\n}"
   },
   {
+    "slug": "magnetic-text",
+    "name": "Magnetic Text",
+    "description": "Per-letter cursor-tracking text effect. Every glyph leans toward the pointer under its own spring; linear falloff inside the configured radius, capped at the configured strength. Soft white glow fades in near the cursor. Wrapper carries an aria-label; per-glyph spans are aria-hidden so screen readers never spell the word out.",
+    "icon": "LucideSparkles",
+    "category": "Text",
+    "addedAt": "2026-05-22",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "The text to animate. Each glyph becomes its own motion target."
+      },
+      {
+        "name": "as",
+        "type": "ElementType",
+        "default": "\"span\"",
+        "description": "Element tag to render as. Use \"h1\" / \"h2\" / \"p\" for semantic headings or paragraphs."
+      },
+      {
+        "name": "radius",
+        "type": "number",
+        "default": "140",
+        "description": "Pixel radius around each letter within which the cursor exerts pull."
+      },
+      {
+        "name": "strength",
+        "type": "number",
+        "default": "12",
+        "description": "Maximum displacement (px) any single letter can reach at peak proximity."
+      },
+      {
+        "name": "animateEntry",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true, letters stagger in with a spring on mount before becoming magnetic."
+      },
+      {
+        "name": "disableGlow",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true, the soft white glow that fades in around letters near the cursor is removed (useful on light backgrounds)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra Tailwind classes on the wrapping element (font-size, weight, color, etc.)."
+      }
+    ],
+    "usageCode": "import { MagneticText } from \"@/components/ui/magnetic-text\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex min-h-[40vh] items-center justify-center bg-[#0a0a0a] p-10\">\n      <MagneticText\n        as=\"h2\"\n        text=\"Motion, where it matters.\"\n        className=\"text-4xl font-semibold tracking-tight text-white sm:text-6xl\"\n        animateEntry\n      />\n    </div>\n  );\n}"
+  },
+  {
     "slug": "meteors-card",
     "name": "Meteors Card",
     "description": "Card with animated meteor/shooting star particles falling through the background.",
