@@ -4193,7 +4193,7 @@
     {
       "slug": "hero-magnetic-letters",
       "name": "Magnetic Letters Hero",
-      "description": "Dark editorial hero where every letter of the headline tracks the cursor under its own spring physics. Configurable pull radius and strength. Slow rotating conic backdrop, soft radial vignette, and a soft white glow that fades in around letters as the pointer approaches.",
+      "description": "Dark editorial hero where every letter of the headline tracks the cursor under its own spring physics. Configurable pull radius and strength. The backdrop is three large blurred gradient orbs (teal, magenta, amber) drifting diagonally on independent slow loops with `mix-blend: screen`, layered with a static SVG-turbulence film grain. A soft white glow fades in around letters as the pointer approaches.",
       "icon": "LucideSparkles",
       "category": "Hero",
       "kind": "block",

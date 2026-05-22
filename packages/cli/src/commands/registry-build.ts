@@ -36,8 +36,12 @@ function formatIssues(issues: ZodIssue[]): string[] {
 async function readJsonOrNull(file: string): Promise<unknown | null> {
     try {
         return await fs.readJson(file);
-    } catch {
-        return null;
+    } catch (err) {
+        // Only treat "file missing" as "no index" — a present-but-malformed
+        // index.json must surface as a hard error so users don't silently
+        // ship broken artifacts derived from filesystem fallback scanning.
+        if ((err as NodeJS.ErrnoException).code === "ENOENT") return null;
+        throw err;
     }
 }
 
@@ -75,6 +79,15 @@ export async function buildRegistry(opts: RegistryBuildOptions): Promise<BuildRe
             }
             return parsed.data;
         });
+        // Reject duplicate slugs — they would otherwise rewrite the same
+        // per-slug JSON twice and duplicate the entry in the mono array.
+        const seen = new Set<string>();
+        for (const slug of slugs) {
+            if (seen.has(slug)) {
+                throw new Error(`index.json: duplicate slug "${slug}"`);
+            }
+            seen.add(slug);
+        }
     } else {
         const all = await fs.readdir(src);
         slugs = all
@@ -116,6 +129,22 @@ export async function buildRegistry(opts: RegistryBuildOptions): Promise<BuildRe
 
     // Write outputs.
     await fs.ensureDir(out);
+    // Drop stale per-slug artifacts that a previous build emitted but the
+    // current source no longer declares. Without this cleanup the out/ dir
+    // accumulates ghost slugs that aren't in index.json but are still
+    // fetchable by anyone who knows the URL — a real correctness hazard.
+    // We scope cleanup to <slug>.json filenames so we never touch unrelated
+    // assets the user may have placed alongside their registry build output.
+    const existing = await fs.readdir(out);
+    const declared = new Set(slugs);
+    for (const f of existing) {
+        if (!f.endsWith(".json")) continue;
+        if (f === "index.json" || f === "registry.json") continue;
+        const base = f.replace(/\.json$/, "");
+        if (!declared.has(base)) {
+            await fs.remove(path.join(out, f));
+        }
+    }
     const written: string[] = [];
 
     const indexOut = path.join(out, "index.json");

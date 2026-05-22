@@ -105,6 +105,49 @@ describe("buildRegistry", () => {
         await fs.ensureDir(path.join(tmp, "src"));
         await expect(buildRegistry({ src: "src", out: "out" })).rejects.toThrow(/No registry entries found/);
     });
+
+    it("surfaces malformed index.json as a hard error (not silent fallback)", async () => {
+        await fs.outputFile(path.join(tmp, "src/index.json"), "{ not: valid json");
+        await fs.outputJson(path.join(tmp, "src/alpha.json"), ENTRY_A);
+
+        // Malformed JSON must throw — silently falling back to filesystem scan
+        // would mask a real source-of-truth corruption.
+        await expect(buildRegistry({ src: "src", out: "out" })).rejects.toThrow();
+    });
+
+    it("rejects duplicate slugs in an explicit index.json", async () => {
+        await fs.outputJson(path.join(tmp, "src/index.json"), {
+            components: ["alpha", "alpha", "beta"],
+        });
+        await fs.outputJson(path.join(tmp, "src/alpha.json"), ENTRY_A);
+        await fs.outputJson(path.join(tmp, "src/beta.json"), ENTRY_B);
+
+        await expect(buildRegistry({ src: "src", out: "out" })).rejects.toThrow(
+            /duplicate slug "alpha"/,
+        );
+    });
+
+    it("removes stale per-slug artifacts that the current source no longer declares", async () => {
+        // Pre-seed out/ with a ghost from a previous build.
+        await fs.outputJson(path.join(tmp, "out/ghost.json"), { name: "ghost" });
+        await fs.outputJson(path.join(tmp, "src/alpha.json"), ENTRY_A);
+
+        await buildRegistry({ src: "src", out: "out" });
+
+        expect(await fs.pathExists(path.join(tmp, "out/ghost.json"))).toBe(false);
+        expect(await fs.pathExists(path.join(tmp, "out/alpha.json"))).toBe(true);
+    });
+
+    it("does NOT touch unrelated non-JSON files in the output dir during cleanup", async () => {
+        // Cleanup is scoped to <slug>.json only — README.md, CSS, assets, etc.
+        // should survive a rebuild.
+        await fs.outputFile(path.join(tmp, "out/README.md"), "# my registry");
+        await fs.outputJson(path.join(tmp, "src/alpha.json"), ENTRY_A);
+
+        await buildRegistry({ src: "src", out: "out" });
+
+        expect(await fs.pathExists(path.join(tmp, "out/README.md"))).toBe(true);
+    });
 });
 
 describe("registryBuild command", () => {

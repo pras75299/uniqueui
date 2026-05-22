@@ -15,21 +15,22 @@ import { cn } from "@/lib/utils";
 /**
  * Magnetic Letters hero.
  *
- * Signature motion: every glyph in the headline tracks the cursor with its own
- * spring. When the pointer enters the headline's bounding box, each letter
- * computes its own offset toward the cursor — strongest within ~`radius`px,
- * tapering linearly to zero past it. Stiff spring (220) + high damping (22)
- * keeps motion crisp; letters never feel rubbery.
+ * Signature motion: every glyph in the headline tracks the cursor with its
+ * own spring. When the pointer enters the headline's bounding box, each
+ * letter computes its own offset toward the cursor — strongest within
+ * ~`radius`px, tapering linearly to zero past it. Stiff spring (220) + high
+ * damping (22) keeps motion crisp; letters never feel rubbery.
  *
- * Two co-existing animation primitives (Hallmark cap of 3 — third is the
- * conic backdrop):
+ * Three animation primitives:
  *  1. ENTRANCE — letters stagger in from below with spring physics.
  *  2. MAGNETIC FOLLOW — per-letter cursor-tracking after mount.
- *  3. AMBIENT CONIC — single conic-gradient layer rotating over 60s (linear),
- *     low alpha. Reads as soft directional light, never demands attention.
+ *  3. VAPOR BACKDROP — three large blurred gradient orbs (teal, magenta,
+ *     amber) drifting diagonally on independent loops with `mix-blend: screen`.
+ *     A static SVG-turbulence film grain sits on top to keep the gradients
+ *     from looking digital. See `VaporBackdrop` below.
  *
  * Reduced motion: entrance collapses to opacity-only ≤150ms, magnetic follow
- * disabled entirely, conic backdrop locked to a static rotation.
+ * disabled, every backdrop orb holds at its starting frame.
  *
  * Composition: pass `children` to replace the default headline composition
  * entirely. Pass `headline` to keep the magnetic effect and surrounding
@@ -314,9 +315,18 @@ function Letter({
   );
 
   if (char === " ") {
-    // Inline-block, non-magnetic — preserves wrapping at word boundaries.
+    // Non-magnetic span containing a real space. Using the font's natural
+    // space width (vs a fixed em) keeps copy looking correct under display
+    // fonts and custom letter-spacing; `whiteSpace:pre` preserves the literal
+    // space so soft-wrap boundaries still work.
     return (
-      <span ref={ref} aria-hidden="true" style={{ display: "inline-block", width: "0.32em" }} />
+      <span
+        ref={ref}
+        aria-hidden="true"
+        style={{ display: "inline-block", whiteSpace: "pre" }}
+      >
+        {" "}
+      </span>
     );
   }
 

@@ -220,30 +220,41 @@ describe("LogoMarqueeHero — logo wiring", () => {
 });
 
 describe("MagneticLettersHero — headline composition", () => {
-    it("uses the `headline` prop as the h1's accessible name without exposing per-letter spans to AT", () => {
+    it("uses the `headline` prop as the h1's accessible name and wraps every glyph in its own aria-hidden span", () => {
+        const headline = "Press for resonance.";
         const { getByRole, container } = render(
-            <MagneticLettersHero headline="Press for resonance." />,
+            <MagneticLettersHero headline={headline} />,
         );
         expect(
-            getByRole("heading", { level: 1, name: "Press for resonance." }),
+            getByRole("heading", { level: 1, name: headline }),
         ).toBeInTheDocument();
-        // Every animated glyph carries aria-hidden so AT never reads
-        // "M-o-t-i-o-n" character by character.
+        // Lock the per-glyph split contract: one span per character. If anyone
+        // accidentally drops the per-letter wrapping (or reverts to rendering
+        // the whole string as text), this fails — exactly the regression we
+        // want to catch.
         const animatedGlyphs = container.querySelectorAll(
             "h1 span[aria-hidden=\"true\"]",
         );
-        expect(animatedGlyphs.length).toBeGreaterThan(0);
+        expect(animatedGlyphs).toHaveLength(Array.from(headline).length);
     });
 
-    it("survives a pointermove dispatched on its wrapper without throwing", () => {
-        const { container } = render(<MagneticLettersHero />);
-        const heading = container.querySelector("h1");
-        expect(heading).not.toBeNull();
-        expect(() => {
-            heading?.dispatchEvent(
-                new PointerEvent("pointermove", { clientX: 200, clientY: 100, bubbles: true }),
-            );
-        }).not.toThrow();
+    it("attaches pointer listeners to the headline for magnetic tracking", () => {
+        // Listener-contract check — stronger than just "doesn't throw". If
+        // someone removes the pointer wiring in MagneticHeadline, this fails.
+        const addListenerSpy = vi.spyOn(
+            HTMLHeadingElement.prototype,
+            "addEventListener",
+        );
+        render(<MagneticLettersHero />);
+        expect(addListenerSpy).toHaveBeenCalledWith(
+            "pointermove",
+            expect.any(Function),
+        );
+        expect(addListenerSpy).toHaveBeenCalledWith(
+            "pointerleave",
+            expect.any(Function),
+        );
+        addListenerSpy.mockRestore();
     });
 });
 

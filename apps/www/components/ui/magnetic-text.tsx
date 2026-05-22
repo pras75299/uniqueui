@@ -118,7 +118,10 @@ export function MagneticText({
   return (
     <Tag
       ref={wrapRef as React.RefObject<HTMLElement>}
-      aria-label={text}
+      // Empty-string `aria-label` is a WCAG 4.1.2 violation (accessible name
+      // must be non-empty). Drop the attribute entirely when text is empty so
+      // the element falls back to its default accessible-name calculation.
+      aria-label={text || undefined}
       className={cn("relative inline-block select-none", className)}
       {...rest}
     >
@@ -206,11 +209,19 @@ function Glyph({
     (g) => `0 0 ${10 * g}px rgba(255,255,255,${0.55 * g})`,
   );
 
-  // Whitespace renders as a non-magnetic, non-measured spacer so soft-wrap
-  // boundaries are preserved.
+  // Whitespace renders as a non-magnetic span with a real space inside so the
+  // font's natural space width is used (display fonts and custom letter-spacing
+  // shift this — a fixed em width breaks copy in those cases). `whiteSpace:pre`
+  // preserves the literal space character so soft-wrap boundaries still work.
   if (char === " ") {
     return (
-      <span ref={ref} aria-hidden="true" style={{ display: "inline-block", width: "0.32em" }} />
+      <span
+        ref={ref}
+        aria-hidden="true"
+        style={{ display: "inline-block", whiteSpace: "pre" }}
+      >
+        {" "}
+      </span>
     );
   }
 

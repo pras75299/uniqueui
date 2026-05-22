@@ -84,65 +84,80 @@ export async function planRemove(slug: string, url: string): Promise<RemovePlan 
 }
 
 export async function remove(slug: string, options: RemoveOptions): Promise<void> {
-    warnIfUntrustedRegistry(options.url);
+    // Wrap the whole flow so an unexpected throw (network, fs, prompts) ends
+    // with a friendly red line + non-zero exit, not a bare Node stack trace.
+    try {
+        warnIfUntrustedRegistry(options.url);
 
-    const plan = await planRemove(slug, options.url);
-    if ("error" in plan) {
-        if (plan.error === "no-config") {
-            console.error(chalk.red("components.json not found. Run `uniqueui init` first."));
-        } else {
-            console.error(chalk.red(`Component "${slug}" not found in registry at ${options.url}.`));
-        }
-        process.exitCode = 1;
-        return;
-    }
-
-    const existing = plan.toRemove.filter((f) => f.exists);
-    const ghost = plan.toRemove.filter((f) => !f.exists);
-
-    if (existing.length === 0) {
-        console.log(chalk.yellow(`${slug}: nothing to remove — no tracked files exist on disk.`));
-        if (ghost.length > 0) {
-            for (const g of ghost) {
-                console.log(chalk.gray(`  (missing) ${path.relative(process.cwd(), g.targetPath) || g.targetPath}`));
+        const plan = await planRemove(slug, options.url);
+        if ("error" in plan) {
+            if (plan.error === "no-config") {
+                console.error(chalk.red("components.json not found. Run `uniqueui init` first."));
+            } else {
+                console.error(chalk.red(`Component "${slug}" not found in registry at ${options.url}.`));
             }
-        }
-        return;
-    }
-
-    console.log(chalk.bold(`\nWould remove ${existing.length} file(s) for ${slug}:`));
-    for (const f of existing) {
-        console.log(chalk.red(`  - ${path.relative(process.cwd(), f.targetPath) || f.targetPath}`));
-    }
-    for (const s of plan.skipped) {
-        console.log(chalk.gray(`  (skip)  ${path.relative(process.cwd(), s.targetPath) || s.targetPath} — ${s.reason}`));
-    }
-
-    if (options.dryRun) {
-        console.log(chalk.cyan("\nDry run — no files touched."));
-        printUninstallHint(plan.npmDependencies);
-        return;
-    }
-
-    if (!options.yes) {
-        const { confirm } = (await prompts({
-            type: "confirm",
-            name: "confirm",
-            message: `Delete ${existing.length} file(s)?`,
-            initial: false,
-        })) as { confirm?: boolean };
-        if (!confirm) {
-            console.log(chalk.gray("Aborted."));
+            process.exitCode = 1;
             return;
         }
-    }
 
-    for (const f of existing) {
-        await fs.remove(f.targetPath);
-        console.log(chalk.green(`removed ${path.relative(process.cwd(), f.targetPath) || f.targetPath}`));
-    }
+        const existing = plan.toRemove.filter((f) => f.exists);
+        const ghost = plan.toRemove.filter((f) => !f.exists);
 
-    printUninstallHint(plan.npmDependencies);
+        if (existing.length === 0) {
+            console.log(chalk.yellow(`${slug}: nothing to remove — no tracked files exist on disk.`));
+            if (ghost.length > 0) {
+                for (const g of ghost) {
+                    console.log(chalk.gray(`  (missing) ${path.relative(process.cwd(), g.targetPath) || g.targetPath}`));
+                }
+            }
+            return;
+        }
+
+        console.log(chalk.bold(`\nWould remove ${existing.length} file(s) for ${slug}:`));
+        for (const f of existing) {
+            console.log(chalk.red(`  - ${path.relative(process.cwd(), f.targetPath) || f.targetPath}`));
+        }
+        // Also surface ghosts in the main path — silently dropping them from
+        // the report hides "we expected this file but it isn't there" which
+        // is genuinely useful information when the user is trying to clean up
+        // a partially-applied component.
+        for (const g of ghost) {
+            console.log(chalk.gray(`  (missing) ${path.relative(process.cwd(), g.targetPath) || g.targetPath}`));
+        }
+        for (const s of plan.skipped) {
+            console.log(chalk.gray(`  (skip)  ${path.relative(process.cwd(), s.targetPath) || s.targetPath} — ${s.reason}`));
+        }
+
+        if (options.dryRun) {
+            console.log(chalk.cyan("\nDry run — no files touched."));
+            printUninstallHint(plan.npmDependencies);
+            return;
+        }
+
+        if (!options.yes) {
+            // `prompts` returns `confirm: undefined` on Ctrl-C — treat the same as "no".
+            const { confirm } = (await prompts({
+                type: "confirm",
+                name: "confirm",
+                message: `Delete ${existing.length} file(s)?`,
+                initial: false,
+            })) as { confirm?: boolean };
+            if (!confirm) {
+                console.log(chalk.gray("Aborted."));
+                return;
+            }
+        }
+
+        for (const f of existing) {
+            await fs.remove(f.targetPath);
+            console.log(chalk.green(`removed ${path.relative(process.cwd(), f.targetPath) || f.targetPath}`));
+        }
+
+        printUninstallHint(plan.npmDependencies);
+    } catch (err) {
+        console.error(chalk.red(`remove failed: ${(err as Error).message}`));
+        process.exitCode = 1;
+    }
 }
 
 function printUninstallHint(deps: string[]): void {

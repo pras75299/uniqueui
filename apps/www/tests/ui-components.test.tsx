@@ -401,13 +401,14 @@ describe("MagneticText", () => {
     expect(wrapper.getAttribute("aria-label")).toBe("Hello world");
   });
 
-  it("renders one aria-hidden span per non-space glyph so AT does not spell the word", () => {
-    const { container } = render(<MagneticText text="abc" />);
+  it("renders one aria-hidden span per glyph so AT does not spell the word", () => {
+    const text = "abc";
+    const { container } = render(<MagneticText text={text} />);
     const animatedGlyphs = container.querySelectorAll(
       "span[aria-hidden=\"true\"]",
     );
-    // Three letters → three aria-hidden glyph spans.
-    expect(animatedGlyphs.length).toBeGreaterThanOrEqual(3);
+    // Exact-count contract: regressions that drop or duplicate glyphs fail this.
+    expect(animatedGlyphs).toHaveLength(Array.from(text).length);
   });
 
   it("renders as the requested tag via the `as` prop", () => {

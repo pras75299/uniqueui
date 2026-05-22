@@ -11,16 +11,27 @@ export function generateStaticParams() {
     .map((c) => ({ slug: c.slug }));
 }
 
+// Sibling route `[slug]/page.tsx` declares `params: Promise<{slug:string}>` —
+// Next 15+ resolves dynamic segments asynchronously, so even though
+// `generateStaticParams` pre-resolves slugs at build time, the runtime
+// signature must match the framework contract or dynamicParams: true fallbacks
+// will break.
 export default async function OpengraphImage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const component = componentsList.find((c) => c.slug === params.slug);
-  const name = component?.name ?? params.slug;
+  const { slug } = await params;
+  const component = componentsList.find((c) => c.slug === slug);
+  const name = component?.name ?? slug;
   const description =
     component?.description ??
     "A motion-first, copy-paste React component from UniqueUI.";
+  // Env-overridable so deployments to alternate hosts (preview branches,
+  // future apex domain) don't bake a stale URL into shared OG cards.
+  const siteDomain =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/^https?:\/\//, "") ??
+    "uniqueui-platform.vercel.app";
 
   return new ImageResponse(
     (
@@ -99,8 +110,8 @@ export default async function OpengraphImage({
             fontFamily: "monospace",
           }}
         >
-          <span>npx uniqueui add {params.slug}</span>
-          <span>uniqueui-platform.vercel.app</span>
+          <span>npx uniqueui add {slug}</span>
+          <span>{siteDomain}</span>
         </div>
       </div>
     ),
