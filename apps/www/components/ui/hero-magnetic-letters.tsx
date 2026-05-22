@@ -350,41 +350,41 @@ function Letter({
 }
 
 /**
- * VaporBackdrop — silver-vapor editorial backdrop, all motion driven by
- * `motion/react` (no CSS keyframes, no rAF loops).
+ * VaporBackdrop — slow diagonal gradient drift.
  *
- * Five composited layers:
- *   1. THREE gradient orbs — cool teal, warm amber, magenta accent. Each
- *      drifts independently with `animate` keyframe arrays (x, y, scale),
- *      `mix-blend-mode: screen`. Where they overlap they create rich tertiary
- *      colors (the lavender bloom emerges between teal+magenta; gold between
- *      amber+magenta). 14s / 18s / 22s loops keep motion intentional but
- *      never synchronized.
- *   2. AURORA SWEEP — a soft conic-gradient band that translates diagonally
- *      across the hero every 12s. Subtle, but adds directional energy.
- *   3. FILAMENT — a 1px diagonal hairline whose opacity breathes between
- *      0.25 and 0.85 over 6s.
- *   4. FILM GRAIN — inline SVG turbulence, static, `overlay` blend.
- *      Disguises gradient smoothness — the single biggest detail that
- *      removes the "AI-generic" feel from gradient backdrops.
- *   5. VIGNETTE — radial fade at the edges so the headline area stays clean.
+ * Three large blurred gradient orbs (teal, amber, magenta) drift continuously
+ * along the SAME diagonal axis (top-left → bottom-right), each at a different
+ * pace and phase. With `mix-blend-mode: screen`, the overlaps produce rich
+ * tertiary blooms — lavender where teal meets magenta, gold where amber meets
+ * magenta — without any color being set directly.
  *
- * Composition: a radial mask on the orbs layer pushes color activity OUT
- * of the central ~25% — the headline never has to fight the background.
+ * No center mask, no vignette darkening, no filament hairline, no diagonal
+ * sweep band. The whole composition is a single continuous diagonal wash that
+ * the eye reads as one smooth motion.
  *
- * Performance: every animation uses motion's compositor-friendly transform
- * + opacity. `prefers-reduced-motion` collapses each layer to a static
- * frame via `useReducedMotion()`.
+ * Film grain (static SVG turbulence) sits on top to keep the gradients from
+ * looking digital.
+ *
+ * Performance: every animated layer uses `motion/react` keyframe arrays on
+ * compositor-friendly `x` / `y` / `scale`. `useReducedMotion()` collapses
+ * each layer to its starting frame.
  */
 function VaporBackdrop() {
   const reduced = useReducedMotion();
-  // Loop config for each orb. Keyframe arrays so motion interpolates a path
-  // rather than just oscillating between two points — gives organic motion.
-  const orbTransition = (duration: number) => ({
+
+  // Same diagonal direction (top-left ↘ bottom-right) for all three orbs, but
+  // each gets its own phase + duration so they pass through each other instead
+  // of moving in lock-step. `repeatType: "reverse"` returns the orb along the
+  // same path — the eye reads a smooth, continuous diagonal drift.
+  const drift = (
+    duration: number,
+    phase: number,
+  ): { duration: number; ease: "easeInOut"; repeat: number; repeatType: "reverse"; delay: number } => ({
     duration,
-    ease: "easeInOut" as const,
+    ease: "easeInOut",
     repeat: Infinity,
-    repeatType: "mirror" as const,
+    repeatType: "reverse",
+    delay: phase,
   });
 
   return (
@@ -392,151 +392,82 @@ function VaporBackdrop() {
       aria-hidden
       className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
     >
-      {/* Layer 1 — three drifting gradient orbs. The wrapping div carries the
-          radial mask that keeps color out of the central headline region. */}
-      <div
-        className="absolute inset-0"
-        style={{
-          WebkitMaskImage:
-            "radial-gradient(ellipse 70% 70% at center, transparent 18%, black 60%)",
-          maskImage:
-            "radial-gradient(ellipse 70% 70% at center, transparent 18%, black 60%)",
-        }}
-      >
-        {/* Teal orb — top-left quadrant */}
-        <motion.div
-          className="absolute left-[-25%] top-[-25%] h-[90vmax] w-[90vmax] rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(56, 224, 224, 0.55) 0%, rgba(56, 224, 224, 0.18) 35%, transparent 65%)",
-            mixBlendMode: "screen",
-            filter: "blur(80px)",
-            willChange: "transform",
-          }}
-          initial={{ x: 0, y: 0, scale: 1 }}
-          animate={
-            reduced
-              ? undefined
-              : {
-                  x: ["0%", "12%", "4%", "0%"],
-                  y: ["0%", "8%", "-4%", "0%"],
-                  scale: [1, 1.12, 1.04, 1],
-                }
-          }
-          transition={reduced ? undefined : orbTransition(14)}
-        />
-
-        {/* Amber orb — bottom-right quadrant */}
-        <motion.div
-          className="absolute right-[-25%] bottom-[-30%] h-[95vmax] w-[95vmax] rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(247, 175, 90, 0.50) 0%, rgba(247, 175, 90, 0.16) 35%, transparent 65%)",
-            mixBlendMode: "screen",
-            filter: "blur(90px)",
-            willChange: "transform",
-          }}
-          initial={{ x: 0, y: 0, scale: 1.05 }}
-          animate={
-            reduced
-              ? undefined
-              : {
-                  x: ["0%", "-10%", "-3%", "0%"],
-                  y: ["0%", "-6%", "5%", "0%"],
-                  scale: [1.05, 1, 1.1, 1.05],
-                }
-          }
-          transition={reduced ? undefined : orbTransition(18)}
-        />
-
-        {/* Magenta accent orb — drifts across center-right area. This is
-            the orb that creates the lavender bloom when it overlaps teal,
-            and the gold when it brushes amber. */}
-        <motion.div
-          className="absolute left-[35%] top-[20%] h-[55vmax] w-[55vmax] rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(232, 121, 198, 0.42) 0%, rgba(232, 121, 198, 0.14) 35%, transparent 65%)",
-            mixBlendMode: "screen",
-            filter: "blur(70px)",
-            willChange: "transform",
-          }}
-          initial={{ x: 0, y: 0, scale: 1 }}
-          animate={
-            reduced
-              ? undefined
-              : {
-                  x: ["0%", "-18%", "10%", "0%"],
-                  y: ["0%", "14%", "-8%", "0%"],
-                  scale: [1, 1.15, 0.95, 1],
-                }
-          }
-          transition={reduced ? undefined : orbTransition(22)}
-        />
-      </div>
-
-      {/* Layer 2 — aurora sweep band. A wide conic-gradient stripe that
-          translates diagonally across the viewport every 12s. */}
+      {/* Teal orb — starts upper-left, drifts down-right. */}
       <motion.div
-        className="absolute left-[-50%] top-[-30%] h-[160%] w-[200%]"
+        className="absolute h-[110vmax] w-[110vmax] rounded-full"
         style={{
+          top: "-40vmax",
+          left: "-40vmax",
           background:
-            "linear-gradient(115deg, transparent 35%, rgba(244, 243, 238, 0.07) 48%, rgba(56, 224, 224, 0.12) 50%, rgba(244, 243, 238, 0.07) 52%, transparent 65%)",
+            "radial-gradient(circle, rgba(56, 224, 224, 0.42) 0%, rgba(56, 224, 224, 0.14) 35%, transparent 65%)",
           mixBlendMode: "screen",
+          filter: "blur(110px)",
           willChange: "transform",
         }}
-        initial={{ x: "-30%", y: "-10%" }}
-        animate={reduced ? undefined : { x: ["-30%", "20%"], y: ["-10%", "10%"] }}
-        transition={
+        initial={{ x: "0%", y: "0%", scale: 1 }}
+        animate={
           reduced
             ? undefined
-            : {
-                duration: 12,
-                ease: "linear",
-                repeat: Infinity,
-                repeatType: "reverse",
-              }
+            : { x: ["0%", "60%"], y: ["0%", "55%"], scale: [1, 1.08] }
         }
+        transition={reduced ? undefined : drift(38, 0)}
       />
 
-      {/* Layer 3 — diagonal filament hairline, opacity breathing */}
+      {/* Magenta orb — starts upper-right, drifts down-left along the same
+          diagonal axis (visually opposite endpoints, same direction). */}
       <motion.div
-        className="absolute left-[-10%] top-[58%] h-px w-[120%]"
+        className="absolute h-[95vmax] w-[95vmax] rounded-full"
         style={{
+          top: "-30vmax",
+          right: "-40vmax",
           background:
-            "linear-gradient(90deg, transparent 0%, rgba(247, 175, 90, 0.55) 28%, rgba(244, 243, 238, 0.7) 50%, rgba(56, 224, 224, 0.55) 72%, transparent 100%)",
-          transform: "rotate(-8deg)",
-          transformOrigin: "center",
-          willChange: "opacity",
+            "radial-gradient(circle, rgba(232, 121, 198, 0.40) 0%, rgba(232, 121, 198, 0.13) 35%, transparent 65%)",
+          mixBlendMode: "screen",
+          filter: "blur(120px)",
+          willChange: "transform",
         }}
-        initial={{ opacity: 0.3 }}
-        animate={reduced ? { opacity: 0.5 } : { opacity: [0.25, 0.85, 0.25] }}
-        transition={
+        initial={{ x: "0%", y: "0%", scale: 1.05 }}
+        animate={
           reduced
             ? undefined
-            : { duration: 6, ease: "easeInOut", repeat: Infinity }
+            : { x: ["0%", "-55%"], y: ["0%", "60%"], scale: [1.05, 1] }
         }
+        transition={reduced ? undefined : drift(46, 2)}
       />
 
-      {/* Layer 4 — film grain (static). Inline SVG turbulence as data-URI. */}
+      {/* Amber orb — starts lower-right, drifts up-left. Closes the diagonal
+          loop: every part of the canvas sees warm light at some point in the
+          cycle. */}
+      <motion.div
+        className="absolute h-[100vmax] w-[100vmax] rounded-full"
+        style={{
+          bottom: "-40vmax",
+          right: "-30vmax",
+          background:
+            "radial-gradient(circle, rgba(247, 175, 90, 0.40) 0%, rgba(247, 175, 90, 0.13) 35%, transparent 65%)",
+          mixBlendMode: "screen",
+          filter: "blur(115px)",
+          willChange: "transform",
+        }}
+        initial={{ x: "0%", y: "0%", scale: 1 }}
+        animate={
+          reduced
+            ? undefined
+            : { x: ["0%", "-50%"], y: ["0%", "-55%"], scale: [1, 1.1] }
+        }
+        transition={reduced ? undefined : drift(42, 5)}
+      />
+
+      {/* Film grain (static) — inline SVG turbulence as data-URI. Keeps the
+          gradient orbs from reading as smooth-digital. */}
       <div
         className="absolute inset-0"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>\")",
           backgroundSize: "240px 240px",
-          opacity: 0.13,
+          opacity: 0.1,
           mixBlendMode: "overlay",
-        }}
-      />
-
-      {/* Layer 5 — outer vignette. Keeps the edges grounded against the
-          cool base while leaving the center clear for the headline. */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, transparent 38%, rgba(6, 8, 12, 0.55) 75%, rgba(6, 8, 12, 0.85) 100%)",
         }}
       />
     </div>
