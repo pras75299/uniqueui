@@ -1125,6 +1125,24 @@
           "target": "components/ui/hero-logo-marquee.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-split-before-after",
+      "type": "registry:ui",
+      "title": "Split Before/After Hero",
+      "description": "Two-column hero contrasting a muted 'before' state with an animated, saturated 'after' state. Center seam draws in on mount. Pass your own copy or screenshots through the `before` and `after` slots; sensible defaults render otherwise.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-split-before-after.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-split-before-after.tsx"
+        }
+      ]
     }
   ]
 }

@@ -9,9 +9,11 @@ import { info } from "./commands/info";
 import { doctor } from "./commands/doctor";
 import { search } from "./commands/search";
 import { validateRegistry } from "./commands/registry";
+import { registryBuild } from "./commands/registry-build";
 import { theme } from "./commands/theme";
 import { diff } from "./commands/diff";
 import { update } from "./commands/update";
+import { remove } from "./commands/remove";
 
 const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
 
@@ -127,11 +129,34 @@ program
         }),
     );
 
+program
+    .command("remove")
+    .alias("rm")
+    .description("Remove a previously-added component from your project")
+    .argument("<component>", "the component slug")
+    .option("--url <url>", "the base URL of the registry", "https://uniqueui-platform.vercel.app")
+    .option("-y, --yes", "Skip the confirmation prompt")
+    .option("--dry-run", "Show what would be removed without modifying anything")
+    .action((componentName, opts) =>
+        remove(componentName, {
+            url: opts.url,
+            yes: opts.yes,
+            dryRun: opts.dryRun,
+        }),
+    );
+
 const registry = program.command("registry").description("Registry maintenance commands");
 registry
     .command("validate")
     .description("Validate a registry (split index + per-slug entries) against the UniqueUI schema")
     .option("--url <url>", "the base URL or local path of the registry", "https://uniqueui-platform.vercel.app")
     .action((opts) => validateRegistry({ url: opts.url }));
+
+registry
+    .command("build")
+    .description("Build distributable registry artifacts (split index + per-slug + mono) from a source dir")
+    .option("--src <path>", "source directory containing per-slug entry JSON files", "registry")
+    .option("--out <path>", "output directory for built artifacts", "dist/registry")
+    .action((opts) => registryBuild({ src: opts.src, out: opts.out }));
 
 program.parse();

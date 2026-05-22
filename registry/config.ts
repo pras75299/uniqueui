@@ -577,4 +577,12 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "hero-split-before-after",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "blocks/hero/split-before-after/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

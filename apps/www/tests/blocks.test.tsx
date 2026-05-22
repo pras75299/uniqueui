@@ -95,6 +95,7 @@ import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
 import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
 import { LogoMarqueeHero, LogoMarqueeRow } from "@/components/ui/hero-logo-marquee";
+import { SplitBeforeAfterHero } from "@/components/ui/hero-split-before-after";
 
 // Two contracts every hero block must keep:
 //  1. Render a single <h1> headline (semantic structure used by SEO + a11y).
@@ -207,6 +208,41 @@ describe("LogoMarqueeHero — logo wiring", () => {
         const { getByRole } = render(<LogoMarqueeHero logos={["A", "B"]} />);
         expect(getByRole("list", { name: "Customer logos" })).toBeInTheDocument();
         expect(getByRole("list", { name: "More customer logos" })).toBeInTheDocument();
+    });
+});
+
+// SplitBeforeAfterHero uses a different contract than the other heroes — two
+// halves with `before` / `after` slots and two <h2>s rather than a single <h1>.
+// That's intentional (no editorial hierarchy between the two states), so it
+// gets its own focused tests instead of being added to the shared `it.each`.
+describe("SplitBeforeAfterHero — slot contract", () => {
+    it("renders the default before/after headlines when no slots are provided", () => {
+        const { container } = render(<SplitBeforeAfterHero />);
+        expect(container.textContent).toContain("Generic, undifferentiated UI.");
+        expect(container.textContent).toContain("UI your customers screenshot.");
+    });
+
+    it("replaces the default copy when both slots are provided", () => {
+        const { getByTestId, container } = render(
+            <SplitBeforeAfterHero
+                before={<div data-testid="b">B side</div>}
+                after={<div data-testid="a">A side</div>}
+            />,
+        );
+        expect(getByTestId("b")).toBeInTheDocument();
+        expect(getByTestId("a")).toBeInTheDocument();
+        // Defaults must NOT also render alongside the slots.
+        expect(container.textContent).not.toContain("Generic, undifferentiated UI.");
+        expect(container.textContent).not.toContain("UI your customers screenshot.");
+    });
+
+    it("renders one half-slot independently when only one is provided", () => {
+        const { container } = render(
+            <SplitBeforeAfterHero before={<div>Only before</div>} />,
+        );
+        expect(container.textContent).toContain("Only before");
+        // The other half should still get its default.
+        expect(container.textContent).toContain("UI your customers screenshot.");
     });
 });
 

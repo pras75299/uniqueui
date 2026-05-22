@@ -4118,6 +4118,47 @@
         "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
         "scenarios": []
       }
+    },
+    {
+      "slug": "hero-split-before-after",
+      "name": "Split Before/After Hero",
+      "description": "Two-column hero contrasting a muted 'before' state with an animated, saturated 'after' state. Center seam draws in on mount. Pass your own copy or screenshots through the `before` and `after` slots; sensible defaults render otherwise.",
+      "icon": "LucideMaximize2",
+      "category": "Hero",
+      "kind": "block",
+      "addedAt": "2026-05-22",
+      "props": [
+        {
+          "name": "before",
+          "type": "ReactNode",
+          "description": "Left-half (problem) content. Renders a placeholder when omitted."
+        },
+        {
+          "name": "after",
+          "type": "ReactNode",
+          "description": "Right-half (solution) content. Renders a placeholder when omitted."
+        },
+        {
+          "name": "beforeClassName",
+          "type": "string",
+          "description": "Extra classes scoped to the left half."
+        },
+        {
+          "name": "afterClassName",
+          "type": "string",
+          "description": "Extra classes scoped to the right half."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Extra classes on the outer `<section>`."
+        }
+      ],
+      "usageCode": "import { SplitBeforeAfterHero } from \"@/components/ui/hero-split-before-after\";\n\nexport default function Hero() {\n  return <SplitBeforeAfterHero />;\n}",
+      "docs": {
+        "overview": "Migration / comparison hero. Particularly effective for products that replace an existing tool: 'before' shows the painful status quo, 'after' shows the upgrade.",
+        "scenarios": []
+      }
     }
   ]
 }

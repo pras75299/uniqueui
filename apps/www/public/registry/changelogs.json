@@ -587,5 +587,14 @@
         "Initial release: headline + dual-row logo ticker with reduced-motion freeze and customizable brand list."
       ]
     }
+  ],
+  "hero-split-before-after": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-22",
+      "changes": [
+        "Initial release: two-column hero with desaturated 'before' half and animated saturated 'after' half. Center seam draws in on mount. Slot-based content with sensible defaults. Reduced-motion respected throughout."
+      ]
+    }
   ]
 }

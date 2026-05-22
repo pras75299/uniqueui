@@ -1090,5 +1090,10 @@ export const docsScenarios: Record<string, ComponentDocs> = {
     "slug": "hero-logo-marquee",
     "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
     "scenarios": []
+  },
+  "hero-split-before-after": {
+    "slug": "hero-split-before-after",
+    "overview": "Migration / comparison hero. Particularly effective for products that replace an existing tool: 'before' shows the painful status quo, 'after' shows the upgrade.",
+    "scenarios": []
   }
 };
