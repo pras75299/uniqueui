@@ -590,6 +590,13 @@
   ],
   "hero-magnetic-letters": [
     {
+      "version": "1.2.0",
+      "date": "2026-05-22",
+      "changes": [
+        "Rewrote the backdrop entirely with `motion/react` — every layer is now a `motion.div` with explicit `animate` keyframe arrays and `repeat: Infinity` (no CSS keyframes, no rAF). Three drifting gradient orbs (teal 14s, amber 18s, magenta 22s) on `mix-blend: screen` create tertiary colors where they overlap (lavender from teal+magenta, gold from amber+magenta). Added an aurora-sweep band translating diagonally every 12s and increased orb alphas so the motion actually reads. Filament breathing tightened to 6s. `useReducedMotion()` freezes every layer at its initial frame."
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-05-22",
       "changes": [
