@@ -577,4 +577,20 @@ export const registry: Registry = [
             cnUtilFile,
         ],
     },
+    {
+        name: "hero-magnetic-letters",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "blocks/hero/magnetic-letters/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
+    {
+        name: "magnetic-text",
+        dependencies: ["motion", "clsx", "tailwind-merge"],
+        files: [
+            { path: "magnetic-text/component.tsx", type: "registry:ui" },
+            cnUtilFile,
+        ],
+    },
 ];

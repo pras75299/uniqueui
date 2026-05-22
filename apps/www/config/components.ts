@@ -776,6 +776,57 @@ const componentDefinitions = [
     "usageCode": "import { ScrambleText } from \"@/components/ui/scramble-text\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-6 text-center p-10 text-white\">\n      <ScrambleText text=\"UNIQUEUI COMPONENTS\" className=\"text-3xl font-bold tracking-wider text-emerald-400\" />\n      <ScrambleText\n        text=\"Hover to scramble again\"\n        triggerOnView={false}\n        className=\"text-lg text-neutral-400 cursor-pointer\"\n      />\n    </div>\n  );\n}"
   },
   {
+    "slug": "magnetic-text",
+    "name": "Magnetic Text",
+    "description": "Per-letter cursor-tracking text effect. Every glyph leans toward the pointer under its own spring; linear falloff inside the configured radius, capped at the configured strength. Soft white glow fades in near the cursor. Wrapper carries an aria-label; per-glyph spans are aria-hidden so screen readers never spell the word out.",
+    "icon": "LucideSparkles",
+    "category": "Text",
+    "addedAt": "2026-05-22",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "The text to animate. Each glyph becomes its own motion target."
+      },
+      {
+        "name": "as",
+        "type": "ElementType",
+        "default": "\"span\"",
+        "description": "Element tag to render as. Use \"h1\" / \"h2\" / \"p\" for semantic headings or paragraphs."
+      },
+      {
+        "name": "radius",
+        "type": "number",
+        "default": "140",
+        "description": "Pixel radius around each letter within which the cursor exerts pull."
+      },
+      {
+        "name": "strength",
+        "type": "number",
+        "default": "12",
+        "description": "Maximum displacement (px) any single letter can reach at peak proximity."
+      },
+      {
+        "name": "animateEntry",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true, letters stagger in with a spring on mount before becoming magnetic."
+      },
+      {
+        "name": "disableGlow",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true, the soft white glow that fades in around letters near the cursor is removed (useful on light backgrounds)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra Tailwind classes on the wrapping element (font-size, weight, color, etc.)."
+      }
+    ],
+    "usageCode": "import { MagneticText } from \"@/components/ui/magnetic-text\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex min-h-[40vh] items-center justify-center bg-[#0a0a0a] p-10\">\n      <MagneticText\n        as=\"h2\"\n        text=\"Motion, where it matters.\"\n        className=\"text-4xl font-semibold tracking-tight text-white sm:text-6xl\"\n        animateEntry\n      />\n    </div>\n  );\n}"
+  },
+  {
     "slug": "meteors-card",
     "name": "Meteors Card",
     "description": "Card with animated meteor/shooting star particles falling through the background.",
@@ -3211,6 +3262,46 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Hero() {\n  return (\n    <LogoMarqueeHero\n      logos={[\n        \"Acme\",\n        \"Globex\",\n        \"Soylent\",\n        \"Initech\",\n        \"Hooli\",\n        \"Umbrella\",\n        \"Stark\",\n        \"Wayne\",\n        \"Cyberdyne\",\n        \"Wonka\",\n        \"Tyrell\",\n        \"Aperture\",\n      ]}\n      secondaryLogos={[\n        \"Aperture\",\n        \"Tyrell\",\n        \"Wonka\",\n        \"Cyberdyne\",\n        \"Wayne\",\n        \"Stark\",\n        \"Umbrella\",\n        \"Hooli\",\n        \"Initech\",\n        \"Soylent\",\n        \"Globex\",\n        \"Acme\",\n      ]}\n      speed={32}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span className=\"h-1.5 w-1.5 rounded-full bg-white/80\" aria-hidden />\n        Trusted across teams\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        The platform shipping teams ship with.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        From scrappy seed startups to public companies — UniqueUI components\n        ship in production every day.\n      </p>\n    </LogoMarqueeHero>\n  );\n}"
+  },
+  {
+    "slug": "hero-magnetic-letters",
+    "name": "Magnetic Letters Hero",
+    "description": "Dark editorial hero where every letter of the headline tracks the cursor under its own spring physics. Configurable pull radius and strength. The backdrop is three large blurred gradient orbs (teal, magenta, amber) drifting diagonally on independent slow loops with `mix-blend: screen`, layered with a static SVG-turbulence film grain. A soft white glow fades in around letters as the pointer approaches.",
+    "icon": "LucideSparkles",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-22",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Override the entire hero composition (eyebrow + headline + sub + CTAs). When omitted, a default composition renders that uses the `headline` prop."
+      },
+      {
+        "name": "headline",
+        "type": "string",
+        "default": "\"Motion, where it matters.\"",
+        "description": "Headline text. Each glyph becomes an independent motion target — set this instead of passing `children` if you only want to swap copy."
+      },
+      {
+        "name": "radius",
+        "type": "number",
+        "default": "160",
+        "description": "Pixel radius around each letter within which the cursor exerts pull. Outside the radius the letter rests at its natural position."
+      },
+      {
+        "name": "strength",
+        "type": "number",
+        "default": "14",
+        "description": "Maximum displacement (in px) any single letter can reach at peak proximity to the cursor."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the outer `<section>`."
+      }
+    ],
+    "usageCode": "import { MagneticLettersHero } from \"@/components/ui/hero-magnetic-letters\";\n\nexport default function Hero() {\n  return <MagneticLettersHero headline=\"Motion, where it matters.\" />;\n}"
   }
 ] satisfies ComponentDefinition[];
 

@@ -95,6 +95,7 @@ import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
 import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
 import { LogoMarqueeHero, LogoMarqueeRow } from "@/components/ui/hero-logo-marquee";
+import { MagneticLettersHero } from "@/components/ui/hero-magnetic-letters";
 
 // Two contracts every hero block must keep:
 //  1. Render a single <h1> headline (semantic structure used by SEO + a11y).
@@ -109,6 +110,7 @@ describe("Hero blocks — render contract", () => {
         { name: "LiquidAuroraMeshHero", Component: LiquidAuroraMeshHero },
         { name: "NoiseDotFieldHero", Component: NoiseDotFieldHero },
         { name: "LogoMarqueeHero", Component: LogoMarqueeHero },
+        { name: "MagneticLettersHero", Component: MagneticLettersHero },
     ])("$name exposes a single <h1> heading via the default-content slot", ({ Component }) => {
         const { getAllByRole } = render(<Component />);
         const headings = getAllByRole("heading", { level: 1 });
@@ -124,6 +126,7 @@ describe("Hero blocks — render contract", () => {
         { name: "LiquidAuroraMeshHero", Component: LiquidAuroraMeshHero },
         { name: "NoiseDotFieldHero", Component: NoiseDotFieldHero },
         { name: "LogoMarqueeHero", Component: LogoMarqueeHero },
+        { name: "MagneticLettersHero", Component: MagneticLettersHero },
     ])("$name renders children in place of the default copy", ({ Component }) => {
         const { getByTestId, queryByRole } = render(
             <Component>
@@ -160,6 +163,12 @@ describe("Hero blocks — render contract", () => {
         expect(render(<LogoMarqueeHero />).container.textContent).toContain(
             "The platform shipping teams ship with.",
         );
+        cleanup();
+        // MagneticLettersHero wraps each glyph in its own <span aria-hidden>, so
+        // the headline is announced via aria-label on the <h1> wrapper rather
+        // than concatenated text content. Assert on the accessible name instead.
+        const { getByRole } = render(<MagneticLettersHero />);
+        expect(getByRole("heading", { level: 1, name: "Motion, where it matters." })).toBeInTheDocument();
     });
 });
 
@@ -207,6 +216,45 @@ describe("LogoMarqueeHero — logo wiring", () => {
         const { getByRole } = render(<LogoMarqueeHero logos={["A", "B"]} />);
         expect(getByRole("list", { name: "Customer logos" })).toBeInTheDocument();
         expect(getByRole("list", { name: "More customer logos" })).toBeInTheDocument();
+    });
+});
+
+describe("MagneticLettersHero — headline composition", () => {
+    it("uses the `headline` prop as the h1's accessible name and wraps every glyph in its own aria-hidden span", () => {
+        const headline = "Press for resonance.";
+        const { getByRole, container } = render(
+            <MagneticLettersHero headline={headline} />,
+        );
+        expect(
+            getByRole("heading", { level: 1, name: headline }),
+        ).toBeInTheDocument();
+        // Lock the per-glyph split contract: one span per character. If anyone
+        // accidentally drops the per-letter wrapping (or reverts to rendering
+        // the whole string as text), this fails — exactly the regression we
+        // want to catch.
+        const animatedGlyphs = container.querySelectorAll(
+            "h1 span[aria-hidden=\"true\"]",
+        );
+        expect(animatedGlyphs).toHaveLength(Array.from(headline).length);
+    });
+
+    it("attaches pointer listeners to the headline for magnetic tracking", () => {
+        // Listener-contract check — stronger than just "doesn't throw". If
+        // someone removes the pointer wiring in MagneticHeadline, this fails.
+        const addListenerSpy = vi.spyOn(
+            HTMLHeadingElement.prototype,
+            "addEventListener",
+        );
+        render(<MagneticLettersHero />);
+        expect(addListenerSpy).toHaveBeenCalledWith(
+            "pointermove",
+            expect.any(Function),
+        );
+        expect(addListenerSpy).toHaveBeenCalledWith(
+            "pointerleave",
+            expect.any(Function),
+        );
+        addListenerSpy.mockRestore();
     });
 });
 

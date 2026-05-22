@@ -290,6 +290,27 @@ export const docsScenarios: Record<string, ComponentDocs> = {
       }
     ]
   },
+  "magnetic-text": {
+    "slug": "magnetic-text",
+    "overview": "A general-purpose text-animation primitive. Use it for headlines, wordmarks, accent phrases, or any single string you want to feel reactive. Pairs well with `as=\"h1\"`/`as=\"h2\"` for SEO-correct headings.",
+    "scenarios": [
+      {
+        "title": "Pull-quote with strong magnetism",
+        "description": "Use a larger radius and strength on a slow editorial pull-quote — the effect reads as physical resonance rather than playful jitter.",
+        "code": "import { MagneticText } from \"@/components/ui/magnetic-text\";\n\nexport default function PullQuote() {\n  return (\n    <blockquote className=\"mx-auto max-w-2xl border-l-2 border-purple-500 px-8 py-16\">\n      <MagneticText\n        text=\"The best UI is the one users never have to think about.\"\n        radius={220}\n        strength={18}\n        className=\"text-2xl italic text-neutral-200\"\n      />\n    </blockquote>\n  );\n}"
+      },
+      {
+        "title": "Wordmark with entry animation",
+        "description": "Stagger the letters in on mount, then let the cursor take over. `as=\"h1\"` keeps it semantic.",
+        "code": "import { MagneticText } from \"@/components/ui/magnetic-text\";\n\nexport default function Wordmark() {\n  return (\n    <MagneticText\n      as=\"h1\"\n      text=\"UNIQUEUI\"\n      animateEntry\n      className=\"text-6xl font-bold tracking-[0.08em] text-white\"\n    />\n  );\n}"
+      },
+      {
+        "title": "Light-mode usage",
+        "description": "On a light background the default white glow disappears anyway, but `disableGlow` removes the now-redundant text-shadow style entirely.",
+        "code": "import { MagneticText } from \"@/components/ui/magnetic-text\";\n\nexport default function LightMode() {\n  return (\n    <div className=\"flex min-h-[30vh] items-center justify-center bg-neutral-50 p-10\">\n      <MagneticText\n        as=\"p\"\n        text=\"Quiet motion. Loud results.\"\n        disableGlow\n        radius={120}\n        strength={10}\n        className=\"text-3xl font-medium text-neutral-900\"\n      />\n    </div>\n  );\n}"
+      }
+    ]
+  },
   "meteors-card": {
     "slug": "meteors-card",
     "overview": "MeteorsCard wraps content in a card with animated meteor streaks flying across it. The custom Tailwind animation is installed automatically via `uniqueui add`.",
@@ -1089,6 +1110,11 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   "hero-logo-marquee": {
     "slug": "hero-logo-marquee",
     "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
+    "scenarios": []
+  },
+  "hero-magnetic-letters": {
+    "slug": "hero-magnetic-letters",
+    "overview": "Per-glyph cursor-tracking hero. The headline reads as a normal h1 to screen readers (aria-label on the wrapper, aria-hidden on each animated span), so accessibility is preserved despite the per-letter wrapping.",
     "scenarios": []
   }
 };

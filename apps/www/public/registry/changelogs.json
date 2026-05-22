@@ -587,5 +587,44 @@
         "Initial release: headline + dual-row logo ticker with reduced-motion freeze and customizable brand list."
       ]
     }
+  ],
+  "hero-magnetic-letters": [
+    {
+      "version": "1.3.0",
+      "date": "2026-05-22",
+      "changes": [
+        "Simplified the backdrop to a single continuous diagonal gradient drift. Removed: the radial center mask (was creating a visible dark void behind the headline), the diagonal aurora-sweep band (read as a stray light slash), and the filament hairline (read as a stray diagonal line). Kept: three large blurred gradient orbs (teal, magenta, amber) each drifting along the top-left ↔ bottom-right diagonal axis on its own slow loop (38s, 46s, 42s) with phase offsets so they pass through each other smoothly. Film grain opacity dropped to 0.10 (subtler). `mix-blend: screen` still produces the tertiary blooms where orbs overlap."
+      ]
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-05-22",
+      "changes": [
+        "Rewrote the backdrop entirely with `motion/react` — every layer is now a `motion.div` with explicit `animate` keyframe arrays and `repeat: Infinity` (no CSS keyframes, no rAF). Three drifting gradient orbs (teal 14s, amber 18s, magenta 22s) on `mix-blend: screen` create tertiary colors where they overlap (lavender from teal+magenta, gold from amber+magenta). Added an aurora-sweep band translating diagonally every 12s and increased orb alphas so the motion actually reads. Filament breathing tightened to 6s. `useReducedMotion()` freezes every layer at its initial frame."
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-05-22",
+      "changes": [
+        "Replaced the rotating conic backdrop with a four-layer silver-vapor composition: cool-teal + warm-amber blurred blobs drifting on asymmetric paths (mix-blend: screen, lavender bloom at overlap, radially masked away from the central headline region), a subtle drifting dot-grid foundation, an SVG film-grain overlay, and a single diagonal filament hairline whose opacity breathes over 12s. All layers freeze under prefers-reduced-motion. Base color shifted from `#08080a` to a cooler `#06080c`."
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-05-22",
+      "changes": [
+        "Initial release: per-letter cursor-tracking springs on a dark conic-backdrop hero. Letters stagger in with spring physics, then track the pointer within a configurable radius. Reduced-motion disables magnetic follow and collapses entrance to opacity-only."
+      ]
+    }
+  ],
+  "magnetic-text": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-22",
+      "changes": [
+        "Initial release: standalone per-letter cursor-tracking text component. Wraps any string with springs that lean toward the pointer; falloff is linear inside `radius`, zero outside; capped at `strength`. Optional `animateEntry` staggers letters in on mount. `as` prop lets it render as h1/h2/p/span. aria-label on the wrapper + aria-hidden on every glyph keep screen readers from spelling out the word."
+      ]
+    }
   ]
 }

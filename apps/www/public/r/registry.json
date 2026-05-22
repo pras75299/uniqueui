@@ -1125,6 +1125,42 @@
           "target": "components/ui/hero-logo-marquee.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-magnetic-letters",
+      "type": "registry:ui",
+      "title": "Magnetic Letters Hero",
+      "description": "Dark editorial hero where every letter of the headline tracks the cursor under its own spring physics. Configurable pull radius and strength. The backdrop is three large blurred gradient orbs (teal, magenta, amber) drifting diagonally on independent slow loops with `mix-blend: screen`, layered with a static SVG-turbulence film grain. A soft white glow fades in around letters as the pointer approaches.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-magnetic-letters.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-magnetic-letters.tsx"
+        }
+      ]
+    },
+    {
+      "name": "magnetic-text",
+      "type": "registry:ui",
+      "title": "Magnetic Text",
+      "description": "Per-letter cursor-tracking text effect. Every glyph leans toward the pointer under its own spring; linear falloff inside the configured radius, capped at the configured strength. Soft white glow fades in near the cursor. Wrapper carries an aria-label; per-glyph spans are aria-hidden so screen readers never spell the word out.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/magnetic-text.tsx",
+          "type": "registry:component",
+          "target": "components/ui/magnetic-text.tsx"
+        }
+      ]
     }
   ]
 }
