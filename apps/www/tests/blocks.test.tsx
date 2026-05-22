@@ -95,7 +95,7 @@ import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
 import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
 import { LogoMarqueeHero, LogoMarqueeRow } from "@/components/ui/hero-logo-marquee";
-import { SplitBeforeAfterHero } from "@/components/ui/hero-split-before-after";
+import { MagneticLettersHero } from "@/components/ui/hero-magnetic-letters";
 
 // Two contracts every hero block must keep:
 //  1. Render a single <h1> headline (semantic structure used by SEO + a11y).
@@ -110,6 +110,7 @@ describe("Hero blocks — render contract", () => {
         { name: "LiquidAuroraMeshHero", Component: LiquidAuroraMeshHero },
         { name: "NoiseDotFieldHero", Component: NoiseDotFieldHero },
         { name: "LogoMarqueeHero", Component: LogoMarqueeHero },
+        { name: "MagneticLettersHero", Component: MagneticLettersHero },
     ])("$name exposes a single <h1> heading via the default-content slot", ({ Component }) => {
         const { getAllByRole } = render(<Component />);
         const headings = getAllByRole("heading", { level: 1 });
@@ -125,6 +126,7 @@ describe("Hero blocks — render contract", () => {
         { name: "LiquidAuroraMeshHero", Component: LiquidAuroraMeshHero },
         { name: "NoiseDotFieldHero", Component: NoiseDotFieldHero },
         { name: "LogoMarqueeHero", Component: LogoMarqueeHero },
+        { name: "MagneticLettersHero", Component: MagneticLettersHero },
     ])("$name renders children in place of the default copy", ({ Component }) => {
         const { getByTestId, queryByRole } = render(
             <Component>
@@ -161,6 +163,12 @@ describe("Hero blocks — render contract", () => {
         expect(render(<LogoMarqueeHero />).container.textContent).toContain(
             "The platform shipping teams ship with.",
         );
+        cleanup();
+        // MagneticLettersHero wraps each glyph in its own <span aria-hidden>, so
+        // the headline is announced via aria-label on the <h1> wrapper rather
+        // than concatenated text content. Assert on the accessible name instead.
+        const { getByRole } = render(<MagneticLettersHero />);
+        expect(getByRole("heading", { level: 1, name: "Motion, where it matters." })).toBeInTheDocument();
     });
 });
 
@@ -211,38 +219,31 @@ describe("LogoMarqueeHero — logo wiring", () => {
     });
 });
 
-// SplitBeforeAfterHero uses a different contract than the other heroes — two
-// halves with `before` / `after` slots and two <h2>s rather than a single <h1>.
-// That's intentional (no editorial hierarchy between the two states), so it
-// gets its own focused tests instead of being added to the shared `it.each`.
-describe("SplitBeforeAfterHero — slot contract", () => {
-    it("renders the default before/after headlines when no slots are provided", () => {
-        const { container } = render(<SplitBeforeAfterHero />);
-        expect(container.textContent).toContain("Generic, undifferentiated UI.");
-        expect(container.textContent).toContain("UI your customers screenshot.");
+describe("MagneticLettersHero — headline composition", () => {
+    it("uses the `headline` prop as the h1's accessible name without exposing per-letter spans to AT", () => {
+        const { getByRole, container } = render(
+            <MagneticLettersHero headline="Press for resonance." />,
+        );
+        expect(
+            getByRole("heading", { level: 1, name: "Press for resonance." }),
+        ).toBeInTheDocument();
+        // Every animated glyph carries aria-hidden so AT never reads
+        // "M-o-t-i-o-n" character by character.
+        const animatedGlyphs = container.querySelectorAll(
+            "h1 span[aria-hidden=\"true\"]",
+        );
+        expect(animatedGlyphs.length).toBeGreaterThan(0);
     });
 
-    it("replaces the default copy when both slots are provided", () => {
-        const { getByTestId, container } = render(
-            <SplitBeforeAfterHero
-                before={<div data-testid="b">B side</div>}
-                after={<div data-testid="a">A side</div>}
-            />,
-        );
-        expect(getByTestId("b")).toBeInTheDocument();
-        expect(getByTestId("a")).toBeInTheDocument();
-        // Defaults must NOT also render alongside the slots.
-        expect(container.textContent).not.toContain("Generic, undifferentiated UI.");
-        expect(container.textContent).not.toContain("UI your customers screenshot.");
-    });
-
-    it("renders one half-slot independently when only one is provided", () => {
-        const { container } = render(
-            <SplitBeforeAfterHero before={<div>Only before</div>} />,
-        );
-        expect(container.textContent).toContain("Only before");
-        // The other half should still get its default.
-        expect(container.textContent).toContain("UI your customers screenshot.");
+    it("survives a pointermove dispatched on its wrapper without throwing", () => {
+        const { container } = render(<MagneticLettersHero />);
+        const heading = container.querySelector("h1");
+        expect(heading).not.toBeNull();
+        expect(() => {
+            heading?.dispatchEvent(
+                new PointerEvent("pointermove", { clientX: 200, clientY: 100, bubbles: true }),
+            );
+        }).not.toThrow();
     });
 });
 

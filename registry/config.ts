@@ -578,10 +578,10 @@ export const registry: Registry = [
         ],
     },
     {
-        name: "hero-split-before-after",
+        name: "hero-magnetic-letters",
         dependencies: ["motion", "clsx", "tailwind-merge"],
         files: [
-            { path: "blocks/hero/split-before-after/component.tsx", type: "registry:ui" },
+            { path: "blocks/hero/magnetic-letters/component.tsx", type: "registry:ui" },
             cnUtilFile,
         ],
     },

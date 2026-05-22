@@ -3213,33 +3213,36 @@ const componentDefinitions = [
     "usageCode": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Hero() {\n  return (\n    <LogoMarqueeHero\n      logos={[\n        \"Acme\",\n        \"Globex\",\n        \"Soylent\",\n        \"Initech\",\n        \"Hooli\",\n        \"Umbrella\",\n        \"Stark\",\n        \"Wayne\",\n        \"Cyberdyne\",\n        \"Wonka\",\n        \"Tyrell\",\n        \"Aperture\",\n      ]}\n      secondaryLogos={[\n        \"Aperture\",\n        \"Tyrell\",\n        \"Wonka\",\n        \"Cyberdyne\",\n        \"Wayne\",\n        \"Stark\",\n        \"Umbrella\",\n        \"Hooli\",\n        \"Initech\",\n        \"Soylent\",\n        \"Globex\",\n        \"Acme\",\n      ]}\n      speed={32}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span className=\"h-1.5 w-1.5 rounded-full bg-white/80\" aria-hidden />\n        Trusted across teams\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        The platform shipping teams ship with.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        From scrappy seed startups to public companies — UniqueUI components\n        ship in production every day.\n      </p>\n    </LogoMarqueeHero>\n  );\n}"
   },
   {
-    "slug": "hero-split-before-after",
-    "name": "Split Before/After Hero",
-    "description": "Two-column hero contrasting a muted 'before' state with an animated, saturated 'after' state. Center seam draws in on mount. Pass your own copy or screenshots through the `before` and `after` slots; sensible defaults render otherwise.",
-    "icon": "LucideMaximize2",
+    "slug": "hero-magnetic-letters",
+    "name": "Magnetic Letters Hero",
+    "description": "Dark editorial hero where every letter of the headline tracks the cursor under its own spring physics. Configurable pull radius and strength. Slow rotating conic backdrop, soft radial vignette, and a soft white glow that fades in around letters as the pointer approaches.",
+    "icon": "LucideSparkles",
     "category": "Hero",
     "kind": "block",
     "addedAt": "2026-05-22",
     "props": [
       {
-        "name": "before",
+        "name": "children",
         "type": "ReactNode",
-        "description": "Left-half (problem) content. Renders a placeholder when omitted."
+        "description": "Override the entire hero composition (eyebrow + headline + sub + CTAs). When omitted, a default composition renders that uses the `headline` prop."
       },
       {
-        "name": "after",
-        "type": "ReactNode",
-        "description": "Right-half (solution) content. Renders a placeholder when omitted."
-      },
-      {
-        "name": "beforeClassName",
+        "name": "headline",
         "type": "string",
-        "description": "Extra classes scoped to the left half."
+        "default": "\"Motion, where it matters.\"",
+        "description": "Headline text. Each glyph becomes an independent motion target — set this instead of passing `children` if you only want to swap copy."
       },
       {
-        "name": "afterClassName",
-        "type": "string",
-        "description": "Extra classes scoped to the right half."
+        "name": "radius",
+        "type": "number",
+        "default": "160",
+        "description": "Pixel radius around each letter within which the cursor exerts pull. Outside the radius the letter rests at its natural position."
+      },
+      {
+        "name": "strength",
+        "type": "number",
+        "default": "14",
+        "description": "Maximum displacement (in px) any single letter can reach at peak proximity to the cursor."
       },
       {
         "name": "className",
@@ -3247,7 +3250,7 @@ const componentDefinitions = [
         "description": "Extra classes on the outer `<section>`."
       }
     ],
-    "usageCode": "import { SplitBeforeAfterHero } from \"@/components/ui/hero-split-before-after\";\n\nexport default function Hero() {\n  return <SplitBeforeAfterHero />;\n}"
+    "usageCode": "import { MagneticLettersHero } from \"@/components/ui/hero-magnetic-letters\";\n\nexport default function Hero() {\n  return <MagneticLettersHero headline=\"Motion, where it matters.\" />;\n}"
   }
 ] satisfies ComponentDefinition[];
 

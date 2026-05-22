@@ -71,7 +71,7 @@ import { IridescentSweepHero } from "@/components/ui/hero-iridescent-sweep";
 import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
 import { LogoMarqueeHero } from "@/components/ui/hero-logo-marquee";
-import { SplitBeforeAfterHero } from "@/components/ui/hero-split-before-after";
+import { MagneticLettersHero } from "@/components/ui/hero-magnetic-letters";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3793,5 +3793,5 @@ export const componentDemos: Record<string, DemoComponent> = {
       <LogoMarqueeDemoHeadline />
     </LogoMarqueeHero>
   ),
-  "hero-split-before-after": () => <SplitBeforeAfterHero />,
+  "hero-magnetic-letters": () => <MagneticLettersHero />,
 };

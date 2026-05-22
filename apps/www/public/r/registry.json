@@ -1127,10 +1127,10 @@
       ]
     },
     {
-      "name": "hero-split-before-after",
+      "name": "hero-magnetic-letters",
       "type": "registry:ui",
-      "title": "Split Before/After Hero",
-      "description": "Two-column hero contrasting a muted 'before' state with an animated, saturated 'after' state. Center seam draws in on mount. Pass your own copy or screenshots through the `before` and `after` slots; sensible defaults render otherwise.",
+      "title": "Magnetic Letters Hero",
+      "description": "Dark editorial hero where every letter of the headline tracks the cursor under its own spring physics. Configurable pull radius and strength. Slow rotating conic backdrop, soft radial vignette, and a soft white glow that fades in around letters as the pointer approaches.",
       "dependencies": [
         "motion",
         "clsx",
@@ -1138,9 +1138,9 @@
       ],
       "files": [
         {
-          "path": "components/ui/hero-split-before-after.tsx",
+          "path": "components/ui/hero-magnetic-letters.tsx",
           "type": "registry:component",
-          "target": "components/ui/hero-split-before-after.tsx"
+          "target": "components/ui/hero-magnetic-letters.tsx"
         }
       ]
     }

@@ -588,12 +588,12 @@
       ]
     }
   ],
-  "hero-split-before-after": [
+  "hero-magnetic-letters": [
     {
       "version": "1.0.0",
       "date": "2026-05-22",
       "changes": [
-        "Initial release: two-column hero with desaturated 'before' half and animated saturated 'after' half. Center seam draws in on mount. Slot-based content with sensible defaults. Reduced-motion respected throughout."
+        "Initial release: per-letter cursor-tracking springs on a dark conic-backdrop hero. Letters stagger in with spring physics, then track the pointer within a configurable radius. Reduced-motion disables magnetic follow and collapses entrance to opacity-only."
       ]
     }
   ]

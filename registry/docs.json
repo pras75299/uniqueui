@@ -4120,33 +4120,36 @@
       }
     },
     {
-      "slug": "hero-split-before-after",
-      "name": "Split Before/After Hero",
-      "description": "Two-column hero contrasting a muted 'before' state with an animated, saturated 'after' state. Center seam draws in on mount. Pass your own copy or screenshots through the `before` and `after` slots; sensible defaults render otherwise.",
-      "icon": "LucideMaximize2",
+      "slug": "hero-magnetic-letters",
+      "name": "Magnetic Letters Hero",
+      "description": "Dark editorial hero where every letter of the headline tracks the cursor under its own spring physics. Configurable pull radius and strength. Slow rotating conic backdrop, soft radial vignette, and a soft white glow that fades in around letters as the pointer approaches.",
+      "icon": "LucideSparkles",
       "category": "Hero",
       "kind": "block",
       "addedAt": "2026-05-22",
       "props": [
         {
-          "name": "before",
+          "name": "children",
           "type": "ReactNode",
-          "description": "Left-half (problem) content. Renders a placeholder when omitted."
+          "description": "Override the entire hero composition (eyebrow + headline + sub + CTAs). When omitted, a default composition renders that uses the `headline` prop."
         },
         {
-          "name": "after",
-          "type": "ReactNode",
-          "description": "Right-half (solution) content. Renders a placeholder when omitted."
-        },
-        {
-          "name": "beforeClassName",
+          "name": "headline",
           "type": "string",
-          "description": "Extra classes scoped to the left half."
+          "default": "\"Motion, where it matters.\"",
+          "description": "Headline text. Each glyph becomes an independent motion target — set this instead of passing `children` if you only want to swap copy."
         },
         {
-          "name": "afterClassName",
-          "type": "string",
-          "description": "Extra classes scoped to the right half."
+          "name": "radius",
+          "type": "number",
+          "default": "160",
+          "description": "Pixel radius around each letter within which the cursor exerts pull. Outside the radius the letter rests at its natural position."
+        },
+        {
+          "name": "strength",
+          "type": "number",
+          "default": "14",
+          "description": "Maximum displacement (in px) any single letter can reach at peak proximity to the cursor."
         },
         {
           "name": "className",
@@ -4154,9 +4157,9 @@
           "description": "Extra classes on the outer `<section>`."
         }
       ],
-      "usageCode": "import { SplitBeforeAfterHero } from \"@/components/ui/hero-split-before-after\";\n\nexport default function Hero() {\n  return <SplitBeforeAfterHero />;\n}",
+      "usageCode": "import { MagneticLettersHero } from \"@/components/ui/hero-magnetic-letters\";\n\nexport default function Hero() {\n  return <MagneticLettersHero headline=\"Motion, where it matters.\" />;\n}",
       "docs": {
-        "overview": "Migration / comparison hero. Particularly effective for products that replace an existing tool: 'before' shows the painful status quo, 'after' shows the upgrade.",
+        "overview": "Per-glyph cursor-tracking hero. The headline reads as a normal h1 to screen readers (aria-label on the wrapper, aria-hidden on each animated span), so accessibility is preserved despite the per-letter wrapping.",
         "scenarios": []
       }
     }

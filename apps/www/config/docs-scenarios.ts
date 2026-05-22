@@ -1091,9 +1091,9 @@ export const docsScenarios: Record<string, ComponentDocs> = {
     "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
     "scenarios": []
   },
-  "hero-split-before-after": {
-    "slug": "hero-split-before-after",
-    "overview": "Migration / comparison hero. Particularly effective for products that replace an existing tool: 'before' shows the painful status quo, 'after' shows the upgrade.",
+  "hero-magnetic-letters": {
+    "slug": "hero-magnetic-letters",
+    "overview": "Per-glyph cursor-tracking hero. The headline reads as a normal h1 to screen readers (aria-label on the wrapper, aria-hidden on each animated span), so accessibility is preserved despite the per-letter wrapping.",
     "scenarios": []
   }
 };
