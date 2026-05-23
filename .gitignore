@@ -2,6 +2,7 @@
 node_modules/
 
 /packages/cli/dist
+/packages/registry-schema/dist
 
 /apps/www/package-lock.json
 /packages/cli/package-lock.json

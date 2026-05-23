@@ -24,7 +24,7 @@ import {
   crossCheckChangelogs,
   crossCheckSlugs,
   validate,
-} from "./validate-registry.lib.mjs";
+} from "@uniqueui/registry-schema";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
