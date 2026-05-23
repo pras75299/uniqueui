@@ -77,9 +77,13 @@ async function run() {
     console.log(`   ${slugs.length} components.\n`);
 
     // ── 2. Ensure registry + shadcn JSON artifacts exist ───────────────────────
+    // Use `pnpm build:registry` (not direct ts-node) so the `prebuild:registry`
+    // hook builds the `@uniqueui/registry-schema` package first. build-registry.ts
+    // imports from that package's compiled `dist/`; bypassing the hook on a
+    // fresh clone causes a TS2307 module-not-found before anything is generated.
     console.log('🔨  Running build:registry (generates apps/www/public/r/*.json)...');
     try {
-        execFileSync('npx', ['ts-node', path.join(__dirname, 'build-registry.ts')], {
+        execFileSync('pnpm', ['build:registry'], {
             cwd: ROOT_DIR,
             stdio: 'pipe',
         });
