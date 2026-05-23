@@ -8,7 +8,8 @@
 import { z } from "zod";
 
 export const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
-const NPM_DEP_RE = /^(?:@[a-z0-9-][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/i;
+// npm package names must be all lowercase (see npm naming rules); no `/i`.
+const NPM_DEP_RE = /^(?:@[a-z0-9-][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/;
 
 export const Slug = z.string().regex(SLUG_RE, "slug must be kebab-case (a-z0-9-)");
 export const NpmDep = z.string().regex(NPM_DEP_RE, "invalid npm dependency name");

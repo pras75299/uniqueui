@@ -15,7 +15,8 @@ import path from "path";
 import { z } from "zod";
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
-const NPM_DEP_RE = /^(?:@[a-z0-9-][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/i;
+// npm package names must be all lowercase (see npm naming rules); no `/i`.
+const NPM_DEP_RE = /^(?:@[a-z0-9-][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/;
 // Loose semver: MAJOR.MINOR.PATCH. Component versions don't carry prerelease
 // or build metadata today; tighten if/when they do.
 const SEMVER_RE = /^\d+\.\d+\.\d+$/;
@@ -291,6 +292,10 @@ export function crossCheckSlugs({
         for (const slug of rootSlugs) {
             if (!shadcnSlugs.has(slug))
                 mismatches.push(`shadcn manifest missing "${slug}"`);
+        }
+        for (const slug of shadcnSlugs) {
+            if (!rootSlugs.has(slug))
+                mismatches.push(`shadcn manifest has stray "${slug}"`);
         }
     }
     return mismatches;

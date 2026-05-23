@@ -177,6 +177,18 @@ describe("crossCheckSlugs", () => {
             true,
         );
     });
+
+    it("flags stray slugs in shadcn manifest — symmetric to the gap check; a rename or stale entry would otherwise ship a slug the registry can't back", () => {
+        const result = crossCheckSlugs({
+            root: [{ name: "a" }],
+            splitIndex: null,
+            publicMono: null,
+            shadcnManifest: { items: [{ name: "a" }, { name: "ghost" }] },
+        });
+        expect(
+            result.some((m) => m.includes('shadcn manifest has stray "ghost"')),
+        ).toBe(true);
+    });
 });
 
 describe("RegistryEntry: meta.version + changelog (Phase 8a)", () => {

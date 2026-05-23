@@ -15,7 +15,7 @@ This package is the source of truth for the shape of every artifact UniqueUI pub
 npm install @uniqueui/registry-schema zod
 ```
 
-`zod` is a peer of this package's runtime dependency; install it explicitly so you stay on a known version.
+`zod` is a direct runtime dependency of this package and is installed automatically. Install it explicitly only if you want to pin or override the version in your app.
 
 ## Usage
 
