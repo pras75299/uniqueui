@@ -2,8 +2,7 @@
 import fs from "fs-extra";
 import path from "path";
 import { registry, type RegistryChangelogEntry } from "../registry/config";
-// @ts-expect-error — .mjs module without ambient types
-import { resolvePathUnderDir } from "./validate-registry.lib.mjs";
+import { resolvePathUnderDir } from "@uniqueui/registry-schema";
 
 const REGISTRY_DIR = path.join(__dirname, "../registry");
 const REGISTRY_DOCS_FILE = path.join(REGISTRY_DIR, "docs.json");
@@ -229,7 +228,7 @@ function compareSemver(a: string, b: string): number {
 }
 
 // `loadChangelogs` mirrors the shape-level rules of the `Changelogs` zod
-// schema in `scripts/validate-registry.lib.mjs`. Both must stay in sync:
+// schema in `@uniqueui/registry-schema`. Both must stay in sync:
 // the build script is the fast-feedback path for contributors, the zod
 // validator is the post-build CI gate. If you add a rule here, mirror it
 // in the zod schema (and vice versa).

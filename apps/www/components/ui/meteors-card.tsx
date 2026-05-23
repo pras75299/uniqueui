@@ -50,9 +50,9 @@ function generateMeteors(count: number): MeteorData[] {
 }
 
 function Meteors({ count, color }: { count: number; color: string }) {
-  const [meteors, setMeteors] = useState<MeteorData[]>(() =>
-    generateMeteors(count)
-  );
+  // Start empty so SSR markup matches the first client render; randomised
+  // positions are generated post-mount to avoid a hydration mismatch.
+  const [meteors, setMeteors] = useState<MeteorData[]>([]);
 
   useEffect(() => {
     setMeteors(generateMeteors(count));

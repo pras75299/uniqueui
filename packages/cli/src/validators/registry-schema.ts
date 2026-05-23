@@ -1,12 +1,15 @@
 // Zod schemas for end-user registry validation via `uniqueui registry validate`.
-// Mirrors `scripts/validate-registry.lib.mjs` (the CI source of truth for
-// monorepo artifact validation). The two are intentionally separate: the
-// script can't be imported from CJS-compiled CLI code, and the CLI ships
-// without scripts/. Keep both in sync when changing slug/NPM rules.
+// Partial mirror of `@uniqueui/registry-schema` (the source of truth for
+// repo-side artifact validation and shared type exports). The two are
+// intentionally separate for now: this trimmed copy keeps the CLI's
+// install footprint small and avoids a workspace dep until the CLI moves
+// to full consumption in Phase 10 (`update`/`diff` consume the schema
+// package directly). Keep both in sync when changing slug/NPM rules.
 import { z } from "zod";
 
 export const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
-const NPM_DEP_RE = /^(?:@[a-z0-9-][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/i;
+// npm package names must be all lowercase (see npm naming rules); no `/i`.
+const NPM_DEP_RE = /^(?:@[a-z0-9-][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/;
 
 export const Slug = z.string().regex(SLUG_RE, "slug must be kebab-case (a-z0-9-)");
 export const NpmDep = z.string().regex(NPM_DEP_RE, "invalid npm dependency name");

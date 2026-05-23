@@ -152,9 +152,13 @@ async function run() {
     console.log(`    ${totalPages} total pages to generate\n`);
 
     // ── 4. Rebuild registry.json so it always reflects the current registry ───
+    // Use `pnpm build:registry` (not direct ts-node) so the `prebuild:registry`
+    // hook builds the `@uniqueui/registry-schema` package first. build-registry.ts
+    // imports from that package's compiled `dist/`; on a fresh clone the dist
+    // doesn't exist and bypassing the hook causes a TS2307 module-not-found.
     console.log('🔨  Rebuilding registry.json...');
     try {
-        execFileSync('npx', ['ts-node', path.join(__dirname, 'build-registry.ts')], {
+        execFileSync('pnpm', ['build:registry'], {
             cwd: ROOT_DIR,
             stdio: 'pipe',
         });

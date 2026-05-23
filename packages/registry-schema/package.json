@@ -1,0 +1,53 @@
+{
+    "name": "@uniqueui/registry-schema",
+    "version": "0.1.0",
+    "description": "Zod schemas, types, and cross-checks for the UniqueUI registry contract. Shared by the build script, CI validator, the uniqueui CLI, and third-party registries.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "scripts": {
+        "build": "tsc",
+        "test": "vitest run",
+        "prepublishOnly": "npm run build"
+    },
+    "keywords": [
+        "uniqueui",
+        "registry",
+        "zod",
+        "schema",
+        "validator"
+    ],
+    "author": "pras75299",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pras75299/uniqueui.git",
+        "directory": "packages/registry-schema"
+    },
+    "homepage": "https://github.com/pras75299/uniqueui#readme",
+    "bugs": {
+        "url": "https://github.com/pras75299/uniqueui/issues"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "dependencies": {
+        "zod": "^3.22.4"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "typescript": "^5.3.3",
+        "vitest": "^4.0.18"
+    }
+}
