@@ -1,0 +1,43 @@
+{
+    "name": "@uniqueui/cli-core",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Programmatic command logic for the uniqueui CLI. Workspace-only — uniqueui-cli bundles this at build time via tsup. Not published to npm.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "test": "vitest run"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "dependencies": {
+        "@types/node-fetch": "^2.6.13",
+        "@uniqueui/registry-schema": "workspace:*",
+        "chalk": "^4.1.2",
+        "fs-extra": "^11.2.0",
+        "node-fetch": "^2.7.0",
+        "ora": "^5.4.1",
+        "prompts": "^2.4.2",
+        "ts-morph": "^21.0.1",
+        "zod": "^3.22.4"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^11.0.4",
+        "@types/node": "^20.10.0",
+        "@types/prompts": "^2.4.9",
+        "typescript": "^5.3.3",
+        "vitest": "^4.0.18"
+    }
+}

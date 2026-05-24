@@ -1,19 +1,23 @@
-#!/usr/bin/env node
+// Bin entry — tsup adds the shebang via banner config so the bundled
+// dist/index.js is directly executable. Keep this file Commander-wiring only;
+// all command logic lives in @uniqueui/cli-core.
 import { Command } from "commander";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { init } from "./commands/init";
-import { add } from "./commands/add";
-import { list } from "./commands/list";
-import { info } from "./commands/info";
-import { doctor } from "./commands/doctor";
-import { search } from "./commands/search";
-import { validateRegistry } from "./commands/registry";
-import { registryBuild } from "./commands/registry-build";
-import { theme } from "./commands/theme";
-import { diff } from "./commands/diff";
-import { update } from "./commands/update";
-import { remove } from "./commands/remove";
+import {
+    add,
+    diff,
+    doctor,
+    info,
+    init,
+    list,
+    registryBuild,
+    remove,
+    search,
+    theme,
+    update,
+    validateRegistry,
+} from "@uniqueui/cli-core";
 
 const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
 
