@@ -24,6 +24,12 @@ UniqueUI is a collection of **copy-paste animated components** built with React,
   - [info](#info-component)
   - [doctor](#doctor)
   - [search](#search-query)
+  - [diff](#diff-component)
+  - [update](#update-component)
+  - [theme](#theme)
+  - [remove](#remove-component)
+  - [registry validate](#registry-validate)
+  - [registry build](#registry-build)
 - [Installing with the shadcn CLI](#installing-with-the-shadcn-cli)
 - [Project Setup Guide](#project-setup-guide)
   - [Next.js](#nextjs-setup)
@@ -194,24 +200,6 @@ npx uniqueui add my-component --url https://my-registry.com/components
 
 **Overwrite behavior:** When `add` finds an existing `components/ui/<slug>.tsx`, it prompts for `skip` / `overwrite` / `diff`. Choose `diff` to see a line-by-line comparison between your file and the registry version before deciding. In non-interactive shells (CI) the default is to skip — pass `--force` to overwrite.
 
----
-
-## Installing with the shadcn CLI
-
-The same components are published in **shadcn registry** format at **`https://uniqueui-platform.vercel.app/r/<slug>.json`** (and `https://uniqueui-platform.vercel.app/r/registry.json` for the full catalog). Use this if your app already follows the shadcn/ui workflow (`components.json`, `@/lib/utils` with `cn`, Tailwind v3-style config).
-
-```bash
-npx shadcn@latest add https://uniqueui-platform.vercel.app/r/moving-border.json -y
-```
-
-- Component snippets import **`@/lib/utils`** — the shadcn registry item does **not** ship a second `cn` file (your project should already have it from `shadcn init`).
-- The CLI writes **`components/ui/<slug>.tsx`** (plus Tailwind merges when the component defines them).
-- **UniqueUI CLI vs shadcn:** `uniqueui add` uses the split registry under `/registry/` and can scaffold `utils/cn.ts`; `shadcn add` uses `/r/*.json` and expects a shadcn-aligned project.
-
-Upstream repo: after `pnpm build:registry`, the same JSON files exist under `apps/www/public/r/` for local testing.
-
----
-
 ### `list`
 
 Display every component available in the registry, sorted alphabetically with descriptions when the source exposes them.
@@ -326,6 +314,143 @@ npx uniqueui search "cursor follow" --limit 5
 5. Description contains the query
 
 Within the same tier, shorter fields rank higher (tighter match), and ties break alphabetically by name for deterministic output. Exits non-zero only on registry-load failure or empty query.
+
+### `diff <component>`
+
+Print a unified diff between the local copy of a component in your project and the upstream registry version. Read-only — never writes. Useful before `update` to preview what would change, or to confirm whether a registry refresh would clobber your edits.
+
+```bash
+npx uniqueui diff moving-border
+```
+
+**Options:**
+
+| Flag | Description |
+|---|---|
+| `--url <url>` | Use a custom registry URL or local path instead of the default hosted registry |
+
+Exits non-zero when the slug is not in the registry or the local file is missing. Output is empty (and exits `0`) when the files are byte-identical.
+
+### `update <component>`
+
+Re-fetch a component from the registry and write it back to your project. Behaves like `add` for an existing component: prompts `skip` / `overwrite` / `diff` per file, honors `--force` / `--dry-run` / `--yes`. Uses a cached snapshot under `.uniqueui/cache/<slug>.json` so re-runs are deterministic.
+
+```bash
+npx uniqueui update moving-border
+npx uniqueui update moving-border --dry-run
+npx uniqueui update moving-border --force
+```
+
+**Options:**
+
+| Flag | Description |
+|---|---|
+| `--url <url>` | Use a custom registry URL instead of the default hosted registry |
+| `--dry-run` | Print every file that would be written + every dependency that would be installed, write nothing |
+| `--force` | Overwrite existing component files without prompting |
+| `-y, --yes` | Skip the dependency-install confirmation prompt |
+
+Pair with `diff` to preview the changes first. Major-version bumps in the registry's `meta.version` print a warning before any prompts.
+
+### `theme`
+
+Print the Tailwind tokens (animations, keyframes, CSS variables) that registry components contribute, in the format your project uses. Detects v3 (JS preset) vs v4 (CSS `@theme` snippet) from `components.json` by default, or pass `--format` to force one. Useful for adopting UniqueUI tokens without running `add` for every component.
+
+```bash
+# Auto-detect format from components.json
+npx uniqueui theme
+
+# Force v4 @theme CSS snippet, scope to one component, write to a file
+npx uniqueui theme --format v4 --component moving-border --out tokens.css
+```
+
+**Options:**
+
+| Flag | Description |
+|---|---|
+| `--url <url>` | Use a custom registry URL or local path instead of the default hosted registry |
+| `--component <slug>` | Scope output to a single component instead of every entry |
+| `--format <mode>` | `v3` \| `v4` \| `auto` — default `auto`, derived from `components.json` |
+| `--out <path>` | Write to a file instead of stdout |
+
+The [`/docs/theming`](https://uniqueui-platform.vercel.app/docs/theming) page on the docs site walks through both formats in more depth.
+
+### `remove <component>`
+
+Remove a component that was added by `uniqueui add` (or the shadcn CLI). Deletes the component file from your `components/ui` directory and reports any related npm dependencies that **may** no longer be needed (does not run `npm uninstall` — those packages are often shared across components).
+
+```bash
+npx uniqueui remove moving-border
+npx uniqueui remove moving-border --dry-run
+```
+
+**Options:**
+
+| Flag | Description |
+|---|---|
+| `--url <url>` | Use a custom registry URL or local path instead of the default hosted registry |
+| `--dry-run` | Show what would be removed without modifying anything |
+| `-y, --yes` | Skip the confirmation prompt |
+
+Alias: `npx uniqueui rm <component>`.
+
+### `registry validate`
+
+Validate a registry's split index + per-slug entries against the UniqueUI Zod schema. Same schema the upstream `pnpm registry:validate` CI gate uses, exposed as a CLI verb so third-party registries can reuse it locally before publish.
+
+```bash
+# Validate the hosted UniqueUI registry
+npx uniqueui registry validate
+
+# Validate your own registry
+npx uniqueui registry validate --url https://my-registry.example.com
+npx uniqueui registry validate --url ./dist/registry
+```
+
+**Options:**
+
+| Flag | Description |
+|---|---|
+| `--url <url>` | Registry URL or local path to validate (default: hosted UniqueUI registry) |
+
+Exits `0` when the index + every per-slug entry passes the schema; non-zero with a list of failures otherwise.
+
+### `registry build`
+
+Build distributable registry artifacts (split index + per-slug entries + monolithic) from a source directory of per-slug JSON files. Useful for maintainers of third-party UniqueUI-compatible registries who want the same publish layout without forking the upstream build script.
+
+```bash
+# Reads ./registry/, writes ./dist/registry/
+npx uniqueui registry build
+
+# Custom paths
+npx uniqueui registry build --src ./src/registry --out ./public/registry
+```
+
+**Options:**
+
+| Flag | Description |
+|---|---|
+| `--src <path>` | Source directory containing per-slug entry JSON files (default `registry`) |
+| `--out <path>` | Output directory for built artifacts (default `dist/registry`) |
+
+Validates each source entry against the schema before writing. A single bad entry fails the whole build with a clear pointer to the offending file.
+
+---
+
+## Installing with the shadcn CLI
+
+The same components are published in **shadcn registry** format at **`https://uniqueui-platform.vercel.app/r/<slug>.json`** (and `https://uniqueui-platform.vercel.app/r/registry.json` for the full catalog). Use this if your app already follows the shadcn/ui workflow (`components.json`, `@/lib/utils` with `cn`, Tailwind v3-style config).
+
+```bash
+npx shadcn@latest add https://uniqueui-platform.vercel.app/r/moving-border.json -y
+```
+
+- Component snippets import **`@/lib/utils`** — the shadcn registry item does **not** ship a second `cn` file (your project should already have it from `shadcn init`).
+- The CLI writes **`components/ui/<slug>.tsx`** (plus Tailwind merges when the component defines them).
+- **UniqueUI CLI vs shadcn:** `uniqueui add` uses the split registry under `/registry/` and can scaffold `utils/cn.ts`; `shadcn add` uses `/r/*.json` and expects a shadcn-aligned project.
+
+Upstream repo: after `pnpm build:registry`, the same JSON files exist under `apps/www/public/r/` for local testing.
 
 ---
 

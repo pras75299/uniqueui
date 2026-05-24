@@ -15,6 +15,7 @@
         "registry.json",
         "apps/www/public/registry.json",
         "apps/www/public/registry/**",
+        "apps/www/public/r/**",
         "apps/www/components/ui/**",
         "apps/www/config/components.ts",
         "apps/www/config/docs-scenarios.ts",

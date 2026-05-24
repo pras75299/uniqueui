@@ -40,6 +40,9 @@ jobs:
       - name: Build CLI
         run: pnpm --dir packages/cli build
 
+      - name: Check CLI ↔ README command drift
+        run: pnpm check:cli-readme
+
       - name: Run workspace tests
         run: pnpm test
 
@@ -61,7 +64,7 @@ jobs:
       - name: Verify generated registry artifacts are up to date
         run: |
           pnpm build:registry
-          git diff --exit-code -- registry.json apps/www/public/registry.json apps/www/public/registry apps/www/components/ui apps/www/config/components.ts apps/www/config/docs-scenarios.ts apps/www/config/demos.tsx || (echo "" && echo "ERROR: generated registry/docs artifacts are out of sync." && echo "Run 'pnpm build:registry' locally and commit the updated generated files." && exit 1)
+          git diff --exit-code -- registry.json apps/www/public/registry.json apps/www/public/registry apps/www/public/r apps/www/components/ui apps/www/config/components.ts apps/www/config/docs-scenarios.ts apps/www/config/demos.tsx || (echo "" && echo "ERROR: generated registry/docs artifacts are out of sync." && echo "Run 'pnpm build:registry' locally and commit the updated generated files." && exit 1)
 
       - name: Validate generated registry artifacts (schema)
         run: pnpm registry:validate
