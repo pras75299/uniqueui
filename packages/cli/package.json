@@ -33,12 +33,16 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/pras75299/uniqueui.git",
+        "url": "git+https://github.com/pras75299/uniqueui.git",
         "directory": "packages/cli"
     },
     "homepage": "https://github.com/pras75299/uniqueui#readme",
     "bugs": {
         "url": "https://github.com/pras75299/uniqueui/issues"
+    },
+    "publishConfig": {
+        "access": "public",
+        "provenance": true
     },
     "engines": {
         "node": ">=18"

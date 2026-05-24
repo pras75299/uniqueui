@@ -40,6 +40,9 @@ jobs:
       - name: Build CLI
         run: pnpm --dir packages/cli build
 
+      - name: Check CLI ↔ README command drift
+        run: pnpm check:cli-readme
+
       - name: Run workspace tests
         run: pnpm test
 
@@ -59,9 +62,27 @@ jobs:
         run: pnpm --dir apps/www exec tsc --noEmit
 
       - name: Verify generated registry artifacts are up to date
+        shell: bash
         run: |
           pnpm build:registry
-          git diff --exit-code -- registry.json apps/www/public/registry.json apps/www/public/registry apps/www/components/ui apps/www/config/components.ts apps/www/config/docs-scenarios.ts apps/www/config/demos.tsx || (echo "" && echo "ERROR: generated registry/docs artifacts are out of sync." && echo "Run 'pnpm build:registry' locally and commit the updated generated files." && exit 1)
+          # Bash array keeps word-splitting safe in any shell a maintainer
+          # might use to reproduce locally (zsh on macOS doesn't word-split
+          # unquoted vars, so a `$PATHS` variable would pass to git as one
+          # giant pathspec and silently match nothing).
+          PATHS=(registry.json apps/www/public/registry.json apps/www/public/registry apps/www/public/r apps/www/components/ui apps/www/config/components.ts apps/www/config/docs-scenarios.ts apps/www/config/demos.tsx)
+          # 1. Tracked-file drift: any diff in already-committed paths.
+          git diff --exit-code -- "${PATHS[@]}" || (echo "" && echo "ERROR: generated registry/docs artifacts are out of sync." && echo "Run 'pnpm build:registry' locally and commit the updated generated files." && exit 1)
+          # 2. Untracked-file drift: build emitted a NEW file (e.g. a new
+          # component slug → new apps/www/public/r/<slug>.json) that the
+          # contributor forgot to `git add`. git diff would not catch it.
+          UNTRACKED=$(git ls-files --others --exclude-standard -- "${PATHS[@]}")
+          if [ -n "$UNTRACKED" ]; then
+            echo ""
+            echo "ERROR: untracked generated registry/docs artifacts detected:"
+            echo "$UNTRACKED" | sed 's/^/  - /'
+            echo "Run 'pnpm build:registry' locally and 'git add' the new files."
+            exit 1
+          fi
 
       - name: Validate generated registry artifacts (schema)
         run: pnpm registry:validate
