@@ -6,7 +6,7 @@ import chalk from "chalk";
 import prompts from "prompts";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
 import { spawnSync } from "child_process";
-import { createInterface } from "readline/promises";
+import { createInterface } from "node:readline/promises";
 import { assertSafeNpmDependencies } from "../npm-dependency-name";
 import { writeCachedItem } from "../cache";
 

@@ -66,6 +66,18 @@
     "packages/cli": {
       "entry": [
         "src/index.ts",
+        "tsup.config.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ],
+      "ignore": [
+        "dist/**"
+      ]
+    },
+    "packages/cli-core": {
+      "entry": [
+        "src/index.ts",
         "src/debug.ts",
         "src/**/*.test.ts"
       ],

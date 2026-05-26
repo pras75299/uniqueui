@@ -12,10 +12,12 @@
         "LICENSE"
     ],
     "scripts": {
-        "build": "tsc",
+        "prebuild": "pnpm --filter @uniqueui/cli-core build",
+        "build": "tsup",
         "start": "node dist/index.js",
+        "predev": "pnpm --filter @uniqueui/cli-core build",
         "dev": "ts-node src/index.ts",
-        "test": "vitest run",
+        "test": "vitest run --passWithNoTests",
         "prepublishOnly": "npm run build"
     },
     "keywords": [
@@ -62,6 +64,8 @@
         "@types/fs-extra": "^11.0.4",
         "@types/node": "^20.10.0",
         "@types/prompts": "^2.4.9",
+        "@uniqueui/cli-core": "workspace:*",
+        "tsup": "^8.3.5",
         "typescript": "^5.3.3",
         "vitest": "^4.0.18"
     }
