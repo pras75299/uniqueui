@@ -46,6 +46,32 @@
           "Initial release."
         ]
       }
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "effect",
+      "border",
+      "spin",
+      "css"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "cssVariables": [
+      {
+        "name": "--animate-border-spin",
+        "defaultValue": "border-spin 3s linear infinite"
+      }
     ]
   },
   {
@@ -78,7 +104,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "typewriter",
+      "type"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "3d-tilt-card",
@@ -110,7 +158,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "card",
+      "3d",
+      "hover",
+      "tilt"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "spotlight-card",
@@ -142,7 +213,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "card",
+      "spotlight",
+      "hover"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "aurora-background",
@@ -174,7 +267,27 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "background",
+      "aurora",
+      "gradient"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Purely decorative background; should be wrapped in an element with aria-hidden if it sits behind content."
+    }
   },
   {
     "name": "animated-tabs",
@@ -206,7 +319,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "tabs",
+      "navigation",
+      "overlay"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "magnetic-button",
@@ -238,7 +373,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "button",
+      "magnetic",
+      "hover"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "infinite-marquee",
@@ -270,7 +427,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "marquee",
+      "scroll",
+      "loop",
+      "effect"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "scroll-reveal",
@@ -302,7 +482,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "effect",
+      "scroll",
+      "reveal"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "skeleton-shimmer",
@@ -334,7 +536,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "effect",
+      "skeleton",
+      "shimmer",
+      "loading"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "morphing-modal",
@@ -366,7 +591,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "overlay",
+      "modal",
+      "morph"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "animated-glowing-text-outline",
@@ -398,7 +645,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "svg",
+      "stroke",
+      "glow"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "gradient-text-reveal",
@@ -430,7 +700,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "gradient",
+      "reveal"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "scramble-text",
@@ -462,7 +754,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "scramble",
+      "effect"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "meteors-card",
@@ -525,6 +839,32 @@
           "Initial release."
         ]
       }
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "card",
+      "meteor",
+      "background",
+      "css"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "cssVariables": [
+      {
+        "name": "--animate-meteor",
+        "defaultValue": "meteor 5s linear infinite"
+      }
     ]
   },
   {
@@ -557,7 +897,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "mockup",
+      "keyboard",
+      "device",
+      "interactive"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "flip-card",
@@ -589,7 +952,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "card",
+      "flip",
+      "3d"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "dot-grid-background",
@@ -621,7 +1006,27 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "background",
+      "dot",
+      "grid"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Decorative background; should be aria-hidden."
+    }
   },
   {
     "name": "floating-dock",
@@ -653,7 +1058,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "navigation",
+      "dock",
+      "floating"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "confetti-burst",
@@ -684,7 +1111,27 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "effect",
+      "confetti",
+      "celebration"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Visual-only celebration effect; should be paired with text feedback for assistive tech."
+    }
   },
   {
     "name": "drawer-slide",
@@ -716,7 +1163,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "overlay",
+      "drawer",
+      "slide"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "notification-stack",
@@ -748,7 +1217,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "overlay",
+      "notification",
+      "stack",
+      "toast"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "animated-timeline",
@@ -780,7 +1272,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "timeline",
+      "scroll",
+      "animation"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "nested-comments",
@@ -812,7 +1326,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "social",
+      "comments",
+      "thread"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "hover-reveal-card",
@@ -844,7 +1380,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "card",
+      "hover",
+      "reveal"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "bento-grid",
@@ -876,7 +1434,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "card",
+      "grid",
+      "layout"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "horizontal-scroll-gallery",
@@ -908,7 +1488,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "effect",
+      "scroll",
+      "gallery",
+      "horizontal"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "particle-field",
@@ -940,7 +1543,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "background",
+      "particle",
+      "field"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Decorative background; should be aria-hidden."
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "interactive-cursor",
@@ -972,7 +1598,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "cursor",
+      "interactive",
+      "effect"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "radial-menu",
@@ -1005,7 +1654,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom",
+      "lucide-react"
+    ],
+    "tags": [
+      "navigation",
+      "menu",
+      "radial"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "cursor-trail",
@@ -1037,7 +1709,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "cursor",
+      "trail",
+      "effect"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "pen-cursor",
@@ -1068,7 +1763,27 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "cursor",
+      "pen",
+      "drawing"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
+    }
   },
   {
     "name": "glow-hero-section",
@@ -1100,7 +1815,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "background",
+      "hero",
+      "glow",
+      "section"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "morphing-card-stack",
@@ -1133,7 +1871,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom",
+      "lucide-react"
+    ],
+    "tags": [
+      "card",
+      "stack",
+      "morph"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "limelight-nav",
@@ -1166,7 +1927,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom",
+      "lucide-react"
+    ],
+    "tags": [
+      "navigation",
+      "nav",
+      "limelight"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "data-table",
@@ -1198,7 +1982,27 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom",
+      "lucide-react"
+    ],
+    "tags": [
+      "data",
+      "table",
+      "layout"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    }
   },
   {
     "name": "multi-step-auth-card",
@@ -1231,7 +2035,31 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom",
+      "lucide-react"
+    ],
+    "tags": [
+      "overlay",
+      "form",
+      "multi-step",
+      "auth"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "shiny-text",
@@ -1263,7 +2091,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "shine",
+      "gradient"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "outlined-mega-mark",
@@ -1294,7 +2144,31 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "outline",
+      "display",
+      "headline"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Decorative display mark; provide visually-hidden text when used as a logo or heading."
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "blur-reveal",
@@ -1326,7 +2200,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "reveal",
+      "blur"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "count-up",
@@ -1358,7 +2254,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "counter",
+      "number"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "border-beam",
@@ -1389,7 +2307,28 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "effect",
+      "border",
+      "beam",
+      "css"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Decorative border layer; no interactive surface."
+    }
   },
   {
     "name": "ripple",
@@ -1421,7 +2360,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "background",
+      "ripple",
+      "effect"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Decorative ripple effect."
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "word-rotate",
@@ -1453,7 +2415,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "rotate",
+      "word"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "shooting-stars-grid",
@@ -1485,7 +2469,31 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "background",
+      "stars",
+      "shooting",
+      "grid"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Decorative background."
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "dynamic-info",
@@ -1517,7 +2525,29 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "data",
+      "info",
+      "presentation"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "none"
+    }
   },
   {
     "name": "macbook-mock",
@@ -1549,7 +2579,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "mockup",
+      "macbook",
+      "device"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Decorative device mockup; wrap with aria-hidden when used for illustration only."
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "liquid-glass-panel",
@@ -1581,7 +2634,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "card",
+      "panel",
+      "glass",
+      "liquid"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "shader-mesh-gradient",
@@ -1613,7 +2689,31 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "background",
+      "shader",
+      "mesh",
+      "gradient"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Decorative gradient background."
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "caustic-light-card",
@@ -1645,7 +2745,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "card",
+      "shader",
+      "light",
+      "caustic"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "chromatic-aberration-reveal",
@@ -1677,7 +2800,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "effect",
+      "shader",
+      "rgb",
+      "reveal"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "iridescent-foil-button",
@@ -1709,7 +2855,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "button",
+      "iridescent",
+      "foil",
+      "shader"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "kinetic-variable-headline",
@@ -1741,7 +2910,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "kinetic",
+      "variable",
+      "headline"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "refractive-cursor-lens",
@@ -1773,7 +2965,31 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "cursor",
+      "shader",
+      "refraction",
+      "lens"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "n/a",
+      "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "ambient-glow-card",
@@ -1805,7 +3021,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "card",
+      "glow",
+      "hover",
+      "ambient"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "hero-reference-pulse",
@@ -1858,7 +3097,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "hero",
+      "block",
+      "pulse",
+      "reference"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "hero-iridescent-sweep",
@@ -1904,7 +3166,30 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "hero",
+      "block",
+      "iridescent",
+      "sweep"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "hero-liquid-aurora-mesh",
@@ -1943,7 +3228,31 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "hero",
+      "block",
+      "aurora",
+      "mesh",
+      "liquid"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "hero-noise-dot-field",
@@ -1975,7 +3284,31 @@
           "Initial release."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "hero",
+      "block",
+      "noise",
+      "dot",
+      "field"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "hero-logo-marquee",
@@ -2014,7 +3347,30 @@
           "Initial release: headline + dual-row logo ticker with reduced-motion freeze and customizable brand list."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "hero",
+      "block",
+      "logo",
+      "marquee"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "hero-magnetic-letters",
@@ -2067,7 +3423,30 @@
           "Initial release: per-letter cursor-tracking springs on a dark conic-backdrop hero. Letters stagger in with spring physics, then track the pointer within a configurable radius. Reduced-motion disables magnetic follow and collapses entrance to opacity-only."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "hero",
+      "block",
+      "text",
+      "magnetic"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   },
   {
     "name": "magnetic-text",
@@ -2099,6 +3478,28 @@
           "Initial release: standalone per-letter cursor-tracking text component. Wraps any string with springs that lean toward the pointer; falloff is linear inside `radius`, zero outside; capped at `strength`. Optional `animateEntry` staggers letters in on mount. `as` prop lets it render as h1/h2/p/span. aria-label on the wrapper + aria-hidden on every glyph keep screen readers from spelling out the word."
         ]
       }
-    ]
+    ],
+    "peerDependencies": [
+      "react",
+      "react-dom"
+    ],
+    "tags": [
+      "text",
+      "magnetic",
+      "interactive"
+    ],
+    "compatibility": {
+      "react": "18+",
+      "next": "14+",
+      "tailwind": "3+|4+",
+      "rsc": false,
+      "ssr": true
+    },
+    "accessibility": {
+      "status": "unaudited"
+    },
+    "motion": {
+      "reducedMotion": "full"
+    }
   }
 ]

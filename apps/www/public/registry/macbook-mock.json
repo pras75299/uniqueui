@@ -28,5 +28,28 @@
         "Initial release."
       ]
     }
-  ]
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "mockup",
+    "macbook",
+    "device"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Decorative device mockup; wrap with aria-hidden when used for illustration only."
+  },
+  "motion": {
+    "reducedMotion": "full"
+  }
 }

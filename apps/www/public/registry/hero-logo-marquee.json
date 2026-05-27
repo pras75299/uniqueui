@@ -35,5 +35,28 @@
         "Initial release: headline + dual-row logo ticker with reduced-motion freeze and customizable brand list."
       ]
     }
-  ]
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "hero",
+    "block",
+    "logo",
+    "marquee"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "full"
+  }
 }

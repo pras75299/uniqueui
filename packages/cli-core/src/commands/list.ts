@@ -9,7 +9,7 @@ import {
     warnIfUntrustedRegistry,
 } from "./add";
 
-type Entry = { name: string; title?: string; description?: string };
+export type Entry = { name: string; title?: string; description?: string; tags?: string[] };
 
 type ShadcnItem = {
     name?: unknown;
@@ -59,7 +59,13 @@ function entriesFromPayload(payload: unknown): Entry[] | null {
     if (splitIndex) return splitIndex.components.map((name) => ({ name }));
 
     const legacy = validateRegistryPayload(payload);
-    if (legacy) return legacy.map((entry) => ({ name: entry.name }));
+    if (legacy) {
+        return legacy.map((entry) => {
+            const out: Entry = { name: entry.name };
+            if (entry.tags && entry.tags.length > 0) out.tags = entry.tags;
+            return out;
+        });
+    }
 
     return null;
 }

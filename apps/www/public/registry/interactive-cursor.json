@@ -28,5 +28,28 @@
         "Initial release."
       ]
     }
-  ]
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "cursor",
+    "interactive",
+    "effect"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
+  },
+  "motion": {
+    "reducedMotion": "none"
+  }
 }

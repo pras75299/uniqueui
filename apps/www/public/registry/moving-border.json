@@ -45,5 +45,31 @@
         "Initial release."
       ]
     }
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "effect",
+    "border",
+    "spin",
+    "css"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "cssVariables": [
+    {
+      "name": "--animate-border-spin",
+      "defaultValue": "border-spin 3s linear infinite"
+    }
   ]
 }

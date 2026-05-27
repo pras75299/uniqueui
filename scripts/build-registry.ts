@@ -7,6 +7,11 @@ import { resolvePathUnderDir } from "@uniqueui/registry-schema";
 const REGISTRY_DIR = path.join(__dirname, "../registry");
 const REGISTRY_DOCS_FILE = path.join(REGISTRY_DIR, "docs.json");
 const REGISTRY_CHANGELOGS_FILE = path.join(REGISTRY_DIR, "changelogs.json");
+const REGISTRY_MOTION_FILE = path.join(REGISTRY_DIR, "motion.json");
+const REGISTRY_TAGS_FILE = path.join(REGISTRY_DIR, "tags.json");
+const REGISTRY_PEER_DEPS_FILE = path.join(REGISTRY_DIR, "peer-dependencies.json");
+const REGISTRY_COMPATIBILITY_FILE = path.join(REGISTRY_DIR, "compatibility.json");
+const REGISTRY_ACCESSIBILITY_FILE = path.join(REGISTRY_DIR, "accessibility.json");
 const OUTPUT_FILE = path.join(__dirname, "../registry.json");
 const APP_PUBLIC_DIR = path.join(__dirname, "../apps/www/public");
 const APP_PUBLIC_OUTPUT_FILE = path.join(APP_PUBLIC_DIR, "registry.json");
@@ -22,6 +27,23 @@ const APP_DEMOS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "demos.tsx");
 const SEMVER_RE = /^\d+\.\d+\.\d+$/;
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
+type MotionStance = "full" | "partial" | "none";
+type MotionMetaEntry = { reducedMotion: MotionStance; performanceNotes?: string };
+type CompatibilityMetaEntry = {
+  react?: string;
+  next?: string;
+  tailwind?: string;
+  rsc?: boolean;
+  ssr?: boolean;
+};
+type AccessibilityStatus = "audited" | "unaudited" | "n/a";
+type AccessibilityMetaEntry = {
+  status: AccessibilityStatus;
+  keyboard?: boolean;
+  screenReaderNotes?: string;
+};
+type CssVariableEntry = { name: string; defaultValue: string; description?: string };
+
 type RegistryEntry = (typeof registry)[number] & {
   files: Array<{
     path: string;
@@ -30,9 +52,20 @@ type RegistryEntry = (typeof registry)[number] & {
   }>;
   meta: { version: string };
   changelog: RegistryChangelogEntry[];
+  motion?: MotionMetaEntry;
+  tags?: string[];
+  peerDependencies?: string[];
+  compatibility?: CompatibilityMetaEntry;
+  accessibility?: AccessibilityMetaEntry;
+  cssVariables?: CssVariableEntry[];
 };
 
 type Changelogs = Record<string, RegistryChangelogEntry[]>;
+type MotionMap = Record<string, MotionMetaEntry>;
+type TagsMap = Record<string, string[]>;
+type PeerDependenciesMap = Record<string, string[]>;
+type CompatibilityMap = Record<string, CompatibilityMetaEntry>;
+type AccessibilityMap = Record<string, AccessibilityMetaEntry>;
 
 type RegistryDocsVariant = {
   id: string;
@@ -310,6 +343,254 @@ async function loadChangelogs(slugs: string[]): Promise<Changelogs> {
   return out;
 }
 
+// `loadMotionMap` mirrors the shape-level rules of the `MotionMap` zod
+// schema in `@uniqueui/registry-schema`. Same contract as `loadChangelogs`:
+// the build script is the fast-feedback path, the zod validator is the
+// post-build CI gate. Cross-checks live in `scripts/check-reduced-motion.mjs`
+// so a missing/stray motion entry surfaces before the build runs.
+async function loadMotionMap(slugs: string[]): Promise<MotionMap> {
+  if (!(await fs.pathExists(REGISTRY_MOTION_FILE))) {
+    throw new Error(`Missing motion metadata at ${REGISTRY_MOTION_FILE}`);
+  }
+  const raw = (await fs.readJson(REGISTRY_MOTION_FILE)) as unknown;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+    throw new Error("registry/motion.json must be an object keyed by slug");
+  }
+  const map = raw as Record<string, unknown>;
+
+  const errors: string[] = [];
+  const out: MotionMap = {};
+  const slugSet = new Set(slugs);
+
+  for (const [slug, value] of Object.entries(map)) {
+    const where = `motion.json: "${slug}"`;
+    if (!slugSet.has(slug)) {
+      errors.push(`${where}: stray entry — no matching registry component`);
+      continue;
+    }
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      errors.push(`${where}: must be an object`);
+      continue;
+    }
+    const v = value as Record<string, unknown>;
+    if (v.reducedMotion !== "full" && v.reducedMotion !== "partial" && v.reducedMotion !== "none") {
+      errors.push(`${where}.reducedMotion must be 'full' | 'partial' | 'none' (got ${JSON.stringify(v.reducedMotion)})`);
+      continue;
+    }
+    const entry: MotionMetaEntry = { reducedMotion: v.reducedMotion };
+    if (v.performanceNotes !== undefined) {
+      if (typeof v.performanceNotes !== "string" || v.performanceNotes.length === 0) {
+        errors.push(`${where}.performanceNotes must be a non-empty string when set`);
+        continue;
+      }
+      entry.performanceNotes = v.performanceNotes;
+    }
+    out[slug] = entry;
+  }
+
+  if (errors.length > 0) {
+    throw new Error(`Motion metadata validation failed:\n  - ${errors.join("\n  - ")}`);
+  }
+
+  return out;
+}
+
+// Shared loader for the per-component metadata maps (tags,
+// peer-dependencies, compatibility, accessibility). These differ from
+// motion.json in that EVERY registry slug must have an entry — the
+// metadata is global, not opt-in. A missing slug is a contributor mistake
+// the build should catch before publish.
+// NOTE: T must never be `string`. The discriminator below uses
+// `typeof parsed === "string"` to distinguish error messages from valid
+// values. If T were string, every valid return value would be treated as
+// an error. All current callers use T = string[] or an object type.
+async function loadFullCoverageMap<T>(
+  file: string,
+  slugs: string[],
+  parseEntry: (value: unknown, where: string) => T | string,
+): Promise<Record<string, T>> {
+  if (!(await fs.pathExists(file))) {
+    throw new Error(`Missing metadata file at ${file}`);
+  }
+  const raw = (await fs.readJson(file)) as unknown;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+    throw new Error(`${path.basename(file)} must be an object keyed by slug`);
+  }
+  const map = raw as Record<string, unknown>;
+  const errors: string[] = [];
+  const out: Record<string, T> = {};
+  const slugSet = new Set(slugs);
+
+  for (const [slug, value] of Object.entries(map)) {
+    if (!slugSet.has(slug)) {
+      errors.push(`${path.basename(file)}: stray entry "${slug}" — no matching registry component`);
+      continue;
+    }
+    const parsed = parseEntry(value, `${path.basename(file)}: "${slug}"`);
+    if (typeof parsed === "string") {
+      errors.push(parsed);
+      continue;
+    }
+    out[slug] = parsed;
+  }
+
+  for (const slug of slugs) {
+    if (!(slug in out)) {
+      errors.push(`${path.basename(file)}: missing entry for "${slug}"`);
+    }
+  }
+
+  if (errors.length > 0) {
+    throw new Error(`${path.basename(file)} validation failed:\n  - ${errors.join("\n  - ")}`);
+  }
+  return out;
+}
+
+const TAG_RE = /^[a-z0-9][a-z0-9-]*$/;
+async function loadTagsMap(slugs: string[]): Promise<TagsMap> {
+  return loadFullCoverageMap<string[]>(REGISTRY_TAGS_FILE, slugs, (value, where) => {
+    if (!Array.isArray(value) || value.length === 0) {
+      return `${where} must be a non-empty array of tag strings`;
+    }
+    for (const t of value) {
+      if (typeof t !== "string" || !TAG_RE.test(t)) {
+        return `${where} contains invalid tag ${JSON.stringify(t)} (must be lowercase kebab-case)`;
+      }
+    }
+    return value as string[];
+  });
+}
+
+const NPM_DEP_RE = /^(?:@[a-z0-9-][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/;
+async function loadPeerDependenciesMap(slugs: string[]): Promise<PeerDependenciesMap> {
+  return loadFullCoverageMap<string[]>(REGISTRY_PEER_DEPS_FILE, slugs, (value, where) => {
+    if (!Array.isArray(value)) {
+      return `${where} must be an array of npm package names (use [] for no peer dependencies)`;
+    }
+    for (const d of value) {
+      if (typeof d !== "string" || !NPM_DEP_RE.test(d)) {
+        return `${where} contains invalid npm dependency ${JSON.stringify(d)}`;
+      }
+    }
+    return value as string[];
+  });
+}
+
+const COMPAT_ALLOWED_KEYS = new Set(["react", "next", "tailwind", "rsc", "ssr"]);
+async function loadCompatibilityMap(slugs: string[]): Promise<CompatibilityMap> {
+  return loadFullCoverageMap<CompatibilityMetaEntry>(REGISTRY_COMPATIBILITY_FILE, slugs, (value, where) => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      return `${where} must be an object`;
+    }
+    const v = value as Record<string, unknown>;
+    for (const k of Object.keys(v)) {
+      if (!COMPAT_ALLOWED_KEYS.has(k)) {
+        return `${where} has unknown compatibility key "${k}" (allowed: ${[...COMPAT_ALLOWED_KEYS].join(", ")})`;
+      }
+    }
+    const out: CompatibilityMetaEntry = {};
+    for (const key of ["react", "next", "tailwind"] as const) {
+      if (v[key] !== undefined) {
+        if (typeof v[key] !== "string" || (v[key] as string).length === 0) {
+          return `${where}.${key} must be a non-empty string`;
+        }
+        out[key] = v[key] as string;
+      }
+    }
+    for (const key of ["rsc", "ssr"] as const) {
+      if (v[key] !== undefined) {
+        if (typeof v[key] !== "boolean") {
+          return `${where}.${key} must be a boolean`;
+        }
+        out[key] = v[key] as boolean;
+      }
+    }
+    return out;
+  });
+}
+
+async function loadAccessibilityMap(slugs: string[]): Promise<AccessibilityMap> {
+  return loadFullCoverageMap<AccessibilityMetaEntry>(REGISTRY_ACCESSIBILITY_FILE, slugs, (value, where) => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      return `${where} must be an object`;
+    }
+    const v = value as Record<string, unknown>;
+    if (v.status !== "audited" && v.status !== "unaudited" && v.status !== "n/a") {
+      return `${where}.status must be 'audited' | 'unaudited' | 'n/a' (got ${JSON.stringify(v.status)})`;
+    }
+    const out: AccessibilityMetaEntry = { status: v.status };
+    if (v.keyboard !== undefined) {
+      if (typeof v.keyboard !== "boolean") {
+        return `${where}.keyboard must be a boolean when set`;
+      }
+      out.keyboard = v.keyboard;
+    }
+    if (v.screenReaderNotes !== undefined) {
+      if (typeof v.screenReaderNotes !== "string" || v.screenReaderNotes.length === 0) {
+        return `${where}.screenReaderNotes must be a non-empty string when set`;
+      }
+      out.screenReaderNotes = v.screenReaderNotes;
+    }
+    return out;
+  });
+}
+
+// Extract CSS custom properties declared in a component's `tailwindCss`
+// snippet. We collect top-level `--name: value;` declarations inside
+// `@theme { ... }` blocks. Nested `@keyframes` (or any nested block) are
+// skipped so `0%`/`100%` selectors don't mis-parse as variables.
+//
+// Returns `undefined` (not `[]`) when the component has no variables, so
+// the optional `cssVariables` field stays absent from the emitted entry
+// rather than appearing as an empty array.
+export function extractCssVariables(tailwindCss: string | undefined): CssVariableEntry[] | undefined {
+  if (!tailwindCss) return undefined;
+  const themeBodies: string[] = [];
+  let depth = 0;
+  // `themeDepth` is the depth at which we entered the current @theme block,
+  // or 0 if we aren't inside one. We accumulate characters only when
+  // `depth === themeDepth` — i.e. at the top level of @theme, never inside
+  // a nested block such as @keyframes.
+  let themeDepth = 0;
+  let buffer = "";
+  let themeBuffer = "";
+  for (let i = 0; i < tailwindCss.length; i++) {
+    const ch = tailwindCss[i];
+    if (ch === "{") {
+      const atMatch = /.*@(\w+)\b[^{]*$/.exec(buffer);
+      depth++;
+      if (themeDepth === 0 && atMatch && atMatch[1] === "theme") {
+        themeDepth = depth;
+        themeBuffer = "";
+      }
+      buffer = "";
+      continue;
+    }
+    if (ch === "}") {
+      if (themeDepth !== 0 && depth === themeDepth) {
+        themeBodies.push(themeBuffer);
+        themeBuffer = "";
+        themeDepth = 0;
+      }
+      depth--;
+      buffer = "";
+      continue;
+    }
+    buffer += ch;
+    if (themeDepth !== 0 && depth === themeDepth) themeBuffer += ch;
+  }
+
+  const out: CssVariableEntry[] = [];
+  const varRe = /(--[a-zA-Z0-9][a-zA-Z0-9-]*)\s*:\s*([^;]+);/g;
+  for (const chunk of themeBodies) {
+    let m;
+    while ((m = varRe.exec(chunk)) !== null) {
+      out.push({ name: m[1], defaultValue: m[2].trim() });
+    }
+  }
+  return out.length > 0 ? out : undefined;
+}
+
 async function loadRegistryDocsManifest(entries: RegistryEntry[]) {
   if (!(await fs.pathExists(REGISTRY_DOCS_FILE))) {
     throw new Error(`Missing docs metadata source at ${REGISTRY_DOCS_FILE}`);
@@ -468,6 +749,11 @@ async function buildRegistry() {
 
   const slugs = registry.map((entry) => entry.name);
   const changelogs = await loadChangelogs(slugs);
+  const motionMap = await loadMotionMap(slugs);
+  const tagsMap = await loadTagsMap(slugs);
+  const peerDepsMap = await loadPeerDependenciesMap(slugs);
+  const compatibilityMap = await loadCompatibilityMap(slugs);
+  const accessibilityMap = await loadAccessibilityMap(slugs);
 
   const result: RegistryEntry[] = [];
 
@@ -501,11 +787,19 @@ async function buildRegistry() {
     const entryChangelog = changelogs[component.name];
     // Latest entry is first in changelog (newest at top, like a release-notes file).
     const latest = entryChangelog[0];
+    const motion = motionMap[component.name];
+    const cssVariables = extractCssVariables(component.tailwindCss);
     result.push({
       ...component,
       files: componentFiles,
       meta: { version: latest.version },
       changelog: entryChangelog,
+      peerDependencies: peerDepsMap[component.name],
+      tags: tagsMap[component.name],
+      compatibility: compatibilityMap[component.name],
+      accessibility: accessibilityMap[component.name],
+      ...(motion ? { motion } : {}),
+      ...(cssVariables ? { cssVariables } : {}),
     });
   }
 

@@ -35,5 +35,29 @@
         "Initial release."
       ]
     }
-  ]
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "hero",
+    "block",
+    "aurora",
+    "mesh",
+    "liquid"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "full"
+  }
 }

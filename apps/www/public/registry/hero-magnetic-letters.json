@@ -49,5 +49,28 @@
         "Initial release: per-letter cursor-tracking springs on a dark conic-backdrop hero. Letters stagger in with spring physics, then track the pointer within a configurable radius. Reduced-motion disables magnetic follow and collapses entrance to opacity-only."
       ]
     }
-  ]
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "hero",
+    "block",
+    "text",
+    "magnetic"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "full"
+  }
 }

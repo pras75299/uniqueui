@@ -15,6 +15,13 @@ type RegistryItem = {
     name: string;
     dependencies: string[];
     files: Array<{ path: string; type: string; content: string }>;
+    // Optional taxonomy strings used by `uniqueui search` ranking. Unknown
+    // tag formats are silently dropped (defense against a hostile / older
+    // registry shipping garbage in this field).
+    tags?: string[];
+    // Peer dependencies declared by the registry (e.g. react, react-dom).
+    // Propagated for future CLI warnings; not auto-installed.
+    peerDependencies?: string[];
     tailwindConfig?: Record<string, any>;
     tailwindCss?: string;
 };
@@ -87,7 +94,23 @@ export function validateRegistryPayload(data: unknown): RegistryItem[] | null {
             }
             tailwindCss = o.tailwindCss;
         }
-        out.push({ name: o.name, dependencies, files, tailwindConfig, tailwindCss });
+        // Tags are optional metadata; tolerate their absence. If present
+        // they must be an array of non-empty strings — anything else gets
+        // dropped silently so a malformed `tags` field doesn't break add.
+        let tags: string[] | undefined;
+        if (Array.isArray(o.tags)) {
+            const cleaned = o.tags.filter((t): t is string => typeof t === "string" && t.length > 0);
+            if (cleaned.length > 0) tags = cleaned;
+        }
+        // peerDependencies are informational — propagated for future CLI
+        // peer-dep warnings but never auto-installed. Tolerate absence and
+        // malformed values the same way as tags.
+        let peerDependencies: string[] | undefined;
+        if (Array.isArray(o.peerDependencies)) {
+            const cleaned = o.peerDependencies.filter((d): d is string => typeof d === "string" && d.length > 0);
+            if (cleaned.length > 0) peerDependencies = cleaned;
+        }
+        out.push({ name: o.name, dependencies, files, tailwindConfig, tailwindCss, tags, peerDependencies });
     }
     return out;
 }

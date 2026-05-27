@@ -162,12 +162,95 @@ export const RegistryMeta = z.object({
     version: SemverVersion,
 });
 
+// Reduced-motion stance for a component. Read by the
+// `scripts/check-reduced-motion.mjs` gate and surfaced to the docs UI so
+// users can filter out components that ignore `prefers-reduced-motion`.
+//
+//   "full"    — component honors the OS pref (e.g. via `useReducedMotion`
+//               or a `prefers-reduced-motion` CSS query). Static fallback
+//               is provided where animation would otherwise be continuous.
+//   "partial" — some animations are guarded, some are not. Acceptable
+//               on rich/ambient blocks where a full static fallback would
+//               degrade meaning; the gaps should be documented in
+//               `performanceNotes`.
+//   "none"    — explicit opt-out. The component ignores the OS pref.
+//               Use sparingly and document why in `performanceNotes`;
+//               this is the technical-debt bucket the gate surfaces.
+export const MotionMeta = z.object({
+    reducedMotion: z.enum(["full", "partial", "none"]),
+    performanceNotes: z.string().min(1).optional(),
+});
+
+// Slug-keyed map of motion stances. Source of truth is
+// `registry/motion.json`; build-registry.ts joins each entry onto the
+// matching `RegistryEntry`. Components with no motion APIs in source are
+// simply omitted from the map.
+export const MotionMap = z.record(Slug, MotionMeta);
+
+// Free-form taxonomy strings (e.g. "card", "hero", "background", "text").
+// Lowercased + hyphenated to keep search/filter logic simple and case-insensitive.
+const TAG_RE = /^[a-z0-9][a-z0-9-]*$/;
+export const Tag = z.string().regex(TAG_RE, "tag must be lowercase kebab-case (a-z0-9-)");
+export const Tags = z.array(Tag).min(1);
+export const TagsMap = z.record(Slug, Tags);
+
+// Compatibility envelope. Each axis is an opaque short string ("18+",
+// "14+", "3+|4+", true/false) — keeping it free-form rather than enum
+// avoids the schema becoming a Next.js release calendar. Validation is
+// "must be a non-empty string when set"; the docs surface decides how
+// to render it.
+export const CompatibilityMeta = z.object({
+    react: z.string().min(1).optional(),
+    next: z.string().min(1).optional(),
+    tailwind: z.string().min(1).optional(),
+    // `rsc` and `ssr` are true/false: does the component work in a React
+    // Server Component / Server-Side rendered context? Most animated
+    // components are `"use client"` so default-false applies.
+    rsc: z.boolean().optional(),
+    ssr: z.boolean().optional(),
+}).strict();
+export const CompatibilityMap = z.record(Slug, CompatibilityMeta);
+
+// Accessibility audit metadata.
+//   status — "audited" means we have an actual a11y review on file;
+//            "unaudited" is the honest default for the bulk of the
+//            registry; "n/a" is for purely-decorative components where
+//            no a11y surface exists (e.g. a background field).
+export const AccessibilityMeta = z.object({
+    status: z.enum(["audited", "unaudited", "n/a"]),
+    keyboard: z.boolean().optional(),
+    screenReaderNotes: z.string().min(1).optional(),
+}).strict();
+export const AccessibilityMap = z.record(Slug, AccessibilityMeta);
+
+// Peer dependency list. Split from the existing `dependencies` array so the
+// CLI can warn when a user's project is missing the right React/Next/
+// Tailwind versions without trying to install them automatically.
+export const PeerDependenciesMap = z.record(Slug, z.array(NpmDep));
+
+// CSS custom property exported by a component (`--animate-foo`, `--ui-bar`).
+// `defaultValue` is the value as it appears in the source `@theme` block
+// or `:root`; consumers like `uniqueui theme` can override these without
+// editing the component file.
+export const CssVariable = z.object({
+    name: z.string().regex(/^--[a-z0-9][a-z0-9-]*$/, "CSS variable name must start with -- and be kebab-case"),
+    defaultValue: z.string().min(1),
+    description: z.string().min(1).optional(),
+}).strict();
+export const CssVariablesMap = z.record(Slug, z.array(CssVariable).min(1));
+
 export const RegistryEntry = z.object({
     name: Slug,
     dependencies: z.array(NpmDep),
+    peerDependencies: z.array(NpmDep).min(1).optional(),
     files: z.array(RegistryFile).min(1),
     tailwindConfig: TailwindConfig.optional(),
     tailwindCss: z.string().min(1).optional(),
+    cssVariables: z.array(CssVariable).min(1).optional(),
+    tags: Tags.optional(),
+    motion: MotionMeta.optional(),
+    compatibility: CompatibilityMeta.optional(),
+    accessibility: AccessibilityMeta.optional(),
     meta: RegistryMeta,
     changelog: changelogArray,
 });
@@ -218,6 +301,18 @@ export type TailwindConfigT = z.infer<typeof TailwindConfig>;
 export type ChangelogEntryT = z.infer<typeof ChangelogEntry>;
 export type ChangelogsT = z.infer<typeof Changelogs>;
 export type RegistryMetaT = z.infer<typeof RegistryMeta>;
+export type MotionMetaT = z.infer<typeof MotionMeta>;
+export type MotionMapT = z.infer<typeof MotionMap>;
+export type TagT = z.infer<typeof Tag>;
+export type TagsT = z.infer<typeof Tags>;
+export type TagsMapT = z.infer<typeof TagsMap>;
+export type CompatibilityMetaT = z.infer<typeof CompatibilityMeta>;
+export type CompatibilityMapT = z.infer<typeof CompatibilityMap>;
+export type AccessibilityMetaT = z.infer<typeof AccessibilityMeta>;
+export type AccessibilityMapT = z.infer<typeof AccessibilityMap>;
+export type PeerDependenciesMapT = z.infer<typeof PeerDependenciesMap>;
+export type CssVariableT = z.infer<typeof CssVariable>;
+export type CssVariablesMapT = z.infer<typeof CssVariablesMap>;
 export type RegistryEntryT = z.infer<typeof RegistryEntry>;
 export type RegistryArrayT = z.infer<typeof RegistryArray>;
 export type SplitIndexT = z.infer<typeof SplitIndex>;

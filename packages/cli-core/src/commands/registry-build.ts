@@ -17,6 +17,12 @@ type Entry = {
     files: Array<{ path: string; content: string; type: string }>;
     tailwindConfig?: Record<string, unknown>;
     tailwindCss?: string;
+    // Optional enrichment fields — passed through from source JSON via
+    // .passthrough() on the local RegistryEntry schema so they survive
+    // the build step without being re-declared here.
+    tags?: string[];
+    peerDependencies?: string[];
+    [key: string]: unknown;
 };
 
 type BuildReport = {

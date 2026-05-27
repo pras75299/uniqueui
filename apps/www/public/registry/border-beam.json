@@ -27,5 +27,26 @@
         "Initial release."
       ]
     }
-  ]
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "effect",
+    "border",
+    "beam",
+    "css"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Decorative border layer; no interactive surface."
+  }
 }

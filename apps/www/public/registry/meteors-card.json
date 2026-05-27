@@ -59,5 +59,31 @@
         "Initial release."
       ]
     }
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "card",
+    "meteor",
+    "background",
+    "css"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "cssVariables": [
+    {
+      "name": "--animate-meteor",
+      "defaultValue": "meteor 5s linear infinite"
+    }
   ]
 }

@@ -28,5 +28,25 @@
         "Initial release."
       ]
     }
-  ]
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "background",
+    "aurora",
+    "gradient"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Purely decorative background; should be wrapped in an element with aria-hidden if it sits behind content."
+  }
 }
