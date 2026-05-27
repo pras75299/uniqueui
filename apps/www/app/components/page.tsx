@@ -188,7 +188,7 @@ export default function ComponentsIndex() {
                     className={cn(
                       "ml-1.5 text-[10px] font-normal",
                       activeCategory === cat
-                        ? "text-purple-200"
+                        ? "text-white"
                         : isDark ? "text-neutral-400" : "text-neutral-600"
                     )}
                   >

@@ -14,6 +14,12 @@ const PAGES = [
 ];
 
 test.describe("axe a11y", () => {
+  // Ensure prefers-reduced-motion:reduce so motion/react transitions are instant
+  // (opacity:0 initial → opacity:1 animate completes in one frame). Without this,
+  // axe can sample cards/thumbnails mid-animation and report false contrast failures
+  // because the composited colour of semi-transparent text appears too dark.
+  test.use({ reducedMotion: "reduce" });
+
   for (const { route, label } of PAGES) {
     test(`${label} (${route}) has no critical/serious axe violations`, async ({ page }) => {
       await page.goto(route);
@@ -21,6 +27,8 @@ test.describe("axe a11y", () => {
       await page.waitForSelector("main", { timeout: 10_000 }).catch(() => {
         // some pages may not have a <main> — that's fine, axe still scans.
       });
+      // Give motion one extra tick to apply instant-mode transitions before axe scans.
+      await page.waitForTimeout(300);
 
       const results = await new AxeBuilder({ page })
         // Exclude known third-party iframes and Next.js dev overlays.
