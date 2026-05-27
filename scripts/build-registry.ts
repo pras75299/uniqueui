@@ -581,7 +581,11 @@ export function extractCssVariables(tailwindCss: string | undefined): CssVariabl
   }
 
   const out: CssVariableEntry[] = [];
-  const varRe = /(--[a-zA-Z0-9][a-zA-Z0-9-]*)\s*:\s*([^;]+);/g;
+  // Matches only lowercase-kebab names to stay in sync with CssVariable.name
+  // schema regex /^--[a-z0-9][a-z0-9-]*$/. Uppercase variables are valid CSS
+  // but rejected by the schema, so they are silently skipped here rather than
+  // extracted and causing a post-build validation failure.
+  const varRe = /(--[a-z0-9][a-z0-9-]*)\s*:\s*([^;]+);/g;
   for (const chunk of themeBodies) {
     let m;
     while ((m = varRe.exec(chunk)) !== null) {
@@ -794,7 +798,9 @@ async function buildRegistry() {
       files: componentFiles,
       meta: { version: latest.version },
       changelog: entryChangelog,
-      peerDependencies: peerDepsMap[component.name],
+      // Emit peerDependencies only when non-empty; RegistryEntry schema
+      // uses .min(1).optional(), which rejects [] but accepts undefined.
+      ...(peerDepsMap[component.name].length ? { peerDependencies: peerDepsMap[component.name] } : {}),
       tags: tagsMap[component.name],
       compatibility: compatibilityMap[component.name],
       accessibility: accessibilityMap[component.name],

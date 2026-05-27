@@ -13,6 +13,8 @@ type RegistryItem = {
     name: string;
     dependencies: string[];
     files: Array<{ path: string; type: string; content: string }>;
+    tags?: string[];
+    peerDependencies?: string[];
     tailwindConfig?: Record<string, unknown>;
     tailwindCss?: string;
 };
