@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useSyncExternalStore,
 } from "react";
+import { MotionConfig } from "motion/react";
 
 export type Theme = "light" | "dark";
 
@@ -97,7 +98,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-      {children}
+      {/* reducedMotion="user" makes motion/react components respect prefers-reduced-motion,
+          so users (and axe/Playwright via emulateMedia) get instant transitions instead of
+          mid-animation opacity that axe scans as low-contrast. */}
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
     </ThemeContext.Provider>
   );
 }
