@@ -11,8 +11,26 @@ export async function addAll(options: {
     force?: boolean;
     dryRun?: boolean;
 }) {
-    const cwd = options.cwd ?? process.cwd();
+    const cwd = path.resolve(options.cwd ?? process.cwd());
+    // add() reads components.json and writes files relative to process.cwd().
+    // If the caller specified a different cwd, temporarily switch the process
+    // working directory so inner add() calls resolve paths correctly.
+    // Wrapped in try/finally so early returns always restore the original cwd.
+    const originalCwd = process.cwd();
+    const cwdChanged = cwd !== originalCwd;
+    if (cwdChanged) process.chdir(cwd);
 
+    try {
+        await _addAll(options, cwd);
+    } finally {
+        if (cwdChanged) process.chdir(originalCwd);
+    }
+}
+
+async function _addAll(
+    options: { url: string; cwd?: string; yes?: boolean; force?: boolean; dryRun?: boolean },
+    cwd: string,
+) {
     warnIfUntrustedRegistry(options.url);
 
     // Gate: components/ui must be empty unless --force or --dry-run

@@ -25,7 +25,7 @@ test.describe("axe a11y", () => {
       const results = await new AxeBuilder({ page })
         // Exclude known third-party iframes and Next.js dev overlays.
         .exclude("#__next-build-watcher")
-        .withTags(["wcag2a", "wcag2aa", "best-practice"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa", "best-practice"])
         .analyze();
 
       const critical = results.violations.filter(

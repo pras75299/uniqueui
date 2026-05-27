@@ -74,7 +74,11 @@ export function validateRegistryPayload(data: unknown): RegistryItem[] | null {
             if (typeof fo.path !== "string" || typeof fo.type !== "string" || typeof fo.content !== "string") {
                 return null;
             }
-            const integrity = typeof fo.integrity === "string" && fo.integrity.length > 0 ? fo.integrity : undefined;
+            // Only accept well-formed SRI hashes — any other non-empty string (e.g.
+            // "md5-abc") would always fail verifyFileIntegrity and produce a
+            // misleading "tampered" error rather than a clear parse rejection.
+            const integrityRaw = typeof fo.integrity === "string" ? fo.integrity : undefined;
+            const integrity = integrityRaw && /^sha384-[A-Za-z0-9+/]+=*$/.test(integrityRaw) ? integrityRaw : undefined;
             files.push({ path: fo.path, type: fo.type, content: fo.content, ...(integrity ? { integrity } : {}) });
         }
         let tailwindConfig: Record<string, any> | undefined;
@@ -557,6 +561,18 @@ async function fetchTextFromUrl(url: string): Promise<string | null> {
     try {
         const res = (await fetch(url, { signal: controller.signal })) as Awaited<ReturnType<typeof fetch>>;
         if (!res.ok) return null;
+        // Mirror the content-length pre-check from fetchJsonFromUrl so a server
+        // advertising an oversized response is rejected before any body is read.
+        const contentLengthHeader =
+            typeof (res as { headers?: { get?: (name: string) => string | null } }).headers?.get === "function"
+                ? res.headers.get("content-length")
+                : null;
+        if (contentLengthHeader) {
+            const contentLength = Number(contentLengthHeader);
+            if (Number.isFinite(contentLength) && contentLength > MAX_REGISTRY_RESPONSE_BYTES) {
+                return null;
+            }
+        }
         const body = (res as unknown as { body?: { getReader?: () => { read: () => Promise<{ done: boolean; value?: Uint8Array }>; cancel: () => Promise<void> } } | null }).body;
         if (body && typeof body.getReader === "function") {
             const reader = body.getReader();
@@ -901,9 +917,17 @@ export async function add(
     // 1b. Verify registry root integrity if pinned in components.json
     const pinnedIntegrity = (config as Record<string, unknown>).registryIntegrity;
     if (typeof pinnedIntegrity === "string" && pinnedIntegrity.length > 0 && !isLocalRegistrySource(options.url)) {
-        const registryRootUrl = options.url.endsWith(".json")
-            ? options.url
-            : `${options.url.replace(/\/+$/, "")}/registry.json`;
+        // Derive the registry root URL. If options.url already points at
+        // registry.json, use it as-is. If it points at some other .json file
+        // (e.g. a component-level JSON), strip the filename to get the directory
+        // and append registry.json. If it's a bare directory URL, append
+        // registry.json directly.
+        const base = options.url.replace(/\/+$/, "");
+        const registryRootUrl = base.endsWith("/registry.json")
+            ? base
+            : base.endsWith(".json")
+                ? `${base.slice(0, base.lastIndexOf("/"))}/registry.json`
+                : `${base}/registry.json`;
         const rawRegistry = await fetchTextFromUrl(registryRootUrl);
         if (rawRegistry === null) {
             console.error(chalk.red(`Could not fetch registry root for integrity check: ${registryRootUrl}`));
