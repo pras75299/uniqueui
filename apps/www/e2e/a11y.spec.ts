@@ -14,14 +14,13 @@ const PAGES = [
 ];
 
 test.describe("axe a11y", () => {
-  // Ensure prefers-reduced-motion:reduce so motion/react transitions are instant
-  // (opacity:0 initial → opacity:1 animate completes in one frame). Without this,
-  // axe can sample cards/thumbnails mid-animation and report false contrast failures
-  // because the composited colour of semi-transparent text appears too dark.
-  test.use({ reducedMotion: "reduce" });
-
   for (const { route, label } of PAGES) {
     test(`${label} (${route}) has no critical/serious axe violations`, async ({ page }) => {
+      // Ensure prefers-reduced-motion:reduce so motion/react transitions complete instantly
+      // (opacity:0 initial → opacity:1 animate in one frame). Without this, axe can sample
+      // cards mid-animation and report false contrast failures because semi-transparent text
+      // composites to a lower-contrast colour than the final rendered value.
+      await page.emulateMedia({ reducedMotion: "reduce" });
       await page.goto(route);
       // Wait for main content to be visible before scanning.
       await page.waitForSelector("main", { timeout: 10_000 }).catch(() => {
