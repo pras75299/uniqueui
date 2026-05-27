@@ -242,7 +242,7 @@ export default function Home() {
               <p
                 className={cn(
                   "text-xs md:text-sm flex flex-wrap items-center gap-2",
-                  isDark ? "text-neutral-500" : "text-neutral-500",
+                  isDark ? "text-neutral-400" : "text-neutral-500",
                 )}
               >
                 <span>Works with Next.js & React ·</span>
@@ -282,7 +282,7 @@ export default function Home() {
                     <span
                       className={cn(
                         "hidden sm:inline-block",
-                        isDark ? "text-neutral-500" : "text-neutral-500",
+                        isDark ? "text-neutral-400" : "text-neutral-500",
                       )}
                     >
                       Try different layouts
@@ -305,7 +305,7 @@ export default function Home() {
                   <p
                     className={cn(
                       "text-xs font-medium uppercase tracking-wide",
-                      isDark ? "text-neutral-500" : "text-neutral-600",
+                      isDark ? "text-neutral-400" : "text-neutral-600",
                     )}
                   >
                     Ribbon trail
@@ -395,7 +395,7 @@ export default function Home() {
                 className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
               >
                 <div>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-neutral-500">
+                  <p className={cn("font-mono text-[11px] uppercase tracking-[0.2em]", isDark ? "text-neutral-400" : "text-neutral-500")}>
                     Surfaces in the registry
                   </p>
                   <h2
@@ -488,7 +488,7 @@ export default function Home() {
                       <p
                         className={cn(
                           "mt-1 text-sm leading-relaxed",
-                          isDark ? "text-neutral-500" : "text-neutral-600",
+                          isDark ? "text-neutral-400" : "text-neutral-600",
                         )}
                       >
                         {row.desc}
@@ -517,7 +517,7 @@ export default function Home() {
                 variants={reveal}
                 className="mb-8 lg:max-w-2xl"
               >
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-neutral-500">
+                <p className={cn("font-mono text-[11px] uppercase tracking-[0.2em]", isDark ? "text-neutral-400" : "text-neutral-500")}>
                   What lands in your editor
                 </p>
                 <h2
@@ -559,28 +559,28 @@ export default function Home() {
                     <span
                       className={cn(
                         "ml-2 text-[10px] md:text-xs",
-                        isDark ? "text-neutral-500" : "text-neutral-500",
+                        isDark ? "text-neutral-400" : "text-neutral-500",
                       )}
                     >
                       explorer — src
                     </span>
                   </div>
                   <div className="space-y-0.5 p-4 leading-relaxed">
-                    <div className="flex items-center gap-2 text-neutral-500">
+                    <div className={cn("flex items-center gap-2", isDark ? "text-neutral-400" : "text-neutral-500")}>
                       <Folder
                         className="h-3.5 w-3.5 shrink-0 opacity-70"
                         aria-hidden
                       />
                       <span>app</span>
                     </div>
-                    <div className="flex items-center gap-2 pl-3 text-neutral-500">
+                    <div className={cn("flex items-center gap-2 pl-3", isDark ? "text-neutral-400" : "text-neutral-500")}>
                       <Folder
                         className="h-3.5 w-3.5 shrink-0 opacity-70"
                         aria-hidden
                       />
                       <span>components</span>
                     </div>
-                    <div className="flex items-center gap-2 pl-6 text-neutral-500">
+                    <div className={cn("flex items-center gap-2 pl-6", isDark ? "text-neutral-400" : "text-neutral-500")}>
                       <Folder
                         className="h-3.5 w-3.5 shrink-0 opacity-70"
                         aria-hidden
@@ -607,14 +607,14 @@ export default function Home() {
                         morphing-card-stack.tsx
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 pl-6 text-neutral-500">
+                    <div className={cn("flex items-center gap-2 pl-6", isDark ? "text-neutral-400" : "text-neutral-500")}>
                       <FileText
                         className="h-3.5 w-3.5 shrink-0 opacity-60"
                         aria-hidden
                       />
                       <span>aurora-background.tsx</span>
                     </div>
-                    <div className="flex items-center gap-2 pl-6 text-neutral-500">
+                    <div className={cn("flex items-center gap-2 pl-6", isDark ? "text-neutral-400" : "text-neutral-500")}>
                       <FileText
                         className="h-3.5 w-3.5 shrink-0 opacity-60"
                         aria-hidden
@@ -661,7 +661,7 @@ export default function Home() {
                   <div className="p-4">
                     <p
                       className={
-                        isDark ? "text-neutral-500" : "text-neutral-500"
+                        isDark ? "text-neutral-400" : "text-neutral-500"
                       }
                     >
                       <span className="text-emerald-500/90" aria-hidden>
@@ -701,7 +701,7 @@ export default function Home() {
                     <p
                       className={cn(
                         "mt-4 text-[11px] leading-relaxed",
-                        isDark ? "text-neutral-500" : "text-neutral-500",
+                        isDark ? "text-neutral-400" : "text-neutral-500",
                       )}
                     >
                       Installs npm deps from the registry entry, writes the file
@@ -740,7 +740,7 @@ export default function Home() {
                 <p
                   className={cn(
                     "mt-2 max-w-xl text-sm",
-                    isDark ? "text-neutral-500" : "text-neutral-600",
+                    isDark ? "text-neutral-400" : "text-neutral-600",
                   )}
                 >
                   Not a feature matrix for procurement — a quick read for
@@ -763,13 +763,13 @@ export default function Home() {
                           : "border-neutral-200 bg-neutral-50",
                       )}
                     >
-                      <th className="px-4 py-3 font-medium text-neutral-500">
+                      <th className={cn("px-4 py-3 font-medium", isDark ? "text-neutral-400" : "text-neutral-500")}>
                         <span className="sr-only">Comparison criteria</span>
                       </th>
-                      <th className="px-4 py-3 font-medium text-neutral-500">
+                      <th className={cn("px-4 py-3 font-medium", isDark ? "text-neutral-400" : "text-neutral-500")}>
                         Hand-rolled
                       </th>
-                      <th className="px-4 py-3 font-medium text-neutral-500">
+                      <th className={cn("px-4 py-3 font-medium", isDark ? "text-neutral-400" : "text-neutral-500")}>
                         Heavy UI kit
                       </th>
                       <th
@@ -822,8 +822,8 @@ export default function Home() {
                         >
                           {label}
                         </th>
-                        <td className="px-4 py-3 text-neutral-500">{a}</td>
-                        <td className="px-4 py-3 text-neutral-500">{b}</td>
+                        <td className={cn("px-4 py-3", isDark ? "text-neutral-400" : "text-neutral-500")}>{a}</td>
+                        <td className={cn("px-4 py-3", isDark ? "text-neutral-400" : "text-neutral-500")}>{b}</td>
                         <td
                           className={cn(
                             "px-4 py-3",
@@ -848,7 +848,7 @@ export default function Home() {
                 variants={reveal}
                 className="mb-8 lg:max-w-2xl"
               >
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-neutral-500">
+                <p className={cn("font-mono text-[11px] uppercase tracking-[0.2em]", isDark ? "text-neutral-400" : "text-neutral-500")}>
                   Still interactive
                 </p>
                 <h2
@@ -959,7 +959,7 @@ export default function Home() {
                   <p
                     className={cn(
                       "mt-6 inline-flex items-center gap-2 text-sm",
-                      isDark ? "text-neutral-500" : "text-neutral-600",
+                      isDark ? "text-neutral-400" : "text-neutral-600",
                     )}
                   >
                     <span>Built with</span>
@@ -984,7 +984,7 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+                    <p className={cn("font-mono text-[10px] uppercase tracking-widest", isDark ? "text-neutral-400" : "text-neutral-500")}>
                       Product
                     </p>
                     <ul className="mt-3 space-y-2 text-sm">
@@ -1030,7 +1030,7 @@ export default function Home() {
                     </ul>
                   </div>
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+                    <p className={cn("font-mono text-[10px] uppercase tracking-widest", isDark ? "text-neutral-400" : "text-neutral-500")}>
                       Source
                     </p>
                     <ul className="mt-3 space-y-2 text-sm">
@@ -1052,7 +1052,7 @@ export default function Home() {
                     </ul>
                   </div>
                   <div className="col-span-2 sm:col-span-1">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+                    <p className={cn("font-mono text-[10px] uppercase tracking-widest", isDark ? "text-neutral-400" : "text-neutral-500")}>
                       Quick start
                     </p>
                     <pre

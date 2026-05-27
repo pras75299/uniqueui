@@ -138,7 +138,7 @@ export default function ComponentsLayout({
                   <h4
                     className={cn(
                       "text-[10px] font-semibold uppercase tracking-widest px-3 mb-2",
-                      isDark ? "text-neutral-500" : "text-neutral-400",
+                      isDark ? "text-neutral-400" : "text-neutral-500",
                     )}
                   >
                     {category}

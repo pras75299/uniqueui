@@ -50,7 +50,7 @@ export function SiteHeader({ trailing, className }: SiteHeaderProps) {
                 className={cn(
                   "hidden items-center gap-1.5 text-sm transition-colors duration-200 ease-out sm:inline-flex",
                   isDark
-                    ? "text-neutral-500 hover:text-white"
+                    ? "text-neutral-400 hover:text-white"
                     : "text-neutral-500 hover:text-neutral-900",
                 )}
               >
@@ -84,7 +84,7 @@ export function SiteHeader({ trailing, className }: SiteHeaderProps) {
             />
             <span className="truncate">UniqueUI</span>
             {isHome ? (
-              <span className="shrink-0 font-mono text-[10px] font-normal tracking-normal text-neutral-500 sm:text-xs">
+              <span className={cn("shrink-0 font-mono text-[10px] font-normal tracking-normal sm:text-xs", isDark ? "text-neutral-400" : "text-neutral-500")}>
                 v1.0.0
               </span>
             ) : null}

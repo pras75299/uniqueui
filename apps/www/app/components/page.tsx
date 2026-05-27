@@ -189,7 +189,7 @@ export default function ComponentsIndex() {
                       "ml-1.5 text-[10px] font-normal",
                       activeCategory === cat
                         ? "text-purple-200"
-                        : isDark ? "text-neutral-600" : "text-neutral-400"
+                        : isDark ? "text-neutral-400" : "text-neutral-600"
                     )}
                   >
                     {categoryCounts[cat]}
@@ -209,7 +209,7 @@ export default function ComponentsIndex() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.2 }}
-        className={cn("text-sm", isDark ? "text-neutral-600" : "text-neutral-400")}
+        className={cn("text-sm", isDark ? "text-neutral-400" : "text-neutral-600")}
       >
         {filtered.length === componentsOnly.length
           ? `All ${componentsOnly.length} components`
@@ -285,7 +285,7 @@ export default function ComponentsIndex() {
                           className={cn(
                             "inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full",
                             isDark
-                              ? "bg-neutral-800 text-neutral-500"
+                              ? "bg-neutral-800 text-neutral-400"
                               : "bg-neutral-100 text-neutral-400"
                           )}
                         >
@@ -305,7 +305,7 @@ export default function ComponentsIndex() {
                       <p
                         className={cn(
                           "text-sm line-clamp-2 leading-relaxed",
-                          isDark ? "text-neutral-500" : "text-neutral-500"
+                          isDark ? "text-neutral-400" : "text-neutral-500"
                         )}
                       >
                         {component.description}
@@ -324,7 +324,7 @@ export default function ComponentsIndex() {
           animate={{ opacity: 1, y: 0 }}
           className={cn(
             "text-center py-24 rounded-2xl border-2 border-dashed",
-            isDark ? "border-neutral-800 text-neutral-600" : "border-neutral-200 text-neutral-400"
+            isDark ? "border-neutral-800 text-neutral-400" : "border-neutral-200 text-neutral-600"
           )}
         >
           <Search className="w-8 h-8 mx-auto mb-3 opacity-40" />
