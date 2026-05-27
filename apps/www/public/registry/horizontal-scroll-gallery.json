@@ -9,12 +9,14 @@
     {
       "path": "horizontal-scroll-gallery/component.tsx",
       "content": "\"use client\";\n\nimport React, { useRef, useEffect, useState } from \"react\";\nimport { cn } from \"@/lib/utils\";\nimport {\n  motion,\n  useScroll,\n  useSpring,\n  useTransform,\n  HTMLMotionProps,\n} from \"motion/react\";\n\nexport interface HorizontalScrollGalleryProps\n  extends Omit<HTMLMotionProps<\"div\">, \"onAnimationStart\" | \"onDragStart\" | \"onDragEnd\" | \"onDrag\"> {\n  items: React.ReactNode[];\n  direction?: \"left\" | \"right\";\n  itemClassName?: string;\n  theme?: \"light\" | \"dark\";\n}\n\nexport function HorizontalScrollGallery({\n  className,\n  items,\n  direction = \"left\",\n  itemClassName,\n  theme: _theme = \"dark\",\n  ...props\n}: HorizontalScrollGalleryProps) {\n  const containerRef = useRef<HTMLDivElement>(null);\n  const viewportRef = useRef<HTMLDivElement>(null);\n  const trackRef = useRef<HTMLDivElement>(null);\n  const [maxOffset, setMaxOffset] = useState(0);\n\n  const { scrollYProgress } = useScroll({\n    target: containerRef,\n    offset: [\"start start\", \"end end\"],\n  });\n  const smoothProgress = useSpring(scrollYProgress, {\n    stiffness: 140,\n    damping: 24,\n    mass: 0.35,\n  });\n\n  useEffect(() => {\n    const track = trackRef.current;\n    const viewport = viewportRef.current;\n    if (!track || !viewport) return;\n    const measure = () => {\n      const trackWidth = track.scrollWidth;\n      const viewportWidth = viewport.clientWidth;\n      setMaxOffset((prev) => {\n        const next = Math.max(0, trackWidth - viewportWidth);\n        return next === prev ? prev : next;\n      });\n    };\n    measure();\n    const RO = typeof ResizeObserver !== \"undefined\" ? ResizeObserver : null;\n    const ro = RO ? new RO(measure) : null;\n    if (ro) {\n      ro.observe(track);\n      ro.observe(viewport);\n    }\n    window.addEventListener(\"resize\", measure);\n    return () => {\n      ro?.disconnect();\n      window.removeEventListener(\"resize\", measure);\n    };\n  }, []);\n\n  const x = useTransform(smoothProgress, (value) =>\n    direction === \"left\" ? -value * maxOffset : -(1 - value) * maxOffset,\n  );\n\n  return (\n    <motion.div\n      {...props}\n      ref={containerRef}\n      className={cn(\"relative h-[300vh] w-full\", className)}\n    >\n      <div\n        ref={viewportRef}\n        className=\"sticky top-0 h-screen w-full overflow-hidden flex items-center\"\n      >\n        <motion.div\n          ref={trackRef}\n          style={{ x }}\n          className=\"flex h-full w-max items-center px-4\"\n        >\n          {items.map((item, index) => (\n            <div\n              key={index}\n              className={cn(\n                \"relative shrink-0 mx-4 h-[60vh] w-[80vw] sm:w-[50vw] md:w-[40vw] lg:w-[30vw] xl:w-[25vw] rounded-2xl overflow-hidden\",\n                itemClassName\n              )}\n            >\n              {item}\n            </div>\n          ))}\n        </motion.div>\n      </div>\n    </motion.div>\n  );\n}\n",
-      "type": "registry:ui"
+      "type": "registry:ui",
+      "integrity": "sha384-TEDc8mPtT/6eqdwOaNWG2gGADv7CihwCTqrkK6Aq19BC110xuJ2/H2kR2ROwVl3Z"
     },
     {
       "path": "utils/cn.ts",
       "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
-      "type": "registry:util"
+      "type": "registry:util",
+      "integrity": "sha384-PFsmUDxsGyTpithwRHqXHK4J46ePXMjvbm5/78jCSJEH1Dsygh4anV8Y/45UrHos"
     }
   ],
   "meta": {
@@ -49,6 +51,10 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "infinite-marquee",
+    "scroll-reveal"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

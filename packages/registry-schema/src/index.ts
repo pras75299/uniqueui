@@ -56,10 +56,35 @@ export const RegistryFileType = z.enum([
     "registry:lib",
 ]);
 
+// SHA-384 integrity hash (same format as Subresource Integrity).
+// Format: "sha384-<base64url>". Computed from the UTF-8 content of each file
+// and verified by the CLI before writing to the user's project.
+const SHA384_RE = /^sha384-[A-Za-z0-9+/]+=*$/;
+export const IntegrityHash = z.string().regex(SHA384_RE, "integrity must be sha384-<base64>");
+
+// Out-of-tree asset (font file, image, etc.) bundled alongside a component.
+// No existing component uses this — the field exists so third-party registries
+// can declare assets without a schema bump.
+export const RegistryAsset = z.object({
+    path: z.string().min(1),
+    type: z.string().min(1),
+    url: z.string().url().optional(),
+}).strict();
+
+// Cross-links between components that share concepts or are commonly used together.
+// Sparse — not every component needs related slugs. Populated in registry/related-slugs.json
+// and derived automatically by the build script from shared tag overlap.
+export const RelatedSlugsMap = z.record(Slug, z.array(Slug).min(1));
+
+// Inverse relationship: which hero-block slugs visually incorporate or were
+// inspired by a given component. Populated in registry/used-by-blocks.json.
+export const UsedByBlocksMap = z.record(Slug, z.array(Slug).min(1));
+
 export const RegistryFile = z.object({
     path: z.string().min(1),
     content: z.string(),
     type: RegistryFileType,
+    integrity: IntegrityHash.optional(),
 });
 
 export const TailwindConfig = z
@@ -251,6 +276,9 @@ export const RegistryEntry = z.object({
     motion: MotionMeta.optional(),
     compatibility: CompatibilityMeta.optional(),
     accessibility: AccessibilityMeta.optional(),
+    relatedSlugs: z.array(Slug).min(1).optional(),
+    usedByBlocks: z.array(Slug).min(1).optional(),
+    assets: z.array(RegistryAsset).min(1).optional(),
     meta: RegistryMeta,
     changelog: changelogArray,
 });
@@ -313,6 +341,10 @@ export type AccessibilityMapT = z.infer<typeof AccessibilityMap>;
 export type PeerDependenciesMapT = z.infer<typeof PeerDependenciesMap>;
 export type CssVariableT = z.infer<typeof CssVariable>;
 export type CssVariablesMapT = z.infer<typeof CssVariablesMap>;
+export type IntegrityHashT = z.infer<typeof IntegrityHash>;
+export type RegistryAssetT = z.infer<typeof RegistryAsset>;
+export type RelatedSlugsMapT = z.infer<typeof RelatedSlugsMap>;
+export type UsedByBlocksMapT = z.infer<typeof UsedByBlocksMap>;
 export type RegistryEntryT = z.infer<typeof RegistryEntry>;
 export type RegistryArrayT = z.infer<typeof RegistryArray>;
 export type SplitIndexT = z.infer<typeof SplitIndex>;

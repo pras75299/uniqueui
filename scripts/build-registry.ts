@@ -1,4 +1,5 @@
 
+import { createHash } from "crypto";
 import fs from "fs-extra";
 import path from "path";
 import { registry, type RegistryChangelogEntry } from "../registry/config";
@@ -12,6 +13,8 @@ const REGISTRY_TAGS_FILE = path.join(REGISTRY_DIR, "tags.json");
 const REGISTRY_PEER_DEPS_FILE = path.join(REGISTRY_DIR, "peer-dependencies.json");
 const REGISTRY_COMPATIBILITY_FILE = path.join(REGISTRY_DIR, "compatibility.json");
 const REGISTRY_ACCESSIBILITY_FILE = path.join(REGISTRY_DIR, "accessibility.json");
+const REGISTRY_RELATED_SLUGS_FILE = path.join(REGISTRY_DIR, "related-slugs.json");
+const REGISTRY_USED_BY_BLOCKS_FILE = path.join(REGISTRY_DIR, "used-by-blocks.json");
 const OUTPUT_FILE = path.join(__dirname, "../registry.json");
 const APP_PUBLIC_DIR = path.join(__dirname, "../apps/www/public");
 const APP_PUBLIC_OUTPUT_FILE = path.join(APP_PUBLIC_DIR, "registry.json");
@@ -66,6 +69,8 @@ type TagsMap = Record<string, string[]>;
 type PeerDependenciesMap = Record<string, string[]>;
 type CompatibilityMap = Record<string, CompatibilityMetaEntry>;
 type AccessibilityMap = Record<string, AccessibilityMetaEntry>;
+type RelatedSlugsMap = Record<string, string[]>;
+type UsedByBlocksMap = Record<string, string[]>;
 
 type RegistryDocsVariant = {
   id: string;
@@ -535,6 +540,52 @@ async function loadAccessibilityMap(slugs: string[]): Promise<AccessibilityMap> 
   });
 }
 
+function computeIntegrity(content: string): string {
+  const hash = createHash("sha384").update(content, "utf8").digest("base64");
+  return `sha384-${hash}`;
+}
+
+async function loadRelatedSlugsMap(slugs: string[]): Promise<RelatedSlugsMap> {
+  if (!(await fs.pathExists(REGISTRY_RELATED_SLUGS_FILE))) return {};
+  const raw = (await fs.readJson(REGISTRY_RELATED_SLUGS_FILE)) as unknown;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+    throw new Error("registry/related-slugs.json must be an object keyed by slug");
+  }
+  const map = raw as Record<string, unknown>;
+  const errors: string[] = [];
+  const out: RelatedSlugsMap = {};
+  const slugSet = new Set(slugs);
+  for (const [slug, value] of Object.entries(map)) {
+    if (!slugSet.has(slug)) { errors.push(`related-slugs.json: stray "${slug}"`); continue; }
+    if (!Array.isArray(value) || value.length === 0) { errors.push(`related-slugs.json: "${slug}" must be non-empty array`); continue; }
+    for (const s of value) {
+      if (typeof s !== "string" || !slugSet.has(s)) { errors.push(`related-slugs.json: "${slug}" contains unknown slug "${s}"`); break; }
+    }
+    out[slug] = value as string[];
+  }
+  if (errors.length > 0) throw new Error(`related-slugs.json validation failed:\n  - ${errors.join("\n  - ")}`);
+  return out;
+}
+
+async function loadUsedByBlocksMap(slugs: string[]): Promise<UsedByBlocksMap> {
+  if (!(await fs.pathExists(REGISTRY_USED_BY_BLOCKS_FILE))) return {};
+  const raw = (await fs.readJson(REGISTRY_USED_BY_BLOCKS_FILE)) as unknown;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+    throw new Error("registry/used-by-blocks.json must be an object keyed by slug");
+  }
+  const map = raw as Record<string, unknown>;
+  const errors: string[] = [];
+  const out: UsedByBlocksMap = {};
+  const slugSet = new Set(slugs);
+  for (const [slug, value] of Object.entries(map)) {
+    if (!slugSet.has(slug)) { errors.push(`used-by-blocks.json: stray "${slug}"`); continue; }
+    if (!Array.isArray(value) || value.length === 0) { errors.push(`used-by-blocks.json: "${slug}" must be non-empty array`); continue; }
+    out[slug] = value as string[];
+  }
+  if (errors.length > 0) throw new Error(`used-by-blocks.json validation failed:\n  - ${errors.join("\n  - ")}`);
+  return out;
+}
+
 // Extract CSS custom properties declared in a component's `tailwindCss`
 // snippet. We collect top-level `--name: value;` declarations inside
 // `@theme { ... }` blocks. Nested `@keyframes` (or any nested block) are
@@ -758,6 +809,8 @@ async function buildRegistry() {
   const peerDepsMap = await loadPeerDependenciesMap(slugs);
   const compatibilityMap = await loadCompatibilityMap(slugs);
   const accessibilityMap = await loadAccessibilityMap(slugs);
+  const relatedSlugsMap = await loadRelatedSlugsMap(slugs);
+  const usedByBlocksMap = await loadUsedByBlocksMap(slugs);
 
   const result: RegistryEntry[] = [];
 
@@ -770,6 +823,7 @@ async function buildRegistry() {
           path: file.path,
           content: file.content,
           type: file.type,
+          integrity: computeIntegrity(file.content),
         });
         continue;
       }
@@ -781,6 +835,7 @@ async function buildRegistry() {
           path: file.path,
           content,
           type: file.type,
+          integrity: computeIntegrity(content),
         });
       } catch (error) {
         console.error(`Error reading file ${file.path} for component ${component.name}:`, error);
@@ -804,6 +859,8 @@ async function buildRegistry() {
       tags: tagsMap[component.name],
       compatibility: compatibilityMap[component.name],
       accessibility: accessibilityMap[component.name],
+      ...(relatedSlugsMap[component.name] ? { relatedSlugs: relatedSlugsMap[component.name] } : {}),
+      ...(usedByBlocksMap[component.name] ? { usedByBlocks: usedByBlocksMap[component.name] } : {}),
       ...(motion ? { motion } : {}),
       ...(cssVariables ? { cssVariables } : {}),
     });

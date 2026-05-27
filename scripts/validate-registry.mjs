@@ -22,10 +22,12 @@ import {
   PeerDependenciesMap,
   RegistryArray,
   RegistryEntry,
+  RelatedSlugsMap,
   ShadcnItem,
   ShadcnManifest,
   SplitIndex,
   TagsMap,
+  UsedByBlocksMap,
   crossCheckChangelogs,
   crossCheckSlugs,
   validate,
@@ -143,6 +145,23 @@ if (sourceMotion && rootRegistry) {
   for (const slug of Object.keys(sourceMotion)) {
     if (!rootSlugs.has(slug)) {
       failures.push(`cross-check: motion.json has stray "${slug}" (not in registry)`);
+    }
+  }
+}
+
+// Sparse maps: optional files that need no full coverage, just valid slugs.
+for (const { file, schema } of [
+  { file: "registry/related-slugs.json", schema: RelatedSlugsMap },
+  { file: "registry/used-by-blocks.json", schema: UsedByBlocksMap },
+]) {
+  if (!fs.existsSync(path.join(ROOT, file))) continue; // sparse — optional
+  const parsed = check(file, schema, readJson(file));
+  if (parsed && rootRegistry) {
+    const rootSlugs = new Set(rootRegistry.map((e) => e.name));
+    for (const slug of Object.keys(parsed)) {
+      if (!rootSlugs.has(slug)) {
+        failures.push(`cross-check: ${file} has stray "${slug}" (not in registry)`);
+      }
     }
   }
 }
