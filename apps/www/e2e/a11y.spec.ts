@@ -16,18 +16,17 @@ const PAGES = [
 test.describe("axe a11y", () => {
   for (const { route, label } of PAGES) {
     test(`${label} (${route}) has no critical/serious axe violations`, async ({ page }) => {
-      // Ensure prefers-reduced-motion:reduce so motion/react transitions complete instantly
-      // (opacity:0 initial → opacity:1 animate in one frame). Without this, axe can sample
-      // cards mid-animation and report false contrast failures because semi-transparent text
-      // composites to a lower-contrast colour than the final rendered value.
+      // prefers-reduced-motion:reduce is set so motion/react skips transform animations and
+      // app-wrapping <MotionConfig reducedMotion="user"> takes effect. Opacity transitions
+      // still play under reduced motion (per motion/react spec), so we also wait for the
+      // staggered card grids on /components and /blocks to fully settle before axe scans.
+      // Worst case: ~32 cards × 0.04s stagger ≈ 1.3s + spring settle. 2.5s is the safe budget.
       await page.emulateMedia({ reducedMotion: "reduce" });
-      await page.goto(route);
-      // Wait for main content to be visible before scanning.
+      await page.goto(route, { waitUntil: "networkidle" });
       await page.waitForSelector("main", { timeout: 10_000 }).catch(() => {
         // some pages may not have a <main> — that's fine, axe still scans.
       });
-      // Give motion one extra tick to apply instant-mode transitions before axe scans.
-      await page.waitForTimeout(300);
+      await page.waitForTimeout(2500);
 
       const results = await new AxeBuilder({ page })
         // Exclude known third-party iframes and Next.js dev overlays.
