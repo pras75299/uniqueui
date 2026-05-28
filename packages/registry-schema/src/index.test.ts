@@ -104,6 +104,99 @@ describe("RegistryEntry", () => {
         const bad = { ...goodEntry, tailwindCss: "" };
         expect(validate(RegistryEntry, bad).ok).toBe(false);
     });
+
+    it("accepts a motion.reducedMotion stance — required by the reduced-motion gate to read source consistency", () => {
+        for (const reducedMotion of ["full", "partial", "none"] as const) {
+            const ok = { ...goodEntry, motion: { reducedMotion } };
+            expect(validate(RegistryEntry, ok).ok).toBe(true);
+        }
+    });
+
+    it("rejects motion.reducedMotion outside the enum — 'true'/'yes' would slip past a free-string field", () => {
+        const bad = { ...goodEntry, motion: { reducedMotion: "yes" } };
+        expect(validate(RegistryEntry, bad).ok).toBe(false);
+    });
+
+    it("accepts motion.performanceNotes alongside reducedMotion — the opt-out path is meant to be documented", () => {
+        const ok = {
+            ...goodEntry,
+            motion: { reducedMotion: "none", performanceNotes: "WebGL hero; falling back would erase the brand moment." },
+        };
+        expect(validate(RegistryEntry, ok).ok).toBe(true);
+    });
+
+    it("rejects an empty motion.performanceNotes string — empty is a smell, omit the field instead", () => {
+        const bad = { ...goodEntry, motion: { reducedMotion: "none", performanceNotes: "" } };
+        expect(validate(RegistryEntry, bad).ok).toBe(false);
+    });
+
+    it("accepts tags — kebab-case taxonomy used by search ranking", () => {
+        const ok = { ...goodEntry, tags: ["card", "hover", "3d"] };
+        expect(validate(RegistryEntry, ok).ok).toBe(true);
+    });
+
+    it("rejects uppercase tags — case folding in search relies on a single source of casing", () => {
+        const bad = { ...goodEntry, tags: ["Card"] };
+        expect(validate(RegistryEntry, bad).ok).toBe(false);
+    });
+
+    it("rejects an empty tags array — taxonomy with zero tags is meaningless; omit the field instead", () => {
+        const bad = { ...goodEntry, tags: [] };
+        expect(validate(RegistryEntry, bad).ok).toBe(false);
+    });
+
+    it("accepts a peerDependencies array — split from runtime deps so the CLI can warn instead of install", () => {
+        const ok = { ...goodEntry, peerDependencies: ["react", "react-dom"] };
+        expect(validate(RegistryEntry, ok).ok).toBe(true);
+    });
+
+    it("rejects an empty peerDependencies array — same rule as tags; omit instead of declaring empty", () => {
+        const bad = { ...goodEntry, peerDependencies: [] };
+        expect(validate(RegistryEntry, bad).ok).toBe(false);
+    });
+
+    it("accepts compatibility with subset of axes — keeps the schema open as new runtimes appear", () => {
+        const ok = { ...goodEntry, compatibility: { react: "18+", tailwind: "3+|4+", rsc: false } };
+        expect(validate(RegistryEntry, ok).ok).toBe(true);
+    });
+
+    it("rejects unknown compatibility keys (strict) — a typo like `nextjs` would silently lose data", () => {
+        const bad = { ...goodEntry, compatibility: { react: "18+", nextjs: "14+" } };
+        expect(validate(RegistryEntry, bad).ok).toBe(false);
+    });
+
+    it("accepts accessibility metadata with status only — the honest default for the unaudited bulk", () => {
+        const ok = { ...goodEntry, accessibility: { status: "unaudited" } };
+        expect(validate(RegistryEntry, ok).ok).toBe(true);
+    });
+
+    it("rejects accessibility.status outside the enum — 'wip'/'todo' would slip past a free string", () => {
+        const bad = { ...goodEntry, accessibility: { status: "wip" } };
+        expect(validate(RegistryEntry, bad).ok).toBe(false);
+    });
+
+    it("accepts cssVariables list — drives `uniqueui theme` overrides", () => {
+        const ok = {
+            ...goodEntry,
+            cssVariables: [
+                { name: "--animate-border-spin", defaultValue: "border-spin 3s linear infinite", description: "Rotation speed of the moving border." },
+            ],
+        };
+        expect(validate(RegistryEntry, ok).ok).toBe(true);
+    });
+
+    it("rejects a CSS variable name without the `--` prefix — `theme` would emit broken CSS", () => {
+        const bad = {
+            ...goodEntry,
+            cssVariables: [{ name: "animate-border-spin", defaultValue: "border-spin 3s linear infinite" }],
+        };
+        expect(validate(RegistryEntry, bad).ok).toBe(false);
+    });
+
+    it("rejects an empty cssVariables array — omit the field instead of declaring nothing", () => {
+        const bad = { ...goodEntry, cssVariables: [] };
+        expect(validate(RegistryEntry, bad).ok).toBe(false);
+    });
 });
 
 describe("RegistryArray", () => {

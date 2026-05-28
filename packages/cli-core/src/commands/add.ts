@@ -7,6 +7,7 @@ import prompts from "prompts";
 import { Project, SyntaxKind, QuoteKind } from "ts-morph";
 import { spawnSync } from "child_process";
 import { createInterface } from "node:readline/promises";
+import { createHash } from "crypto";
 import { assertSafeNpmDependencies } from "../npm-dependency-name";
 import { writeCachedItem } from "../cache";
 
@@ -14,7 +15,14 @@ import { writeCachedItem } from "../cache";
 type RegistryItem = {
     name: string;
     dependencies: string[];
-    files: Array<{ path: string; type: string; content: string }>;
+    files: Array<{ path: string; type: string; content: string; integrity?: string }>;
+    // Optional taxonomy strings used by `uniqueui search` ranking. Unknown
+    // tag formats are silently dropped (defense against a hostile / older
+    // registry shipping garbage in this field).
+    tags?: string[];
+    // Peer dependencies declared by the registry (e.g. react, react-dom).
+    // Propagated for future CLI warnings; not auto-installed.
+    peerDependencies?: string[];
     tailwindConfig?: Record<string, any>;
     tailwindCss?: string;
 };
@@ -66,7 +74,12 @@ export function validateRegistryPayload(data: unknown): RegistryItem[] | null {
             if (typeof fo.path !== "string" || typeof fo.type !== "string" || typeof fo.content !== "string") {
                 return null;
             }
-            files.push({ path: fo.path, type: fo.type, content: fo.content });
+            // Only accept well-formed SRI hashes — any other non-empty string (e.g.
+            // "md5-abc") would always fail verifyFileIntegrity and produce a
+            // misleading "tampered" error rather than a clear parse rejection.
+            const integrityRaw = typeof fo.integrity === "string" ? fo.integrity : undefined;
+            const integrity = integrityRaw && /^sha384-[A-Za-z0-9+/]+=*$/.test(integrityRaw) ? integrityRaw : undefined;
+            files.push({ path: fo.path, type: fo.type, content: fo.content, ...(integrity ? { integrity } : {}) });
         }
         let tailwindConfig: Record<string, any> | undefined;
         if (o.tailwindConfig !== undefined) {
@@ -87,7 +100,23 @@ export function validateRegistryPayload(data: unknown): RegistryItem[] | null {
             }
             tailwindCss = o.tailwindCss;
         }
-        out.push({ name: o.name, dependencies, files, tailwindConfig, tailwindCss });
+        // Tags are optional metadata; tolerate their absence. If present
+        // they must be an array of non-empty strings — anything else gets
+        // dropped silently so a malformed `tags` field doesn't break add.
+        let tags: string[] | undefined;
+        if (Array.isArray(o.tags)) {
+            const cleaned = o.tags.filter((t): t is string => typeof t === "string" && t.length > 0);
+            if (cleaned.length > 0) tags = cleaned;
+        }
+        // peerDependencies are informational — propagated for future CLI
+        // peer-dep warnings but never auto-installed. Tolerate absence and
+        // malformed values the same way as tags.
+        let peerDependencies: string[] | undefined;
+        if (Array.isArray(o.peerDependencies)) {
+            const cleaned = o.peerDependencies.filter((d): d is string => typeof d === "string" && d.length > 0);
+            if (cleaned.length > 0) peerDependencies = cleaned;
+        }
+        out.push({ name: o.name, dependencies, files, tailwindConfig, tailwindCss, tags, peerDependencies });
     }
     return out;
 }
@@ -518,6 +547,63 @@ export async function fetchJsonFromUrl(url: string): Promise<unknown | null> {
     }
 }
 
+function computeSha384(content: string): string {
+    return "sha384-" + createHash("sha384").update(content, "utf8").digest("base64");
+}
+
+function verifyFileIntegrity(content: string, integrity: string): boolean {
+    return computeSha384(content) === integrity;
+}
+
+async function fetchTextFromUrl(url: string): Promise<string | null> {
+    const controller = new AbortController();
+    const timeoutHandle = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    try {
+        const res = (await fetch(url, { signal: controller.signal })) as Awaited<ReturnType<typeof fetch>>;
+        if (!res.ok) return null;
+        // Mirror the content-length pre-check from fetchJsonFromUrl so a server
+        // advertising an oversized response is rejected before any body is read.
+        const contentLengthHeader =
+            typeof (res as { headers?: { get?: (name: string) => string | null } }).headers?.get === "function"
+                ? res.headers.get("content-length")
+                : null;
+        if (contentLengthHeader) {
+            const contentLength = Number(contentLengthHeader);
+            if (Number.isFinite(contentLength) && contentLength > MAX_REGISTRY_RESPONSE_BYTES) {
+                return null;
+            }
+        }
+        const body = (res as unknown as { body?: { getReader?: () => { read: () => Promise<{ done: boolean; value?: Uint8Array }>; cancel: () => Promise<void> } } | null }).body;
+        if (body && typeof body.getReader === "function") {
+            const reader = body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let received = 0;
+            let text = "";
+            for (;;) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                if (!value) continue;
+                received += value.byteLength;
+                if (received > MAX_REGISTRY_RESPONSE_BYTES) {
+                    try { await reader.cancel(); } catch { /* best-effort */ }
+                    return null;
+                }
+                text += decoder.decode(value, { stream: true });
+            }
+            text += decoder.decode();
+            return text;
+        }
+        if (typeof (res as { text?: () => Promise<string> }).text !== "function") return null;
+        const text = await res.text();
+        if (Buffer.byteLength(text, "utf8") > MAX_REGISTRY_RESPONSE_BYTES) return null;
+        return text;
+    } catch {
+        return null;
+    } finally {
+        clearTimeout(timeoutHandle);
+    }
+}
+
 async function confirmDependencyInstall(
     dependencies: string[],
     options: { yes?: boolean },
@@ -828,6 +914,39 @@ export async function add(
         process.exit(1);
     }
 
+    // 1b. Verify registry root integrity if pinned in components.json
+    const pinnedIntegrity = (config as Record<string, unknown>).registryIntegrity;
+    if (typeof pinnedIntegrity === "string" && pinnedIntegrity.length > 0 && !isLocalRegistrySource(options.url)) {
+        // Derive the registry root URL. If options.url already points at
+        // registry.json, use it as-is. If it points at some other .json file
+        // (e.g. a component-level JSON), strip the filename to get the directory
+        // and append registry.json. If it's a bare directory URL, append
+        // registry.json directly.
+        const base = options.url.replace(/\/+$/, "");
+        const registryRootUrl = base.endsWith("/registry.json")
+            ? base
+            : base.endsWith(".json")
+                ? `${base.slice(0, base.lastIndexOf("/"))}/registry.json`
+                : `${base}/registry.json`;
+        const rawRegistry = await fetchTextFromUrl(registryRootUrl);
+        if (rawRegistry === null) {
+            console.error(chalk.red(`Could not fetch registry root for integrity check: ${registryRootUrl}`));
+            process.exit(1);
+        }
+        const actualHash = computeSha384(rawRegistry);
+        if (actualHash !== pinnedIntegrity) {
+            console.error(
+                chalk.red(
+                    `Registry integrity mismatch!\n` +
+                    `  Expected: ${pinnedIntegrity}\n` +
+                    `  Actual:   ${actualHash}\n` +
+                    `Remove or update "registryIntegrity" in components.json to accept the new registry.`,
+                ),
+            );
+            process.exit(1);
+        }
+    }
+
     // 2. Fetch registry
     let lookupResult: RegistryLookupResult = { status: "unavailable" };
     let sourceLabel = options.url;
@@ -979,6 +1098,10 @@ export async function add(
                 console.error(chalk.red(String(error)));
                 process.exit(1);
             }
+            if (file.integrity && !verifyFileIntegrity(file.content, file.integrity)) {
+                console.error(chalk.red(`Integrity check failed for ${file.path}. The file may have been tampered with.`));
+                process.exit(1);
+            }
             await writeRegistryUiFile(targetPath, file.content, {
                 dryRun: options.dryRun,
                 force: options.force,
@@ -1001,6 +1124,10 @@ export async function add(
 
             // Only create util if it doesn't exist (skip-if-exists is intentional — never clobber user's cn)
             if (!fs.existsSync(targetPath)) {
+                if (file.integrity && !verifyFileIntegrity(file.content, file.integrity)) {
+                    console.error(chalk.red(`Integrity check failed for ${file.path}. The file may have been tampered with.`));
+                    process.exit(1);
+                }
                 if (options.dryRun) {
                     const rel = path.relative(process.cwd(), targetPath) || targetPath;
                     console.log(chalk.cyan(`[dry-run] Would create ${rel}`));

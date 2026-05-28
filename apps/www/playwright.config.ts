@@ -45,6 +45,20 @@ export default defineConfig({
         deviceScaleFactor: 1,
       },
     },
+    // Accessibility audit — runs axe-core on 5 canonical pages.
+    // Opt-in via `pnpm test:e2e:a11y` or the e2e-a11y CI job.
+    {
+      name: "a11y",
+      testMatch: /a11y\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"] },
+    },
+    // Performance budgets — LCP and CLS thresholds on key pages.
+    // Opt-in via `pnpm test:e2e:perf` or the e2e-perf CI job.
+    {
+      name: "perf",
+      testMatch: /perf\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"] },
+    },
   ],
   webServer: {
     command: `pnpm exec next start --port ${PORT}`,

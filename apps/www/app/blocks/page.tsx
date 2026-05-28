@@ -187,7 +187,7 @@ export default function BlocksIndex() {
             className={cn(
               "rounded-xl border border-dashed p-12 text-center text-sm",
               isDark
-                ? "border-neutral-800 bg-neutral-950/50 text-neutral-500"
+                ? "border-neutral-800 bg-neutral-950/50 text-neutral-400"
                 : "border-neutral-200 bg-white text-neutral-500",
             )}
           >

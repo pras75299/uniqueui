@@ -8,6 +8,7 @@
 
 export { init } from "./commands/init";
 export { add } from "./commands/add";
+export { addAll } from "./commands/add-all";
 export { list } from "./commands/list";
 export { info } from "./commands/info";
 export { doctor } from "./commands/doctor";

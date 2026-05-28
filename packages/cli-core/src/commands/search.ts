@@ -1,8 +1,6 @@
 import chalk from "chalk";
-import { loadRegistryEntries } from "./list";
+import { loadRegistryEntries, type Entry } from "./list";
 import { warnIfUntrustedRegistry } from "./add";
-
-type Entry = { name: string; title?: string; description?: string };
 
 type Ranked = Entry & { score: number };
 
@@ -13,8 +11,14 @@ type Ranked = Entry & { score: number };
  *   100 — exact name match
  *    80 — name starts with query
  *    60 — name contains query
+ *    50 — exact tag match (e.g. query "card" hits a `card` tag)
  *    40 — title contains query
+ *    30 — tag contains query as substring (e.g. "anim" → "animation")
  *    20 — description contains query
+ *
+ * Tags slot above title because they're curated taxonomy — a `hero` tag is
+ * a stronger signal than the word "hero" appearing in a title sentence.
+ * Substring-tag still beats description for the same reason.
  *
  * The +0..9 length bonus for substring tiers slightly favors shorter names
  * (tighter matches) when two entries land in the same tier.
@@ -30,8 +34,21 @@ export function scoreEntry(entry: Entry, query: string): number {
     const nameIdx = name.indexOf(q);
     if (nameIdx !== -1) return 60 + tightnessBonus(name.length, q.length);
 
+    const tags = entry.tags;
+    if (tags && tags.length > 0) {
+        const lower = tags.map((t) => t.toLowerCase());
+        if (lower.includes(q)) return 50;
+    }
+
     const title = entry.title?.toLowerCase();
     if (title && title.includes(q)) return 40 + tightnessBonus(title.length, q.length);
+
+    if (tags && tags.length > 0) {
+        for (const t of tags) {
+            const lt = t.toLowerCase();
+            if (lt !== q && lt.includes(q)) return 30 + tightnessBonus(lt.length, q.length);
+        }
+    }
 
     const description = entry.description?.toLowerCase();
     if (description && description.includes(q)) return 20;

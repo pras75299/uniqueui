@@ -15,12 +15,19 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  AccessibilityMap,
   Changelogs,
+  CompatibilityMap,
+  MotionMap,
+  PeerDependenciesMap,
   RegistryArray,
   RegistryEntry,
+  RelatedSlugsMap,
   ShadcnItem,
   ShadcnManifest,
   SplitIndex,
+  TagsMap,
+  UsedByBlocksMap,
   crossCheckChangelogs,
   crossCheckSlugs,
   validate,
@@ -121,6 +128,70 @@ for (const [label, changelogs] of [
   if (!changelogs) continue;
   const mismatches = crossCheckChangelogs({ root: rootRegistry, changelogs });
   for (const m of mismatches) failures.push(`cross-check (${label}): ${m}`);
+}
+
+// Motion metadata is sparse (only components that import motion APIs).
+// Schema-validate the source file and cross-check it against the registry
+// slug set: stray slugs are caught here, missing coverage is caught by
+// `scripts/check-reduced-motion.mjs` (which also enforces source/metadata
+// consistency).
+const sourceMotion = check(
+  "registry/motion.json",
+  MotionMap,
+  readJson("registry/motion.json"),
+);
+if (sourceMotion && rootRegistry) {
+  const rootSlugs = new Set(rootRegistry.map((e) => e.name));
+  for (const slug of Object.keys(sourceMotion)) {
+    if (!rootSlugs.has(slug)) {
+      failures.push(`cross-check: motion.json has stray "${slug}" (not in registry)`);
+    }
+  }
+}
+
+// Sparse maps: optional files that need no full coverage, just valid slugs.
+for (const { file, schema } of [
+  { file: "registry/related-slugs.json", schema: RelatedSlugsMap },
+  { file: "registry/used-by-blocks.json", schema: UsedByBlocksMap },
+]) {
+  if (!fs.existsSync(path.join(ROOT, file))) continue; // sparse — optional
+  const parsed = check(file, schema, readJson(file));
+  if (parsed && rootRegistry) {
+    const rootSlugs = new Set(rootRegistry.map((e) => e.name));
+    for (const slug of Object.keys(parsed)) {
+      if (!rootSlugs.has(slug)) {
+        failures.push(`cross-check: ${file} has stray "${slug}" (not in registry)`);
+      }
+    }
+  }
+}
+
+// Full-coverage metadata maps: every registry slug must have an entry,
+// and the file must have no stray slugs. The build script already enforces
+// this on the source files, but validating again here closes the gap if
+// someone hand-edits a generated artifact or skips the build.
+const FULL_COVERAGE_MAPS = [
+  { file: "registry/tags.json", schema: TagsMap },
+  { file: "registry/peer-dependencies.json", schema: PeerDependenciesMap },
+  { file: "registry/compatibility.json", schema: CompatibilityMap },
+  { file: "registry/accessibility.json", schema: AccessibilityMap },
+];
+for (const { file, schema } of FULL_COVERAGE_MAPS) {
+  const parsed = check(file, schema, readJson(file));
+  if (parsed && rootRegistry) {
+    const rootSlugs = new Set(rootRegistry.map((e) => e.name));
+    const fileSlugs = new Set(Object.keys(parsed));
+    for (const slug of rootSlugs) {
+      if (!fileSlugs.has(slug)) {
+        failures.push(`cross-check: ${file} missing entry for "${slug}"`);
+      }
+    }
+    for (const slug of fileSlugs) {
+      if (!rootSlugs.has(slug)) {
+        failures.push(`cross-check: ${file} has stray "${slug}" (not in registry)`);
+      }
+    }
+  }
 }
 
 // Direct parity: source is the authored truth, public is the published copy.

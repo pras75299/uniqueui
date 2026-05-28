@@ -37,6 +37,24 @@ describe("scoreEntry", () => {
     it("returns 0 for empty query (defensive — rankEntries also guards)", () => {
         expect(scoreEntry({ name: "moving-border" }, "")).toBe(0);
     });
+
+    it("scores exact tag match above title — tags are curated taxonomy, titles are sentences", () => {
+        const tagHit = scoreEntry({ name: "ambient-glow-card", tags: ["card", "glow"] }, "card");
+        const titleHit = scoreEntry({ name: "z-thing", title: "A card-like surface" }, "card");
+        expect(tagHit).toBeGreaterThan(titleHit);
+    });
+
+    it("scores substring tag match above description — substring-tag is still a curated signal", () => {
+        const tagSub = scoreEntry({ name: "z-thing", tags: ["animation"] }, "anim");
+        const descHit = scoreEntry({ name: "y-thing", description: "uses anim under the hood" }, "anim");
+        expect(tagSub).toBeGreaterThan(descHit);
+    });
+
+    it("scores exact tag match below name substring — slug match remains the strongest signal", () => {
+        const nameSub = scoreEntry({ name: "moving-border" }, "border");
+        const tagExact = scoreEntry({ name: "z-thing", tags: ["border"] }, "border");
+        expect(nameSub).toBeGreaterThan(tagExact);
+    });
 });
 
 describe("rankEntries", () => {

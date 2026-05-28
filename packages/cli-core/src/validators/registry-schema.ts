@@ -42,7 +42,7 @@ export const RegistryEntry = z.object({
     files: z.array(RegistryFile).min(1),
     tailwindConfig: TailwindConfig.optional(),
     tailwindCss: z.string().min(1).optional(),
-});
+}).passthrough();
 
 export const RegistryArray = z.array(RegistryEntry).min(1);
 

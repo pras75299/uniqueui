@@ -214,7 +214,7 @@ export default function CompatibilityPage() {
       <div className="space-y-4">
         <Link
           href="/docs"
-          className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
           Back to docs
