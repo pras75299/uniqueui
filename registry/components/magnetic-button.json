@@ -32,11 +32,13 @@
       {
         "name": "magneticStrength",
         "type": "number",
+        "default": "0.3",
         "description": "Float determining how fast/far the button lerps toward the cursor."
       },
       {
         "name": "magneticRadius",
         "type": "number",
+        "default": "150",
         "description": "Pixel radius extending outward from the button where gravity begins."
       },
       {
@@ -62,12 +64,12 @@
         {
           "title": "Icon navigation links",
           "description": "Magnetic icons in a header or dock feel playful and high-quality.",
-          "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\nimport { Code, X, Mail } from \"lucide-react\";\n\nconst socialLinks = [\n  { icon: Code, href: \"https://github.com\", label: \"GitHub\" },\n  { icon: X, href: \"https://twitter.com\", label: \"Twitter\" },\n  { icon: Mail, href: \"mailto:hi@example.com\", label: \"Email\" },\n];\n\nexport default function SocialNav() {\n  return (\n    <div className=\"flex items-center gap-2\">\n      {socialLinks.map(({ icon: Icon, href, label }) => (\n        <MagneticButton key={label} strength={0.4}>\n          <a\n            href={href}\n            aria-label={label}\n            className=\"p-2.5 rounded-xl border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors\"\n          >\n            <Icon className=\"w-5 h-5\" />\n          </a>\n        </MagneticButton>\n      ))}\n    </div>\n  );\n}"
+          "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\nimport { Code, X, Mail } from \"lucide-react\";\n\nconst socialLinks = [\n  { icon: Code, href: \"https://github.com\", label: \"GitHub\" },\n  { icon: X, href: \"https://twitter.com\", label: \"Twitter\" },\n  { icon: Mail, href: \"mailto:hi@example.com\", label: \"Email\" },\n];\n\nexport default function SocialNav() {\n  return (\n    <div className=\"flex items-center gap-2\">\n      {socialLinks.map(({ icon: Icon, href, label }) => (\n        <MagneticButton key={label} magneticStrength={0.4}>\n          <a\n            href={href}\n            aria-label={label}\n            className=\"p-2.5 rounded-xl border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors\"\n          >\n            <Icon className=\"w-5 h-5\" />\n          </a>\n        </MagneticButton>\n      ))}\n    </div>\n  );\n}"
         },
         {
           "title": "Reduced-strength subtle hover",
           "description": "Lower the strength for elements that should feel premium but not distracting.",
-          "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function SubtleCard() {\n  return (\n    <MagneticButton strength={0.25} className=\"block\">\n      <div className=\"p-6 rounded-2xl border border-neutral-800 bg-neutral-900 cursor-pointer hover:border-neutral-700 transition-colors\">\n        <h3 className=\"text-white font-semibold mb-2\">UniqueUI Pro</h3>\n        <p className=\"text-neutral-400 text-sm\">Access all templates and premium components.</p>\n      </div>\n    </MagneticButton>\n  );\n}"
+          "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function SubtleCard() {\n  return (\n    <MagneticButton magneticStrength={0.25} className=\"block\">\n      <div className=\"p-6 rounded-2xl border border-neutral-800 bg-neutral-900 cursor-pointer hover:border-neutral-700 transition-colors\">\n        <h3 className=\"text-white font-semibold mb-2\">UniqueUI Pro</h3>\n        <p className=\"text-neutral-400 text-sm\">Access all templates and premium components.</p>\n      </div>\n    </MagneticButton>\n  );\n}"
         }
       ]
     }

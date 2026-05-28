@@ -21,48 +21,39 @@
     "props": [
       {
         "name": "tabs",
-        "type": "{",
-        "description": "Array of tab configurations establishing navigation schema."
-      },
-      {
-        "name": "id",
-        "type": "string",
-        "description": "A unique identifier used strictly for layout animations."
-      },
-      {
-        "name": "label",
-        "type": "string",
-        "description": "The string/node rendered on the clickable tab button."
-      },
-      {
-        "name": "content",
-        "type": "React.ReactNode",
-        "description": "The DOM payload rendered below when this tab is selected."
+        "type": "{ id: string; label: string; content?: React.ReactNode }[]",
+        "description": "Array of tab configs. Each item has an id (used for layout animation and onChange), a label rendered on the button, and optional content shown when that tab is selected."
       },
       {
         "name": "className",
         "type": "string",
-        "description": "Description coming soon"
+        "description": "Tailwind classes merged onto the outer tabs container."
       },
       {
         "name": "tabClassName",
         "type": "string",
-        "description": "Description coming soon"
+        "description": "Classes applied to each tab button."
       },
       {
         "name": "activeTabClassName",
         "type": "string",
-        "description": "Description coming soon"
+        "description": "Additional classes applied to the currently active tab button."
       },
       {
         "name": "contentClassName",
         "type": "string",
-        "description": "Description coming soon"
+        "description": "Classes applied to the content wrapper rendered below the tab bar."
       },
       {
         "name": "onChange",
         "type": "(id: string) => void",
-        "description": "Description coming soon"
+        "description": "Called when the active tab changes, receiving the newly selected tab id."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Color theme for the tab bar and content surfaces."
       }
     ],
     "usageCode": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-md mx-auto p-10\">\n      <AnimatedTabs\n        tabs={[\n          {\n            id: \"design\",\n            label: \"Design\",\n            content: (\n              <div className=\"p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm\">\n                Build stunning interfaces with our design system. Every component is crafted with\n                attention to detail.\n              </div>\n            ),\n          },\n          {\n            id: \"animate\",\n            label: \"Animate\",\n            content: (\n              <div className=\"p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm\">\n                Add life to your UI with spring-physics animations powered by Motion.dev.\n              </div>\n            ),\n          },\n          {\n            id: \"ship\",\n            label: \"Ship\",\n            content: (\n              <div className=\"p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm\">\n                Deploy with confidence. All components are production-ready and accessible.\n              </div>\n            ),\n          },\n        ]}\n      />\n    </div>\n  );\n}",

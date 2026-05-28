@@ -56,12 +56,14 @@
       {
         "name": "meteorCount",
         "type": "number",
+        "default": "20",
         "description": "Total integer quantity defining maximum concurrent active meteor particles."
       },
       {
         "name": "meteorColor",
         "type": "string",
-        "description": "Hex string establishing the primary focal styling of light trails."
+        "default": "\"white\"",
+        "description": "CSS color string for the meteor heads and light trails."
       }
     ],
     "usageCode": "import { MeteorsCard } from \"@/components/ui/meteors-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6 p-10 text-white\">\n      <MeteorsCard className=\"h-full\">\n        <h3 className=\"text-xl font-bold mb-2\">Meteors Effect</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Watch the shooting stars fall through this card's background.\n        </p>\n      </MeteorsCard>\n      <MeteorsCard meteorColor=\"#a855f7\" meteorCount={30} className=\"h-full\">\n        <h3 className=\"text-xl font-bold mb-2 text-purple-200\">Purple Meteors</h3>\n        <p className=\"text-purple-300/60 text-sm\">Custom colored meteors with extra density.</p>\n      </MeteorsCard>\n    </div>\n  );\n}",

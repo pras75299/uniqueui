@@ -53,6 +53,12 @@
         "name": "once",
         "type": "boolean",
         "description": "Whether the element should hide and re-animate when scrolled out and back in."
+      },
+      {
+        "name": "staggerDelay",
+        "type": "number",
+        "default": "0.1",
+        "description": "ScrollRevealGroup only: delay in seconds between each child's staggered reveal."
       }
     ],
     "usageCode": "import { ScrollReveal, ScrollRevealGroup } from \"@/components/ui/scroll-reveal\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-10 text-white\">\n      <ScrollRevealGroup\n        animation=\"fade-up\"\n        staggerDelay={0.15}\n        className=\"grid grid-cols-1 md:grid-cols-3 gap-4\"\n      >\n        {[\"fade-up\", \"scale\", \"blur\"].map((preset) => (\n          <div\n            key={preset}\n            className=\"p-6 rounded-lg bg-neutral-900/50 border border-neutral-800 text-center\"\n          >\n            <div className=\"text-lg font-semibold mb-1 text-neutral-200\">{preset}</div>\n            <p className=\"text-neutral-500 text-xs\">Scroll to reveal</p>\n          </div>\n        ))}\n      </ScrollRevealGroup>\n    </div>\n  );\n}",

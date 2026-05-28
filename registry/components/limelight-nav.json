@@ -41,6 +41,11 @@
         "name": "className",
         "type": "string",
         "description": "Styles applied to the container."
+      },
+      {
+        "name": "onTabChange",
+        "type": "(index: number) => void",
+        "description": "Called when the active item changes, receiving the newly selected item index."
       }
     ],
     "variants": [

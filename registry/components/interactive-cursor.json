@@ -77,7 +77,7 @@
         {
           "title": "Interactive demo showcase",
           "description": "Enable the cursor on a dedicated component showcase page to enhance the sense of interactivity.",
-          "code": "\"use client\";\nimport { InteractiveCursor } from \"@/components/ui/interactive-cursor\";\n\nexport default function ShowcasePage() {\n  return (\n    <div className=\"relative h-[400px] bg-black rounded-2xl flex items-center justify-center\">\n      <InteractiveCursor color=\"#6366f1\" ringColor=\"#a78bfa\" />\n      <p className=\"text-neutral-300 text-lg\">Move and click for the full effect.</p>\n    </div>\n  );\n}"
+          "code": "\"use client\";\nimport { InteractiveCursor } from \"@/components/ui/interactive-cursor\";\n\nexport default function ShowcasePage() {\n  return (\n    <div className=\"relative h-[400px] bg-black rounded-2xl flex items-center justify-center\">\n      <InteractiveCursor color=\"#6366f1\" trailColor=\"rgba(167, 139, 250, 0.4)\" />\n      <p className=\"text-neutral-300 text-lg\">Move and click for the full effect.</p>\n    </div>\n  );\n}"
         }
       ]
     }

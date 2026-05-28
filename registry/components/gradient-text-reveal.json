@@ -67,12 +67,12 @@
         {
           "title": "Section headline reveal",
           "description": "Fire the reveal when the section scrolls into view for a cinematic entrance.",
-          "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function SectionHeadline() {\n  return (\n    <div className=\"py-24 text-center\">\n      <GradientTextReveal\n        text=\"Design that moves people.\"\n        className=\"text-5xl font-bold\"\n        gradient=\"from-white via-purple-300 to-white\"\n      />\n    </div>\n  );\n}"
+          "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function SectionHeadline() {\n  return (\n    <div className=\"py-24 text-center\">\n      <GradientTextReveal\n        text=\"Design that moves people.\"\n        className=\"text-5xl font-bold\"\n        gradientFrom=\"#ffffff\"\n        gradientTo=\"#c4b5fd\"\n      />\n    </div>\n  );\n}"
         },
         {
           "title": "Pull quote in a blog post",
           "description": "Highlight a key quote mid-article with a gradient sweep to re-engage readers.",
-          "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function PullQuote() {\n  return (\n    <blockquote className=\"my-12 px-8 border-l-2 border-purple-500\">\n      <GradientTextReveal\n        text=\"The best design is invisible — until it moves.\"\n        className=\"text-2xl font-medium italic\"\n        gradient=\"from-neutral-300 via-purple-400 to-neutral-300\"\n        duration={1.4}\n      />\n    </blockquote>\n  );\n}"
+          "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function PullQuote() {\n  return (\n    <blockquote className=\"my-12 px-8 border-l-2 border-purple-500\">\n      <GradientTextReveal\n        text=\"The best design is invisible — until it moves.\"\n        className=\"text-2xl font-medium italic\"\n        gradientFrom=\"#d4d4d8\"\n        gradientTo=\"#a78bfa\"\n        duration={1.4}\n      />\n    </blockquote>\n  );\n}"
         }
       ]
     }

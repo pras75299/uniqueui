@@ -48,6 +48,12 @@
         "name": "gap",
         "type": "number",
         "description": "Spacing separating consecutive skeleton layers."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Color theme for the placeholder surface and shimmer."
       }
     ],
     "usageCode": "import { SkeletonShimmer, SkeletonCard } from \"@/components/ui/skeleton-shimmer\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full text-white\">\n      <SkeletonCard />\n      <div className=\"space-y-4 p-6 rounded-xl border border-neutral-800 bg-neutral-900/50\">\n        <SkeletonShimmer width=\"80%\" height={20} rounded=\"md\" />\n        <SkeletonShimmer count={4} height={14} />\n        <div className=\"flex gap-3\">\n          <SkeletonShimmer width={100} height={36} rounded=\"lg\" />\n          <SkeletonShimmer width={100} height={36} rounded=\"lg\" />\n        </div>\n      </div>\n    </div>\n  );\n}",

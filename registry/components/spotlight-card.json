@@ -38,6 +38,12 @@
         "name": "spotlightSize",
         "type": "number",
         "description": "Diameter width/height of the gradient spotlight in pixels."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Color theme for the card surface and border."
       }
     ],
     "usageCode": "import { SpotlightCard } from \"@/components/ui/spotlight-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6 p-10 text-white text-left\">\n      <SpotlightCard>\n        <h3 className=\"text-xl font-bold mb-2\">Hover for spotlight</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Move your mouse over the card to reveal a tracking spotlight effect.\n        </p>\n      </SpotlightCard>\n      <SpotlightCard spotlightColor=\"rgba(232, 121, 249, 0.1)\" spotlightSize={300}>\n        <h3 className=\"text-xl font-bold mb-2\">Custom spotlight</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Different color and size for the spotlight effect.\n        </p>\n      </SpotlightCard>\n    </div>\n  );\n}",
