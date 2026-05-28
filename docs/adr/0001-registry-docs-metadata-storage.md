@@ -2,6 +2,8 @@
 
 ## Status
 
+Superseded by [ADR 0002](0002-per-slug-registry-manifests.md) - 2026-05-28.
+
 Accepted - 2026-04-16
 
 ## Context
