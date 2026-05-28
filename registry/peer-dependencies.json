@@ -59,6 +59,7 @@
   "shooting-stars-grid": ["react", "react-dom"],
   "skeleton-shimmer": ["react", "react-dom"],
   "spotlight-card": ["react", "react-dom"],
+  "hero-terminal": ["react", "react-dom"],
   "typewriter-text": ["react", "react-dom"],
   "word-rotate": ["react", "react-dom"]
 }

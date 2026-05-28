@@ -77,6 +77,7 @@ import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
 import { LogoMarqueeHero } from "@/components/ui/hero-logo-marquee";
 import { MagneticLettersHero } from "@/components/ui/hero-magnetic-letters";
+import { TerminalHero } from "@/components/ui/hero-terminal";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3828,4 +3829,5 @@ export const componentDemos: Record<string, DemoComponent> = {
     </LogoMarqueeHero>
   ),
   "hero-magnetic-letters": () => <MagneticLettersHero />,
+  "hero-terminal": () => <TerminalHero />,
 };

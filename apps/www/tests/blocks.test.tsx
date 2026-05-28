@@ -96,6 +96,7 @@ import { LiquidAuroraMeshHero } from "@/components/ui/hero-liquid-aurora-mesh";
 import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
 import { LogoMarqueeHero, LogoMarqueeRow } from "@/components/ui/hero-logo-marquee";
 import { MagneticLettersHero } from "@/components/ui/hero-magnetic-letters";
+import { TerminalHero } from "@/components/ui/hero-terminal";
 
 // Two contracts every hero block must keep:
 //  1. Render a single <h1> headline (semantic structure used by SEO + a11y).
@@ -111,6 +112,7 @@ describe("Hero blocks — render contract", () => {
         { name: "NoiseDotFieldHero", Component: NoiseDotFieldHero },
         { name: "LogoMarqueeHero", Component: LogoMarqueeHero },
         { name: "MagneticLettersHero", Component: MagneticLettersHero },
+        { name: "TerminalHero", Component: TerminalHero },
     ])("$name exposes a single <h1> heading via the default-content slot", ({ Component }) => {
         const { getAllByRole } = render(<Component />);
         const headings = getAllByRole("heading", { level: 1 });
@@ -127,6 +129,7 @@ describe("Hero blocks — render contract", () => {
         { name: "NoiseDotFieldHero", Component: NoiseDotFieldHero },
         { name: "LogoMarqueeHero", Component: LogoMarqueeHero },
         { name: "MagneticLettersHero", Component: MagneticLettersHero },
+        { name: "TerminalHero", Component: TerminalHero },
     ])("$name renders children in place of the default copy", ({ Component }) => {
         const { getByTestId, queryByRole } = render(
             <Component>
@@ -169,6 +172,10 @@ describe("Hero blocks — render contract", () => {
         // than concatenated text content. Assert on the accessible name instead.
         const { getByRole } = render(<MagneticLettersHero />);
         expect(getByRole("heading", { level: 1, name: "Motion, where it matters." })).toBeInTheDocument();
+        cleanup();
+        expect(render(<TerminalHero />).container.textContent).toContain(
+            "Watch your stack build itself.",
+        );
     });
 });
 

@@ -51,6 +51,7 @@
   "shooting-stars-grid": { "reducedMotion": "full" },
   "skeleton-shimmer": { "reducedMotion": "none" },
   "spotlight-card": { "reducedMotion": "none" },
+  "hero-terminal": { "reducedMotion": "full" },
   "typewriter-text": { "reducedMotion": "none" },
   "word-rotate": { "reducedMotion": "none" }
 }

@@ -1145,6 +1145,24 @@
       ]
     },
     {
+      "name": "hero-terminal",
+      "type": "registry:ui",
+      "title": "Terminal Hero",
+      "description": "A 'code-builds-the-page' hero: a headline above a macOS-style terminal that types your install commands and prints their output. Ships the reusable Terminal window too, with reduced-motion, in-view triggering, replay, copy, and keystroke sound.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-terminal.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-terminal.tsx"
+        }
+      ]
+    },
+    {
       "name": "magnetic-text",
       "type": "registry:ui",
       "title": "Magnetic Text",

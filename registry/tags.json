@@ -59,6 +59,7 @@
   "shooting-stars-grid": ["background", "stars", "shooting", "grid"],
   "skeleton-shimmer": ["effect", "skeleton", "shimmer", "loading"],
   "spotlight-card": ["card", "spotlight", "hover"],
+  "hero-terminal": ["terminal", "cli", "typing", "code", "hero"],
   "typewriter-text": ["text", "typewriter", "type"],
   "word-rotate": ["text", "rotate", "word"]
 }

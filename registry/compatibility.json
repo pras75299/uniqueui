@@ -59,6 +59,7 @@
   "shooting-stars-grid": { "react": "18+", "next": "14+", "tailwind": "3+|4+", "rsc": false, "ssr": true },
   "skeleton-shimmer": { "react": "18+", "next": "14+", "tailwind": "3+|4+", "rsc": false, "ssr": true },
   "spotlight-card": { "react": "18+", "next": "14+", "tailwind": "3+|4+", "rsc": false, "ssr": true },
+  "hero-terminal": { "react": "18+", "next": "14+", "tailwind": "3+|4+", "rsc": false, "ssr": true },
   "typewriter-text": { "react": "18+", "next": "14+", "tailwind": "3+|4+", "rsc": false, "ssr": true },
   "word-rotate": { "react": "18+", "next": "14+", "tailwind": "3+|4+", "rsc": false, "ssr": true }
 }

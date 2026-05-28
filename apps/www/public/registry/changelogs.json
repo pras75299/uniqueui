@@ -625,6 +625,15 @@
       ]
     }
   ],
+  "hero-terminal": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-28",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
   "magnetic-text": [
     {
       "version": "1.0.0",
