@@ -1,0 +1,81 @@
+{
+  "slug": "meteors-card",
+  "registry": {
+    "dependencies": [
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "meteors-card/component.tsx",
+        "type": "registry:ui"
+      }
+    ],
+    "tailwindConfig": {
+      "theme": {
+        "extend": {
+          "animation": {
+            "meteor": "meteor 5s linear infinite"
+          },
+          "keyframes": {
+            "meteor": {
+              "0%": {
+                "transform": "rotate(215deg) translateX(0)",
+                "opacity": "1"
+              },
+              "70%": {
+                "opacity": "1"
+              },
+              "100%": {
+                "transform": "rotate(215deg) translateX(-500px)",
+                "opacity": "0"
+              }
+            }
+          }
+        }
+      }
+    },
+    "tailwindCss": "@theme {\n  --animate-meteor: meteor 5s linear infinite;\n\n  @keyframes meteor {\n    0% {\n      transform: rotate(215deg) translateX(0);\n      opacity: 1;\n    }\n    70% {\n      opacity: 1;\n    }\n    100% {\n      transform: rotate(215deg) translateX(-500px);\n      opacity: 0;\n    }\n  }\n}\n"
+  },
+  "docs": {
+    "name": "Meteors Card",
+    "description": "Card with animated meteor/shooting star particles falling through the background.",
+    "icon": "Flame",
+    "category": "Cards",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The payload rendering above the background particle effect."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Layout configurations for the wrapping card boundary."
+      },
+      {
+        "name": "meteorCount",
+        "type": "number",
+        "default": "20",
+        "description": "Total integer quantity defining maximum concurrent active meteor particles."
+      },
+      {
+        "name": "meteorColor",
+        "type": "string",
+        "default": "\"white\"",
+        "description": "CSS color string for the meteor heads and light trails."
+      }
+    ],
+    "usageCode": "import { MeteorsCard } from \"@/components/ui/meteors-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6 p-10 text-white\">\n      <MeteorsCard className=\"h-full\">\n        <h3 className=\"text-xl font-bold mb-2\">Meteors Effect</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Watch the shooting stars fall through this card's background.\n        </p>\n      </MeteorsCard>\n      <MeteorsCard meteorColor=\"#a855f7\" meteorCount={30} className=\"h-full\">\n        <h3 className=\"text-xl font-bold mb-2 text-purple-200\">Purple Meteors</h3>\n        <p className=\"text-purple-300/60 text-sm\">Custom colored meteors with extra density.</p>\n      </MeteorsCard>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "MeteorsCard wraps content in a card with animated meteor streaks flying across it. The custom Tailwind animation is installed automatically via `uniqueui add`.",
+      "scenarios": [
+        {
+          "title": "Hero spotlight card",
+          "description": "Use a single MeteorsCard as a dark hero panel with a short headline and supporting line so the meteor field reads behind the copy.",
+          "code": "import { MeteorsCard } from \"@/components/ui/meteors-card\";\n\nexport default function MeteorHero() {\n  return (\n    <div className=\"min-h-[280px] flex items-center justify-center p-10 bg-neutral-950\">\n      <MeteorsCard className=\"max-w-lg w-full border border-neutral-800 bg-neutral-900/80 p-8 rounded-2xl\">\n        <h2 className=\"text-2xl font-bold text-white mb-2\">Ship faster</h2>\n        <p className=\"text-neutral-400 text-sm\">\n          Animated meteors add motion without distracting from your CTA.\n        </p>\n      </MeteorsCard>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

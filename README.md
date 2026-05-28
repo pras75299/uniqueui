@@ -522,7 +522,7 @@ Registry (GitHub)
             Your project (shadcn components.json, @/lib/utils)
 ```
 
-1. **Registry** — Each component is defined in `registry/config.ts` and points at files like `registry/<slug>/component.tsx`. `build-registry.ts` outputs `registry.json`, split files under `apps/www/public/registry/`, **shadcn-format items under `apps/www/public/r/`**, and synced docs UI copies.
+1. **Registry** — Each component is defined in `registry/components/<slug>.json` (build config + docs metadata) and points at files like `registry/<slug>/component.tsx`. `build-registry.ts` aggregates these (ordered by `registry/manifest.json`) and outputs `registry.json`, split files under `apps/www/public/registry/`, **shadcn-format items under `apps/www/public/r/`**, and synced docs UI copies.
 2. **UniqueUI CLI** — Fetches the hosted registry, writes files to your project, and installs npm dependencies (and can add `utils/cn.ts`).
 3. **shadcn CLI** — Consumes the same component source via `public/r/<slug>.json` URLs; expects a standard shadcn project layout and `@/lib/utils` for `cn`.
 4. **Showcase** — The `apps/www` Next.js site serves as marketing landing page and component documentation with live previews and install commands.
@@ -570,8 +570,8 @@ node --version  # must be v18 or higher
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/my-component`)
-3. Add your component to `registry/` and update `registry/config.ts`
-4. Update `registry/docs.json` for docs metadata and `apps/www/config/demos.tsx` for the live demo
+3. Add your component to `registry/` and create `registry/components/<slug>.json` (build config + docs metadata), then add the slug to `order` and `docsOrder` in `registry/manifest.json`
+4. Add the live demo mapping in `registry/demos.tsx`
 5. Run `pnpm build:registry` to regenerate `registry.json`, refresh `apps/www/public/registry/*` and **`apps/www/public/r/*`**, sync `apps/www/components/ui/*`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
 6. Run `pnpm build` to ensure everything compiles
 7. Submit a pull request

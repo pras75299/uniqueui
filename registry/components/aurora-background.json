@@ -1,0 +1,99 @@
+{
+  "slug": "aurora-background",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "aurora-background/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Aurora Background",
+    "description": "A fully customizable, smooth aurora light background mimicking the northern lights. Configurable via exact hex props alongside automatic integration with the current light or dark mode theme. Accessibility: Respects prefers-reduced-motion (drifting pauses smoothly).",
+    "icon": "LucideSparkles",
+    "category": "Backgrounds",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Content layered above the aurora; keep contrast high on the charcoal base."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes on the outer container (height, rounding, layout)."
+      },
+      {
+        "name": "showRadialGradient",
+        "type": "boolean",
+        "default": "true",
+        "description": "Radial vignette so the hero center stays readable."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Dark uses screen blend; light uses multiply and a softer base."
+      },
+      {
+        "name": "preset",
+        "type": "\"cinematic\" | \"stitch\"",
+        "default": "\"cinematic\"",
+        "description": "Color story: cinematic (reference-style pillars) or stitch (MCP showcase DS)."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "1",
+        "description": "Drift speed multiplier; higher = faster horizontal travel."
+      },
+      {
+        "name": "blur",
+        "type": "number",
+        "default": "1",
+        "description": "Blur strength multiplier for the pillar layer."
+      }
+    ],
+    "variants": [
+      {
+        "id": "cinematic",
+        "label": "Cinematic",
+        "demoKey": "aurora-background/cinematic",
+        "usageCode": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative text-white\">\n      <AuroraBackground preset=\"cinematic\" speed={0.95} className=\"min-h-0 h-full rounded-xl\">\n        <div className=\"text-center z-10 w-full px-4\">\n          <h3 className=\"text-2xl font-bold mb-2 tracking-tight\">Background lights</h3>\n          <p className=\"text-neutral-400 text-sm\">Vertical pillars, slow drift</p>\n        </div>\n      </AuroraBackground>\n    </div>\n  );\n}"
+      },
+      {
+        "id": "stitch",
+        "label": "Stitch DS",
+        "demoKey": "aurora-background/stitch",
+        "usageCode": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative text-white\">\n      <AuroraBackground preset=\"stitch\" blur={1.05} className=\"min-h-0 h-full rounded-xl\">\n        <div className=\"text-center z-10 w-full px-4\">\n          <h3 className=\"text-2xl font-bold mb-2 tracking-tight\">Stitch showcase</h3>\n          <p className=\"text-neutral-400 text-sm\">Container tokens in motion</p>\n        </div>\n      </AuroraBackground>\n    </div>\n  );\n}"
+      }
+    ],
+    "docs": {
+      "overview": "AuroraBackground renders a shifting, color-cycling radial gradient behind your content. It uses a CSS keyframe animation that's optimized for performance and respects prefers-reduced-motion.",
+      "scenarios": [
+        {
+          "title": "Full-page hero section",
+          "description": "Wrap your entire landing hero with the aurora to create an immediate cinematic impression.",
+          "code": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function HeroSection() {\n  return (\n    <AuroraBackground className=\"min-h-screen flex items-center justify-center\">\n      <div className=\"text-center space-y-4 z-10 relative\">\n        <h1 className=\"text-6xl font-bold text-white\">\n          Ship beautiful UIs\n        </h1>\n        <p className=\"text-neutral-300 text-xl max-w-xl mx-auto\">\n          Animated components that make your product feel alive.\n        </p>\n        <button className=\"mt-6 px-8 py-3 bg-white text-black rounded-full font-semibold\">\n          Get started\n        </button>\n      </div>\n    </AuroraBackground>\n  );\n}"
+        },
+        {
+          "title": "Feature section banner",
+          "description": "Apply the aurora to a single section mid-page to break up a long-scrolling layout.",
+          "code": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function FeatureBanner() {\n  return (\n    <AuroraBackground\n      className=\"rounded-3xl overflow-hidden py-24 px-8 text-center\"\n      showRadialGradient={false}\n    >\n      <span className=\"text-xs uppercase tracking-widest text-purple-300 font-semibold\">\n        New in v2\n      </span>\n      <h2 className=\"mt-3 text-4xl font-bold text-white\">\n        Bento Grid layouts\n      </h2>\n      <p className=\"mt-2 text-neutral-400 max-w-md mx-auto\">\n        Drag-and-drop grid sections that adapt to any content type.\n      </p>\n    </AuroraBackground>\n  );\n}"
+        },
+        {
+          "title": "CTA section with custom colors",
+          "description": "Customize the aurora colors to match your brand palette on a bottom-of-page conversion section.",
+          "code": "import { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function CTASection() {\n  return (\n    <AuroraBackground\n      className=\"py-32 text-center\"\n      colors={[\"#7c3aed\", \"#2563eb\", \"#7c3aed\"]}\n    >\n      <div className=\"relative z-10 space-y-6\">\n        <h2 className=\"text-5xl font-bold text-white\">\n          Ready to build something great?\n        </h2>\n        <div className=\"flex gap-4 justify-center\">\n          <button className=\"px-6 py-3 bg-white text-neutral-900 rounded-full font-semibold\">\n            Start free\n          </button>\n          <button className=\"px-6 py-3 border border-white/30 text-white rounded-full\">\n            View docs\n          </button>\n        </div>\n      </div>\n    </AuroraBackground>\n  );\n}"
+        }
+      ]
+    },
+    "usageCode": "\"use client\";\nimport { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function Example() {\n  return (\n    <AuroraBackground theme=\"dark\" className=\"h-[400px] rounded-xl\">\n      <div className=\"text-center space-y-3 px-4\">\n        <h1 className=\"text-4xl font-bold text-white\">Aurora Background</h1>\n        <p className=\"text-neutral-300\">A beautiful, customisable aurora effect behind any content.</p>\n      </div>\n    </AuroraBackground>\n  );\n}"
+  }
+}

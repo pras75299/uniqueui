@@ -1,0 +1,85 @@
+{
+  "slug": "3d-tilt-card",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "3d-tilt-card/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "3D Tilt Card",
+    "description": "Perspective-shifting card that tilts toward the cursor with parallax layers and glare overlay.",
+    "icon": "Layers",
+    "category": "Cards",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The element(s) suspended inside the 3D card layout."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Tailwind configuration applied directly to the physical card."
+      },
+      {
+        "name": "containerClassName",
+        "type": "string",
+        "description": "Tailwind bounds defining the invisible hover hit-box."
+      },
+      {
+        "name": "tiltMaxDeg",
+        "type": "number",
+        "description": "The maximum angle the card aggressively pitches on hover."
+      },
+      {
+        "name": "perspective",
+        "type": "number",
+        "description": "The CSS perspective depth in pixels determining 3D deformation strength."
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "description": "Float multiplier for card scaling when hovered (e.g. 1.05)."
+      },
+      {
+        "name": "glare",
+        "type": "boolean",
+        "description": "Enable a dynamic radial-gradient glare sweep that tracks the pointer."
+      },
+      {
+        "name": "glareMaxOpacity",
+        "type": "number",
+        "description": "Max brightness (0 to 1) for the dynamic glare effect."
+      }
+    ],
+    "usageCode": "import { TiltCard } from \"@/components/ui/3d-tilt-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-8 items-center justify-center p-10 text-white\">\n      <TiltCard className=\"w-72 bg-gradient-to-br from-neutral-900 to-neutral-800 border border-neutral-700 rounded-xl p-6\">\n        <h3 className=\"text-xl font-bold mb-2\">Hover me</h3>\n        <p className=\"text-neutral-400 text-sm\">\n          Move your cursor over this card to see the 3D tilt effect with glare.\n        </p>\n        <div className=\"mt-4 h-24 rounded-lg bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-neutral-700/50\" />\n      </TiltCard>\n      <TiltCard\n        tiltMaxDeg={25}\n        glare={true}\n        className=\"w-72 bg-gradient-to-br from-purple-950 to-indigo-950 border border-purple-800/50 rounded-xl p-6\"\n      >\n        <h3 className=\"text-xl font-bold mb-2 text-purple-200\">Extra Tilt</h3>\n        <p className=\"text-purple-300/60 text-sm\">\n          This card has a stronger tilt angle for a more dramatic effect.\n        </p>\n        <div className=\"mt-4 flex gap-2\">\n          <div className=\"h-12 w-12 rounded-lg bg-purple-500/20 border border-purple-500/30\" />\n          <div className=\"h-12 w-12 rounded-lg bg-pink-500/20 border border-pink-500/30\" />\n          <div className=\"h-12 w-12 rounded-lg bg-indigo-500/20 border border-indigo-500/30\" />\n        </div>\n      </TiltCard>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "TiltCard responds to mouse position with a spring-driven 3D tilt effect, giving wrapped content a realistic depth. An optional glare overlay reinforces the illusion.",
+      "scenarios": [
+        {
+          "title": "Feature highlight card",
+          "description": "Wrap a feature card so users instinctively interact with it, naturally exploring the depth effect.",
+          "code": "\"use client\";\nimport { TiltCard } from \"@/components/ui/3d-tilt-card\";\n\nexport default function FeatureCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <TiltCard className=\"p-8 bg-neutral-900 border border-neutral-800 rounded-xl max-w-xs\">\n        <div className=\"w-10 h-10 rounded-lg bg-indigo-500 mb-4 flex items-center justify-center text-white text-xl\">⚡</div>\n        <h3 className=\"text-lg font-bold text-white\">Blazing Fast</h3>\n        <p className=\"text-neutral-400 text-sm mt-2\">Optimised animations that run at 60 fps without layout thrash.</p>\n      </TiltCard>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Profile / team member card",
+          "description": "Give each team member card a tactile feel to make the About page more engaging.",
+          "code": "\"use client\";\nimport { TiltCard } from \"@/components/ui/3d-tilt-card\";\n\nexport default function ProfileCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <TiltCard className=\"p-6 bg-neutral-900 border border-neutral-800 rounded-2xl text-center max-w-[200px]\" tiltMaxDeg={12}>\n        <div className=\"w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 mx-auto mb-3\" />\n        <h3 className=\"text-white font-semibold\">Prashant Kumar</h3>\n        <p className=\"text-neutral-400 text-xs mt-1\">Founder</p>\n      </TiltCard>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Pricing tier card",
+          "description": "Apply a gentle tilt to pricing cards so the recommended plan naturally commands attention on hover.",
+          "code": "\"use client\";\nimport { TiltCard } from \"@/components/ui/3d-tilt-card\";\n\nexport default function PricingTiltCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <TiltCard className=\"p-8 bg-neutral-950 border border-purple-500/30 rounded-2xl max-w-xs\" tiltMaxDeg={10} scale={1.04}>\n        <span className=\"text-xs font-bold text-purple-400 uppercase tracking-widest\">Pro</span>\n        <p className=\"text-4xl font-bold text-white mt-2\">$29<span className=\"text-lg text-neutral-400\">/mo</span></p>\n        <button className=\"mt-6 w-full py-3 bg-purple-600 text-white rounded-xl font-medium\">Get started</button>\n      </TiltCard>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "slug": "scroll-reveal",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "scroll-reveal/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Scroll Reveal",
+    "description": "Elements animate into view when they enter the viewport, with 6 animation presets.",
+    "icon": "LucideScrollText",
+    "category": "Effects & Animations",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The DOM elements to animate into view upon scrolling."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Styling classes mapping to the outer tracking viewport."
+      },
+      {
+        "name": "animation",
+        "type": "AnimationPreset",
+        "description": "The specific animation choreography preset (e.g. 'fade-up', 'scale-in')."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "description": "Delay in seconds before the animation begins."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "description": "Duration in seconds for the reveal animation."
+      },
+      {
+        "name": "threshold",
+        "type": "number",
+        "description": "Intersection ratio (0-1) required to trigger the reveal."
+      },
+      {
+        "name": "once",
+        "type": "boolean",
+        "description": "Whether the element should hide and re-animate when scrolled out and back in."
+      },
+      {
+        "name": "staggerDelay",
+        "type": "number",
+        "default": "0.1",
+        "description": "ScrollRevealGroup only: delay in seconds between each child's staggered reveal."
+      }
+    ],
+    "usageCode": "import { ScrollReveal, ScrollRevealGroup } from \"@/components/ui/scroll-reveal\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-10 text-white\">\n      <ScrollRevealGroup\n        animation=\"fade-up\"\n        staggerDelay={0.15}\n        className=\"grid grid-cols-1 md:grid-cols-3 gap-4\"\n      >\n        {[\"fade-up\", \"scale\", \"blur\"].map((preset) => (\n          <div\n            key={preset}\n            className=\"p-6 rounded-lg bg-neutral-900/50 border border-neutral-800 text-center\"\n          >\n            <div className=\"text-lg font-semibold mb-1 text-neutral-200\">{preset}</div>\n            <p className=\"text-neutral-500 text-xs\">Scroll to reveal</p>\n          </div>\n        ))}\n      </ScrollRevealGroup>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "ScrollReveal wraps any element and fades + slides it into view when it enters the viewport using an IntersectionObserver. Zero layout shift, respects prefers-reduced-motion.",
+      "scenarios": [
+        {
+          "title": "Staggered feature list",
+          "description": "Reveal bullet points one by one as the user scrolls down a features section.",
+          "code": "import { ScrollReveal } from \"@/components/ui/scroll-reveal\";\n\nconst features = [\n  \"Copy-paste single-file components\",\n  \"Motion.dev spring animations\",\n  \"Dark and light theme support\",\n  \"TypeScript-first API\",\n];\n\nexport default function FeatureList() {\n  return (\n    <ul className=\"space-y-3\">\n      {features.map((feature, i) => (\n        <ScrollReveal key={i} delay={i * 0.08}>\n          <li className=\"flex items-center gap-3 text-neutral-300\">\n            <span className=\"h-1.5 w-1.5 rounded-full bg-purple-500\" />\n            {feature}\n          </li>\n        </ScrollReveal>\n      ))}\n    </ul>\n  );\n}"
+        },
+        {
+          "title": "Animated section headers",
+          "description": "Reveal each section heading with a subtle upward drift as the user reaches it.",
+          "code": "\"use client\";\nimport { ScrollReveal } from \"@/components/ui/scroll-reveal\";\n\nexport default function SectionHeaderDemo() {\n  return (\n    <div className=\"py-24 text-center space-y-3\">\n      <ScrollReveal>\n        <h2 className=\"text-4xl font-bold text-white\">Build with confidence</h2>\n      </ScrollReveal>\n      <ScrollReveal delay={0.1}>\n        <p className=\"text-neutral-400 max-w-xl mx-auto\">\n          Animated components that enhance user experience without adding complexity.\n        </p>\n      </ScrollReveal>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

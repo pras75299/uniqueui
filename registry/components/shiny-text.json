@@ -1,0 +1,73 @@
+{
+  "slug": "shiny-text",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "shiny-text/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Shiny Text",
+    "description": "A shimmering highlight that continuously sweeps across text — perfect for hero taglines and call-to-action copy.",
+    "icon": "LucideWand2",
+    "category": "Text",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "The text content to render."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "3",
+        "description": "Duration of one shimmer pass in seconds."
+      },
+      {
+        "name": "shimmerWidth",
+        "type": "number",
+        "default": "40",
+        "description": "Width of the bright band as a percentage."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra Tailwind classes (font size, weight, colour, etc.)."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Controls the shimmer palette."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function Hero() {\n  return (\n    <h1 className=\"text-5xl font-black\">\n      <ShinyText\n        text=\"Build something brilliant.\"\n        speed={3}\n        shimmerWidth={45}\n        className=\"text-5xl font-black\"\n      />\n    </h1>\n  );\n}",
+    "docs": {
+      "overview": "ShinyText adds a moving shimmer highlight that sweeps across your text using a CSS background-clip animation. Ideal for hero taglines, badge labels, or any copy that needs a premium metallic feel.",
+      "scenarios": [
+        {
+          "title": "Hero tagline highlight",
+          "description": "Draw attention to a key phrase in your hero section with a continuous shimmer sweep.",
+          "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function HeroTagline() {\n  return (\n    <h1 className=\"text-5xl font-bold text-white\">\n      Build beautiful UIs{\" \"}\n      <ShinyText text=\"effortlessly\" speed={2.5} className=\"text-purple-400\" />\n    </h1>\n  );\n}"
+        },
+        {
+          "title": "Premium badge label",
+          "description": "Use a smaller shimmer span inside a pill badge to signal a paid or featured tier.",
+          "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function PremiumBadge() {\n  return (\n    <span className=\"inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-xs font-semibold\">\n      ✦ <ShinyText text=\"PRO\" speed={4} className=\"text-yellow-400\" />\n    </span>\n  );\n}"
+        },
+        {
+          "title": "CTA button text",
+          "description": "Give a call-to-action button a shimmering label to make it pop on dark landing pages.",
+          "code": "import { ShinyText } from \"@/components/ui/shiny-text\";\n\nexport default function ShinyButton() {\n  return (\n    <button className=\"px-6 py-3 rounded-xl bg-neutral-800 border border-neutral-700 hover:border-purple-500 transition-colors\">\n      <ShinyText text=\"Get started for free →\" speed={3} className=\"text-white\" />\n    </button>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

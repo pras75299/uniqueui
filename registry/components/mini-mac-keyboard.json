@@ -1,0 +1,70 @@
+{
+  "slug": "mini-mac-keyboard",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "mini-mac-keyboard/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Mini Mac Keyboard",
+    "description": "Pure CSS decorative compact Mac-style keyboard with subtle spring entrance from motion.dev — ideal for hero device mockups.",
+    "icon": "LayoutGrid",
+    "category": "Components",
+    "props": [
+      {
+        "name": "wrapperClassName",
+        "type": "string",
+        "description": "Classes on the transform layer inside the motion wrapper (placement, scale, translate). Include responsive translate resets (e.g. md:translate-y-0) if you override base position and the default uses md: breakpoints."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes merged onto the keyboard bezel container (chassis shell, border, padding)."
+      },
+      {
+        "name": "keysClassName",
+        "type": "string",
+        "description": "Classes merged onto every key cap after the defaults — background, text, and ring overrides for a custom palette."
+      },
+      {
+        "name": "indicatorRingClassName",
+        "type": "string",
+        "description": "Classes merged onto the power-indicator gradient ring in the F12 key."
+      },
+      {
+        "name": "indicatorDotClassName",
+        "type": "string",
+        "description": "Classes merged onto the inner dot of the power indicator."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { MiniMacKeyboard } from \"@/components/ui/mini-mac-keyboard\";\n\nexport default function HeroDevices() {\n  return (\n    <div className=\"flex justify-center p-12\">\n      <MiniMacKeyboard\n        wrapperClassName=\"translate-x-0 translate-y-0 md:translate-y-0 scale-125\"\n        keysClassName=\"bg-stone-200 text-stone-800 dark:bg-stone-800 dark:text-stone-100\"\n      />\n    </div>\n  );\n}\n",
+    "docs": {
+      "overview": "MiniMacKeyboard renders a tiny faux keyboard using stacked key caps with light/dark Tailwind styling and a short spring entrance. It is decorative only (aria-label on the wrapper). Use wrapperClassName for scale and position; keysClassName recolors all caps; className styles the outer bezel. Overall width is controlled with scale on the wrapper (native layout is fixed for the key grid).",
+      "scenarios": [
+        {
+          "title": "Hero beside a laptop frame",
+          "description": "Reset transforms for a centered marketing hero so the board reads at a readable size.",
+          "code": "import { MiniMacKeyboard } from \"@/components/ui/mini-mac-keyboard\";\n\nexport default function Hero() {\n  return (\n    <MiniMacKeyboard\n      wrapperClassName=\"mx-auto scale-125 translate-x-0 translate-y-4 sm:scale-150\"\n    />\n  );\n}"
+        },
+        {
+          "title": "Reduced footprint in a card",
+          "description": "Shrink with Tailwind scale utilities on the wrapper inside a tight card.",
+          "code": "import { MiniMacKeyboard } from \"@/components/ui/mini-mac-keyboard\";\n\nexport default function CardAccent() {\n  return (\n    <div className=\"rounded-2xl border border-neutral-800 bg-neutral-950 p-6\">\n      <MiniMacKeyboard wrapperClassName=\"scale-90 translate-x-0 translate-y-0 md:translate-y-0\" />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Custom keys and indicator",
+          "description": "Tint every cap with keysClassName and tweak the power dot with indicator props; bezel uses className.",
+          "code": "import { MiniMacKeyboard } from \"@/components/ui/mini-mac-keyboard\";\n\nexport default function CustomBoard() {\n  return (\n    <MiniMacKeyboard\n      wrapperClassName=\"translate-x-0 translate-y-0 md:translate-y-0 scale-150\"\n      className=\"ring-violet-500/30 dark:ring-violet-400/25\"\n      keysClassName=\"bg-violet-100 text-violet-950 dark:bg-violet-950 dark:text-violet-100\"\n      indicatorRingClassName=\"from-emerald-400 via-emerald-500 to-emerald-400\"\n      indicatorDotClassName=\"bg-emerald-300 dark:bg-emerald-700\"\n    />\n  );\n}"
+        }
+      ]
+    }
+  }
+}

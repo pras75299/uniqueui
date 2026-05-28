@@ -1,0 +1,81 @@
+{
+  "slug": "skeleton-shimmer",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "skeleton-shimmer/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Skeleton Shimmer",
+    "description": "Skeleton loading placeholders with animated shimmer gradient sweep and pulse fade.",
+    "icon": "Loader2",
+    "category": "Effects & Animations",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional CSS configuration applied to the background container."
+      },
+      {
+        "name": "width",
+        "type": "string | number",
+        "description": "Explicit CSS width for the placeholder element."
+      },
+      {
+        "name": "height",
+        "type": "string | number",
+        "description": "Explicit CSS height for the placeholder element."
+      },
+      {
+        "name": "rounded",
+        "type": "\"sm\" | \"md\" | \"lg\" | \"xl\" | \"full\"",
+        "description": "Tailwind border-radius abstraction class string (e.g. 'md', 'full')."
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "description": "Number of consecutive skeleton items to iterate."
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "description": "Spacing separating consecutive skeleton layers."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Color theme for the placeholder surface and shimmer."
+      }
+    ],
+    "usageCode": "import { SkeletonShimmer, SkeletonCard } from \"@/components/ui/skeleton-shimmer\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6 p-10 w-full text-white\">\n      <SkeletonCard />\n      <div className=\"space-y-4 p-6 rounded-xl border border-neutral-800 bg-neutral-900/50\">\n        <SkeletonShimmer width=\"80%\" height={20} rounded=\"md\" />\n        <SkeletonShimmer count={4} height={14} />\n        <div className=\"flex gap-3\">\n          <SkeletonShimmer width={100} height={36} rounded=\"lg\" />\n          <SkeletonShimmer width={100} height={36} rounded=\"lg\" />\n        </div>\n      </div>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "SkeletonShimmer renders animated placeholder shapes with a sweeping shimmer to indicate loading state. Includes SkeletonCard and SkeletonText convenience wrappers for common patterns.",
+      "scenarios": [
+        {
+          "title": "Content feed loading state",
+          "description": "Replace a list of posts with skeleton rows while data fetches, preventing layout shift.",
+          "code": "import { SkeletonCard } from \"@/components/ui/skeleton-shimmer\";\n\nexport default function FeedLoader() {\n  return (\n    <div className=\"space-y-4 p-6 max-w-md\">\n      {[1, 2, 3].map((i) => (\n        <SkeletonCard key={i} theme=\"dark\" />\n      ))}\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Article body placeholder",
+          "description": "Show a paragraph skeleton while a blog post loads, keeping the reading layout intact.",
+          "code": "import { SkeletonText, SkeletonShimmer } from \"@/components/ui/skeleton-shimmer\";\n\nexport default function ArticleSkeleton() {\n  return (\n    <div className=\"space-y-6 p-8 max-w-2xl\">\n      <SkeletonShimmer height={40} width=\"70%\" rounded=\"lg\" theme=\"dark\" />\n      <SkeletonShimmer height={200} rounded=\"xl\" theme=\"dark\" />\n      <SkeletonText lines={5} />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Dashboard stat cards",
+          "description": "Display skeleton placeholders for metric cards while analytics data loads.",
+          "code": "import { SkeletonShimmer } from \"@/components/ui/skeleton-shimmer\";\n\nexport default function StatCardSkeleton() {\n  return (\n    <div className=\"grid grid-cols-3 gap-4 p-6\">\n      {[1, 2, 3].map((i) => (\n        <div key={i} className=\"p-4 rounded-xl border border-neutral-800 bg-neutral-900 space-y-3\">\n          <SkeletonShimmer height={12} width=\"40%\" rounded=\"full\" theme=\"dark\" />\n          <SkeletonShimmer height={28} width=\"60%\" rounded=\"md\" theme=\"dark\" />\n        </div>\n      ))}\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

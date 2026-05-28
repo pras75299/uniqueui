@@ -1,0 +1,86 @@
+{
+  "slug": "liquid-glass-panel",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "liquid-glass-panel/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Liquid Glass Panel",
+    "description": "A frosted container that physically refracts the content behind it via SVG turbulence + displacement — not a simple backdrop blur. Sub-pixel-crisp text on top, slow specular sheen, Fresnel-like edge highlight, and a hover boost on the displacement strength. Honors prefers-reduced-motion.",
+    "icon": "LucideSquare",
+    "category": "Cards",
+    "addedAt": "2026-05-06",
+    "props": [
+      {
+        "name": "displacementScale",
+        "type": "number",
+        "default": "24",
+        "description": "Strength of the UV displacement applied to pixels behind the panel. Higher values warp more aggressively."
+      },
+      {
+        "name": "noiseFrequency",
+        "type": "number",
+        "default": "0.014",
+        "description": "Base frequency of the turbulence noise. Lower values produce larger, glassier ripples; higher values feel more etched."
+      },
+      {
+        "name": "tint",
+        "type": "string",
+        "default": "\"rgba(255,255,255,0.08)\"",
+        "description": "Overall surface tint applied above the refraction layer."
+      },
+      {
+        "name": "borderHighlight",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to render the inner Fresnel-like edge ring and outer drop shadow."
+      },
+      {
+        "name": "intensityOnHover",
+        "type": "number",
+        "default": "1.15",
+        "description": "Multiplier applied to displacementScale on hover. 1.0 disables the hover boost."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for sizing, padding, rounding, and layout of the panel."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Content rendered crisply on top of the refraction layer — never filtered."
+      }
+    ],
+    "usageCode": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function Example() {\n  return (\n    <div\n      className=\"relative flex min-h-[440px] w-full items-center justify-center overflow-hidden rounded-xl bg-cover bg-center px-6 py-10\"\n      style={{\n        backgroundImage:\n          \"url(https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80)\",\n      }}\n    >\n      <div className=\"grid w-full max-w-3xl gap-5 md:grid-cols-2\">\n        <LiquidGlassPanel className=\"p-7\">\n          <span className=\"text-[11px] font-mono uppercase tracking-[0.3em] text-white/70\">\n            Solar Winter · 2026\n          </span>\n          <h3 className=\"mt-3 text-2xl font-semibold text-white\">\n            Real glass, not a blur.\n          </h3>\n          <p className=\"mt-2 text-sm text-white/80\">\n            Pixels behind this panel are physically refracted via SVG turbulence —\n            text on top stays pixel-crisp.\n          </p>\n        </LiquidGlassPanel>\n        <LiquidGlassPanel\n          className=\"p-7\"\n          tint=\"rgba(120,90,255,0.18)\"\n          displacementScale={32}\n          noiseFrequency={0.018}\n        >\n          <h3 className=\"text-lg font-semibold text-white\">Tinted variant</h3>\n          <p className=\"mt-2 text-sm text-white/80\">\n            Stronger displacement and a violet tint — useful for modal surfaces or\n            CTA flourishes.\n          </p>\n          <button className=\"mt-4 rounded-full bg-white/15 px-4 py-1.5 text-xs font-medium text-white backdrop-blur-md transition hover:bg-white/25\">\n            Action\n          </button>\n        </LiquidGlassPanel>\n      </div>\n    </div>\n  );\n}\n",
+    "docs": {
+      "overview": "LiquidGlassPanel renders an SVG turbulence + displacement filter onto a backdrop layer, so content behind it warps the way real glass would. The text/content layer sits above the filter and is never distorted, preserving sub-pixel antialiasing. Use it for cards, navbars, modal surfaces, or HUD overlays placed on top of imagery, video, or animated backgrounds.",
+      "scenarios": [
+        {
+          "title": "Hero overlay card",
+          "description": "Drop a glass card on top of a hero image — refraction makes the panel feel like a physical pane, while the headline stays perfectly crisp.",
+          "code": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function HeroCard() {\n  return (\n    <div\n      className=\"relative h-[480px] w-full overflow-hidden rounded-2xl bg-cover bg-center\"\n      style={{ backgroundImage: \"url(https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1600&q=80)\" }}\n    >\n      <LiquidGlassPanel className=\"absolute bottom-8 left-8 right-8 p-8 md:right-auto md:max-w-md\">\n        <span className=\"text-xs font-mono uppercase tracking-[0.3em] text-white/70\">\n          Solar Winter · 2026\n        </span>\n        <h2 className=\"mt-3 text-3xl font-semibold text-white\">\n          Real glass, not a blur.\n        </h2>\n        <p className=\"mt-3 text-sm text-white/80\">\n          Sub-pixel refraction warps the imagery behind the panel while the copy stays sharp.\n        </p>\n      </LiquidGlassPanel>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Floating HUD navbar",
+          "description": "Use a slim panel as a floating navbar on top of a video or image background. Reduce displacementScale for a calmer, more readable surface.",
+          "code": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function GlassNav() {\n  return (\n    <LiquidGlassPanel\n      displacementScale={12}\n      noiseFrequency={0.01}\n      className=\"flex items-center gap-6 px-6 py-3 rounded-full\"\n    >\n      <span className=\"text-sm font-semibold text-white\">UniqueUI</span>\n      <nav className=\"flex items-center gap-4 text-sm text-white/70\">\n        <a href=\"#\" className=\"hover:text-white\">Components</a>\n        <a href=\"#\" className=\"hover:text-white\">Pricing</a>\n        <a href=\"#\" className=\"hover:text-white\">Docs</a>\n      </nav>\n    </LiquidGlassPanel>\n  );\n}"
+        },
+        {
+          "title": "Tinted modal surface",
+          "description": "Tint the panel with a brand color for modal dialogs or notification toasts that still let the underlying scene breathe through.",
+          "code": "import { LiquidGlassPanel } from \"@/components/ui/liquid-glass-panel\";\n\nexport default function GlassToast() {\n  return (\n    <LiquidGlassPanel\n      tint=\"rgba(120,90,255,0.18)\"\n      displacementScale={28}\n      className=\"max-w-sm p-5 rounded-2xl\"\n    >\n      <p className=\"text-sm font-medium text-white\">Build complete</p>\n      <p className=\"mt-1 text-xs text-white/70\">\n        Deployed in 24s · 12 components synced\n      </p>\n    </LiquidGlassPanel>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

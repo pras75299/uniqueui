@@ -1,0 +1,121 @@
+{
+  "slug": "bento-grid",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "bento-grid/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Bento Grid",
+    "description": "Responsive masonry-style grid with staggered scroll-reveal, pointer-follow spotlight, hover lift and shadows, optional spin borders, and spring micro-interactions per cell.",
+    "icon": "LayoutGrid",
+    "category": "Cards",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Headline text displayed at the bottom of the card."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Supporting body text shown beneath the title."
+      },
+      {
+        "name": "icon",
+        "type": "React.ReactNode",
+        "description": "Icon element rendered inside a pill at the top of the card."
+      },
+      {
+        "name": "background",
+        "type": "React.ReactNode",
+        "description": "Optional decorative layer (image, gradient, SVG) rendered behind the content."
+      },
+      {
+        "name": "cta",
+        "type": "string",
+        "description": "Call-to-action label that slides up into view on hover."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "When supplied the card renders as an anchor element."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Grid span and sizing classes forwarded to the cell wrapper, e.g. col-span-2 or row-span-2."
+      },
+      {
+        "name": "spinBorder",
+        "type": "boolean",
+        "description": "Enable the spinning conic-gradient border effect (same technique as the hero button). Replaces the static border."
+      },
+      {
+        "name": "spinBorderColors",
+        "type": "[string, string]",
+        "description": "Two hex/CSS color values for the conic gradient. Defaults to [\"#E2CBFF\", \"#393BB2\"] (purple–indigo)."
+      },
+      {
+        "name": "interactiveSpotlight",
+        "type": "boolean",
+        "description": "When true (default), a violet radial highlight follows the pointer inside the card on fine-pointer hover."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "description": "Surface and text colors; injected by BentoGrid on each child."
+      }
+    ],
+    "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\nimport { Sparkles, Zap, Shield, Globe } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"max-w-3xl mx-auto\">\n        <BentoCard\n          icon={<Sparkles className=\"w-5 h-5\" />}\n          title=\"Beautiful animations\"\n          description=\"Every interaction is crafted with spring-physics Motion.dev animations for a premium feel.\"\n          cta=\"Explore components\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          icon={<Zap className=\"w-5 h-5\" />}\n          title=\"Lightning fast\"\n          description=\"Copy-paste components with zero runtime overhead.\"\n        />\n        <BentoCard\n          icon={<Shield className=\"w-5 h-5\" />}\n          title=\"Type safe\"\n          description=\"Built with TypeScript and fully typed props.\"\n        />\n        <BentoCard\n          icon={<Globe className=\"w-5 h-5\" />}\n          title=\"Zero lock-in\"\n          description=\"You own the code. No external runtime dependency.\"\n          cta=\"Get started\"\n          className=\"col-span-2\"\n        />\n      </BentoGrid>\n    </div>\n  );\n}",
+    "variants": [
+      {
+        "id": "features",
+        "label": "Features",
+        "demoKey": "bento-grid/features",
+        "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\nimport { Sparkles, Zap, Shield, Globe } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid>\n        <BentoCard\n          icon={<Sparkles className=\"w-5 h-5\" />}\n          title=\"Beautiful animations\"\n          description=\"Every interaction is crafted with spring-physics Motion.dev animations.\"\n          cta=\"Explore components\"\n          className=\"col-span-2\"\n          spinBorder\n          spinBorderColors={[\"#E2CBFF\", \"#393BB2\"]}\n        />\n        <BentoCard\n          icon={<Zap className=\"w-5 h-5\" />}\n          title=\"Lightning fast\"\n          description=\"Copy-paste components with zero runtime overhead.\"\n          spinBorder\n          spinBorderColors={[\"#a3e635\", \"#065f46\"]}\n        />\n        <BentoCard\n          icon={<Shield className=\"w-5 h-5\" />}\n          title=\"Type-safe props\"\n          description=\"Fully typed with TypeScript for confidence at scale.\"\n          spinBorder\n          spinBorderColors={[\"#67e8f9\", \"#1e3a5f\"]}\n        />\n        <BentoCard\n          icon={<Globe className=\"w-5 h-5\" />}\n          title=\"Zero lock-in\"\n          description=\"You own the code. No external runtime dependency.\"\n          cta=\"Get started\"\n          className=\"col-span-2\"\n          spinBorder\n          spinBorderColors={[\"#fda4af\", \"#9f1239\"]}\n        />\n      </BentoGrid>\n    </div>\n  );\n}"
+      },
+      {
+        "id": "showcase",
+        "label": "Showcase",
+        "demoKey": "bento-grid/showcase",
+        "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid>\n        <BentoCard\n          title=\"Aurora vibes\"\n          description=\"Layered animated gradients that feel alive.\"\n          background={\n            <div className=\"absolute inset-0 bg-gradient-to-br from-violet-700/30 via-fuchsia-600/15 to-cyan-600/20 animate-pulse\" />\n          }\n          cta=\"View component\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          title=\"Magnetic pull\"\n          description=\"Spring-physics cursor attraction.\"\n          background={\n            <div className=\"absolute inset-0 bg-gradient-to-br from-rose-700/25 to-orange-600/20\" />\n          }\n        />\n        <BentoCard\n          title=\"Spotlight effect\"\n          description=\"Radial light that follows your mouse.\"\n          background={\n            <div className=\"absolute inset-0 bg-gradient-to-br from-sky-700/25 to-indigo-700/20\" />\n          }\n        />\n        <BentoCard\n          title=\"Meteor storm\"\n          description=\"Shooting star particles raining through cards.\"\n          background={\n            <div className=\"absolute inset-0 bg-gradient-to-br from-emerald-700/25 to-teal-600/20\" />\n          }\n          cta=\"Try it\"\n          className=\"col-span-2\"\n        />\n      </BentoGrid>\n    </div>\n  );\n}"
+      },
+      {
+        "id": "stats",
+        "label": "Stats",
+        "demoKey": "bento-grid/stats",
+        "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"auto-rows-[160px]\">\n        <BentoCard\n          title=\"Components\"\n          description=\"Production-ready animated components\"\n          background={\n            <div className=\"absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none\">24</div>\n          }\n          icon={<span className=\"text-2xl font-black text-violet-400\">24</span>}\n        />\n        <BentoCard\n          title=\"Zero dependencies\"\n          description=\"No UniqueUI runtime in your bundle\"\n          background={\n            <div className=\"absolute top-4 right-4 text-6xl font-black text-white/[0.06] select-none\">0</div>\n          }\n          icon={<span className=\"text-2xl font-black text-emerald-400\">0</span>}\n        />\n        <BentoCard\n          title=\"Install time\"\n          description=\"Seconds from CLI to working component\"\n          icon={<span className=\"text-2xl font-black text-sky-400\">~3s</span>}\n        />\n        <BentoCard\n          title=\"MIT License\"\n          description=\"Open source forever. Fork it, extend it, ship it.\"\n          cta=\"View on GitHub\"\n          className=\"col-span-2\"\n        />\n        <BentoCard\n          title=\"Tailwind compatible\"\n          description=\"v3 and v4 supported\"\n          icon={<span className=\"text-2xl font-black text-cyan-400\">✓</span>}\n        />\n      </BentoGrid>\n    </div>\n  );\n}"
+      },
+      {
+        "id": "team",
+        "label": "Team",
+        "demoKey": "bento-grid/team",
+        "usageCode": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nconst members = [\n  { name: \"Alex Kim\",   role: \"Lead Engineer\",    tag: \"Motion\",     color: \"#a855f7\" },\n  { name: \"Sara Chen\",  role: \"Design Systems\",   tag: \"Tailwind\",   color: \"#6366f1\" },\n  { name: \"Jordan Lee\", role: \"DX Engineer\",      tag: \"CLI\",        color: \"#ec4899\" },\n  { name: \"Maya Patel\", role: \"Animations Lead\",  tag: \"Motion.dev\", color: \"#10b981\" },\n  { name: \"Ryan Wu\",    role: \"Accessibility\",    tag: \"ARIA\",       color: \"#f59e0b\" },\n  { name: \"Priya Shah\", role: \"TypeScript Infra\", tag: \"TS 5.x\",    color: \"#3b82f6\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-8 w-full\">\n      <BentoGrid className=\"auto-rows-[180px]\">\n        {members.map((m) => (\n          <BentoCard\n            key={m.name}\n            title={m.name}\n            description={m.role}\n            background={\n              <div\n                className=\"absolute bottom-0 right-0 w-24 h-24 rounded-tl-full opacity-10\"\n                style={{ backgroundColor: m.color }}\n              />\n            }\n            icon={\n              <div\n                className=\"w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white\"\n                style={{ backgroundColor: m.color + \"33\", border: `1.5px solid ${m.color}66` }}\n              >\n                {m.name.split(\" \").map((n) => n[0]).join(\"\")}\n              </div>\n            }\n            cta={m.tag}\n          />\n        ))}\n      </BentoGrid>\n    </div>\n  );\n}"
+      }
+    ],
+    "docs": {
+      "overview": "BentoGrid lays out content cards in an asymmetric masonry-style grid inspired by Apple's design language. Each cell can span multiple columns or rows, with animated entrance and hover effects.",
+      "scenarios": [
+        {
+          "title": "Product feature overview",
+          "description": "Showcase multiple features in a single glanceable grid without overwhelming the user.",
+          "code": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\nimport { Zap, Shield, Code } from \"lucide-react\";\n\nexport default function FeatureGrid() {\n  return (\n    <BentoGrid>\n      <BentoCard\n        title=\"Blazing fast\"\n        description=\"Server-side rendered with zero layout shift.\"\n        icon={<Zap className=\"w-6 h-6\" />}\n        className=\"col-span-2\"\n      />\n      <BentoCard\n        title=\"Type-safe\"\n        description=\"Full TypeScript support out of the box.\"\n        icon={<Code className=\"w-6 h-6\" />}\n      />\n      <BentoCard\n        title=\"Secure by default\"\n        description=\"No external requests. Your data stays local.\"\n        icon={<Shield className=\"w-6 h-6\" />}\n      />\n    </BentoGrid>\n  );\n}"
+        },
+        {
+          "title": "Personal portfolio grid",
+          "description": "Display projects, skills, and social links in an editorial bento layout.",
+          "code": "import { BentoGrid, BentoCard } from \"@/components/ui/bento-grid\";\n\nexport default function PortfolioGrid() {\n  return (\n    <BentoGrid className=\"max-w-4xl mx-auto\">\n      <BentoCard\n        title=\"UniqueUI\"\n        description=\"An open-source animated component library.\"\n        className=\"col-span-2 row-span-2\"\n      />\n      <BentoCard title=\"React\" description=\"5 years\" />\n      <BentoCard title=\"Next.js\" description=\"3 years\" />\n      <BentoCard\n        title=\"Open to work\"\n        description=\"Based in India · Remote-friendly\"\n        className=\"col-span-2\"\n      />\n    </BentoGrid>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

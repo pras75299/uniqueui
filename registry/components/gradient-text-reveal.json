@@ -1,0 +1,80 @@
+{
+  "slug": "gradient-text-reveal",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "gradient-text-reveal/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Gradient Text Reveal",
+    "description": "Word-by-word text reveal with gradient coloring and blur-to-clear spring animation.",
+    "icon": "LucidePalette",
+    "category": "Text",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "The exact sentence paragraph targeted for staggered rendering."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Add CSS classes mapping typographic configurations."
+      },
+      {
+        "name": "gradientFrom",
+        "type": "string",
+        "description": "Color indicating the start coordinate mapping of the visual gradient ramp."
+      },
+      {
+        "name": "gradientTo",
+        "type": "string",
+        "description": "Terminal color definition ending the textual mask gradient."
+      },
+      {
+        "name": "staggerDelay",
+        "type": "number",
+        "description": "Seconds mapping the offset differential delay evaluating subsequent sequential words."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "description": "Metric representation detailing exact sequence total span (measured in seconds)."
+      },
+      {
+        "name": "once",
+        "type": "boolean",
+        "description": "Prevent re-evaluating the intersection layout and permanently mark complete once run."
+      },
+      {
+        "name": "as",
+        "type": "\"h1\" | \"h2\" | \"h3\" | \"h4\" | \"p\" | \"span\"",
+        "description": "Explicit HTML element defining correct semantics matching the parent boundary box."
+      }
+    ],
+    "usageCode": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-8 text-center p-10 text-white\">\n      <GradientTextReveal\n        text=\"Build stunning interfaces with UniqueUI\"\n        as=\"h3\"\n        className=\"text-3xl font-bold justify-center\"\n      />\n      <GradientTextReveal\n        text=\"Beautiful animated components for modern web apps\"\n        gradientFrom=\"#6366f1\"\n        gradientTo=\"#06b6d4\"\n        className=\"text-lg justify-center\"\n      />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "GradientTextReveal animates a gradient sweep across text as it enters the viewport — a dramatic way to introduce headlines or key phrases on scroll.",
+      "scenarios": [
+        {
+          "title": "Section headline reveal",
+          "description": "Fire the reveal when the section scrolls into view for a cinematic entrance.",
+          "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function SectionHeadline() {\n  return (\n    <div className=\"py-24 text-center\">\n      <GradientTextReveal\n        text=\"Design that moves people.\"\n        className=\"text-5xl font-bold\"\n        gradientFrom=\"#ffffff\"\n        gradientTo=\"#c4b5fd\"\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Pull quote in a blog post",
+          "description": "Highlight a key quote mid-article with a gradient sweep to re-engage readers.",
+          "code": "import { GradientTextReveal } from \"@/components/ui/gradient-text-reveal\";\n\nexport default function PullQuote() {\n  return (\n    <blockquote className=\"my-12 px-8 border-l-2 border-purple-500\">\n      <GradientTextReveal\n        text=\"The best design is invisible — until it moves.\"\n        className=\"text-2xl font-medium italic\"\n        gradientFrom=\"#d4d4d8\"\n        gradientTo=\"#a78bfa\"\n        duration={1.4}\n      />\n    </blockquote>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "slug": "flip-card",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "flip-card/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Flip Card",
+    "description": "3D card flip with spring physics, supporting hover or click triggers.",
+    "icon": "LucideRotateCw",
+    "category": "Cards",
+    "props": [
+      {
+        "name": "front",
+        "type": "React.ReactNode",
+        "description": "The leading visible standard interface node."
+      },
+      {
+        "name": "back",
+        "type": "React.ReactNode",
+        "description": "The trailing hidden secondary information node."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Overarching classes driving constraints on the 3D rotating canvas."
+      },
+      {
+        "name": "frontClassName",
+        "type": "string",
+        "description": "Granular overrides for the un-rotated visual state."
+      },
+      {
+        "name": "backClassName",
+        "type": "string",
+        "description": "Granular overrides targeting the inverted 180-degree state representation."
+      },
+      {
+        "name": "trigger",
+        "type": "\"hover\" | \"click\"",
+        "description": "Enum literal targeting 'hover' execution or explicit 'click' toggles."
+      },
+      {
+        "name": "direction",
+        "type": "\"horizontal\" | \"vertical\"",
+        "description": "Axis orientation literal mapping rotation logic to 'horizontal' vs 'vertical'."
+      },
+      {
+        "name": "perspective",
+        "type": "number",
+        "description": "Z-depth translation simulating three-dimensional depth stretching."
+      }
+    ],
+    "usageCode": "import { FlipCard } from \"@/components/ui/flip-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-8 items-center justify-center p-10 text-white\">\n      <FlipCard\n        className=\"w-60 h-40\"\n        front={\n          <div className=\"flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800\">\n            <p className=\"text-lg font-bold\">Hover to flip →</p>\n          </div>\n        }\n        back={\n          <div className=\"flex items-center justify-center h-full bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl\">\n            <p className=\"text-lg font-bold text-purple-200\">Back side! ✨</p>\n          </div>\n        }\n      />\n      <FlipCard\n        className=\"w-60 h-40\"\n        trigger=\"click\"\n        front={\n          <div className=\"flex items-center justify-center h-full bg-zinc-900 rounded-xl border border-zinc-800\">\n            <p className=\"text-lg font-bold\">Click to flip</p>\n          </div>\n        }\n        back={\n          <div className=\"flex items-center justify-center h-full bg-zinc-800 rounded-xl border border-zinc-700\">\n            <p className=\"text-lg font-bold text-green-400\">Click again!</p>\n          </div>\n        }\n      />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "FlipCard reveals a back face on hover or click with a smooth 3D rotation. Supports horizontal and vertical flip axes and can wrap any React content on either face.",
+      "scenarios": [
+        {
+          "title": "Team member bio card",
+          "description": "Show a photo and name on the front; reveal role, bio, and social links on the back.",
+          "code": "\"use client\";\nimport { FlipCard } from \"@/components/ui/flip-card\";\n\nconst front = (\n  <div className=\"text-center space-y-3\">\n    <div className=\"w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 mx-auto\" />\n    <h3 className=\"text-white font-bold text-lg\">Prashant Kumar</h3>\n    <p className=\"text-neutral-400 text-sm\">Hover to learn more</p>\n  </div>\n);\n\nconst back = (\n  <div className=\"space-y-3 text-center\">\n    <p className=\"text-purple-400 text-sm font-semibold uppercase tracking-widest\">Founder</p>\n    <p className=\"text-neutral-300 text-sm leading-relaxed\">Full-stack engineer building UniqueUI.</p>\n    <div className=\"flex gap-3 justify-center\">\n      <a href=\"#\" className=\"text-xs text-purple-400 hover:underline\">GitHub</a>\n      <a href=\"#\" className=\"text-xs text-purple-400 hover:underline\">Twitter</a>\n    </div>\n  </div>\n);\n\nexport default function TeamCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <FlipCard front={front} back={back} className=\"w-56 h-52\" />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Click-to-reveal FAQ card",
+          "description": "Use trigger=\"click\" and vertical flip for a fun alternative to a standard accordion.",
+          "code": "\"use client\";\nimport { FlipCard } from \"@/components/ui/flip-card\";\n\nconst front = (\n  <div className=\"flex flex-col items-center justify-center h-full gap-2\">\n    <span className=\"text-2xl\">❓</span>\n    <p className=\"text-white font-medium text-center\">What is UniqueUI?</p>\n    <p className=\"text-neutral-500 text-xs\">Click to reveal</p>\n  </div>\n);\n\nconst back = (\n  <div className=\"flex flex-col justify-center h-full\">\n    <p className=\"text-neutral-300 text-sm leading-relaxed\">\n      UniqueUI is a copy-paste animated React component library. Install components via <code className=\"text-purple-400\">npx uniqueui add</code>.\n    </p>\n  </div>\n);\n\nexport default function FAQFlipCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <FlipCard front={front} back={back} trigger=\"click\" direction=\"vertical\" className=\"w-72 h-40\" />\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "slug": "animated-glowing-text-outline",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "animated-glowing-text-outline/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Animated Glowing Text",
+    "description": "Animated SVG drawing trace outline over shimmering text characters.",
+    "icon": "LucideSparkles",
+    "category": "Text",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "default": "\"Hello World\"",
+        "description": "The text content to be displayed."
+      },
+      {
+        "name": "fontSize",
+        "type": "number | string",
+        "default": "80",
+        "description": "The font size of the text."
+      },
+      {
+        "name": "fontWeight",
+        "type": "string | number",
+        "default": "900",
+        "description": "The CSS font-weight of the text."
+      },
+      {
+        "name": "textColor",
+        "type": "string",
+        "default": "\"#080808\"",
+        "description": "Fill color of the text face."
+      },
+      {
+        "name": "outlineColor",
+        "type": "string",
+        "default": "\"#333333\"",
+        "description": "The default color of the text stroke outline."
+      },
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": "[\"#ffaa40\", \"#9c40ff\", \"#ffaa40\"]",
+        "description": "Array of colors forming the animated gradient sweep."
+      },
+      {
+        "name": "outlineWidth",
+        "type": "number | string",
+        "default": "\"2px\"",
+        "description": "Width of the stroke outline."
+      },
+      {
+        "name": "animationDuration",
+        "type": "number",
+        "default": "4",
+        "description": "Duration of the stroke-drawing animation for a SINGLE character (in seconds)."
+      },
+      {
+        "name": "staggerDelay",
+        "type": "number",
+        "default": "0.15",
+        "description": "Delay between each character starting to draw (in seconds)."
+      },
+      {
+        "name": "dashArray",
+        "type": "number",
+        "default": "1000",
+        "description": "Length of the SVG stroke dash array. Tune this higher for longer paths."
+      }
+    ],
+    "usageCode": "import GlowingTextOutline from \"@/components/ui/animated-glowing-text-outline\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex justify-center p-10 bg-black rounded-xl\">\n      <GlowingTextOutline \n        text=\"Hello World\" \n        colors={[\"#ffaa40\", \"#9c40ff\", \"#ffaa40\"]}\n        animationDuration={5}\n      />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "AnimatedGlowingTextOutline draws SVG stroke paths over each character, creating a glowing trace-reveal animation followed by a shimmering gradient sweep. Ideal for dramatic headings or hero callouts.",
+      "scenarios": [
+        {
+          "title": "Hero heading reveal",
+          "description": "Use a large font size and slow duration to make a memorable first impression above the fold.",
+          "code": "import GlowingTextOutline from \"@/components/ui/animated-glowing-text-outline\";\n\nexport default function HeroHeading() {\n  return (\n    <div className=\"flex justify-center p-16 bg-black rounded-2xl\">\n      <GlowingTextOutline\n        text=\"UniqueUI\"\n        fontSize={96}\n        fontWeight={900}\n        colors={[\"#a78bfa\", \"#6366f1\", \"#a78bfa\"]}\n        animationDuration={6}\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Loading splash screen",
+          "description": "Pair with a fullscreen overlay to reveal an app logo while assets load in the background.",
+          "code": "import GlowingTextOutline from \"@/components/ui/animated-glowing-text-outline\";\n\nexport default function SplashScreen() {\n  return (\n    <div className=\"fixed inset-0 bg-neutral-950 flex items-center justify-center z-50\">\n      <GlowingTextOutline\n        text=\"Loading\"\n        fontSize={72}\n        colors={[\"#34d399\", \"#06b6d4\", \"#34d399\"]}\n        animationDuration={3}\n        staggerDelay={0.1}\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Section title accent",
+          "description": "Use a smaller font size inline with a dark section background for subtle section headings.",
+          "code": "import GlowingTextOutline from \"@/components/ui/animated-glowing-text-outline\";\n\nexport default function SectionAccent() {\n  return (\n    <div className=\"py-20 text-center bg-neutral-950 rounded-xl\">\n      <GlowingTextOutline\n        text=\"Features\"\n        fontSize={56}\n        colors={[\"#f59e0b\", \"#ef4444\", \"#f59e0b\"]}\n        outlineWidth=\"1.5px\"\n        animationDuration={4}\n      />\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

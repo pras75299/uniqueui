@@ -1,0 +1,125 @@
+{
+  "slug": "glow-hero-section",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "glow-hero-section/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Glow Hero Section",
+    "description": "Physics-driven hero section with an interactive aqueous mesh canvas, spring-based motion text entrance, and fully configurable badge, heading, description, colors, and dimensions.",
+    "icon": "LucideSparkles",
+    "category": "Backgrounds",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra CSS classes applied to the root container."
+      },
+      {
+        "name": "height",
+        "type": "string",
+        "default": "\"h-[520px]\"",
+        "description": "Tailwind height class for the component, e.g. \"h-screen\" or \"h-[600px]\"."
+      },
+      {
+        "name": "badge",
+        "type": "string | null",
+        "default": "\"Decentralized · Environmental · Protocol\"",
+        "description": "Text shown in the badge above the heading. Pass null to hide the badge entirely."
+      },
+      {
+        "name": "heading",
+        "type": "string",
+        "default": "\"The Gaia Protocol\"",
+        "description": "Main heading text."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "default": "\"A decentralized framework...\"",
+        "description": "Subheading / description paragraph beneath the heading."
+      },
+      {
+        "name": "backgroundColor",
+        "type": "string",
+        "default": "\"#f0f4f0\"",
+        "description": "CSS background color of the container behind the mesh canvas."
+      },
+      {
+        "name": "meshColorStart",
+        "type": "string",
+        "default": "\"rgba(255, 122, 0, 0.45)\"",
+        "description": "Start color of the linear gradient applied to mesh lines."
+      },
+      {
+        "name": "meshColorEnd",
+        "type": "string",
+        "default": "\"rgba(50, 205, 50, 0.45)\"",
+        "description": "End color of the linear gradient applied to mesh lines."
+      },
+      {
+        "name": "meshOpacity",
+        "type": "number",
+        "default": "0.6",
+        "description": "Overall opacity of the mesh canvas layer (0–1)."
+      },
+      {
+        "name": "gridSize",
+        "type": "number",
+        "default": "30",
+        "description": "Pixel size of each mesh grid cell. Smaller = denser mesh."
+      },
+      {
+        "name": "mouseRadius",
+        "type": "number",
+        "default": "150",
+        "description": "Radius in pixels within which mouse movement repels mesh grid points."
+      }
+    ],
+    "variants": [
+      {
+        "id": "default",
+        "label": "Default",
+        "demoKey": "glow-hero-section/default",
+        "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      height=\"h-[520px]\"\n      badge=\"Decentralized · Environmental · Protocol\"\n      heading=\"The Gaia Protocol\"\n      description=\"A decentralized framework for global environmental synthesis, powered by a living, self-organizing data network.\"\n      backgroundColor=\"#f0f4f0\"\n      meshColorStart=\"rgba(255, 122, 0, 0.45)\"\n      meshColorEnd=\"rgba(50, 205, 50, 0.45)\"\n      meshOpacity={0.6}\n      gridSize={30}\n      mouseRadius={150}\n    />\n  );\n}"
+      },
+      {
+        "id": "dark",
+        "label": "Dark Theme",
+        "demoKey": "glow-hero-section/dark",
+        "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      backgroundColor=\"#0a0a0f\"\n      meshColorStart=\"rgba(139, 92, 246, 0.5)\"\n      meshColorEnd=\"rgba(6, 182, 212, 0.5)\"\n      badge=\"Next-Gen · Web · Components\"\n      heading=\"UniqueUI\"\n      description=\"Premium animated React components, copy-paste ready.\"\n      gridSize={40}\n      mouseRadius={200}\n    />\n  );\n}"
+      },
+      {
+        "id": "no-badge",
+        "label": "No Badge",
+        "demoKey": "glow-hero-section/no-badge",
+        "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      badge={null}\n      heading=\"Build Interfaces That Stand Out\"\n      description=\"Drop-in animated components powered by Motion.dev and Tailwind CSS.\"\n    />\n  );\n}"
+      }
+    ],
+    "docs": {
+      "overview": "GlowHeroSection is a full-width hero component with a customizable radial glow effect behind the content. It combines a gradient background, centered text hierarchy, and optional CTA buttons into one production-ready section.",
+      "scenarios": [
+        {
+          "title": "SaaS product landing hero",
+          "description": "The most common pattern — a bold headline and subheadline over a dark, interactive glowing mesh background.",
+          "code": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function LandingHero() {\n  return (\n    <GlowHeroSection\n      badge=\"Now in public beta\"\n      heading=\"Ship cinematic UI in minutes\"\n      description=\"Copy-paste animated React components powered by motion.dev and Tailwind CSS.\"\n      backgroundColor=\"#0a0a0f\"\n      meshColorStart=\"rgba(139, 92, 246, 0.5)\"\n      meshColorEnd=\"rgba(236, 72, 153, 0.5)\"\n    />\n  );\n}"
+        },
+        {
+          "title": "Open-source project hero",
+          "description": "Announce a community project with a badge, headline, and supporting copy over the animated mesh.",
+          "code": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function OpenSourceHero() {\n  return (\n    <GlowHeroSection\n      badge=\"MIT-licensed · Community-maintained\"\n      heading=\"Built in the open.\"\n      description=\"Every component is MIT-licensed and community-maintained — 2.4k stars and 120 contributors.\"\n      backgroundColor=\"#0a0a0f\"\n      meshColorStart=\"rgba(59, 130, 246, 0.5)\"\n      meshColorEnd=\"rgba(6, 182, 212, 0.5)\"\n    />\n  );\n}"
+        }
+      ]
+    },
+    "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      heading=\"Build the Future\"\n      description=\"A decentralised toolkit for ambitious teams moving fast.\"\n      badge=\"Open Source · MIT License\"\n      className=\"rounded-2xl\"\n    />\n  );\n}"
+  }
+}

@@ -189,8 +189,9 @@ Every component in UniqueUI follows a consistent architecture:
 
 ```
 registry/
-  └── {component-name}.tsx      ← Source component file
-registry/config.ts              ← Registry metadata (deps, tailwind config)
+  └── {slug}/component.tsx      ← Source component file
+registry/components/{slug}.json ← Per-component manifest (deps, tailwind config + docs metadata)
+registry/manifest.json          ← Demos sourceFile + order + docsOrder
 registry.json                   ← Auto-generated (via build:registry script)
 apps/www/components/ui/
   └── {component-name}.tsx      ← Copy used in the docs site
@@ -307,8 +308,8 @@ uniqueui add typewriter-text
 
 ## Contributing a New Component
 
-1. Create `registry/{component-name}.tsx`
-2. Add entry to `registry/config.ts` with dependencies and tailwind config
+1. Create `registry/{slug}/component.tsx`
+2. Create `registry/components/{slug}.json` (dependencies, tailwind config + docs metadata) and add the slug to `order`/`docsOrder` in `registry/manifest.json`
 3. Run `pnpm build:registry` to regenerate `registry.json`
 4. Add a showcase demo in `apps/www/app/page.tsx`
 5. Test with `uniqueui add {component-name}` in a fresh project

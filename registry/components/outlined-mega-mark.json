@@ -1,0 +1,116 @@
+{
+  "slug": "outlined-mega-mark",
+  "registry": {
+    "dependencies": [
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "outlined-mega-mark/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Outlined Mega Mark",
+    "description": "Full-width mega outlined headline with theme-aware stroke colours; optional hover swaps the outline for an SVG gradient stroke (hollow fill).",
+    "icon": "LucideType",
+    "category": "Text",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "description": "Plain-text label rendered once (accessible); SVG mode duplicates visually inside stroke layers only."
+      },
+      {
+        "name": "fontSize",
+        "type": "string",
+        "default": "\"clamp(11.25rem, 10vw, 14.25rem)\"",
+        "description": "Any valid CSS font-size (clamp, rem, px, etc.)."
+      },
+      {
+        "name": "letterSpacing",
+        "type": "string",
+        "default": "\"-0.02em\"",
+        "description": "CSS letter-spacing for the headline."
+      },
+      {
+        "name": "lightStrokeColor",
+        "type": "string",
+        "default": "\"var(--color-neutral-500, #737373)\"",
+        "description": "Outline colour when the page is in light mode."
+      },
+      {
+        "name": "darkStrokeColor",
+        "type": "string",
+        "default": "\"var(--color-neutral-300, #d4d4d4)\"",
+        "description": "Outline colour when the page is in dark mode."
+      },
+      {
+        "name": "strokeWidth",
+        "type": "number | string",
+        "default": "1",
+        "description": "Outline width rendered as SVG/CSS stroke. Numeric values (and `\"N\"` / `\"Npx\"` strings) are clamped so the stroke never exceeds **1px**; thicker values are capped to a hairline. Other CSS units (`rem`, `em`) pass through and are not clamped."
+      },
+      {
+        "name": "fillOnHover",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true without gradientOnHover, hover fills glyphs with the active stroke colour."
+      },
+      {
+        "name": "gradientOnHover",
+        "type": "boolean",
+        "default": "true",
+        "description": "When true (default), renders **two hollow SVG `<text>` strokes**: a diagonal **idle** stroke using your theme accent (`lightStrokeColor` / `darkStrokeColor`) everywhere, plus a **`linearGradient` stroke** visible only inside a radial **spotlight mask** driven by pointer position. Idle stroke is clipped under the hotspot so the two strokes never visually stack thicker than **1 device px** (`nonScalingStroke`, width capped via `strokeWidth`). When false, `-webkit-text-stroke` markup only."
+      },
+      {
+        "name": "outlineGradient",
+        "type": "OutlinedMegaMarkOutlineGradient",
+        "description": "Vivid hover outline gradient. Shape: `{ stops: string[] /* 2+ CSS colours */, x1?, y1?, x2?, y2? }` — optional line for the SVG linearGradient (`userSpaceOnUse`). Exported from the component module. Overrides `outlineGradientStops`."
+      },
+      {
+        "name": "outlineGradientStops",
+        "type": "readonly string[]",
+        "description": "Shortcut for gradient `stops` only (horizontal default axis). Ignored when `outlineGradient` is set."
+      },
+      {
+        "name": "hoverGradient",
+        "type": "string",
+        "description": "Deprecated: ignored. Use `outlineGradient` or `outlineGradientStops`."
+      },
+      {
+        "name": "containerClassName",
+        "type": "string",
+        "description": "Optional Tailwind classes for the outer wrapper."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Optional Tailwind classes on the SVG (gradient mode) or inner paragraph (plain mode)."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function LandingFooter() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark\n        fontSize=\"clamp(7rem, 26vw, 14rem)\"\n        letterSpacing=\"-0.02em\"\n        strokeWidth={1}\n        lightStrokeColor=\"var(--color-neutral-400, #a3a3a3)\"\n        darkStrokeColor=\"var(--color-neutral-200, #e5e5e5)\"\n        gradientOnHover\n        outlineGradient={{\n          stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n          x1: \"0%\",\n          y1: \"0%\",\n          x2: \"100%\",\n          y2: \"0%\",\n        }}\n      >\n        UniqueUI\n      </OutlinedMegaMark>\n    </footer>\n  );\n}\n",
+    "docs": {
+      "overview": "With `gradientOnHover` (default), the headline stays hollow (**`fill=\"none\"`**) SVG text: themed **idle** outline (`stroke` from a duplicate `linearGradient` whose stops reuse `--omm-stroke-idle`) fills the framing, while a **`stroke=\"url(#vividGradient)\"` copy** paints only beneath a radial mask that trails the cursor. Pointer mapping runs on the outer wrapper so the spotlight reliably tracks hits across the mega mark box. Customize vivid colours with `outlineGradientStops` or `outlineGradient`. Set `gradientOnHover={false}` for `-webkit-text-stroke`-only markup, or `fillOnHover` for solid hover fill.",
+      "scenarios": [
+        {
+          "title": "Landing page footer",
+          "description": "Place the mark below legal or link columns; move the pointer over the letters to reveal the gradient stroke along the outline in a moving spotlight.",
+          "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Footer() {\n  return (\n    <footer className=\"w-full\">\n      <OutlinedMegaMark\n        fontSize=\"clamp(7rem, 26vw, 14rem)\"\n        letterSpacing=\"-0.02em\"\n        strokeWidth={1}\n        lightStrokeColor=\"var(--color-neutral-400, #a3a3a3)\"\n        darkStrokeColor=\"var(--color-neutral-200, #e5e5e5)\"\n        gradientOnHover\n        outlineGradient={{\n          stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n          x1: \"0%\",\n          y1: \"0%\",\n          x2: \"100%\",\n          y2: \"0%\",\n        }}\n      >\n        UniqueUI\n      </OutlinedMegaMark>\n    </footer>\n  );\n}"
+        },
+        {
+          "title": "Custom stroke and scale",
+          "description": "Tune stroke width and colours for contrast on tinted backgrounds, or shrink fontSize for dense layouts.",
+          "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function CustomMark() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2rem, 8vw, 4rem)\"\n      strokeWidth={2}\n      lightStrokeColor=\"rgb(147 51 234)\"\n      darkStrokeColor=\"rgb(196 181 253)\"\n      containerClassName=\"pt-4\"\n      gradientOnHover\n      outlineGradient={{\n        stops: [\"#fde68a\", \"#f97316\", \"#ec4899\"],\n        x1: \"0%\",\n        y1: \"0%\",\n        x2: \"100%\",\n        y2: \"0%\",\n      }}\n    >\n      Ship slower\n    </OutlinedMegaMark>\n  );\n}"
+        },
+        {
+          "title": "outlineGradientStops shorthand",
+          "description": "When you only need custom colours along the default axis, pass `outlineGradientStops={[...]}` instead of the full `outlineGradient` object.",
+          "code": "import { OutlinedMegaMark } from \"@/components/ui/outlined-mega-mark\";\n\nexport default function Shorthand() {\n  return (\n    <OutlinedMegaMark\n      fontSize=\"clamp(2.5rem, 10vw, 5rem)\"\n      strokeWidth={1.25}\n      lightStrokeColor=\"var(--color-neutral-400, #a3a3a3)\"\n      darkStrokeColor=\"var(--color-neutral-200, #e5e5e5)\"\n      gradientOnHover\n      outlineGradientStops={[\"#38bdf8\", \"#a855f7\", \"#ec4899\"]}\n    >\n      Three stops\n    </OutlinedMegaMark>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

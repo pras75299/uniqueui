@@ -608,7 +608,7 @@ function withDemoFreezeExtras<T extends Record<string, unknown>>(rows: T[]) {
   }));
 }
 
-/** Keep in sync with `usageCode` in registry/docs.json for hero-logo-marquee. */
+/** Keep in sync with `docs.usageCode` in registry/components/hero-logo-marquee.json. */
 const LOGO_MARQUEE_DEMO_LOGOS = [
   "Acme",
   "Globex",
@@ -3616,7 +3616,7 @@ export const componentDemos: Record<string, DemoComponent> = {
     </div>
   ),
   // Main hero demos — render the same inline JSX shown in each block's
-  // `usageCode` (registry/docs.json) so the Preview and Usage produce byte-
+  // `docs.usageCode` (registry/components/<slug>.json) so the Preview and Usage produce byte-
   // identical DOM. The plain-JSX form (no motion.* wrappers) trades the
   // staggered entrance polish for full code transparency — every <span>,
   // <h1>, <p>, and <button> the user sees is the exact one they copy.

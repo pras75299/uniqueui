@@ -1,0 +1,73 @@
+{
+  "slug": "word-rotate",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "word-rotate/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Word Rotate",
+    "description": "A list of words that cycle with slide, flip, or fade transitions — the signature hero-headline effect used across modern SaaS sites.",
+    "icon": "LucideRefreshCw",
+    "category": "Text",
+    "props": [
+      {
+        "name": "words",
+        "type": "string[]",
+        "description": "Array of words to cycle through."
+      },
+      {
+        "name": "interval",
+        "type": "number",
+        "default": "2500",
+        "description": "How long each word is shown in ms."
+      },
+      {
+        "name": "animation",
+        "type": "\"slide-up\" | \"slide-down\" | \"flip\" | \"fade\"",
+        "default": "\"slide-up\"",
+        "description": "Transition style between words."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra Tailwind classes (font size, colour, etc.)."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Theme context."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function Hero() {\n  return (\n    <h1 className=\"text-5xl font-black text-white\">\n      Build interfaces that are{\" \"}\n      <WordRotate\n        words={[\"faster\", \"smarter\", \"bolder\", \"yours\"]}\n        animation=\"slide-up\"\n        className=\"text-purple-400\"\n      />\n    </h1>\n  );\n}",
+    "docs": {
+      "overview": "WordRotate cycles through an array of words with configurable entrance and exit animations — slide, flip, or fade. Drop it inline within headings to convey multiple ideas without extra layout space.",
+      "scenarios": [
+        {
+          "title": "Hero headline value rotator",
+          "description": "Cycle through your product's core benefits inline inside a headline.",
+          "code": "import { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function HeroHeadline() {\n  return (\n    <h1 className=\"text-5xl font-bold text-white\">\n      The{\" \"}\n      <WordRotate\n        words={[\"fastest\", \"cleanest\", \"smartest\"]}\n        animation=\"slide-up\"\n        className=\"text-purple-400\"\n      />\n      {\" \"}way to ship UI\n    </h1>\n  );\n}"
+        },
+        {
+          "title": "Feature list rotator with flip",
+          "description": "Use the flip animation for a more dramatic 3-D card-turning effect.",
+          "code": "import { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function FlipRotator() {\n  return (\n    <p className=\"text-2xl font-semibold text-white\">\n      Built for{\" \"}\n      <WordRotate\n        words={[\"designers\", \"developers\", \"startups\", \"agencies\"]}\n        animation=\"flip\"\n        interval={2000}\n        className=\"text-emerald-400\"\n      />\n    </p>\n  );\n}"
+        },
+        {
+          "title": "Subtle fade rotator in body copy",
+          "description": "Use the fade animation for a soft, unobtrusive rotation inside a paragraph.",
+          "code": "import { WordRotate } from \"@/components/ui/word-rotate\";\n\nexport default function FadeRotator() {\n  return (\n    <p className=\"text-base text-neutral-400\">\n      Perfect for{\" \"}\n      <WordRotate\n        words={[\"landing pages\", \"SaaS apps\", \"portfolios\", \"dashboards\"]}\n        animation=\"fade\"\n        interval={3000}\n        className=\"text-white font-medium\"\n      />\n    </p>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "slug": "ambient-glow-card",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "ambient-glow-card/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Ambient Glow Card",
+    "description": "A single responsive card whose copy you write as normal JSX children. A soft radial-gradient blob slowly drifts between the four corners — colour and speed are props. Headings inherit the page font; paragraphs get muted body styling. Fills any parent column via w-full h-full.",
+    "icon": "LucideAperture",
+    "category": "Cards",
+    "addedAt": "2026-05-11",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Card body — pass standard JSX (heading + paragraph). Headings inherit the page font and get sensible tracking + colour; paragraphs get muted body styling."
+      },
+      {
+        "name": "blobColor",
+        "type": "string | readonly [string, string, string]",
+        "description": "Blob accent. Single CSS colour (hex / rgb / oklch / named) for a one-stop wash, or a tuple of three stops for a richer gradient. Defaults to a warm pink trio."
+      },
+      {
+        "name": "cardBackground",
+        "type": "string",
+        "description": "Optional solid surface colour; omit for theme default neutral-100 / neutral-900."
+      },
+      {
+        "name": "animationDuration",
+        "type": "number",
+        "default": "24",
+        "description": "Seconds for one full drift cycle through the four corners. Clamped 6–120 (lower = faster)."
+      },
+      {
+        "name": "motionDisabled",
+        "type": "boolean",
+        "default": "false",
+        "description": "Pin the blob to a single corner. `prefers-reduced-motion` always pins regardless."
+      },
+      {
+        "name": "padding",
+        "type": "\"sm\" | \"md\" | \"lg\"",
+        "default": "\"md\"",
+        "description": "Inner padding scale around the children slot."
+      },
+      {
+        "name": "showNoise",
+        "type": "boolean",
+        "default": "true",
+        "description": "SVG film-grain overlay on top of the surface."
+      },
+      {
+        "name": "minHeight",
+        "type": "string",
+        "default": "\"13rem\"",
+        "description": "Minimum card height when content is short. Any CSS length."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Merged onto the outer article (e.g. h-full, ring, custom shadow)."
+      }
+    ],
+    "usageCode": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-md p-4\">\n      <AmbientGlowCard\n        blobColor={[\"#f9b8c4\", \"#f897ad\", \"#fcd1c1\"]}\n        animationDuration={24}\n      >\n        <h3>Software That Actually Scales</h3>\n        <p>Not code. Not prototypes. Real, live systems running in production from day one.</p>\n      </AmbientGlowCard>\n    </div>\n  );\n}\n",
+    "docs": {
+      "overview": "AmbientGlowCard is a single **`<article>`** that fills its parent column (**`w-full h-full`**). A single soft radial-gradient **blob** drifts between the four corners on a keyframe loop; the loop length is **`animationDuration`** seconds (clamped 6–120). Colour comes from **`blobColor`** — either a single CSS colour or a `[c0, c1, c2]` tuple. Content is plain JSX **`children`**; any `<h1>`–`<h6>` inside gets sensible tracking, balance, and theme colour but inherits the consumer's font family. The base tint is **`bg-neutral-100`** with **`dark:bg-neutral-900`** unless **`cardBackground`** overrides. Grain is inline SVG; reduced-motion pins the blob.",
+      "scenarios": [
+        {
+          "title": "Drop into any column",
+          "description": "Place inside a 2-column responsive grid — the card stretches to the cell.",
+          "code": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function Pair() {\n  return (\n    <div className=\"grid grid-cols-1 gap-5 md:grid-cols-2\">\n      <AmbientGlowCard blobColor={[\"#f9b8c4\", \"#f897ad\", \"#fcd1c1\"]}>\n        <h3>Software That Actually Scales</h3>\n        <p>Not code. Not prototypes. Real, live systems running in production from day one.</p>\n      </AmbientGlowCard>\n      <AmbientGlowCard blobColor={[\"#b4c8f4\", \"#9aa9eb\", \"#c4d5f5\"]} animationDuration={28}>\n        <h3>Infrastructure Built In</h3>\n        <p>Deployment, scaling, and runtime handled automatically. No DevOps, no setup, no friction.</p>\n      </AmbientGlowCard>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Single accent colour",
+          "description": "Pass `blobColor` as a string for a quick one-stop wash.",
+          "code": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function SingleColour() {\n  return (\n    <AmbientGlowCard blobColor=\"#a8d4a0\" animationDuration={32}>\n      <h3>AI That Owns the System</h3>\n      <p>AI doesn't just generate code — it builds, runs, and evolves the entire system end-to-end.</p>\n    </AmbientGlowCard>\n  );\n}"
+        },
+        {
+          "title": "Pause the drift",
+          "description": "Set `motionDisabled` to pin the blob to its starting corner — useful for static screenshots or motion-sensitive contexts.",
+          "code": "import { AmbientGlowCard } from \"@/components/ui/ambient-glow-card\";\n\nexport default function Pinned() {\n  return (\n    <AmbientGlowCard blobColor={[\"#f5cf90\", \"#f1b063\", \"#ffd9a0\"]} motionDisabled>\n      <h3>Build &amp; Iterate Real Software</h3>\n      <p>Create, run, and improve real production systems — not one-shot prompts or demos.</p>\n    </AmbientGlowCard>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

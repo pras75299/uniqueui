@@ -1,0 +1,80 @@
+{
+  "slug": "dot-grid-background",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "dot-grid-background/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Dot Grid Background",
+    "description": "Interactive dot-grid pattern with a glowing cursor-following effect.",
+    "icon": "Grid",
+    "category": "Backgrounds",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Components mapped into the z-index layer visually above the matrix."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Container abstraction classes."
+      },
+      {
+        "name": "dotColor",
+        "type": "string",
+        "description": "Color code controlling the default un-illuminated grid representation."
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "description": "Diameter specifying visual footprint density of single grid intersections."
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "description": "Vector translation pixel count separating independent grid items."
+      },
+      {
+        "name": "hoverRadius",
+        "type": "number",
+        "description": "Spread area around the cursor triggering focus interactions."
+      },
+      {
+        "name": "hoverScale",
+        "type": "number",
+        "description": "Float magnitude expanding intersections actively caught inside the hover bounds."
+      }
+    ],
+    "usageCode": "import { DotGridBackground } from \"@/components/ui/dot-grid-background\";\n\nexport default function Example() {\n  return (\n    <DotGridBackground className=\"w-full h-[340px] flex items-center justify-center rounded-xl\">\n      <div className=\"text-center relative z-10 select-none px-6\">\n        <p className=\"text-xs font-mono tracking-[0.25em] uppercase mb-4 text-neutral-500\">\n          Move your cursor\n        </p>\n        <h3 className=\"text-4xl font-bold tracking-tight text-white\">\n          Ripple Field\n        </h3>\n        <p className=\"mt-3 text-sm text-neutral-500\">\n          Each movement fires a shockwave through the grid\n        </p>\n      </div>\n    </DotGridBackground>\n  );\n}",
+    "docs": {
+      "overview": "DotGridBackground renders a canvas-based animated dot grid that reacts to mouse movement with ripple propagation. Dots scale and shift colour as the cursor passes, creating an interactive depth effect behind any wrapped content.",
+      "scenarios": [
+        {
+          "title": "Interactive hero section",
+          "description": "Wrap a hero headline in DotGridBackground to create an eye-catching, cursor-reactive landing section.",
+          "code": "import { DotGridBackground } from \"@/components/ui/dot-grid-background\";\n\nexport default function HeroSection() {\n  return (\n    <DotGridBackground theme=\"dark\" className=\"h-[400px] rounded-2xl flex items-center justify-center\">\n      <div className=\"text-center space-y-4 px-4\">\n        <h1 className=\"text-5xl font-bold text-white\">Move your cursor</h1>\n        <p className=\"text-neutral-400\">Watch the grid come alive beneath you.</p>\n      </div>\n    </DotGridBackground>\n  );\n}"
+        },
+        {
+          "title": "Bento grid cell background",
+          "description": "Use as a decorative background inside individual bento grid cells for subtle interactivity.",
+          "code": "import { DotGridBackground } from \"@/components/ui/dot-grid-background\";\n\nexport default function BentoCell() {\n  return (\n    <DotGridBackground\n      theme=\"dark\"\n      gap={20}\n      hoverRadius={100}\n      dotColor=\"#a855f7\"\n      className=\"p-6 rounded-xl h-40\"\n    >\n      <h3 className=\"text-white font-bold relative z-10\">Analytics</h3>\n      <p className=\"text-neutral-400 text-sm relative z-10 mt-1\">Real-time event tracking</p>\n    </DotGridBackground>\n  );\n}"
+        },
+        {
+          "title": "Full-page app background",
+          "description": "Render at viewport height as a fixed or full-page background layer behind your main layout.",
+          "code": "import { DotGridBackground } from \"@/components/ui/dot-grid-background\";\n\nexport default function AppBackground() {\n  return (\n    <DotGridBackground\n      theme=\"dark\"\n      gap={32}\n      dotSize={2}\n      className=\"min-h-screen flex items-center justify-center\"\n    >\n      <div className=\"text-center\">\n        <h1 className=\"text-4xl font-bold text-white\">Your app here</h1>\n      </div>\n    </DotGridBackground>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

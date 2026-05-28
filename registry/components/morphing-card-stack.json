@@ -1,0 +1,65 @@
+{
+  "slug": "morphing-card-stack",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "lucide-react",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "morphing-card-stack/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Morphing Card Stack",
+    "description": "An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using Framer Motion springs.",
+    "icon": "Layers",
+    "category": "Cards",
+    "props": [
+      {
+        "name": "cards",
+        "type": "CardData[]",
+        "description": "Array of CardData containing id, title, description, icon, and optional color."
+      },
+      {
+        "name": "defaultLayout",
+        "type": "\"stack\" | \"grid\" | \"list\"",
+        "default": "\"stack\"",
+        "description": "Initial layout mode configuration."
+      },
+      {
+        "name": "onCardClick",
+        "type": "(card: CardData) => void",
+        "description": "Callback function triggered when clicking a card."
+      }
+    ],
+    "variants": [
+      {
+        "id": "default",
+        "label": "Default",
+        "demoKey": "morphing-card-stack/default",
+        "usageCode": "import { MorphingCardStack } from \"@/components/ui/morphing-card-stack\";\nimport { Layers, Palette, Clock, Sparkles } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-12 min-h-[500px] w-full bg-neutral-950 rounded-xl border border-neutral-800\">\n      <MorphingCardStack \n        cards={[\n          {\n            id: \"1\",\n            title: \"Magnetic Dock\",\n            description: \"Cursor-responsive scaling with smooth spring animations\",\n            icon: <Layers className=\"h-5 w-5\" />,\n          },\n          {\n            id: \"2\",\n            title: \"Gradient Mesh\",\n            description: \"Dynamic animated gradient backgrounds that follow your cursor\",\n            icon: <Palette className=\"h-5 w-5\" />,\n          },\n          {\n            id: \"3\",\n            title: \"Pulse Timeline\",\n            description: \"Interactive timeline with animated pulse nodes\",\n            icon: <Clock className=\"h-5 w-5\" />,\n          },\n          {\n            id: \"4\",\n            title: \"Command Palette\",\n            description: \"Radial command menu with keyboard navigation\",\n            icon: <Sparkles className=\"h-5 w-5\" />,\n          },\n        ]} \n      />\n    </div>\n  );\n}"
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { MorphingCardStack } from \"@/components/ui/morphing-card-stack\";\n\nconst cards = [\n  { id: \"1\", title: \"Design\", description: \"Craft beautiful interfaces with motion-first components.\", color: \"#6366f120\" },\n  { id: \"2\", title: \"Develop\", description: \"Install via CLI, copy into your codebase, done.\", color: \"#a855f720\" },\n  { id: \"3\", title: \"Ship\", description: \"Production-ready, accessible, and fully typed.\", color: \"#22c55e20\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-10\">\n      <MorphingCardStack cards={cards} />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "MorphingCardStack displays a set of cards that morph between Stack (swipeable fan), Grid, and List layout modes using shared layout animations. The top card in stack mode is draggable to cycle through cards.",
+      "scenarios": [
+        {
+          "title": "Feature showcase carousel",
+          "description": "Present key product features as a swipeable stack that users can fan into a grid for an overview.",
+          "code": "\"use client\";\nimport { MorphingCardStack } from \"@/components/ui/morphing-card-stack\";\nimport { Zap, Palette, Shield } from \"lucide-react\";\n\nconst features = [\n  { id: \"speed\", title: \"Blazing Fast\", description: \"60 fps animations with zero layout thrash.\", icon: <Zap className=\"w-5 h-5\" />, color: \"#6366f120\" },\n  { id: \"design\", title: \"Beautiful\", description: \"Crafted with care for every pixel and motion curve.\", icon: <Palette className=\"w-5 h-5\" />, color: \"#a855f720\" },\n  { id: \"safe\", title: \"Production Safe\", description: \"Fully typed, accessible, and tested.\", icon: <Shield className=\"w-5 h-5\" />, color: \"#22c55e20\" },\n];\n\nexport default function FeatureStack() {\n  return (\n    <div className=\"flex items-center justify-center p-10\">\n      <MorphingCardStack cards={features} defaultLayout=\"stack\" />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Kanban-style task switcher",
+          "description": "Start in list layout for a compact task view and let users switch to grid for a spatial overview.",
+          "code": "\"use client\";\nimport { MorphingCardStack } from \"@/components/ui/morphing-card-stack\";\n\nconst tasks = [\n  { id: \"t1\", title: \"Write release notes\", description: \"Summarise all changes in the v2 changelog.\" },\n  { id: \"t2\", title: \"Update component docs\", description: \"Add usageCode and scenarios for new additions.\" },\n  { id: \"t3\", title: \"Record demo video\", description: \"Showcase the radial menu and morphing stack.\" },\n  { id: \"t4\", title: \"Publish to npm\", description: \"Bump version, build, and push the CLI package.\" },\n];\n\nexport default function TaskSwitcher() {\n  return (\n    <div className=\"flex items-center justify-center p-10\">\n      <MorphingCardStack cards={tasks} defaultLayout=\"list\" />\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

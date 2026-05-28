@@ -1,0 +1,91 @@
+{
+  "slug": "animated-timeline",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "animated-timeline/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Animated Timeline",
+    "description": "Scroll-triggered timeline with 4 distinct Motion.dev animation variants: vertical spring, horizontal growing line, alternating cards, and numbered steps.",
+    "icon": "Clock",
+    "category": "Effects & Animations",
+    "props": [
+      {
+        "name": "items",
+        "type": "TimelineItem[]",
+        "description": "Ordered array of timeline items (id, title, description, date, color, icon)."
+      },
+      {
+        "name": "variant",
+        "type": "\"vertical\" | \"horizontal\" | \"cards\" | \"steps\"",
+        "description": "Layout and animation style. Defaults to \"vertical\"."
+      },
+      {
+        "name": "lineColor",
+        "type": "string",
+        "description": "Connecting line color. Defaults to rgba(255,255,255,0.08)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional classes on the root wrapper."
+      }
+    ],
+    "variants": [
+      {
+        "id": "vertical",
+        "label": "Vertical",
+        "demoKey": "animated-timeline/vertical",
+        "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Project Kickoff\",   description: \"Scope defined and team assembled.\",             color: \"#a855f7\", date: \"Jan 2026\" },\n  { id: \"2\", title: \"Design Phase\",      description: \"Wireframes and component system finalised.\",    color: \"#6366f1\", date: \"Jan 2026\" },\n  { id: \"3\", title: \"Dev Sprint\",        description: \"Core components built and tested end-to-end.\", color: \"#ec4899\", date: \"Feb 2026\" },\n  { id: \"4\", title: \"Public Launch\",     description: \"CLI published and registry live.\",             color: \"#10b981\", date: \"Feb 2026\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-sm mx-auto p-6 w-full\">\n      <AnimatedTimeline items={items} variant=\"vertical\" lineColor=\"#3f3f46\" />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "horizontal",
+        "label": "Horizontal",
+        "demoKey": "animated-timeline/horizontal",
+        "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Kickoff\",  description: \"Scope agreed.\",          color: \"#a855f7\", date: \"Jan\" },\n  { id: \"2\", title: \"Design\",   description: \"Wireframes done.\",       color: \"#6366f1\", date: \"Jan\" },\n  { id: \"3\", title: \"Build\",    description: \"Components shipped.\",    color: \"#ec4899\", date: \"Feb\" },\n  { id: \"4\", title: \"Launch\",   description: \"Registry live.\",         color: \"#10b981\", date: \"Feb\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-6 w-full overflow-x-auto\">\n      <AnimatedTimeline items={items} variant=\"horizontal\" lineColor=\"#3f3f46\" />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "cards",
+        "label": "Cards",
+        "demoKey": "animated-timeline/cards",
+        "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Project Kickoff\",   description: \"Scope defined and team assembled.\",             color: \"#a855f7\", date: \"Jan 2026\" },\n  { id: \"2\", title: \"Design Phase\",      description: \"Wireframes and component system finalised.\",    color: \"#6366f1\", date: \"Jan 2026\" },\n  { id: \"3\", title: \"Dev Sprint\",        description: \"Core components built and tested end-to-end.\", color: \"#ec4899\", date: \"Feb 2026\" },\n  { id: \"4\", title: \"Public Launch\",     description: \"CLI published and registry live.\",             color: \"#10b981\", date: \"Feb 2026\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-lg mx-auto p-6 w-full\">\n      <AnimatedTimeline items={items} variant=\"cards\" lineColor=\"#3f3f46\" />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "steps",
+        "label": "Steps",
+        "demoKey": "animated-timeline/steps",
+        "usageCode": "import { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Install the CLI\",        description: \"Run npx uniqueui init in your project.\",         color: \"#a855f7\" },\n  { id: \"2\", title: \"Add a component\",        description: \"Run npx uniqueui add animated-timeline.\",        color: \"#6366f1\" },\n  { id: \"3\", title: \"Import and customise\",   description: \"Use variant, color, and date props as needed.\",  color: \"#ec4899\" },\n  { id: \"4\", title: \"Ship to production\",     description: \"Zero runtime dependency — fully your code.\",     color: \"#10b981\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-sm mx-auto p-6 w-full\">\n      <AnimatedTimeline items={items} variant=\"steps\" />\n    </div>\n  );\n}"
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst items = [\n  { id: \"1\", title: \"Project kickoff\", date: \"Jan 2024\", description: \"Team assembled and roadmap finalised.\", color: \"#6366f1\" },\n  { id: \"2\", title: \"Design phase\", date: \"Feb 2024\", description: \"Wireframes and prototypes approved.\", color: \"#a855f7\" },\n  { id: \"3\", title: \"Development\", date: \"Mar 2024\", description: \"Core features built and tested.\", color: \"#ec4899\" },\n  { id: \"4\", title: \"Launch\", date: \"Apr 2024\", description: \"Version 1.0 shipped to production.\", color: \"#22c55e\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-10 max-w-sm mx-auto\">\n      <AnimatedTimeline items={items} />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "AnimatedTimeline renders a sequence of events with scroll-triggered entry animations. Four layout variants are supported: vertical (default staggered list), horizontal (left-to-right with growing connectors), cards (alternating left/right), and steps (numbered progress).",
+      "scenarios": [
+        {
+          "title": "Product roadmap",
+          "description": "Use the vertical variant with colour-coded dots to visualise upcoming releases at a glance.",
+          "code": "\"use client\";\nimport { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst roadmap = [\n  { id: \"q1\", title: \"v1.0 — Core library\", date: \"Q1 2024\", color: \"#6366f1\", description: \"10 foundational components shipped.\" },\n  { id: \"q2\", title: \"v1.5 — Motion system\", date: \"Q2 2024\", color: \"#a855f7\", description: \"Spring physics and scroll triggers.\" },\n  { id: \"q3\", title: \"v2.0 — CLI & registry\", date: \"Q3 2024\", color: \"#22c55e\", description: \"npx uniqueui add for all 42 components.\" },\n];\n\nexport default function Roadmap() {\n  return (\n    <div className=\"p-10 max-w-xs\">\n      <AnimatedTimeline items={roadmap} />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Onboarding steps",
+          "description": "Switch to the steps variant to guide users through a numbered setup process.",
+          "code": "\"use client\";\nimport { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst steps = [\n  { id: \"s1\", title: \"Create your account\", description: \"Sign up with your work email.\", color: \"#6366f1\" },\n  { id: \"s2\", title: \"Install the CLI\", description: \"Run npx uniqueui add in your project.\", color: \"#a855f7\" },\n  { id: \"s3\", title: \"Pick a component\", description: \"Browse the registry and copy-paste.\", color: \"#ec4899\" },\n];\n\nexport default function OnboardingSteps() {\n  return (\n    <div className=\"p-10 max-w-xs\">\n      <AnimatedTimeline items={steps} variant=\"steps\" />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Horizontal milestone strip",
+          "description": "Use the horizontal variant for a compact milestone strip in a company history or press section.",
+          "code": "\"use client\";\nimport { AnimatedTimeline } from \"@/components/ui/animated-timeline\";\n\nconst milestones = [\n  { id: \"m1\", title: \"Founded\", date: \"2020\", color: \"#6366f1\" },\n  { id: \"m2\", title: \"Series A\", date: \"2021\", color: \"#a855f7\" },\n  { id: \"m3\", title: \"1M users\", date: \"2022\", color: \"#ec4899\" },\n  { id: \"m4\", title: \"Global launch\", date: \"2023\", color: \"#22c55e\" },\n];\n\nexport default function MilestoneStrip() {\n  return (\n    <div className=\"p-10 overflow-x-auto\">\n      <AnimatedTimeline items={milestones} variant=\"horizontal\" />\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

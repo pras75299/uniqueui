@@ -1,0 +1,98 @@
+{
+  "slug": "count-up",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "count-up/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Count Up",
+    "description": "An animated number that counts from a starting value to a target when scrolled into view — essential for metrics and stats sections.",
+    "icon": "Hash",
+    "category": "Text",
+    "props": [
+      {
+        "name": "to",
+        "type": "number",
+        "description": "Target (end) value."
+      },
+      {
+        "name": "from",
+        "type": "number",
+        "default": "0",
+        "description": "Starting value."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "default": "2",
+        "description": "Animation duration in seconds."
+      },
+      {
+        "name": "decimals",
+        "type": "number",
+        "default": "0",
+        "description": "Number of decimal places."
+      },
+      {
+        "name": "prefix",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Prepended string, e.g. \"$\"."
+      },
+      {
+        "name": "suffix",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Appended string, e.g. \"k+\"."
+      },
+      {
+        "name": "separator",
+        "type": "string",
+        "default": "\",\"",
+        "description": "Thousands separator. Pass empty string to disable."
+      },
+      {
+        "name": "once",
+        "type": "boolean",
+        "default": "true",
+        "description": "Only animate on first scroll-enter."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra Tailwind classes."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Theme context."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { CountUp } from \"@/components/ui/count-up\";\n\nexport default function Stats() {\n  return (\n    <div className=\"flex gap-12\">\n      <div className=\"text-center\">\n        <p className=\"text-5xl font-black text-white\">\n          <CountUp to={12400} suffix=\"+\" duration={2.5} />\n        </p>\n        <p className=\"text-neutral-400 mt-1\">Stars on GitHub</p>\n      </div>\n      <div className=\"text-center\">\n        <p className=\"text-5xl font-black text-white\">\n          <CountUp to={99.9} decimals={1} suffix=\"%\" duration={2} />\n        </p>\n        <p className=\"text-neutral-400 mt-1\">Uptime SLA</p>\n      </div>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "CountUp animates a number from a starting value to a target value as it enters the viewport. It supports decimals, prefixes, suffixes, and thousands separators — perfect for stats and metrics sections.",
+      "scenarios": [
+        {
+          "title": "Stats row",
+          "description": "Display key product metrics that animate in when the user scrolls to them.",
+          "code": "import { CountUp } from \"@/components/ui/count-up\";\n\nconst stats = [\n  { label: \"Components\", value: 60, suffix: \"+\" },\n  { label: \"GitHub Stars\", value: 4.2, suffix: \"k\", decimals: 1 },\n  { label: \"Downloads\", value: 120, suffix: \"k+\" },\n];\n\nexport default function StatsRow() {\n  return (\n    <div className=\"grid grid-cols-3 gap-8 text-center\">\n      {stats.map(({ label, value, suffix, decimals }) => (\n        <div key={label}>\n          <p className=\"text-4xl font-bold text-white\">\n            <CountUp to={value} suffix={suffix} decimals={decimals} />\n          </p>\n          <p className=\"text-sm text-neutral-400 mt-1\">{label}</p>\n        </div>\n      ))}\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Revenue counter with currency prefix",
+          "description": "Show an animated revenue or savings figure with a dollar sign prefix.",
+          "code": "import { CountUp } from \"@/components/ui/count-up\";\n\nexport default function RevenueCounter() {\n  return (\n    <div className=\"text-center space-y-1\">\n      <p className=\"text-5xl font-extrabold text-emerald-400\">\n        <CountUp from={0} to={1250000} prefix=\"$\" separator=\",\" duration={2.5} />\n      </p>\n      <p className=\"text-sm text-neutral-400\">Total revenue generated</p>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

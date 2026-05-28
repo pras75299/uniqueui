@@ -1,0 +1,99 @@
+{
+  "slug": "pen-cursor",
+  "registry": {
+    "dependencies": [
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "pen-cursor/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Pen Cursor",
+    "description": "Physics-driven ribbon trail rendered on canvas — a chain of linked points follows the mouse with spring-damping inertia, width scales with speed, and colors interpolate head-to-tail. Inspired by obsidianassembly.com.",
+    "icon": "Edit2",
+    "category": "Cursor Effects",
+    "props": [
+      {
+        "name": "trailLength",
+        "type": "number",
+        "description": "Number of chain-linked trail points. Default 60."
+      },
+      {
+        "name": "maxWidth",
+        "type": "number",
+        "description": "Maximum ribbon width in px (scales with speed). Default 1."
+      },
+      {
+        "name": "minWidth",
+        "type": "number",
+        "description": "Minimum ribbon width in px at the tail. Default 1."
+      },
+      {
+        "name": "damping",
+        "type": "number",
+        "description": "Spring damping for the head point (0–1). Default 0.6."
+      },
+      {
+        "name": "speedInfluence",
+        "type": "number",
+        "description": "How much mouse speed widens the ribbon (0–1). Default 0.9."
+      },
+      {
+        "name": "colorHead",
+        "type": "string",
+        "description": "RGB string for the ribbon head color. Default \"159, 175, 155\" (sage green)."
+      },
+      {
+        "name": "colorTail",
+        "type": "string",
+        "description": "RGB string for the ribbon tail color. Default \"198, 167, 106\" (warm gold)."
+      },
+      {
+        "name": "alphaHead",
+        "type": "number",
+        "description": "Opacity at the ribbon head (0–1). Default 0.9."
+      },
+      {
+        "name": "alphaTail",
+        "type": "number",
+        "description": "Opacity at the ribbon tail (0–1). Default 0."
+      },
+      {
+        "name": "hideSystemCursor",
+        "type": "boolean",
+        "description": "Hide the system cursor while mounted. Default false."
+      },
+      {
+        "name": "containerRef",
+        "type": "RefObject<HTMLElement | null>",
+        "description": "Optional. Limits drawing to this element; parent should be `relative`. Omit for full-window tracking."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the canvas element."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { useRef } from \"react\";\nimport { PenCursor } from \"@/components/ui/pen-cursor\";\n\nexport default function Example() {\n  const containerRef = useRef<HTMLDivElement>(null);\n  return (\n    <div\n      ref={containerRef}\n      className=\"h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center\"\n    >\n      <h3 className=\"text-white text-2xl font-bold uppercase tracking-widest pointer-events-none\">\n        Move your mouse\n      </h3>\n      <PenCursor\n        containerRef={containerRef}\n        trailLength={40}\n        maxWidth={1}\n        colorHead=\"159, 175, 155\"\n        colorTail=\"198, 167, 106\"\n        alphaHead={0.95}\n        damping={0.55}\n      />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "PenCursor draws a ribbon-like ink trail that follows the mouse with spring-driven inertia, tapering from a thick head to a thin tail. Renders on a fullscreen canvas overlay positioned above page content.",
+      "scenarios": [
+        {
+          "title": "Creative portfolio cursor",
+          "description": "Add a painterly ink ribbon cursor to a design or illustration portfolio to reinforce the creative brand.",
+          "code": "\"use client\";\nimport { PenCursor } from \"@/components/ui/pen-cursor\";\n\nexport default function PortfolioPage() {\n  return (\n    <div className=\"relative h-[400px] bg-neutral-950 rounded-2xl flex items-center justify-center\">\n      <PenCursor color=\"#a855f7\" trailLength={60} maxWidth={18} />\n      <h1 className=\"text-5xl font-bold text-white\">My Work</h1>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Handwriting effect on a landing page",
+          "description": "Use a thin, fast trail to simulate a ballpoint pen writing across the screen as users navigate.",
+          "code": "\"use client\";\nimport { PenCursor } from \"@/components/ui/pen-cursor\";\n\nexport default function WritingLanding() {\n  return (\n    <div className=\"relative h-[400px] bg-white rounded-2xl flex items-center justify-center\">\n      <PenCursor color=\"#1e293b\" trailLength={40} maxWidth={8} damping={0.7} />\n      <h1 className=\"text-5xl font-bold text-slate-900\">Write your story.</h1>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

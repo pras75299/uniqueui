@@ -1,0 +1,46 @@
+{
+  "slug": "hero-iridescent-sweep",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "blocks/hero/iridescent-sweep/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Iridescent Sweep Hero",
+    "description": "An editorial, holographic-foil hero. Conic-gradient foil drifts under a turbulence grain; a soft sheen ribbon sweeps across on a slow cadence; the headline ships with a one-shot foil sheen on mount. CSS + SVG + motion only — no WebGL.",
+    "icon": "LucideStars",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-12",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Omit for the default headline + CTAs."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ speed?: number; hue?: number; grain?: number; baseColor?: string; palette?: string[]; className?: string }",
+        "description": "Forwarded to the background layer (`baseColor` + `palette` control the foil; `hue` rotates the whole layer)."
+      }
+    ],
+    "usageCode": "import { IridescentSweepHero } from \"@/components/ui/hero-iridescent-sweep\";\n\nexport default function Hero() {\n  return (\n    <IridescentSweepHero\n      className=\"bg-[#0e0a14] text-white\"\n      backgroundProps={{\n        hue: 0,\n        speed: 22,\n        grain: 0.35,\n        baseColor: \"#0e0a14\",\n        palette: [\"#ff9bd1\", \"#ffd66b\", \"#9bffd6\", \"#6bb5ff\", \"#c89bff\", \"#ff9bd1\"],\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-white/85 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full\"\n          style={{\n            background:\n              \"conic-gradient(from 0deg, #ff9bd1, #ffd66b, #9bffd6, #6bb5ff, #c89bff, #ff9bd1)\",\n            boxShadow: \"0 0 12px 2px rgba(255,255,255,0.4)\",\n          }}\n        />\n        Edition · MMXXVI\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        <span\n          className=\"bg-clip-text text-transparent\"\n          style={{\n            backgroundImage:\n              \"linear-gradient(120deg, #ffffff 0%, #f5e6ff 28%, #ffe9c2 50%, #c8f1ff 72%, #ffffff 100%)\",\n          }}\n        >\n          Pressed in light.\n        </span>\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/75 sm:text-lg\">\n        Conic foil under a turbulence grain, with a sheen that sweeps across\n        the type on a slow cadence. Editorial energy, zero plug-ins.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-neutral-900 transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Reserve a copy</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/25 px-6 text-sm font-medium text-white/90 backdrop-blur transition-colors hover:bg-white/10\"\n        >\n          Read the editorial\n        </button>\n      </div>\n    </IridescentSweepHero>\n  );\n}",
+    "docs": {
+      "overview": "Editorial holographic-foil hero. Pair with serifs or magazine-style typography in your override.",
+      "scenarios": []
+    }
+  }
+}

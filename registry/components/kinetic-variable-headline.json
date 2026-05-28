@@ -1,0 +1,80 @@
+{
+  "slug": "kinetic-variable-headline",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "kinetic-variable-headline/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Kinetic Variable Headline",
+    "description": "A large display headline that animates variable font weight per glyph on entrance and pointer proximity. Letters inflate like a magnetic field while preserving readable text semantics.",
+    "icon": "LucideType",
+    "category": "Text",
+    "addedAt": "2026-05-07",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "Headline text. Supports line breaks via `\\n`."
+      },
+      {
+        "name": "mode",
+        "type": "\"entrance\" | \"pointer\" | \"both\"",
+        "default": "\"both\"",
+        "description": "Animation mode: entrance stagger, pointer magnetic field, or both."
+      },
+      {
+        "name": "weightRange",
+        "type": "[number, number]",
+        "default": "[200, 700]",
+        "description": "Variable font weight range mapped across animations."
+      },
+      {
+        "name": "staggerMs",
+        "type": "number",
+        "default": "25",
+        "description": "Per-letter delay for entrance animation in milliseconds."
+      },
+      {
+        "name": "as",
+        "type": "\"h1\" | \"h2\" | \"h3\"",
+        "default": "\"h1\"",
+        "description": "Semantic heading level."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the headline wrapper."
+      }
+    ],
+    "usageCode": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function Example() {\n  return (\n    <KineticVariableHeadline\n      text=\"CRAFTED MOTION\"\n      mode=\"both\"\n      className=\"text-[clamp(3.5rem,11vw,7.2rem)] uppercase\"\n    />\n  );\n}\n",
+    "docs": {
+      "overview": "KineticVariableHeadline splits text into per-glyph spans and animates each glyph's `font-variation-settings` (`wght`) via springs. In entrance mode, letters rise from low weight to high weight with a left-to-right stagger. In pointer mode, each glyph weight is mapped from distance-to-pointer using a smooth falloff curve, creating a physically coherent magnetic field effect. Reduced-motion users render directly at final weight with no animation. The wrapper includes `aria-label` with the full input text so assistive technologies read a coherent headline even though glyphs are split visually.",
+      "scenarios": [
+        {
+          "title": "Hero headline with entrance choreography",
+          "description": "Use large type and entrance mode to create a premium launch moment above the fold.",
+          "code": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function HeroHeadline() {\n  return (\n    <KineticVariableHeadline\n      text=\"BUILD BOLD\"\n      mode=\"entrance\"\n      className=\"text-[clamp(3.5rem,12vw,8rem)] leading-[0.95]\"\n    />\n  );\n}"
+        },
+        {
+          "title": "Interactive kinetic title",
+          "description": "Pointer mode turns the headline into a responsive magnetic field that reacts to cursor proximity.",
+          "code": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function InteractiveTitle() {\n  return (\n    <KineticVariableHeadline\n      text=\"FEEL THE TYPE\"\n      mode=\"pointer\"\n      weightRange={[220, 780]}\n      className=\"text-[clamp(3rem,11vw,7rem)]\"\n    />\n  );\n}"
+        },
+        {
+          "title": "Multi-line editorial display",
+          "description": "Line breaks are preserved, so stacked statements still animate per glyph.",
+          "code": "import { KineticVariableHeadline } from \"@/components/ui/kinetic-variable-headline\";\n\nexport default function EditorialStack() {\n  return (\n    <KineticVariableHeadline\n      text={\"MAKE\\nIT\\nMOVE\"}\n      mode=\"both\"\n      as=\"h2\"\n      className=\"text-[clamp(3rem,13vw,8rem)] uppercase\"\n    />\n  );\n}"
+        }
+      ]
+    }
+  }
+}

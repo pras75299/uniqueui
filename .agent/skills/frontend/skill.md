@@ -26,8 +26,8 @@ When creating a new component, you **MUST** create/update the following files co
    Create the primary source file for the component here.
 2. **`apps/www/components/ui/[component-name].tsx`**
    Create an exact copy of the source component here so it can be used in the docs/showcase site.
-3. **`registry/config.ts`**
-   Update the registry config to include the new component, specifying its dependencies (e.g., `["motion", "clsx", "tailwind-merge"]`), tailwind properties, and files.
+3. **`registry/components/[component-name].json`**
+   Create the per-component manifest with a `registry` block (dependencies e.g. `["motion", "clsx", "tailwind-merge"]`, `files`, optional tailwind config) and a `docs` block (name, props, scenarios). Add the slug to `order` and `docsOrder` in `registry/manifest.json`.
 4. **`apps/www/app/page.tsx`**
    Add a functional showcase/demo block of your new component on the main page.
 5. **(After Code Generation)**
@@ -118,7 +118,7 @@ export function ComponentName({ className, children, ...props }: ComponentNamePr
 ## 6. Anti-Patterns (Immediate Failure)
 
 ❌ Failing to create the file in BOTH `registry/` and `apps/www/components/ui/`.
-❌ Failing to update `registry/config.ts` and `apps/www/app/page.tsx`.
+❌ Failing to create `registry/components/[component].json` (+ `registry/manifest.json` order) and `apps/www/app/page.tsx`.
 ❌ Creating a standard static button without hover/tap spring feedback.
 ❌ Using standard CSS `transition-all` on everything instead of precise `motion` springs.
 
@@ -128,7 +128,7 @@ export function ComponentName({ className, children, ...props }: ComponentNamePr
 
 Before finalizing output:
 * [ ] Did I create `registry/[component].tsx` and mirror it to `apps/www/components/ui/`?
-* [ ] Did I update `registry/config.ts` with the new component metadata?
+* [ ] Did I create `registry/components/[component].json` and add the slug to `registry/manifest.json`?
 * [ ] Did I add a demo to `apps/www/app/page.tsx`?
 * [ ] Does the component have meaningful, purposeful, physics-based motion?
 * [ ] Is `motion/react` imported correctly and are styles built entirely with Tailwind CSS?

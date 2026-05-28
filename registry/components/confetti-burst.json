@@ -1,0 +1,69 @@
+{
+  "slug": "confetti-burst",
+  "registry": {
+    "dependencies": [
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "confetti-burst/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Confetti Burst",
+    "description": "Click-triggered confetti particle explosion with customizable colors and physics.",
+    "icon": "LucidePartyPopper",
+    "category": "Effects & Animations",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Trigger element wrapped by the particle generation effect zone."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Styling configurations for the interaction wrapper logic container."
+      },
+      {
+        "name": "particleCount",
+        "type": "number",
+        "description": "Quantity multiplier defining how many fragments evaluate per execution."
+      },
+      {
+        "name": "colors",
+        "type": "string[]",
+        "description": "Array defining hex code palettes defining sequential particle rendering."
+      },
+      {
+        "name": "spread",
+        "type": "number",
+        "description": "Radiant measurement indicating geometric angle variance for throwing trajectories."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "description": "Timer limit capping maximum gravity simulation lifetime."
+      }
+    ],
+    "usageCode": "import { ConfettiBurst } from \"@/components/ui/confetti-burst\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-20 text-white\">\n      <ConfettiBurst className=\"rounded-xl p-12 border border-neutral-800 bg-neutral-900/50 hover:border-neutral-700 transition-colors cursor-pointer\">\n        <div className=\"text-center\">\n          <h3 className=\"text-xl font-bold mb-2\">🎉 Click me!</h3>\n          <p className=\"text-neutral-400 text-sm\">Click anywhere on this card for confetti</p>\n        </div>\n      </ConfettiBurst>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "ConfettiBurst fires a particle explosion from a point on screen — perfect for celebrating milestones like a completed form, a successful payment, or an unlocked achievement.",
+      "scenarios": [
+        {
+          "title": "Success after form submission",
+          "description": "Trigger a confetti burst when the user completes a sign-up or checkout form.",
+          "code": "\"use client\";\nimport { ConfettiBurst } from \"@/components/ui/confetti-burst\";\nimport { useState } from \"react\";\n\nexport default function SignupForm() {\n  const [submitted, setSubmitted] = useState(false);\n\n  return (\n    <div className=\"w-full max-w-sm mx-auto p-8 space-y-4\">\n      {submitted ? (\n        <div className=\"text-center text-white py-8\">\n          <p className=\"text-2xl font-bold\">You're in! 🎉</p>\n          <p className=\"text-neutral-400 text-sm mt-2\">Check your inbox for next steps.</p>\n        </div>\n      ) : (\n        <>\n          <input type=\"email\" placeholder=\"Your email\" className=\"w-full px-4 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-white\" />\n          <ConfettiBurst className=\"w-full rounded-xl\">\n            <button\n              onClick={() => setSubmitted(true)}\n              className=\"w-full py-3 bg-purple-600 text-white rounded-xl font-semibold\"\n            >\n              Join waitlist\n            </button>\n          </ConfettiBurst>\n        </>\n      )}\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Achievement unlock",
+          "description": "Celebrate when a user reaches a milestone inside a dashboard or onboarding flow.",
+          "code": "\"use client\";\nimport { ConfettiBurst } from \"@/components/ui/confetti-burst\";\nimport { useState } from \"react\";\nimport { Trophy } from \"lucide-react\";\n\nexport default function AchievementCard() {\n  const [unlocked, setUnlocked] = useState(false);\n\n  return (\n    <div className=\"p-6 rounded-2xl border border-neutral-800 bg-neutral-900 text-center space-y-4 max-w-xs mx-auto mt-20\">\n      <Trophy className={`w-10 h-10 mx-auto transition-colors ${unlocked ? \"text-yellow-400\" : \"text-neutral-600\"}`} />\n      <p className=\"text-white font-semibold\">First component added</p>\n      {!unlocked ? (\n        <ConfettiBurst particleCount={80} className=\"inline-block\">\n          <button\n            onClick={() => setUnlocked(true)}\n            className=\"px-5 py-2 bg-purple-600 text-white rounded-xl text-sm font-medium\"\n          >\n            Claim reward\n          </button>\n        </ConfettiBurst>\n      ) : (\n        <p className=\"text-yellow-400 text-sm font-medium\">Achievement unlocked! 🏆</p>\n      )}\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}
