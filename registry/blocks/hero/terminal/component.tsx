@@ -340,6 +340,9 @@ export function Terminal({
       <div className="space-y-1 p-4 leading-relaxed" aria-hidden="true">
         {history.map((line, i) =>
           line.kind === "command" ? (
+            // Command lines render instantly: they take the row the active
+            // typing line just occupied, so animating them would re-collapse
+            // text that is already on screen.
             <div key={i} className="whitespace-pre-wrap break-all">
               {renderPrompt()}
               <CommandTokens
@@ -349,12 +352,20 @@ export function Terminal({
               />
             </div>
           ) : (
-            <div
+            // Output lines reveal their height so a multi-line batch grows the
+            // window with a spring instead of snapping open.
+            <motion.div
               key={i}
-              className={cn("whitespace-pre-wrap break-all", outputClass)}
+              initial={reduceMotion ? false : { height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              transition={{ type: "spring", stiffness: 420, damping: 38 }}
+              className={cn(
+                "overflow-hidden whitespace-pre-wrap break-all",
+                outputClass,
+              )}
             >
               {line.text}
-            </div>
+            </motion.div>
           ),
         )}
         {!done && (
