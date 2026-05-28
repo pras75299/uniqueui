@@ -1,0 +1,95 @@
+{
+  "slug": "hover-reveal-card",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "hover-reveal-card/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Hover Reveal Card",
+    "description": "Card that displays an image with teaser content, then slides up a full details panel on hover with staggered Motion.dev animations.",
+    "icon": "Layers",
+    "category": "Cards",
+    "props": [
+      {
+        "name": "image",
+        "type": "string",
+        "description": "URL of the image displayed as the card's primary visual."
+      },
+      {
+        "name": "imageAlt",
+        "type": "string",
+        "description": "Accessible alt text attached to the img element."
+      },
+      {
+        "name": "tag",
+        "type": "string",
+        "description": "Small uppercase label rendered above the heading in both states."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Primary headline text displayed in both the default and reveal states."
+      },
+      {
+        "name": "subtitle",
+        "type": "string",
+        "description": "Supporting line shown beneath the title in the default state and as a footer in the reveal panel."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Extended body copy that appears only inside the slide-up hover panel."
+      },
+      {
+        "name": "ctaText",
+        "type": "string",
+        "description": "Call-to-action label rendered at the bottom of the hover panel."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "When supplied the wrapper renders as an anchor element pointing to this URL."
+      },
+      {
+        "name": "accentColor",
+        "type": "string",
+        "description": "Hex or CSS colour driving the tag, CTA text, and border-glow accent."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Tailwind utility classes forwarded onto the outermost card wrapper."
+      },
+      {
+        "name": "imageHeight",
+        "type": "number",
+        "description": "Pixel height reserved for the image section before the content area."
+      }
+    ],
+    "usageCode": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-6 items-start justify-center p-10\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80\"\n        imageAlt=\"People at a conference table\"\n        tag=\"AI\"\n        title=\"AI for inclusive growth: Leadership lessons from Davos\"\n        subtitle=\"Article\"\n        description=\"What are the practical ways to ensure AI expands opportunity, strengthens resilience and supports a more inclusive, equitable future?\"\n        ctaText=\"Read the article →\"\n        accentColor=\"#6366f1\"\n        imageHeight={220}\n        className=\"w-72\"\n      />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "HoverRevealCard slides a rich content panel up from the bottom of an image card on hover, replacing the static caption with a description, CTA, and accent glow. Great for portfolio grids and blog previews.",
+      "scenarios": [
+        {
+          "title": "Portfolio project grid",
+          "description": "Display project thumbnails that reveal a description and link when hovered.",
+          "code": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function PortfolioGrid() {\n  return (\n    <div className=\"grid grid-cols-2 gap-4 p-6 max-w-2xl\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400\"\n        tag=\"Case Study\"\n        title=\"Redesigning the checkout flow\"\n        description=\"How we cut drop-off by 32% with micro-interactions and clear progress indicators.\"\n        ctaText=\"Read case study →\"\n        accentColor=\"#6366f1\"\n      />\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1547658719-da2b51169166?w=400\"\n        tag=\"Design System\"\n        title=\"Building a token-first design system\"\n        description=\"A deep dive into semantic tokens, component primitives, and dark mode support.\"\n        ctaText=\"Explore →\"\n        accentColor=\"#a855f7\"\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Blog post preview cards",
+          "description": "Turn a simple blog listing into an interactive card grid with article descriptions on hover.",
+          "code": "import { HoverRevealCard } from \"@/components/ui/hover-reveal-card\";\n\nexport default function BlogPreview() {\n  return (\n    <div className=\"p-6 max-w-md\">\n      <HoverRevealCard\n        image=\"https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400\"\n        tag=\"Engineering\"\n        title=\"Why we chose motion/react over framer-motion\"\n        subtitle=\"April 18, 2026\"\n        description=\"A technical deep dive into bundle size, API surface, and ecosystem compatibility.\"\n        ctaText=\"Read more →\"\n        accentColor=\"#22c55e\"\n        imageHeight={200}\n      />\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "hero-liquid-aurora-mesh",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "blocks/hero/liquid-aurora-mesh/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Liquid Aurora Mesh Hero",
+    "description": "An aurora-mesh hero whose colour ribbons drift through an SVG turbulence-displacement filter for an organic, fluid look. Mouse-reactive light pool follows the cursor with a spring; headline words rise on mount via per-word reveal. Pure CSS + SVG + motion — no WebGL deps.",
+    "icon": "LucideWaves",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-12",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Omit for the default headline + CTAs."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ palette?: [string, string, string]; speed?: number; className?: string }",
+        "description": "Forwarded to the background layer."
+      }
+    ],
+    "usageCode": "import { LiquidAuroraMeshHero } from \"@/components/ui/hero-liquid-aurora-mesh\";\n\nexport default function Hero() {\n  return (\n    <LiquidAuroraMeshHero\n      backgroundProps={{\n        palette: [\"#9b6bff\", \"#3effd0\", \"#ff77c4\"],\n        speed: 14,\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full bg-emerald-300/90 shadow-[0_0_12px_2px] shadow-emerald-300/40\"\n        />\n        Liquid · Aurora · Mesh\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Light, made fluid.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A displacement-warped aurora mesh that drifts behind your headline.\n        Mouse where you want the light to pool.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Get started</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          See it move\n        </button>\n      </div>\n    </LiquidAuroraMeshHero>\n  );\n}",
+    "docs": {
+      "overview": "A displacement-warped aurora mesh hero. The background is a separate export, so it can layer behind any section.",
+      "scenarios": []
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "slug": "cursor-trail",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "cursor-trail/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Cursor Trail",
+    "description": "Glowing trail that follows the cursor with decay physics, like a sparkler or comet tail.",
+    "icon": "LayoutGrid",
+    "category": "Cursor Effects",
+    "props": [
+      {
+        "name": "color",
+        "type": "string",
+        "description": "The color of the trail particles."
+      },
+      {
+        "name": "trailLength",
+        "type": "number",
+        "description": "Maximum number of particles rendering concurrently."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "description": "Base size of the trailing particle dots."
+      },
+      {
+        "name": "decayDuration",
+        "type": "number",
+        "description": "How long it takes for a drawn particle to fade and shrink out."
+      }
+    ],
+    "usageCode": "import { CursorTrail } from \"@/components/ui/cursor-trail\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full relative bg-neutral-950 overflow-hidden flex items-center justify-center\">\n      <h3 className=\"text-white text-2xl font-bold uppercase tracking-widest pointer-events-none\">\n        Move your mouse\n      </h3>\n      \n      {/* Ensures it captures pointer events across the block but doesn't block the content */}\n      <CursorTrail \n        color=\"#a855f7\"\n        size={14}\n        trailLength={25}\n        decayDuration={0.6}\n      />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "CursorTrail renders a sequence of fading particles that follow the cursor across the page, creating a comet-like tail effect. Trail length, size, colour, and decay speed are all configurable.",
+      "scenarios": [
+        {
+          "title": "Magic wand cursor for interactive demos",
+          "description": "Enable a glowing trail on a dedicated demo page to delight visitors and signal interactivity.",
+          "code": "\"use client\";\nimport { CursorTrail } from \"@/components/ui/cursor-trail\";\n\nexport default function MagicDemo() {\n  return (\n    <div className=\"relative h-[400px] bg-neutral-950 rounded-2xl flex items-center justify-center overflow-hidden\">\n      <CursorTrail color=\"#a855f7\" trailLength={30} size={14} />\n      <p className=\"text-neutral-400 text-lg pointer-events-none\">Move your cursor around</p>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Brand-coloured trail on a landing page",
+          "description": "Match the trail colour to your primary brand colour for a cohesive, premium feel.",
+          "code": "\"use client\";\nimport { CursorTrail } from \"@/components/ui/cursor-trail\";\n\nexport default function BrandedLanding() {\n  return (\n    <div className=\"relative h-[400px] bg-black rounded-2xl flex items-center justify-center\">\n      <CursorTrail color=\"#6366f1\" trailLength={20} size={10} decayDuration={0.6} />\n      <h1 className=\"text-5xl font-bold text-white\">Welcome</h1>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

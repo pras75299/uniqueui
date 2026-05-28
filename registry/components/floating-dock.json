@@ -1,0 +1,95 @@
+{
+  "slug": "floating-dock",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "floating-dock/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Floating Dock",
+    "description": "macOS-style dock with magnetic scaling, spring physics, and tooltips.",
+    "icon": "Anchor",
+    "category": "Navigation & Overlays",
+    "props": [
+      {
+        "name": "items",
+        "type": "{",
+        "description": "Array defining mapping configuration objects containing icons and references."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": "A unique mapping identifier referencing the component node."
+      },
+      {
+        "name": "icon",
+        "type": "React.ReactNode",
+        "description": "The SVG image rendered actively on the dock interface."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "String payload rendered inside the expanding tooltip layout."
+      },
+      {
+        "name": "onClick",
+        "type": "() => void",
+        "description": "Routine capturing specific explicit interactions mapped to the dock region."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "Link routing path if the interface object encapsulates an anchor tag natively."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Description coming soon"
+      },
+      {
+        "name": "iconSize",
+        "type": "number",
+        "description": "Description coming soon"
+      },
+      {
+        "name": "maxScale",
+        "type": "number",
+        "description": "Description coming soon"
+      },
+      {
+        "name": "magneticRange",
+        "type": "number",
+        "description": "Description coming soon"
+      }
+    ],
+    "usageCode": "import { FloatingDock } from \"@/components/ui/floating-dock\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex items-center justify-center p-20 text-white\">\n      <FloatingDock\n        items={[\n          { id: \"home\", icon: <span className=\"text-xl\">🏠</span>, label: \"Home\" },\n          { id: \"search\", icon: <span className=\"text-xl\">✨</span>, label: \"Search\" },\n          { id: \"layers\", icon: <span className=\"text-xl\">📚</span>, label: \"Layers\" },\n          { id: \"scroll\", icon: <span className=\"text-xl\">📜</span>, label: \"Scroll\" },\n          { id: \"terminal\", icon: <span className=\"text-xl\">💻</span>, label: \"Terminal\" },\n        ]}\n      />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "FloatingDock renders a macOS-style icon dock with a magnetic magnification effect. Icons near the cursor scale up smoothly, making navigation feel interactive and playful.",
+      "scenarios": [
+        {
+          "title": "App bottom navigation",
+          "description": "Replace a static mobile nav bar with a floating dock for a more expressive feel.",
+          "code": "import { FloatingDock } from \"@/components/ui/floating-dock\";\nimport { Home, Search, Bell, User, Settings } from \"lucide-react\";\n\nconst navItems = [\n  { title: \"Home\", icon: <Home className=\"w-5 h-5\" />, href: \"/\" },\n  { title: \"Search\", icon: <Search className=\"w-5 h-5\" />, href: \"/search\" },\n  { title: \"Notifications\", icon: <Bell className=\"w-5 h-5\" />, href: \"/notifications\" },\n  { title: \"Profile\", icon: <User className=\"w-5 h-5\" />, href: \"/profile\" },\n  { title: \"Settings\", icon: <Settings className=\"w-5 h-5\" />, href: \"/settings\" },\n];\n\nexport default function AppNav() {\n  return (\n    <div className=\"fixed bottom-8 left-1/2 -translate-x-1/2 z-50\">\n      <FloatingDock items={navItems} />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Social media quick-share dock",
+          "description": "A share toolbar that floats alongside article content for quick social sharing.",
+          "code": "import { FloatingDock } from \"@/components/ui/floating-dock\";\nimport { X, Globe, Link2, Bookmark } from \"lucide-react\";\n\nconst shareItems = [\n  { title: \"Share on X\", icon: <X className=\"w-5 h-5\" />, href: \"#\" },\n  { title: \"Share on LinkedIn\", icon: <Globe className=\"w-5 h-5\" />, href: \"#\" },\n  { title: \"Copy link\", icon: <Link2 className=\"w-5 h-5\" />, href: \"#\" },\n  { title: \"Bookmark\", icon: <Bookmark className=\"w-5 h-5\" />, href: \"#\" },\n];\n\nexport default function ShareDock() {\n  return (\n    <aside className=\"fixed right-6 top-1/2 -translate-y-1/2 hidden lg:block\">\n      <FloatingDock items={shareItems} direction=\"vertical\" />\n    </aside>\n  );\n}"
+        },
+        {
+          "title": "Document editor toolbar",
+          "description": "A compact formatting toolbar with magnification for a rich-text or canvas editor.",
+          "code": "import { FloatingDock } from \"@/components/ui/floating-dock\";\nimport { Bold, Italic, Underline, AlignLeft, AlignCenter, List, Image } from \"lucide-react\";\n\nconst toolbarItems = [\n  { title: \"Bold\", icon: <Bold className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Italic\", icon: <Italic className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Underline\", icon: <Underline className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Align left\", icon: <AlignLeft className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Center\", icon: <AlignCenter className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"List\", icon: <List className=\"w-4 h-4\" />, href: \"#\" },\n  { title: \"Image\", icon: <Image className=\"w-4 h-4\" />, href: \"#\" },\n];\n\nexport default function EditorToolbar() {\n  return (\n    <div className=\"flex justify-center py-4\">\n      <FloatingDock items={toolbarItems} magnification={52} distance={100} />\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

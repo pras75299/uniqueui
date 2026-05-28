@@ -1,0 +1,90 @@
+{
+  "slug": "drawer-slide",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "drawer-slide/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Drawer Slide",
+    "description": "Slide-out drawer panel with drag-to-dismiss, spring physics, and backdrop blur. Portals above page chrome by default.",
+    "icon": "LucidePanelRight",
+    "category": "Navigation & Overlays",
+    "props": [
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "description": "React state abstraction determining visible rendering."
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": "Method triggered when dismiss actions evaluation (drag, backdrop, external limit)."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Content rendered inside the active sliding sheet."
+      },
+      {
+        "name": "position",
+        "type": "DrawerPosition",
+        "description": "Anchoring enumeration bounding left, right, top, or bottom screen edges."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Specific styling modifiers passing onto the physical sliding panel."
+      },
+      {
+        "name": "overlayClassName",
+        "type": "string",
+        "description": "Specific styling modifiers passing onto the dimming backdrop."
+      },
+      {
+        "name": "width",
+        "type": "string",
+        "description": "CSS explicit translation sizing left/right sliding panels."
+      },
+      {
+        "name": "height",
+        "type": "string",
+        "description": "CSS explicit translation sizing top/bottom sliding panels."
+      },
+      {
+        "name": "dragToClose",
+        "type": "boolean",
+        "description": "Map touch swiping events onto gesture recognizers supporting drag dismiss."
+      },
+      {
+        "name": "usePortal",
+        "type": "boolean",
+        "description": "When true (default), portals overlay and panel to document.body with z-index above sticky headers."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { useState } from \"react\";\nimport { DrawerSlide } from \"@/components/ui/drawer-slide\";\n\nexport default function Example() {\n  const [drawerOpen, setDrawerOpen] = useState(false);\n  return (\n    <>\n      <div className=\"flex items-center justify-center p-20\">\n        <button\n          onClick={() => setDrawerOpen(true)}\n          className=\"px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-colors font-medium\"\n        >\n          Open Drawer\n        </button>\n      </div>\n      <DrawerSlide isOpen={drawerOpen} onClose={() => setDrawerOpen(false)}>\n        <h3 className=\"text-xl font-bold mb-4 text-white\">Drawer Content</h3>\n        <p className=\"text-neutral-400 mb-4\">\n          This drawer slides in from the right with spring physics. You can drag it to dismiss.\n        </p>\n        <button\n          onClick={() => setDrawerOpen(false)}\n          className=\"px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors text-sm\"\n        >\n          Close Drawer\n        </button>\n      </DrawerSlide>\n    </>\n  );\n}",
+    "docs": {
+      "overview": "DrawerSlide animates a panel in from any screen edge (left, right, top, bottom) over a blurred overlay. Supports drag-to-close, keyboard Escape dismissal, and aria-modal focus trapping.",
+      "scenarios": [
+        {
+          "title": "Navigation sidebar",
+          "description": "Open a left-edge drawer for primary navigation on mobile layouts.",
+          "code": "\"use client\";\nimport { DrawerSlide } from \"@/components/ui/drawer-slide\";\nimport { useState } from \"react\";\n\nexport default function NavDrawer() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <button\n        onClick={() => setOpen(true)}\n        className=\"px-4 py-2 bg-neutral-800 text-white rounded-lg text-sm\"\n      >\n        Open menu\n      </button>\n      <DrawerSlide isOpen={open} onClose={() => setOpen(false)} position=\"left\" width=\"280px\" ariaLabel=\"Navigation menu\">\n        <nav className=\"space-y-2\">\n          {[\"Home\", \"Components\", \"Docs\", \"GitHub\"].map((item) => (\n            <a key={item} href=\"#\" className=\"block px-3 py-2 rounded-lg text-neutral-300 hover:bg-neutral-800 text-sm\">\n              {item}\n            </a>\n          ))}\n        </nav>\n      </DrawerSlide>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Bottom sheet for mobile actions",
+          "description": "Use a bottom-edge drawer as a mobile action sheet instead of a modal dialog.",
+          "code": "\"use client\";\nimport { DrawerSlide } from \"@/components/ui/drawer-slide\";\nimport { useState } from \"react\";\n\nexport default function ActionSheet() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <button\n        onClick={() => setOpen(true)}\n        className=\"px-4 py-2 bg-neutral-800 text-white rounded-lg text-sm\"\n      >\n        Share\n      </button>\n      <DrawerSlide isOpen={open} onClose={() => setOpen(false)} position=\"bottom\" height=\"220px\" ariaLabel=\"Share options\">\n        <div className=\"space-y-3\">\n          <h3 className=\"text-white font-semibold\">Share this page</h3>\n          {[\"Copy link\", \"Share to Twitter\", \"Share to LinkedIn\"].map((action) => (\n            <button key={action} onClick={() => setOpen(false)} className=\"w-full text-left px-4 py-3 rounded-lg bg-neutral-800/50 text-neutral-300 text-sm\">\n              {action}\n            </button>\n          ))}\n        </div>\n      </DrawerSlide>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

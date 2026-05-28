@@ -1,0 +1,46 @@
+{
+  "slug": "hero-noise-dot-field",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "blocks/hero/noise-dot-field/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Noise Dot Field Hero",
+    "description": "A canvas-rendered hero block. A dense dot grid is displaced by a sine-wave noise field and parts smoothly around the cursor with a falloff pocket. Honors `prefers-reduced-motion`, devicePixelRatio-aware, and ships with zero external animation deps beyond `motion`.",
+    "icon": "LucideGrid3x3",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-12",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Omit for the default headline + CTAs."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ spacing?: number; color?: string; pocketRadius?: number; className?: string }",
+        "description": "Forwarded to the canvas background layer."
+      }
+    ],
+    "usageCode": "import { NoiseDotFieldHero } from \"@/components/ui/hero-noise-dot-field\";\n\nexport default function Hero() {\n  return (\n    <NoiseDotFieldHero\n      backgroundProps={{\n        spacing: 28,\n        color: \"rgba(255,255,255,0.85)\",\n        pocketRadius: 180,\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full bg-cyan-300/90 shadow-[0_0_10px_2px] shadow-cyan-300/40\"\n        />\n        Field · 0x004\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Engineered, down to the pixel.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A canvas-rendered dot grid that displaces with a sine-wave noise field\n        and parts around your cursor. No external animation deps.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Read the spec</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 font-mono text-xs uppercase tracking-[0.18em] text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          View source\n        </button>\n      </div>\n    </NoiseDotFieldHero>\n  );\n}",
+    "docs": {
+      "overview": "Canvas-rendered dot-field hero. Background is a separate export and can be reused under any composition.",
+      "scenarios": []
+    }
+  }
+}

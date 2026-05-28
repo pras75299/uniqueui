@@ -1,0 +1,70 @@
+{
+  "slug": "infinite-marquee",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "infinite-marquee/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Infinite Marquee",
+    "description": "Seamless infinite-scrolling ticker with pause-on-hover and variable speed.",
+    "icon": "LucideScrollText",
+    "category": "Effects & Animations",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Individual cards, images, or elements you want scrolling seamlessly."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Styling classes mapping to the outer tracking viewport."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "description": "Scrolling velocity, representing translation pixels per second."
+      },
+      {
+        "name": "direction",
+        "type": "\"left\" | \"right\"",
+        "description": "Horizontal (left/right) scroll direction."
+      },
+      {
+        "name": "pauseOnHover",
+        "type": "boolean",
+        "description": "Temporarily pause the animation sequence when a user points at the element."
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "description": "Consistent spacing separating each repeated instance loop."
+      }
+    ],
+    "usageCode": "import { InfiniteMarquee, MarqueeItem } from \"@/components/ui/infinite-marquee\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-6 w-full p-10 overflow-hidden\">\n      <InfiniteMarquee speed={30}>\n        {[\n          \"React\",\n          \"Next.js\",\n          \"TypeScript\",\n          \"Tailwind\",\n          \"Motion\",\n          \"UniqueUI\",\n          \"Vercel\",\n          \"Node.js\",\n        ].map((item) => (\n          <MarqueeItem key={item}>\n            <span className=\"text-sm font-medium text-neutral-300\">{item}</span>\n          </MarqueeItem>\n        ))}\n      </InfiniteMarquee>\n      <InfiniteMarquee speed={20} direction=\"right\">\n        {[\n          \"⚡ Fast\",\n          \"🎨 Beautiful\",\n          \"♿ Accessible\",\n          \"📱 Responsive\",\n          \"🔧 Customizable\",\n          \"🚀 Production Ready\",\n        ].map((item) => (\n          <MarqueeItem key={item} className=\"bg-purple-950/30 border-purple-800/50\">\n            <span className=\"text-sm font-medium text-purple-300\">{item}</span>\n          </MarqueeItem>\n        ))}\n      </InfiniteMarquee>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "InfiniteMarquee continuously scrolls a row of items horizontally, looping seamlessly. It's commonly used for logo strips, testimonial tickers, and feature highlights.",
+      "scenarios": [
+        {
+          "title": "Client logo strip",
+          "description": "Showcase trusted brand logos below the hero section to build social proof.",
+          "code": "import { InfiniteMarquee } from \"@/components/ui/infinite-marquee\";\n\nconst logos = [\"Vercel\", \"Stripe\", \"Linear\", \"Notion\", \"Figma\", \"GitHub\"];\n\nexport default function LogoStrip() {\n  return (\n    <div className=\"py-12 border-y border-neutral-800\">\n      <InfiniteMarquee speed={30} gap={64}>\n        {logos.map((name) => (\n          <span key={name} className=\"text-lg font-semibold text-neutral-500 shrink-0\">\n            {name}\n          </span>\n        ))}\n      </InfiniteMarquee>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Bidirectional feature ticker",
+          "description": "Two rows scrolling in opposite directions create depth and visual interest for a features section.",
+          "code": "import { InfiniteMarquee } from \"@/components/ui/infinite-marquee\";\n\nconst row1 = [\"Motion.dev springs\", \"Copy-paste DX\", \"Dark mode\", \"TypeScript-first\"];\nconst row2 = [\"Zero config\", \"Tailwind CSS v4\", \"Single-file\", \"Accessible\"];\n\nexport default function FeatureTicker() {\n  return (\n    <div className=\"space-y-3 py-10 overflow-hidden\">\n      <InfiniteMarquee speed={25} direction=\"left\">\n        {row1.map((f) => (\n          <span key={f} className=\"px-4 py-1.5 rounded-full border border-neutral-700 text-sm text-neutral-300 shrink-0\">\n            {f}\n          </span>\n        ))}\n      </InfiniteMarquee>\n      <InfiniteMarquee speed={25} direction=\"right\">\n        {row2.map((f) => (\n          <span key={f} className=\"px-4 py-1.5 rounded-full border border-purple-500/30 text-sm text-purple-300 shrink-0\">\n            {f}\n          </span>\n        ))}\n      </InfiniteMarquee>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

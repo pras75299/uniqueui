@@ -1,0 +1,65 @@
+{
+  "slug": "morphing-modal",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "morphing-modal/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Morphing Modal",
+    "description": "Modal that expands from the trigger element with spring physics and backdrop blur.",
+    "icon": "LucideMaximize2",
+    "category": "Navigation & Overlays",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The payload rendering inside the physical boundaries of the modal dialog box."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Tailwind definitions passing specific sizes and visuals onto the dialog constraint."
+      },
+      {
+        "name": "layoutId",
+        "type": "string",
+        "description": "Unique arbitrary string utilized by Framer Motion to tie trigger layout transitions."
+      },
+      {
+        "name": "onClick",
+        "type": "() => void",
+        "description": "Description coming soon"
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { useState } from \"react\";\nimport { MorphingModal, MorphingModalTrigger } from \"@/components/ui/morphing-modal\";\n\nexport default function Example() {\n  const [modalOpen, setModalOpen] = useState(false);\n  return (\n    <>\n      <div className=\"flex items-center justify-center p-20\">\n        <MorphingModalTrigger\n          layoutId=\"modal-demo\"\n          onClick={() => setModalOpen(true)}\n          className=\"p-6 rounded-xl bg-neutral-900/50 border border-neutral-800 hover:border-neutral-700 transition-colors max-w-xs text-white\"\n        >\n          <h3 className=\"text-lg font-bold mb-2\">Click to open modal</h3>\n          <p className=\"text-neutral-400 text-sm\">\n            This card morphs into a modal with spring physics.\n          </p>\n        </MorphingModalTrigger>\n      </div>\n      <MorphingModal\n        isOpen={modalOpen}\n        onClose={() => setModalOpen(false)}\n        layoutId=\"modal-demo\"\n      >\n        <div className=\"pt-4 text-white\">\n          <h3 className=\"text-2xl font-bold mb-4\">Morphing Modal</h3>\n          <p className=\"text-neutral-400 mb-6\">\n            This modal expands from the trigger element with spring-based animation. It supports\n            Escape key to close, click-outside to dismiss, and an animated close button.\n          </p>\n          <div className=\"flex gap-3\">\n            <button\n              onClick={() => setModalOpen(false)}\n              className=\"px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 transition-colors text-sm font-medium\"\n            >\n              Got it\n            </button>\n            <button\n              onClick={() => setModalOpen(false)}\n              className=\"px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors text-sm font-medium text-neutral-300\"\n            >\n              Cancel\n            </button>\n          </div>\n        </div>\n      </MorphingModal>\n    </>\n  );\n}",
+    "docs": {
+      "overview": "MorphingModal animates open/close with a spring-driven scale and blur, making overlays feel fluid rather than jarring. Supports a trigger element for shared-layout animations.",
+      "scenarios": [
+        {
+          "title": "Confirmation dialog",
+          "description": "Use the modal for destructive actions — a focused modal prevents accidental clicks better than inline prompts.",
+          "code": "\"use client\";\nimport { MorphingModal } from \"@/components/ui/morphing-modal\";\nimport { useState } from \"react\";\n\nexport default function ConfirmDelete() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <button\n        onClick={() => setOpen(true)}\n        className=\"px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg text-sm\"\n      >\n        Delete project\n      </button>\n\n      <MorphingModal isOpen={open} onClose={() => setOpen(false)}>\n        <div className=\"p-6 space-y-4 max-w-sm\">\n          <h2 className=\"text-lg font-semibold text-white\">Are you sure?</h2>\n          <p className=\"text-sm text-neutral-400\">\n            This will permanently delete the project and all its data. This action cannot be undone.\n          </p>\n          <div className=\"flex gap-3 pt-2\">\n            <button\n              onClick={() => setOpen(false)}\n              className=\"flex-1 py-2 rounded-lg border border-neutral-700 text-neutral-300 text-sm\"\n            >\n              Cancel\n            </button>\n            <button className=\"flex-1 py-2 rounded-lg bg-red-600 text-white text-sm font-medium\">Delete</button>\n          </div>\n        </div>\n      </MorphingModal>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Image / media preview",
+          "description": "Expand a thumbnail into a full preview with a smooth morph transition.",
+          "code": "\"use client\";\nimport { MorphingModal } from \"@/components/ui/morphing-modal\";\nimport { useState } from \"react\";\n\nexport default function ImagePreview() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <div\n        onClick={() => setOpen(true)}\n        className=\"w-32 h-20 rounded-lg cursor-zoom-in bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-xs font-medium\"\n      >\n        Click to expand\n      </div>\n\n      <MorphingModal isOpen={open} onClose={() => setOpen(false)}>\n        <div className=\"p-4 space-y-3\">\n          <div className=\"w-full h-48 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500\" />\n          <p className=\"text-sm text-neutral-400 text-center\">Full-size preview</p>\n        </div>\n      </MorphingModal>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Multi-step onboarding modal",
+          "description": "Use internal state to drive a step-by-step flow inside a single modal instance.",
+          "code": "\"use client\";\nimport { MorphingModal } from \"@/components/ui/morphing-modal\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst steps = [\"Welcome\", \"Choose plan\", \"You're ready\"];\n\nexport default function OnboardingModalDemo() {\n  const [open, setOpen] = useState(false);\n  const [step, setStep] = useState(0);\n\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <button\n        onClick={() => { setStep(0); setOpen(true); }}\n        className=\"px-6 py-3 bg-purple-600 text-white rounded-xl font-medium\"\n      >\n        Start onboarding\n      </button>\n\n      <MorphingModal isOpen={open} onClose={() => setOpen(false)}>\n        <div className=\"p-8 w-full max-w-md space-y-6\">\n          <div className=\"flex gap-1.5\">\n            {steps.map((_, i) => (\n              <div key={i} className={`h-1 flex-1 rounded-full transition-colors ${i <= step ? \"bg-purple-500\" : \"bg-neutral-700\"}`} />\n            ))}\n          </div>\n          <AnimatePresence mode=\"wait\">\n            <motion.div key={step} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }} className=\"space-y-2\">\n              <h2 className=\"text-xl font-bold text-white\">{steps[step]}</h2>\n              <p className=\"text-sm text-neutral-400\">Step {step + 1} of {steps.length}</p>\n            </motion.div>\n          </AnimatePresence>\n          <button\n            onClick={() => step < steps.length - 1 ? setStep(s => s + 1) : setOpen(false)}\n            className=\"w-full py-2.5 bg-purple-600 text-white rounded-xl font-medium\"\n          >\n            {step < steps.length - 1 ? \"Continue\" : \"Finish\"}\n          </button>\n        </div>\n      </MorphingModal>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

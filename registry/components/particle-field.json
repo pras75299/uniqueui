@@ -1,0 +1,74 @@
+{
+  "slug": "particle-field",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "particle-field/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Particle Field",
+    "description": "Canvas-based floating particles with mouse-repulsion physics and responsive connecting lines.",
+    "icon": "LucideSparkles",
+    "category": "Backgrounds",
+    "props": [
+      {
+        "name": "particleCount",
+        "type": "number",
+        "description": "The number of particles rendered dynamically."
+      },
+      {
+        "name": "particleColor",
+        "type": "string | string[]",
+        "description": "One hex color or an array of hex colors for particles and connecting lines."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "description": "The base movement speed multiplier."
+      },
+      {
+        "name": "interactionRadius",
+        "type": "number",
+        "description": "The pixel radius for the mouse repulsion event."
+      }
+    ],
+    "usageCode": "import { ParticleField } from \"@/components/ui/particle-field\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950\">\n      <div className=\"absolute inset-0 z-10 pointer-events-none flex items-center justify-center\">\n        <h3 className=\"text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500\">\n          Hover Around\n        </h3>\n      </div>\n      <ParticleField \n        particleCount={120}\n        particleColor={[\"#a855f7\", \"#06b6d4\", \"#f472b6\"]}\n        speed={0.5}\n      />\n    </div>\n  );\n}",
+    "variants": [
+      {
+        "id": "single",
+        "label": "Single Color",
+        "demoKey": "particle-field/single",
+        "usageCode": "import { ParticleField } from \"@/components/ui/particle-field\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950\">\n      <div className=\"absolute inset-0 z-10 pointer-events-none flex items-center justify-center\">\n        <h3 className=\"text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500\">\n          Hover Around\n        </h3>\n      </div>\n      <ParticleField\n        particleCount={120}\n        particleColor=\"#a855f7\"\n        speed={0.5}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "multi",
+        "label": "Multi Color",
+        "demoKey": "particle-field/multi",
+        "usageCode": "import { ParticleField } from \"@/components/ui/particle-field\";\n\nexport default function Example() {\n  return (\n    <div className=\"rounded-xl overflow-hidden border border-neutral-800 h-[400px] w-full relative bg-neutral-950\">\n      <div className=\"absolute inset-0 z-10 pointer-events-none flex items-center justify-center\">\n        <h3 className=\"text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-500\">\n          Hover Around\n        </h3>\n      </div>\n      <ParticleField\n        particleCount={120}\n        particleColor={[\"#a855f7\", \"#06b6d4\", \"#f472b6\"]}\n        speed={0.5}\n      />\n    </div>\n  );\n}"
+      }
+    ],
+    "docs": {
+      "overview": "ParticleField renders a canvas-based animated particle system that reacts to cursor proximity. Particles drift, connect with lines when close, and scatter away from the mouse.",
+      "scenarios": [
+        {
+          "title": "Ambient hero background",
+          "description": "Use as a full-section background layer behind hero text for a subtle, living atmosphere.",
+          "code": "import { ParticleField } from \"@/components/ui/particle-field\";\n\nexport default function ParticleHero() {\n  return (\n    <ParticleField className=\"h-[400px] rounded-2xl flex items-center justify-center\" particleCount={80} particleColor=\"#6366f1\">\n      <div className=\"text-center space-y-3 relative z-10\">\n        <h1 className=\"text-5xl font-bold text-white\">Particle Field</h1>\n        <p className=\"text-neutral-400\">Move your cursor to interact with the particles.</p>\n      </div>\n    </ParticleField>\n  );\n}"
+        },
+        {
+          "title": "Feature section accent",
+          "description": "Apply to an individual feature card panel to add depth without distracting from the content.",
+          "code": "import { ParticleField } from \"@/components/ui/particle-field\";\n\nexport default function FeatureAccent() {\n  return (\n    <ParticleField\n      className=\"p-8 rounded-xl border border-neutral-800 h-48 flex items-end\"\n      particleCount={40}\n      particleColor={[\"#a855f7\", \"#6366f1\"]}\n      speed={0.4}\n    >\n      <p className=\"text-white font-semibold relative z-10\">Real-time analytics</p>\n    </ParticleField>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

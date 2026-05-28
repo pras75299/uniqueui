@@ -61,7 +61,7 @@ describe("slugFromComponentPath", () => {
         expect(slugFromComponentPath(REGISTRY_DIR, abs)).toBe("moving-border");
     });
 
-    it("derives the `hero-` prefix for hero block paths — mirrors the convention in registry/config.ts", () => {
+    it("derives the `hero-` prefix for hero block paths — mirrors the registry manifest slug convention", () => {
         const abs = path.join(REGISTRY_DIR, "blocks", "hero", "logo-marquee", "component.tsx");
         expect(slugFromComponentPath(REGISTRY_DIR, abs)).toBe("hero-logo-marquee");
     });

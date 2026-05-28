@@ -14,7 +14,7 @@
     "test:e2e:shadcn": "npx ts-node scripts/test-shadcn-all-components.ts",
     "test": "turbo run test",
     "test:ci": "pnpm --filter @uniqueui/registry-schema test && pnpm --filter @uniqueui/cli-core test && pnpm --dir packages/cli test && pnpm --dir apps/www test && pnpm test:repo",
-    "test:repo": "pnpm exec vitest run scripts/docs-metadata-friction.test.ts scripts/check-cli-readme-drift.test.ts scripts/check-reduced-motion.test.ts",
+    "test:repo": "pnpm exec vitest run scripts/check-cli-readme-drift.test.ts scripts/check-reduced-motion.test.ts",
     "check:cli-readme": "node scripts/check-cli-readme-drift.mjs",
     "check:reduced-motion": "node scripts/check-reduced-motion.mjs",
     "lint:cli": "pnpm --dir packages/cli exec eslint src --ext .ts --config eslint.config.mjs && pnpm --dir packages/cli-core exec eslint src --ext .ts --config eslint.config.mjs",
@@ -29,7 +29,6 @@
     "prepare": "husky",
     "precommit": "./scripts/pre-commit.sh",
     "changelog:verify": "bash scripts/verify-changelog.sh",
-    "docs:metadata-friction": "node scripts/docs-metadata-friction.mjs",
     "changeset:quality": "node scripts/verify-changeset-quality.mjs"
   },
   "devDependencies": {

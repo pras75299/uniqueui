@@ -1,0 +1,72 @@
+{
+  "slug": "nested-comments",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "nested-comments/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Nested Comments",
+    "description": "Threaded comment section with infinite nesting, animated expand/collapse, inline reply composer, and spring-physics like button.",
+    "icon": "LucideMessageSquare",
+    "category": "Social & Interaction",
+    "props": [
+      {
+        "name": "comments",
+        "type": "Comment[]",
+        "description": "Array of top-level comment objects, each optionally containing a `replies` array for nested threading."
+      },
+      {
+        "name": "maxDepth",
+        "type": "number",
+        "default": "4",
+        "description": "Maximum nesting depth allowed before disabling the Reply button to prevent infinite threading."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional CSS classes applied to the root wrapper element."
+      },
+      {
+        "name": "accentColor",
+        "type": "string",
+        "default": "\"#8b5cf6\"",
+        "description": "Hex or CSS color used for reply badge highlights and interactive accent elements."
+      },
+      {
+        "name": "onReply",
+        "type": "(commentId: string, content: string) => void",
+        "description": "Callback fired when a user submits a reply, receiving the parent comment ID and reply text."
+      },
+      {
+        "name": "onLike",
+        "type": "(commentId: string) => void",
+        "description": "Callback fired when a user likes a comment, receiving the comment ID."
+      }
+    ],
+    "usageCode": "import { NestedComments } from \"@/components/ui/nested-comments\";\nimport type { Comment } from \"@/components/ui/nested-comments\";\n\nconst comments: Comment[] = [\n  {\n    id: \"1\",\n    author: \"Alex Kim\",\n    content: \"This component is incredible! The animations feel so natural.\",\n    timestamp: \"2 hours ago\",\n    likes: 14,\n    replies: [\n      {\n        id: \"1-1\",\n        author: \"Sarah Chen\",\n        content: \"Agreed! The collapse animation is especially smooth.\",\n        timestamp: \"1 hour ago\",\n        likes: 6,\n        replies: [\n          {\n            id: \"1-1-1\",\n            author: \"Alex Kim\",\n            content: \"Thanks! Motion.dev's layout animations make it effortless.\",\n            timestamp: \"45 min ago\",\n            likes: 3,\n          },\n        ],\n      },\n    ],\n  },\n  {\n    id: \"2\",\n    author: \"Jordan Lee\",\n    content: \"Love the inline reply box with keyboard shortcuts. Very intuitive UX.\",\n    timestamp: \"3 hours ago\",\n    likes: 9,\n  },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-6 bg-neutral-950 rounded-xl min-h-[400px]\">\n      <NestedComments\n        comments={comments}\n        maxDepth={4}\n        accentColor=\"#8b5cf6\"\n        onReply={(id, content) => console.log(\"Reply to\", id, \":\", content)}\n        onLike={(id) => console.log(\"Liked\", id)}\n      />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "NestedComments renders a threaded discussion tree with animated reply forms, like/unlike interactions, and configurable nesting depth. Avatars are generated from initials when no image is provided.",
+      "scenarios": [
+        {
+          "title": "Blog post discussion",
+          "description": "Embed below a blog article to allow readers to reply, like, and thread conversations.",
+          "code": "\"use client\";\nimport { NestedComments } from \"@/components/ui/nested-comments\";\n\nconst comments = [\n  {\n    id: \"1\",\n    author: \"Alice Chen\",\n    content: \"This component library is exactly what I was looking for.\",\n    timestamp: \"2 hours ago\",\n    likes: 12,\n    replies: [\n      { id: \"1-1\", author: \"Bob Martin\", content: \"Agreed! The motion system is top-notch.\", timestamp: \"1 hour ago\", likes: 5 },\n    ],\n  },\n];\n\nexport default function BlogComments() {\n  return (\n    <div className=\"max-w-2xl p-6\">\n      <NestedComments comments={comments} theme=\"dark\" />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Community Q&A thread",
+          "description": "Use maxDepth to cap nesting at 2 levels, keeping long threads readable.",
+          "code": "\"use client\";\nimport { NestedComments } from \"@/components/ui/nested-comments\";\n\nconst thread = [\n  {\n    id: \"q1\",\n    author: \"Dev Sam\",\n    content: \"How do I customise the accent colour of individual timeline items?\",\n    timestamp: \"5 mins ago\",\n    likes: 3,\n    replies: [\n      { id: \"q1-1\", author: \"Support\", content: \"Pass a `color` string to each item in the items array.\", timestamp: \"3 mins ago\", likes: 7 },\n    ],\n  },\n];\n\nexport default function QAThread() {\n  return (\n    <div className=\"max-w-xl p-6\">\n      <NestedComments comments={thread} maxDepth={2} accentColor=\"#6366f1\" theme=\"dark\" />\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

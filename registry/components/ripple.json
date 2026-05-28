@@ -1,0 +1,74 @@
+{
+  "slug": "ripple",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "ripple/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Ripple",
+    "description": "Luminous orbs that drift slowly across the viewport — a liquid nebula hero background with warm, organic colour blooms.",
+    "icon": "LucideWaves",
+    "category": "Backgrounds",
+    "props": [
+      {
+        "name": "mainCircleSize",
+        "type": "number",
+        "default": "120",
+        "description": "Controls orb diameter — each orb renders at mainCircleSize × 4.5 px."
+      },
+      {
+        "name": "mainCircleOpacity",
+        "type": "number",
+        "default": "0.6",
+        "description": "Peak opacity for every orb (0–1). Individual orbs shimmer around this value."
+      },
+      {
+        "name": "numCircles",
+        "type": "number",
+        "default": "7",
+        "description": "Number of orbs to render. Capped at 8."
+      },
+      {
+        "name": "color",
+        "type": "string",
+        "description": "Pin all orbs to one colour (hex or rgba). Omit to use the built-in warm palette."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "default": "9",
+        "description": "Base drift-cycle length in seconds. Each orb is staggered so they never move in sync."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the wrapper div."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { Ripple } from \"@/components/ui/ripple\";\n\nexport default function Hero() {\n  return (\n    <section className=\"relative h-[500px] w-full flex items-center justify-center overflow-hidden bg-[#0c0608]\">\n      {/* Animated nebula background */}\n      <Ripple mainCircleSize={90} mainCircleOpacity={0.55} numCircles={7} duration={10} />\n\n      {/* Radial vignette so centre text stays readable */}\n      <div\n        className=\"absolute inset-0 pointer-events-none\"\n        style={{\n          background:\n            \"radial-gradient(ellipse 55% 60% at 50% 50%, transparent 0%, rgba(12,6,8,0.75) 60%, rgba(12,6,8,0.97) 100%)\",\n        }}\n      />\n\n      {/* Hero content sits above the orbs */}\n      <div className=\"relative z-10 flex flex-col items-center gap-4 px-6 text-center max-w-sm\">\n        <p className=\"text-[10px] uppercase tracking-[0.35em] text-rose-300/70\">\n          Maison de Parfum\n        </p>\n        <h1 className=\"text-6xl font-light italic text-white\" style={{ fontFamily: \"Georgia, serif\" }}>\n          Aurore.\n        </h1>\n        <p className=\"text-xs leading-relaxed tracking-wide text-stone-400\">\n          A scent composed at the edge of dawn — rose, oud, and amber woven into silence.\n        </p>\n        <button className=\"mt-1 border border-rose-300/30 px-7 py-2.5 text-xs tracking-[0.18em] uppercase text-rose-200/80 transition-colors hover:border-rose-300/70 hover:text-rose-100\">\n          Discover the collection\n        </button>\n      </div>\n    </section>\n  );\n}",
+    "docs": {
+      "overview": "Ripple renders luminous drifting orbs across a dark background for a liquid-nebula hero effect. Tune `mainCircleSize`, `mainCircleOpacity`, `numCircles` (capped at 8), `color`, and `duration` to dial in the atmosphere — works well layered behind hero copy, product stages, and ambient panels.",
+      "scenarios": [
+        {
+          "title": "Live presence indicator",
+          "description": "Show a pulsing ripple behind an avatar to indicate a user is online or broadcasting.",
+          "code": "import { Ripple } from \"@/components/ui/ripple\";\n\nexport default function LivePresence() {\n  return (\n    <div className=\"relative flex items-center justify-center w-24 h-24\">\n      <Ripple mainCircleSize={48} numCircles={5} color=\"#22c55e\" duration={2.5} />\n      <img\n        src=\"/avatar.png\"\n        alt=\"User\"\n        className=\"relative z-10 w-12 h-12 rounded-full border-2 border-green-500\"\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "CTA focus ring",
+          "description": "Add a ripple effect behind a primary CTA button to make it visually magnetic.",
+          "code": "import { Ripple } from \"@/components/ui/ripple\";\n\nexport default function RippleCTA() {\n  return (\n    <div className=\"relative inline-flex items-center justify-center\">\n      <Ripple mainCircleSize={64} numCircles={4} color=\"#a855f7\" duration={3} />\n      <button className=\"relative z-10 px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold text-sm\">\n        Get Started\n      </button>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

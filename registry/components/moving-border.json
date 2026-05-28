@@ -1,0 +1,97 @@
+{
+  "slug": "moving-border",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "moving-border/component.tsx",
+        "type": "registry:ui"
+      }
+    ],
+    "tailwindConfig": {
+      "theme": {
+        "extend": {
+          "animation": {
+            "border-spin": "border-spin 3s linear infinite"
+          },
+          "keyframes": {
+            "border-spin": {
+              "100%": {
+                "transform": "rotate(-360deg)"
+              }
+            }
+          }
+        }
+      }
+    },
+    "tailwindCss": "@theme {\n  --animate-border-spin: border-spin 3s linear infinite;\n\n  @keyframes border-spin {\n    100% {\n      transform: rotate(-360deg);\n    }\n  }\n}\n"
+  },
+  "docs": {
+    "name": "Moving Border",
+    "description": "SVG-path-tracing animated border that orbits a button or card.",
+    "icon": "LucideSparkles",
+    "category": "Effects & Animations",
+    "props": [
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "description": "Visual theme; light or dark. Default: dark."
+      },
+      {
+        "name": "borderRadius",
+        "type": "string",
+        "description": "The radius for rounding the button edges and the orbiting path."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The label or content displayed inside the button."
+      },
+      {
+        "name": "as",
+        "type": "React.ElementType",
+        "description": "The HTML element tag to use for the button wrapper (e.g., 'button', 'div')."
+      },
+      {
+        "name": "containerClassName",
+        "type": "string",
+        "description": "Add CSS classes to the outermost container."
+      },
+      {
+        "name": "borderClassName",
+        "type": "string",
+        "description": "Add CSS classes directly to the moving animated SVG border."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "description": "Time in milliseconds to complete one full orbit around the border."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Add CSS classes to the inner content layer."
+      }
+    ],
+    "usageCode": "import { Button } from \"@/components/ui/moving-border\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-6 items-center justify-center p-10\">\n      <Button\n        borderRadius=\"1.75rem\"\n        className=\"bg-zinc-950 text-white border-neutral-200 dark:border-slate-800\"\n      >\n        Click me\n      </Button>\n      <Button\n        borderRadius=\"1rem\"\n        className=\"bg-zinc-950 text-white border-neutral-200 dark:border-slate-800\"\n        containerClassName=\"h-12 w-48\"\n      >\n        Rounded Button\n      </Button>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "MovingBorder traces an animated SVG path around a button or card, creating the appearance of a glowing line orbiting the element. The path speed and glow intensity are fully configurable.",
+      "scenarios": [
+        {
+          "title": "Highlighted CTA button",
+          "description": "Draw immediate attention to a primary action with an orbiting glow border.",
+          "code": "\"use client\";\nimport { Button } from \"@/components/ui/moving-border\";\n\nexport default function GlowCTA() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <Button borderRadius=\"9999px\" duration={3000} containerClassName=\"h-14 w-56\" theme=\"dark\">\n        Start building for free\n      </Button>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Featured pricing card",
+          "description": "Indicate the recommended pricing tier with a subtle moving border that stands out from static cards.",
+          "code": "\"use client\";\nimport { Button } from \"@/components/ui/moving-border\";\n\nexport default function FeaturedPricingCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <Button\n        as=\"div\"\n        borderRadius=\"1rem\"\n        duration={4000}\n        borderClassName=\"bg-[radial-gradient(var(--tw-gradient-stops))] from-purple-500 via-transparent to-transparent\"\n        containerClassName=\"h-auto w-auto\"\n        className=\"p-8 min-w-[280px]\"\n        theme=\"dark\"\n      >\n        <div className=\"space-y-4\">\n          <span className=\"text-xs font-bold uppercase tracking-widest text-purple-400\">Most popular</span>\n          <p className=\"text-4xl font-bold text-white\">$29<span className=\"text-lg text-neutral-400\">/mo</span></p>\n          <button className=\"w-full py-3 bg-purple-600 text-white rounded-xl font-medium\">Get started</button>\n        </div>\n      </Button>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

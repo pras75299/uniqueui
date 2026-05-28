@@ -29,7 +29,8 @@ pnpm dev                   # Docs site at localhost:3000
 | Directory | Purpose |
 |-----------|---------|
 | `registry/` | Component source files — single source of truth |
-| `registry/config.ts` | Component registry definition (name, deps, tailwind config) |
+| `registry/components/<slug>.json` | Per-component manifest: build config (deps, files, tailwind) + docs metadata. See [ADR 0002](docs/adr/0002-per-slug-registry-manifests.md) |
+| `registry/manifest.json` | Demos `sourceFile` + `order` (install order) + `docsOrder` (docs-site display order) |
 | `packages/cli/` | `uniqueui-cli` npm package — handles `uniqueui add <component>` |
 | `apps/www/` | Next.js docs/showcase site |
 | `scripts/` | Build scripts (registry generation, pre-commit hook) |
@@ -37,8 +38,8 @@ pnpm dev                   # Docs site at localhost:3000
 ## Adding a New Component
 
 1. Create `registry/<component-name>/component.tsx` with the component source
-2. Add an entry to `registry/config.ts` with `name`, `dependencies`, `files`, and optional `tailwindConfig`
-3. Add docs metadata to `registry/docs.json` for the component page and scenarios
+2. Create `registry/components/<slug>.json` — a `registry` block (`dependencies`, `files`, optional `tailwindConfig`/`tailwindCss`; the shared `cn` util is appended automatically, so don't list it) and a `docs` block (name, description, icon, props, optional `docs.overview`/`docs.scenarios`). See [ADR 0002](docs/adr/0002-per-slug-registry-manifests.md)
+3. Add the slug to both `order` and `docsOrder` in `registry/manifest.json`
 4. Add the live demo mapping to `registry/demos.tsx`
 5. Run `pnpm build:registry` from the root — this regenerates `registry.json`, refreshes `apps/www/public/registry/*` and **`apps/www/public/r/*`** (shadcn registry URLs), syncs `apps/www/components/ui/*`, and generates `apps/www/config/components.ts`, `apps/www/config/docs-scenarios.ts`, and `apps/www/config/demos.tsx`
 6. Test in the docs site: `cd apps/www && pnpm dev`
@@ -47,12 +48,12 @@ pnpm dev                   # Docs site at localhost:3000
 
 | Source (edit these) | Generated (do not edit by hand) |
 |---------------------|----------------------------------|
-| `registry/docs.json` | `apps/www/config/components.ts`, `apps/www/config/docs-scenarios.ts` |
+| `registry/components/<slug>.json` | `apps/www/config/components.ts`, `apps/www/config/docs-scenarios.ts` |
 | `registry/demos.tsx` | `apps/www/config/demos.tsx` |
 
-- **Policy:** Keep docs metadata authoring centralized in `registry/docs.json` unless a [documented migration](docs/adr/0001-registry-docs-metadata-storage.md) has happened. The ADR lists quantitative **migration triggers** (file size, conflict rate, ownership needs) and qualitative **friction signals** — open a discussion if friction grows, but do not split metadata files until triggers are met.
-- **When the model changes:** If an ADR supersedes 0001 (for example per-component `registry/<slug>/docs.json`), update this section, `BUILD.md`, and any `scripts/build-registry.ts` / CI drift checks in the same change series so contributors have a single coherent story.
-- After any edit to `registry/docs.json` or `registry/demos.tsx`, run `pnpm build:registry` and commit generated files under `apps/www/config/`, `apps/www/components/ui/`, `apps/www/public/registry/`, **`apps/www/public/r/`**, and root `registry.json` as required by CI.
+- **Model:** Registry metadata is authored as one manifest per component under `registry/components/<slug>.json`, aggregated by `scripts/build-registry.ts`. This supersedes the centralized `registry/docs.json` model — see [ADR 0002](docs/adr/0002-per-slug-registry-manifests.md) (which supersedes [ADR 0001](docs/adr/0001-registry-docs-metadata-storage.md)).
+- **When the model changes:** If a future ADR supersedes 0002, update this section, `BUILD.md`, and any `scripts/build-registry.ts` / CI drift checks in the same change series so contributors have a single coherent story.
+- After any edit under `registry/components/`, `registry/manifest.json`, or `registry/demos.tsx`, run `pnpm build:registry` and commit generated files under `apps/www/config/`, `apps/www/components/ui/`, `apps/www/public/registry/`, **`apps/www/public/r/`**, and root `registry.json` as required by CI.
 
 ## Component Design Rules
 

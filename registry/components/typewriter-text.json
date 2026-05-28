@@ -1,0 +1,90 @@
+{
+  "slug": "typewriter-text",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "typewriter-text/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Typewriter Text",
+    "description": "Character-by-character typing with blinking cursor, configurable speed, and delete-retype loop.",
+    "icon": "LucideTerminal",
+    "category": "Text",
+    "props": [
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "description": "Visual theme; light or dark. Default: dark."
+      },
+      {
+        "name": "words",
+        "type": "string[]",
+        "description": "An array of words or phrases to be typed out sequentially."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Add CSS classes to the text container."
+      },
+      {
+        "name": "cursorClassName",
+        "type": "string",
+        "description": "Add CSS classes to customize the blinking cursor span."
+      },
+      {
+        "name": "typingSpeed",
+        "type": "number",
+        "description": "Delay in milliseconds between typing each character."
+      },
+      {
+        "name": "deletingSpeed",
+        "type": "number",
+        "description": "Delay in milliseconds between deleting each character."
+      },
+      {
+        "name": "delayBetweenWords",
+        "type": "number",
+        "description": "Pause duration before erasing a completed word to type the next."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "description": "Whether the typewriter sequence should repeat infinitely."
+      },
+      {
+        "name": "cursor",
+        "type": "boolean",
+        "description": "Controls the visibility of the blinking cursor at the end of the text."
+      }
+    ],
+    "usageCode": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function Example() {\n  return (\n    <div className=\"space-y-6 text-center p-10\">\n      <div className=\"text-3xl font-bold text-white\">\n        I love{\" \"}\n        <TypewriterText\n          words={[\"React\", \"TypeScript\", \"Motion\", \"Tailwind\", \"UniqueUI\"]}\n          className=\"text-purple-400\"\n          typingSpeed={100}\n          deletingSpeed={60}\n        />\n      </div>\n      <div className=\"text-lg text-neutral-400\">\n        <TypewriterText\n          words={[\n            \"Building amazing user interfaces...\",\n            \"With beautiful animations...\",\n            \"That stand out from the crowd.\",\n          ]}\n          typingSpeed={50}\n          deletingSpeed={30}\n          delayBetweenWords={2000}\n        />\n      </div>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "TypewriterText cycles through an array of words with a smooth typing and erasing animation. It's great for hero headings that need to convey multiple value propositions without cluttering the layout.",
+      "scenarios": [
+        {
+          "title": "Hero headline rotator",
+          "description": "Swap your hero subtitle or adjective with a typewriter that cycles through your key benefits.",
+          "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function HeroHeadline() {\n  return (\n    <h1 className=\"text-5xl font-bold text-white\">\n      Build{\" \"}\n      <TypewriterText\n        words={[\"faster\", \"smarter\", \"beautifully\"]}\n        className=\"text-purple-400\"\n      />\n      <br />\n      with UniqueUI\n    </h1>\n  );\n}"
+        },
+        {
+          "title": "Loading / processing indicator",
+          "description": "Use a single looping word to hint that background work is in progress.",
+          "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function ProcessingBadge() {\n  return (\n    <div className=\"flex items-center gap-2 text-sm text-neutral-400\">\n      <span className=\"h-2 w-2 rounded-full bg-green-500 animate-pulse\" />\n      <TypewriterText\n        words={[\"Analyzing…\", \"Optimizing…\", \"Almost done…\"]}\n        typingSpeed={60}\n        deletingSpeed={40}\n        delayBetweenWords={1200}\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Feature tagline in a navbar",
+          "description": "Animate a short tagline beside your logo to keep visitors engaged right from the header.",
+          "code": "import { TypewriterText } from \"@/components/ui/typewriter-text\";\n\nexport default function NavTagline() {\n  return (\n    <nav className=\"flex items-center gap-3 px-6 py-4 border-b border-neutral-800\">\n      <span className=\"font-bold text-white\">UniqueUI</span>\n      <span className=\"text-neutral-600\">·</span>\n      <TypewriterText\n        words={[\"Copy-paste components\", \"Zero design system lock-in\", \"Motion-first\"]}\n        className=\"text-xs text-neutral-400 font-mono\"\n        typingSpeed={55}\n      />\n    </nav>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

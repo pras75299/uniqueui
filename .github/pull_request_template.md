@@ -42,8 +42,8 @@ Skip this section if your PR doesn't add a component or block.
 **Registry sources**
 
 - [ ] `registry/<slug>/component.tsx` created (or `registry/blocks/<category>/<slug>/component.tsx` for blocks)
-- [ ] `registry/config.ts` entry added with `name`, `dependencies`, `files`, and `tailwindConfig` (v3) and/or `tailwindCss` (v4) as needed
-- [ ] `registry/docs.json` entry added (title, description, category, props)
+- [ ] `registry/components/<slug>.json` created — `registry` block (`dependencies`, `files`, `tailwindConfig` v3 and/or `tailwindCss` v4 as needed) + `docs` block (name, description, category, props)
+- [ ] Slug added to `order` and `docsOrder` in `registry/manifest.json`
 - [ ] `registry/demos.tsx` demo added
 - [ ] `pnpm build:registry` run — no `git diff` in `apps/www/public/registry/`, `apps/www/public/r/`, or `apps/www/components/ui/`
 

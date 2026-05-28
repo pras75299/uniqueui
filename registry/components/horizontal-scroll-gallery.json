@@ -1,0 +1,55 @@
+{
+  "slug": "horizontal-scroll-gallery",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "horizontal-scroll-gallery/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Horizontal Scroll Gallery",
+    "description": "Converts vertical scroll into horizontal movement with momentum physics for immersive galleries.",
+    "icon": "Layers",
+    "category": "Effects & Animations",
+    "props": [
+      {
+        "name": "items",
+        "type": "React.ReactNode[]",
+        "description": "Array of React nodes (e.g. images, cards) to map across the horizontal track."
+      },
+      {
+        "name": "direction",
+        "type": "\"left\" | \"right\"",
+        "description": "Direction the track moves when the user scrolls down."
+      },
+      {
+        "name": "itemClassName",
+        "type": "string",
+        "description": "Common classes applied to every individual container."
+      }
+    ],
+    "usageCode": "import { HorizontalScrollGallery } from \"@/components/ui/horizontal-scroll-gallery\";\n\nexport default function Example() {\n  const images = [\n    <img key=\"1\" src=\"https://images.unsplash.com/photo-1681935396624-006f4acdc530?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\" alt=\"Landscape 1\" className=\"object-cover w-full h-full\" />,\n    <img key=\"2\" src=\"https://images.unsplash.com/photo-1775059956734-78ffd2075cec?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\" alt=\"Landscape 2\" className=\"object-cover w-full h-full\" />,\n    <img key=\"3\" src=\"https://images.unsplash.com/photo-1722152246589-23370458081f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\" alt=\"Landscape 3\" className=\"object-cover w-full h-full\" />,\n    <div key=\"4\" className=\"w-full h-full bg-neutral-900 flex items-center justify-center p-8 text-center text-white\">\n      <h3 className=\"text-4xl font-bold\">End of Gallery</h3>\n    </div>\n  ];\n  return (\n    <HorizontalScrollGallery items={images} />\n  );\n}",
+    "docs": {
+      "overview": "HorizontalScrollGallery converts vertical scroll into a smooth horizontal pan across a row of items, driven by a spring-dampened progress value. The gallery pins to the viewport for the full scroll distance.",
+      "scenarios": [
+        {
+          "title": "Portfolio project showcase",
+          "description": "Lay out project images in a wide horizontal strip that users pan through by scrolling.",
+          "code": "import { HorizontalScrollGallery } from \"@/components/ui/horizontal-scroll-gallery\";\n\nconst images = [\n  \"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600\",\n  \"https://images.unsplash.com/photo-1547658719-da2b51169166?w=600\",\n  \"https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600\",\n  \"https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600\",\n];\n\nexport default function PortfolioGallery() {\n  return (\n    <HorizontalScrollGallery\n      items={images.map((src, i) => (\n        <img key={i} src={src} alt=\"Project\" className=\"h-64 w-96 object-cover rounded-2xl\" />\n      ))}\n    />\n  );\n}"
+        },
+        {
+          "title": "Feature card reel",
+          "description": "Scroll through a reel of feature cards, each revealing itself as the user pans right.",
+          "code": "import { HorizontalScrollGallery } from \"@/components/ui/horizontal-scroll-gallery\";\n\nconst features = [\n  { title: \"Animations\", desc: \"Spring-driven motion on every component.\" },\n  { title: \"CLI\", desc: \"Install any component in seconds.\" },\n  { title: \"Docs\", desc: \"Live previews with copy-paste code.\" },\n  { title: \"Open Source\", desc: \"MIT licensed, forever free.\" },\n];\n\nexport default function FeatureReel() {\n  return (\n    <HorizontalScrollGallery\n      items={features.map((f, i) => (\n        <div key={i} className=\"w-72 h-44 rounded-2xl bg-neutral-900 border border-neutral-800 p-6 flex flex-col justify-between\">\n          <h3 className=\"text-white font-bold text-xl\">{f.title}</h3>\n          <p className=\"text-neutral-400 text-sm\">{f.desc}</p>\n        </div>\n      ))}\n    />\n  );\n}"
+        }
+      ]
+    }
+  }
+}

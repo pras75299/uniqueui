@@ -1,0 +1,85 @@
+{
+  "slug": "border-beam",
+  "registry": {
+    "dependencies": [
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "border-beam/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Border Beam",
+    "description": "A glowing comet that continuously orbits the border of a container — instantly upgrades cards, code blocks, and feature sections.",
+    "icon": "Flame",
+    "category": "Effects & Animations",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "Content inside the bordered container."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "default": "5",
+        "description": "Seconds for one full orbit."
+      },
+      {
+        "name": "colorFrom",
+        "type": "string",
+        "default": "\"#a855f7\"",
+        "description": "Comet head colour."
+      },
+      {
+        "name": "colorTo",
+        "type": "string",
+        "default": "\"#ec4899\"",
+        "description": "Comet tail colour."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "default": "160",
+        "description": "Diameter of the glowing orb in px."
+      },
+      {
+        "name": "borderWidth",
+        "type": "number",
+        "default": "1.5",
+        "description": "Width of the container border in px."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra Tailwind classes on the container."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Controls border colour."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { BorderBeam } from \"@/components/ui/border-beam\";\n\nexport default function FeatureCard() {\n  return (\n    <BorderBeam\n      colorFrom=\"#a855f7\"\n      colorTo=\"#ec4899\"\n      duration={5}\n      className=\"rounded-xl p-6 bg-neutral-900\"\n    >\n      <h3 className=\"text-xl font-bold text-white\">Spotlight Feature</h3>\n      <p className=\"text-neutral-400 mt-2\">\n        Drop BorderBeam around any card to make it shine.\n      </p>\n    </BorderBeam>\n  );\n}",
+    "docs": {
+      "overview": "BorderBeam traces an animated glowing orb around the perimeter of any container using requestAnimationFrame. Wrap any card, input, or panel to give it a dynamic, premium border highlight.",
+      "scenarios": [
+        {
+          "title": "Glowing feature card",
+          "description": "Surround a feature card with a colour-shifting comet beam that draws the eye.",
+          "code": "\"use client\";\nimport { BorderBeam } from \"@/components/ui/border-beam\";\n\nexport default function FeatureCard() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <BorderBeam\n        colorFrom=\"#a855f7\"\n        colorTo=\"#06b6d4\"\n        duration={4}\n        className=\"p-6 bg-neutral-900 max-w-sm w-full space-y-2\"\n      >\n        <h3 className=\"text-lg font-semibold text-white\">Motion-powered</h3>\n        <p className=\"text-sm text-neutral-400\">\n          Every animation uses spring physics for natural, fluid movement.\n        </p>\n      </BorderBeam>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Highlighted input field",
+          "description": "Make an email or search input stand out with an animated beam instead of a static focus ring.",
+          "code": "\"use client\";\nimport { BorderBeam } from \"@/components/ui/border-beam\";\n\nexport default function BeamInput() {\n  return (\n    <div className=\"flex items-center justify-center p-20\">\n      <BorderBeam\n        colorFrom=\"#f59e0b\"\n        colorTo=\"#ef4444\"\n        borderWidth={2}\n        duration={3}\n        className=\"w-full max-w-sm\"\n      >\n        <input\n          type=\"email\"\n          placeholder=\"Enter your email\"\n          className=\"w-full px-4 py-3 bg-neutral-800 text-white outline-none text-sm\"\n        />\n      </BorderBeam>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

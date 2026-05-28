@@ -1,0 +1,90 @@
+{
+  "slug": "animated-tabs",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "animated-tabs/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Animated Tabs",
+    "description": "Tab bar with a sliding pill that morphs between active tabs using layout animation.",
+    "icon": "Layers",
+    "category": "Navigation & Overlays",
+    "props": [
+      {
+        "name": "tabs",
+        "type": "{",
+        "description": "Array of tab configurations establishing navigation schema."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": "A unique identifier used strictly for layout animations."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "The string/node rendered on the clickable tab button."
+      },
+      {
+        "name": "content",
+        "type": "React.ReactNode",
+        "description": "The DOM payload rendered below when this tab is selected."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Description coming soon"
+      },
+      {
+        "name": "tabClassName",
+        "type": "string",
+        "description": "Description coming soon"
+      },
+      {
+        "name": "activeTabClassName",
+        "type": "string",
+        "description": "Description coming soon"
+      },
+      {
+        "name": "contentClassName",
+        "type": "string",
+        "description": "Description coming soon"
+      },
+      {
+        "name": "onChange",
+        "type": "(id: string) => void",
+        "description": "Description coming soon"
+      }
+    ],
+    "usageCode": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\n\nexport default function Example() {\n  return (\n    <div className=\"max-w-md mx-auto p-10\">\n      <AnimatedTabs\n        tabs={[\n          {\n            id: \"design\",\n            label: \"Design\",\n            content: (\n              <div className=\"p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm\">\n                Build stunning interfaces with our design system. Every component is crafted with\n                attention to detail.\n              </div>\n            ),\n          },\n          {\n            id: \"animate\",\n            label: \"Animate\",\n            content: (\n              <div className=\"p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm\">\n                Add life to your UI with spring-physics animations powered by Motion.dev.\n              </div>\n            ),\n          },\n          {\n            id: \"ship\",\n            label: \"Ship\",\n            content: (\n              <div className=\"p-4 rounded-lg bg-neutral-900/50 border border-neutral-800 text-neutral-300 text-sm\">\n                Deploy with confidence. All components are production-ready and accessible.\n              </div>\n            ),\n          },\n        ]}\n      />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "AnimatedTabs uses a layoutId-driven underline or pill indicator to transition between tabs with a fluid spring. The active indicator follows the selected tab without a hard jump.",
+      "scenarios": [
+        {
+          "title": "Settings panel",
+          "description": "A classic tab bar for separating profile, notifications, and security settings.",
+          "code": "import { AnimatedTabs } from \"@/components/ui/animated-tabs\";\n\nconst tabs = [\n  { id: \"profile\", label: \"Profile\" },\n  { id: \"notifications\", label: \"Notifications\" },\n  { id: \"security\", label: \"Security\" },\n];\n\nexport default function SettingsPanel() {\n  return (\n    <div className=\"max-w-2xl space-y-6\">\n      <AnimatedTabs tabs={tabs} defaultTab=\"profile\" />\n      {/* Render panel content based on active tab */}\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Dashboard content switcher",
+          "description": "Switch between weekly, monthly, and yearly data views in a dashboard.",
+          "code": "\"use client\";\nimport { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\n\nconst ranges = [\n  { id: \"7d\", label: \"7 days\" },\n  { id: \"30d\", label: \"30 days\" },\n  { id: \"90d\", label: \"90 days\" },\n  { id: \"1y\", label: \"1 year\" },\n];\n\nexport default function DateRangeTabs() {\n  const [range, setRange] = useState(\"30d\");\n\n  return (\n    <div>\n      <AnimatedTabs\n        tabs={ranges}\n        defaultTab=\"30d\"\n        onChange={setRange}\n        size=\"sm\"\n      />\n      <p className=\"mt-4 text-sm text-neutral-400\">\n        Showing data for: {range}\n      </p>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Product feature showcase tabs",
+          "description": "Let marketing highlight different product features with animated tab transitions.",
+          "code": "\"use client\";\nimport { AnimatedTabs } from \"@/components/ui/animated-tabs\";\nimport { useState } from \"react\";\nimport { motion, AnimatePresence } from \"motion/react\";\n\nconst features = [\n  { id: \"speed\", label: \"Speed\", content: \"Deploy components in seconds with the CLI.\" },\n  { id: \"design\", label: \"Design\", content: \"Motion-first animations out of the box.\" },\n  { id: \"dx\", label: \"DX\", content: \"Single-file components, zero config.\" },\n];\n\nexport default function FeatureTabs() {\n  const [active, setActive] = useState(\"speed\");\n  const feature = features.find(f => f.id === active)!;\n\n  return (\n    <div className=\"space-y-6 max-w-lg\">\n      <AnimatedTabs tabs={features} defaultTab=\"speed\" onChange={setActive} />\n      <AnimatePresence mode=\"wait\">\n        <motion.p\n          key={active}\n          initial={{ opacity: 0, y: 6 }}\n          animate={{ opacity: 1, y: 0 }}\n          exit={{ opacity: 0, y: -6 }}\n          className=\"text-neutral-300\"\n        >\n          {feature.content}\n        </motion.p>\n      </AnimatePresence>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

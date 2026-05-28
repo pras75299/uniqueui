@@ -85,7 +85,8 @@ pnpm test -- packages/cli/src/commands/add.test.ts
 `registry.json` is a **generated artifact** — never edit it manually.
 
 ```bash
-pnpm build:registry    # Reads registry/<slug>/component.tsx sources → writes registry.json
+pnpm build:registry    # Aggregates registry/components/<slug>.json + registry/manifest.json
+                       #    and registry/<slug>/component.tsx sources → writes registry.json
                        # Also writes apps/www/public/registry.json
                        # Also splits per-component files into apps/www/public/registry/
                        # Also writes shadcn-format registry items to apps/www/public/r/
@@ -96,13 +97,12 @@ pnpm build:registry    # Reads registry/<slug>/component.tsx sources → writes 
 
 Always commit `registry.json` and the generated files under `apps/www/public/r/` (and the rest of the synced paths) after adding or modifying components, as required by your branch / CI.
 
-### Docs Metadata Storage Decision
+### Registry Metadata Storage Decision
 
-`registry/docs.json` remains centralized for now (single source authoring model). This aligns with the current build flow where one registry build command composes and syncs docs artifacts.
+Registry metadata is authored as **one manifest per component** under `registry/components/<slug>.json`, with cross-cutting config (demos `sourceFile`, install `order`, docs `docsOrder`) in `registry/manifest.json`. `pnpm build:registry` aggregates these into the generated artifacts.
 
-- Author docs metadata in the centralized file.
-- Generated runtime artifacts can still be split per component for delivery.
-- Revisit splitting authoring into per-component metadata files only when scaling triggers are hit (see `docs/adr/0001-registry-docs-metadata-storage.md`).
+- Each `registry/components/<slug>.json` holds a `registry` block (deps, files, tailwind) and a `docs` block (name, props, scenarios).
+- This supersedes the former centralized `registry/config.ts` + `registry/docs.json` model — see [`docs/adr/0002-per-slug-registry-manifests.md`](docs/adr/0002-per-slug-registry-manifests.md) (supersedes ADR 0001).
 
 ## Workspaces
 

@@ -1,0 +1,66 @@
+{
+  "slug": "radial-menu",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "lucide-react",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "radial-menu/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Radial Menu",
+    "description": "Circular flyout menu that bursts items outward from a center trigger with staggered spring animation.",
+    "icon": "LucidePalette",
+    "category": "Navigation & Overlays",
+    "props": [
+      {
+        "name": "items",
+        "type": "RadialMenuItem[]",
+        "description": "Array of item configurations representing the burst actions."
+      },
+      {
+        "name": "radius",
+        "type": "number",
+        "description": "Distance in pixels each item travels from the trigger center."
+      },
+      {
+        "name": "startAngle",
+        "type": "number",
+        "description": "The starting angle for the radial arc (e.g. -90 for top)."
+      },
+      {
+        "name": "endAngle",
+        "type": "number",
+        "description": "The concluding angle for the radial arc."
+      },
+      {
+        "name": "staggerDelay",
+        "type": "number",
+        "description": "Staggering time multiplier between cascading children."
+      }
+    ],
+    "usageCode": "import { RadialMenu } from \"@/components/ui/radial-menu\";\nimport { User, Settings, Mail, Bell } from \"lucide-react\";\n\nexport default function Example() {\n  const menuItems = [\n    { id: \"profile\", label: \"Profile\", icon: <User className=\"w-5 h-5\" /> },\n    { id: \"settings\", label: \"Settings\", icon: <Settings className=\"w-5 h-5\" /> },\n    { id: \"messages\", label: \"Messages\", icon: <Mail className=\"w-5 h-5\" /> },\n    { id: \"notifications\", label: \"Notifications\", icon: <Bell className=\"w-5 h-5\" /> },\n  ];\n\n  return (\n    <div className=\"h-[400px] w-full flex items-center justify-center\">\n      <RadialMenu items={menuItems} radius={120} />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "RadialMenu bursts a configurable set of action buttons outward from a central trigger in an arc or full circle, using spring-animated entry and exit. Closes on outside click.",
+      "scenarios": [
+        {
+          "title": "Quick action toolbar",
+          "description": "Provide fast access to common actions without consuming screen real estate when the menu is closed.",
+          "code": "\"use client\";\nimport { RadialMenu } from \"@/components/ui/radial-menu\";\nimport { Pencil, Trash, Share2, Star } from \"lucide-react\";\n\nexport default function ActionToolbar() {\n  return (\n    <div className=\"flex items-center justify-center h-64\">\n      <RadialMenu\n        items={[\n          { id: \"edit\", label: \"Edit\", icon: <Pencil size={16} />, color: \"#6366f1\" },\n          { id: \"delete\", label: \"Delete\", icon: <Trash size={16} />, color: \"#ef4444\" },\n          { id: \"share\", label: \"Share\", icon: <Share2 size={16} />, color: \"#22c55e\" },\n          { id: \"star\", label: \"Favourite\", icon: <Star size={16} />, color: \"#f59e0b\" },\n        ]}\n        radius={90}\n      />\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Canvas drawing tool picker",
+          "description": "Expand a top-half arc above the trigger so the menu does not overlap a canvas drawing surface.",
+          "code": "\"use client\";\nimport { RadialMenu } from \"@/components/ui/radial-menu\";\nimport { Pen, Eraser, Pipette, Crop } from \"lucide-react\";\n\nexport default function DrawingToolPicker() {\n  return (\n    <div className=\"flex items-center justify-center h-64\">\n      <RadialMenu\n        items={[\n          { id: \"pen\", label: \"Pen\", icon: <Pen size={16} />, color: \"#6366f1\" },\n          { id: \"eraser\", label: \"Eraser\", icon: <Eraser size={16} />, color: \"#a855f7\" },\n          { id: \"picker\", label: \"Picker\", icon: <Pipette size={16} />, color: \"#06b6d4\" },\n          { id: \"crop\", label: \"Crop\", icon: <Crop size={16} />, color: \"#22c55e\" },\n        ]}\n        startAngle={-180}\n        endAngle={0}\n        radius={110}\n      />\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

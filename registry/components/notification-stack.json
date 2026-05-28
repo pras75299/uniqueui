@@ -1,0 +1,60 @@
+{
+  "slug": "notification-stack",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "notification-stack/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Notification Stack",
+    "description": "Stacked toast notifications with auto-dismiss progress, sliding animations, and multiple types. Renders through a portal above page chrome by default.",
+    "icon": "Bell",
+    "category": "Navigation & Overlays",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "description": "CSS attributes tailoring the absolute container."
+      },
+      {
+        "name": "position",
+        "type": "\"top-right\" | \"top-left\" | \"bottom-right\" | \"bottom-left\"",
+        "description": "Screen coordinate literal dictating orientation constraints."
+      },
+      {
+        "name": "maxVisible",
+        "type": "number",
+        "description": "Limit quantity threshold managing physical screen stack instances."
+      },
+      {
+        "name": "usePortal",
+        "type": "boolean",
+        "description": "When true (default), portals the stack to document.body with a high z-index so it clears sticky headers and overflow-hidden ancestors."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { NotificationStack, useNotifications } from \"@/components/ui/notification-stack\";\n\nexport default function Example() {\n  const { notifications, addNotification, removeNotification } = useNotifications();\n  return (\n    <div className=\"flex flex-col items-center gap-4 w-full p-20\">\n      <div className=\"flex flex-wrap gap-3 items-center justify-center\">\n        {([\"success\", \"error\", \"warning\", \"info\"] as const).map((type) => (\n          <button\n            key={type}\n            onClick={() =>\n              addNotification({\n                title: `${type.charAt(0).toUpperCase() + type.slice(1)} notification`,\n                description: \"This is a demo notification that auto-dismisses.\",\n                type,\n                duration: 4000,\n              })\n            }\n            className=\"px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize text-white bg-neutral-800 hover:bg-neutral-700\"\n          >\n            {type}\n          </button>\n        ))}\n      </div>\n      <NotificationStack notifications={notifications} onRemove={removeNotification} />\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "NotificationStack renders a stacked pile of toast-style cards that animate in and collapse when dismissed. Great for live activity feeds, system alerts, or social notifications.",
+      "scenarios": [
+        {
+          "title": "Live activity feed",
+          "description": "Push real-time events (new users, payments, deployments) into the stack.",
+          "code": "\"use client\";\nimport { NotificationStack } from \"@/components/ui/notification-stack\";\nimport { useState } from \"react\";\n\nconst events = [\n  { id: 1, title: \"New signup\", body: \"prashant@example.com just joined.\" },\n  { id: 2, title: \"Payment received\", body: \"$49 from Stripe · Order #1042\" },\n  { id: 3, title: \"Deploy success\", body: \"main → production in 34s\" },\n];\n\nexport default function ActivityFeed() {\n  const [notifications, setNotifications] = useState(events);\n\n  return (\n    <NotificationStack\n      notifications={notifications}\n      onDismiss={(id) => setNotifications((n) => n.filter((x) => x.id !== id))}\n    />\n  );\n}"
+        },
+        {
+          "title": "Form validation errors",
+          "description": "Surface validation errors as dismissible stacked notices instead of inline messages.",
+          "code": "import { NotificationStack } from \"@/components/ui/notification-stack\";\n\nconst errors = [\n  { id: 1, title: \"Email required\", body: \"Please enter a valid email address.\" },\n  { id: 2, title: \"Password too short\", body: \"Password must be at least 8 characters.\" },\n];\n\nexport default function FormErrors() {\n  return (\n    <div className=\"fixed bottom-6 right-6 z-50 w-80\">\n      <NotificationStack notifications={errors} variant=\"error\" />\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

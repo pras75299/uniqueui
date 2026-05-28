@@ -74,7 +74,7 @@ export function listComponentFiles(registryDir) {
 }
 
 /**
- * Mirror of the slug-naming convention used in `registry/config.ts`:
+ * Mirror of the slug-naming convention used by the registry manifests (`registry/components/<slug>.json`):
  *   registry/<slug>/component.tsx                 → <slug>
  *   registry/blocks/hero/<x>/component.tsx        → hero-<x>
  * Throws on an unrecognized layout so a new directory shape can't silently

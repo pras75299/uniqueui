@@ -138,10 +138,13 @@ pnpm test -- packages/cli/src/commands/add.test.ts
 ### Component Data Flow
 
 ```
-registry/{component}/component.tsx ← source of truth for component code
-       ↓  (pnpm build:registry)
-registry/config.ts                ← declares name, npm deps, tailwindConfig per component
-       ↓
+registry/{component}/component.tsx   ← source of truth for component code
+registry/components/{slug}.json       ← per-component manifest: build config (deps,
+                                         files, tailwind) + docs metadata (name, props,
+                                         scenarios). See ADR 0002.
+registry/manifest.json                ← demos sourceFile + `order` (install order) +
+                                         `docsOrder` (docs-site display order)
+       ↓  (pnpm build:registry — aggregates the per-slug manifests)
 registry.json                     ← auto-generated root manifest
 apps/www/public/registry/*.json   ← auto-generated split docs registry artifacts (uniqueui add)
 apps/www/public/r/*.json          ← shadcn registry-item JSON (+ r/registry.json manifest)
@@ -174,9 +177,9 @@ Three config files drive the entire docs site:
 ### Adding a New Component
 
 1. Create `registry/{component-name}/component.tsx`
-2. Add entry to `registry/config.ts` (name, dependencies, files array, optional `tailwindConfig` for custom keyframes)
-3. Add docs metadata to `registry/docs.json`
-4. Add demo to `apps/www/config/demos.tsx` (`componentDemos`)
+2. Create `registry/components/{slug}.json` (see ADR 0002 for the shape): a `registry` block (`dependencies`, `files`, optional `tailwindConfig`/`tailwindCss` — do **not** list the shared `cn` util; the build script appends it) and a `docs` block (name, description, icon, props, optional `docs.overview`/`docs.scenarios`).
+3. Add the slug to both `order` and `docsOrder` in `registry/manifest.json`.
+4. Add demo to `apps/www/config/demos.tsx` (`componentDemos`) — via the `registry/demos.tsx` source.
 5. Add an entry to `registry/changelogs.json` under the new slug — at minimum `[{ "version": "1.0.0", "date": "YYYY-MM-DD", "changes": ["Initial release."] }]`. The build script reads `entries[0]` as the component's `meta.version`; entries must be newest-first (descending semver).
 6. Run `pnpm build:registry` from root to regenerate `registry.json`, refresh `apps/www/public/registry/*` and **`apps/www/public/r/*`**, sync `apps/www/components/ui/{component-name}.tsx`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
 

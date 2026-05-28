@@ -1,0 +1,59 @@
+{
+  "slug": "hero-magnetic-letters",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "blocks/hero/magnetic-letters/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Magnetic Letters Hero",
+    "description": "Dark editorial hero where every letter of the headline tracks the cursor under its own spring physics. Configurable pull radius and strength. The backdrop is three large blurred gradient orbs (teal, magenta, amber) drifting diagonally on independent slow loops with `mix-blend: screen`, layered with a static SVG-turbulence film grain. A soft white glow fades in around letters as the pointer approaches.",
+    "icon": "LucideSparkles",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-22",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Override the entire hero composition (eyebrow + headline + sub + CTAs). When omitted, a default composition renders that uses the `headline` prop."
+      },
+      {
+        "name": "headline",
+        "type": "string",
+        "default": "\"Motion, where it matters.\"",
+        "description": "Headline text. Each glyph becomes an independent motion target — set this instead of passing `children` if you only want to swap copy."
+      },
+      {
+        "name": "radius",
+        "type": "number",
+        "default": "160",
+        "description": "Pixel radius around each letter within which the cursor exerts pull. Outside the radius the letter rests at its natural position."
+      },
+      {
+        "name": "strength",
+        "type": "number",
+        "default": "14",
+        "description": "Maximum displacement (in px) any single letter can reach at peak proximity to the cursor."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the outer `<section>`."
+      }
+    ],
+    "usageCode": "import { MagneticLettersHero } from \"@/components/ui/hero-magnetic-letters\";\n\nexport default function Hero() {\n  return <MagneticLettersHero headline=\"Motion, where it matters.\" />;\n}",
+    "docs": {
+      "overview": "Per-glyph cursor-tracking hero. The headline reads as a normal h1 to screen readers (aria-label on the wrapper, aria-hidden on each animated span), so accessibility is preserved despite the per-letter wrapping.",
+      "scenarios": []
+    }
+  }
+}

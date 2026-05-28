@@ -1,0 +1,46 @@
+{
+  "slug": "hero-reference-pulse",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "blocks/hero/reference-pulse/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Reference Pulse Hero",
+    "description": "A reference hero block. Conic-gradient halo rotating behind a radial pulse, with motion-driven entry on the headline. Drop your own children in to replace the default composition; the background also ships as a standalone export.",
+    "icon": "LucideSparkles",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-12",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Pass your own headline / CTA / nav. When omitted, a default composition renders."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ conicPalette?: string[]; pulseColor?: string; speed?: number; baseColor?: string; hue?: number; className?: string }",
+        "description": "Forwarded to the background layer. Use `conicPalette` + `pulseColor` for the rotating halo (defaults match preview); `baseColor` is the dark vignette (`#08080a`)."
+      }
+    ],
+    "usageCode": "import { ReferencePulseHero } from \"@/components/ui/hero-reference-pulse\";\n\nexport default function Hero() {\n  return (\n    <ReferencePulseHero\n      className=\"bg-[#08080a] text-white\"\n      backgroundProps={{\n        speed: 7,\n        baseColor: \"#08080a\",\n        conicPalette: [\n          \"hsla(268, 95%, 62%, 0.55)\",\n          \"hsla(328, 95%, 60%, 0.35)\",\n          \"hsla(228, 95%, 60%, 0.55)\",\n          \"hsla(268, 95%, 62%, 0.55)\",\n        ],\n        pulseColor: \"hsla(268, 95%, 70%, 0.45)\",\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span className=\"h-1.5 w-1.5 rounded-full bg-white/80\" aria-hidden />\n        Hero block\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Build with light, not boxes.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A reference hero block. Drop in your own children to override the\n        default composition — the background lives on its own as well.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group relative inline-flex h-11 items-center gap-2 overflow-hidden rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Get started</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          Read docs\n        </button>\n      </div>\n    </ReferencePulseHero>\n  );\n}",
+    "docs": {
+      "overview": "A minimal hero block that proves the slotted composition pattern. Background lives on its own; the hero accepts children for full content override.",
+      "scenarios": []
+    }
+  }
+}

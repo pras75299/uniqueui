@@ -1,0 +1,75 @@
+{
+  "slug": "magnetic-button",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "magnetic-button/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Magnetic Button",
+    "description": "Button that stretches toward the cursor when nearby and snaps back with spring physics.",
+    "icon": "LucideMousePointer",
+    "category": "Components",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "description": "The internal content of the button."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Style overrides appended to the interactive boundary."
+      },
+      {
+        "name": "magneticStrength",
+        "type": "number",
+        "description": "Float determining how fast/far the button lerps toward the cursor."
+      },
+      {
+        "name": "magneticRadius",
+        "type": "number",
+        "description": "Pixel radius extending outward from the button where gravity begins."
+      },
+      {
+        "name": "onClick",
+        "type": "() => void",
+        "description": "Standard click event handler."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": "Disables interaction and magnetic gravitational pull."
+      }
+    ],
+    "usageCode": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex flex-wrap gap-8 items-center justify-center p-20 text-white\">\n      <MagneticButton>Hover near me</MagneticButton>\n      <MagneticButton\n        magneticStrength={0.5}\n        magneticRadius={200}\n        className=\"bg-gradient-to-b from-purple-700 to-purple-900\"\n      >\n        Stronger pull\n      </MagneticButton>\n    </div>\n  );\n}",
+    "docs": {
+      "overview": "MagneticButton adds a physics-based cursor attraction effect to any button or interactive element. As the cursor approaches, the element gently pulls toward it, creating a satisfying tactile feel.",
+      "scenarios": [
+        {
+          "title": "Primary CTA button",
+          "description": "Apply the magnetic effect to your hero CTA to make it irresistible to click.",
+          "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function HeroCTA() {\n  return (\n    <div className=\"flex justify-center py-20\">\n      <MagneticButton className=\"px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-neutral-100 transition-colors\">\n        Get started free →\n      </MagneticButton>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Icon navigation links",
+          "description": "Magnetic icons in a header or dock feel playful and high-quality.",
+          "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\nimport { Code, X, Mail } from \"lucide-react\";\n\nconst socialLinks = [\n  { icon: Code, href: \"https://github.com\", label: \"GitHub\" },\n  { icon: X, href: \"https://twitter.com\", label: \"Twitter\" },\n  { icon: Mail, href: \"mailto:hi@example.com\", label: \"Email\" },\n];\n\nexport default function SocialNav() {\n  return (\n    <div className=\"flex items-center gap-2\">\n      {socialLinks.map(({ icon: Icon, href, label }) => (\n        <MagneticButton key={label} strength={0.4}>\n          <a\n            href={href}\n            aria-label={label}\n            className=\"p-2.5 rounded-xl border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors\"\n          >\n            <Icon className=\"w-5 h-5\" />\n          </a>\n        </MagneticButton>\n      ))}\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Reduced-strength subtle hover",
+          "description": "Lower the strength for elements that should feel premium but not distracting.",
+          "code": "import { MagneticButton } from \"@/components/ui/magnetic-button\";\n\nexport default function SubtleCard() {\n  return (\n    <MagneticButton strength={0.25} className=\"block\">\n      <div className=\"p-6 rounded-2xl border border-neutral-800 bg-neutral-900 cursor-pointer hover:border-neutral-700 transition-colors\">\n        <h3 className=\"text-white font-semibold mb-2\">UniqueUI Pro</h3>\n        <p className=\"text-neutral-400 text-sm\">Access all templates and premium components.</p>\n      </div>\n    </MagneticButton>\n  );\n}"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "slug": "hero-logo-marquee",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "blocks/hero/logo-marquee/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Logo Marquee Hero",
+    "description": "A classic SaaS hero: bold headline above two ticker rows of partner / customer logos scrolling in opposite directions. CSS mask softens the edges, reduced-motion freezes the rows, and the brand list is fully customizable.",
+    "icon": "LucideBuilding2",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-20",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content above the marquee rows. Pass your own headline / subhead / CTAs. When omitted, a default composition renders."
+      },
+      {
+        "name": "logos",
+        "type": "ReadonlyArray<string>",
+        "description": "Brand names rendered as the ticker items. Defaults to a placeholder list."
+      },
+      {
+        "name": "secondaryLogos",
+        "type": "ReadonlyArray<string> | null",
+        "description": "Optional second row. `undefined` (default) reverses the primary list; `null` hides the second row."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "32",
+        "description": "Loop duration in seconds for the primary row. The second row runs slightly slower for visual interest."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the outer `<section>`."
+      }
+    ],
+    "usageCode": "import { LogoMarqueeHero } from \"@/components/ui/hero-logo-marquee\";\n\nexport default function Hero() {\n  return (\n    <LogoMarqueeHero\n      logos={[\n        \"Acme\",\n        \"Globex\",\n        \"Soylent\",\n        \"Initech\",\n        \"Hooli\",\n        \"Umbrella\",\n        \"Stark\",\n        \"Wayne\",\n        \"Cyberdyne\",\n        \"Wonka\",\n        \"Tyrell\",\n        \"Aperture\",\n      ]}\n      secondaryLogos={[\n        \"Aperture\",\n        \"Tyrell\",\n        \"Wonka\",\n        \"Cyberdyne\",\n        \"Wayne\",\n        \"Stark\",\n        \"Umbrella\",\n        \"Hooli\",\n        \"Initech\",\n        \"Soylent\",\n        \"Globex\",\n        \"Acme\",\n      ]}\n      speed={32}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        <span className=\"h-1.5 w-1.5 rounded-full bg-white/80\" aria-hidden />\n        Trusted across teams\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        The platform shipping teams ship with.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        From scrappy seed startups to public companies — UniqueUI components\n        ship in production every day.\n      </p>\n    </LogoMarqueeHero>\n  );\n}",
+    "docs": {
+      "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
+      "scenarios": []
+    }
+  }
+}
