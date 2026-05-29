@@ -269,8 +269,12 @@ export function Terminal({
         "ml-px inline-block h-[1.05em] w-[0.55em] translate-y-[0.15em] align-baseline",
         dark ? "bg-neutral-200" : "bg-neutral-700",
       )}
-      animate={{ opacity: [1, 1, 0, 0] }}
-      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+      animate={reduceMotion ? { opacity: 1 } : { opacity: [1, 1, 0, 0] }}
+      transition={
+        reduceMotion
+          ? undefined
+          : { duration: 1, repeat: Infinity, ease: "linear" }
+      }
     />
   );
 
@@ -310,7 +314,7 @@ export function Terminal({
               onClick={handleCopy}
               aria-label={copied ? "Copied" : "Copy commands"}
               className={cn(
-                "rounded p-1 transition-colors",
+                "rounded p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70",
                 dark
                   ? "text-neutral-500 hover:bg-neutral-700 hover:text-neutral-200"
                   : "text-neutral-400 hover:bg-neutral-200 hover:text-neutral-700",
@@ -324,7 +328,7 @@ export function Terminal({
                 onClick={() => setReplayKey((k) => k + 1)}
                 aria-label="Replay"
                 className={cn(
-                  "rounded p-1 transition-colors",
+                  "rounded p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70",
                   dark
                     ? "text-neutral-500 hover:bg-neutral-700 hover:text-neutral-200"
                     : "text-neutral-400 hover:bg-neutral-200 hover:text-neutral-700",
