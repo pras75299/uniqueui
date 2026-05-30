@@ -291,7 +291,7 @@ export const ComponentManifest = z.object({
         })
         .passthrough(),
     tags: Tags,
-    peerDependencies: z.array(NpmDep),
+    peerDependencies: z.array(NpmDep).min(1),
     compatibility: CompatibilityMeta,
     accessibility: AccessibilityMeta,
     motion: MotionMeta.optional(),

@@ -128,14 +128,16 @@ for (const [label, changelogs] of [
 }
 
 // Per-slug source manifests (ADR 0003): metadata lives on each manifest.
+const componentsDir = path.join(ROOT, "registry", "components");
 const motionFromManifests = {};
-if (rootRegistry) {
-  for (const entry of rootRegistry) {
-    const rel = `registry/components/${entry.name}.json`;
+if (fs.existsSync(componentsDir)) {
+  for (const file of fs.readdirSync(componentsDir)) {
+    if (!file.endsWith(".json")) continue;
+    const rel = `registry/components/${file}`;
     const raw = readJson(rel);
     const parsed = check(rel, ComponentManifest, raw);
     if (parsed?.motion) {
-      motionFromManifests[entry.name] = parsed.motion;
+      motionFromManifests[parsed.slug] = parsed.motion;
     }
   }
 }

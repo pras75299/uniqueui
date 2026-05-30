@@ -31,7 +31,8 @@ Read `CLAUDE.md` for architecture rules. **Never** edit generated files under `a
 3. **Metadata** — set on the same manifest file:
    - `tags` (≥1, lowercase kebab-case)
    - `accessibility` (`audited` | `unaudited` | `n/a`)
-   - `motion` (only if the component animates): `{ "reducedMotion": "full"|"partial"|"none" }`
+   - `motion` (only if the component animates): `{ "reducedMotion": "full"|"partial"|"none", "performanceNotes"?: "..." }`
+     - Add `performanceNotes` when using `"partial"` or `"none"` to document why the OS preference isn't fully honored.
    - `compatibility` / `peerDependencies` if non-default
 4. **Demo** — add entry to `registry/demos.tsx` (until ADR 0005 per-slug demos land).
 5. **Changelog** — bump semver in `registry/changelogs.json` when shipping user-visible changes.

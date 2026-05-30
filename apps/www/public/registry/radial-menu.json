@@ -53,6 +53,7 @@
     "status": "unaudited"
   },
   "motion": {
-    "reducedMotion": "none"
+    "reducedMotion": "none",
+    "performanceNotes": "Radial burst animation is core to the component's UX contract; static fallback would reduce it to a plain button."
   }
 }

@@ -92,6 +92,7 @@
     "screenReaderNotes": "Decorative ripple effect."
   },
   "motion": {
-    "reducedMotion": "none"
+    "reducedMotion": "none",
+    "performanceNotes": "Continuous drift animation is the component's visual identity; a static fallback would eliminate its purpose as an ambient hero background."
   }
 }

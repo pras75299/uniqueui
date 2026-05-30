@@ -114,6 +114,6 @@
   },
   "accessibility": {
     "status": "n/a",
-    "screenReaderNotes": "Purely decorative background; should be wrapped in an element with aria-hidden if it sits behind content."
+    "screenReaderNotes": "Decorative visual layer only should be aria-hidden; do not apply aria-hidden to wrappers containing readable children."
   }
 }

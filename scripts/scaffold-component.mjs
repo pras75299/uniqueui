@@ -146,18 +146,19 @@ export function scaffoldComponent(slug, hero, tags, repoRoot = REPO_ROOT) {
         throw new Error(`Component already exists: ${path.relative(repoRoot, componentFile)}`);
     }
 
+    const manifestJsonPath = path.join(repoRoot, "registry", "manifest.json");
+    const manifest = JSON.parse(fs.readFileSync(manifestJsonPath, "utf8"));
+    if (manifest.order.includes(slug) || manifest.docsOrder.includes(slug)) {
+        throw new Error(`Slug "${slug}" already listed in registry/manifest.json`);
+    }
+
     fs.mkdirSync(sourceDir, { recursive: true });
     fs.writeFileSync(componentFile, componentStub(slug, hero));
 
     writeJson(manifestPath, buildManifest({ slug, hero, tags, registryFilePath }));
-
-    const manifest = JSON.parse(fs.readFileSync(path.join(repoRoot, "registry", "manifest.json"), "utf8"));
-    if (manifest.order.includes(slug) || manifest.docsOrder.includes(slug)) {
-        throw new Error(`Slug "${slug}" already listed in registry/manifest.json`);
-    }
     manifest.order.push(slug);
     manifest.docsOrder.push(slug);
-    writeJson(path.join(repoRoot, "registry", "manifest.json"), manifest);
+    writeJson(manifestJsonPath, manifest);
 
     const changelogs = JSON.parse(fs.readFileSync(path.join(repoRoot, "registry", "changelogs.json"), "utf8"));
     const today = new Date().toISOString().slice(0, 10);
