@@ -42,5 +42,28 @@
       "overview": "Editorial holographic-foil hero. Pair with serifs or magazine-style typography in your override.",
       "scenarios": []
     }
+  },
+  "tags": [
+    "hero",
+    "block",
+    "iridescent",
+    "sweep"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }

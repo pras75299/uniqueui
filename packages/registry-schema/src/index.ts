@@ -206,10 +206,9 @@ export const MotionMeta = z.object({
     performanceNotes: z.string().min(1).optional(),
 });
 
-// Slug-keyed map of motion stances. Source of truth is
-// `registry/motion.json`; build-registry.ts joins each entry onto the
-// matching `RegistryEntry`. Components with no motion APIs in source are
-// simply omitted from the map.
+// Slug-keyed map of motion stances. Source of truth is the optional `motion`
+// field on each `registry/components/<slug>.json` manifest (ADR 0003).
+// Components with no motion APIs in source omit the field.
 export const MotionMap = z.record(Slug, MotionMeta);
 
 // Free-form taxonomy strings (e.g. "card", "hero", "background", "text").
@@ -263,6 +262,40 @@ export const CssVariable = z.object({
     description: z.string().min(1).optional(),
 }).strict();
 export const CssVariablesMap = z.record(Slug, z.array(CssVariable).min(1));
+
+// Per-slug source manifest at `registry/components/<slug>.json` (ADR 0002/0003).
+// Metadata fields (`tags`, `compatibility`, etc.) live on the manifest after
+// ADR 0003; they were formerly split across global sidecar JSON files.
+export const ComponentManifestRegistry = z.object({
+    dependencies: z.array(NpmDep),
+    files: z
+        .array(
+            z.object({
+                path: z.string().min(1),
+                type: RegistryFileType,
+            }),
+        )
+        .min(1),
+    tailwindConfig: TailwindConfig.optional(),
+    tailwindCss: z.string().min(1).optional(),
+});
+
+export const ComponentManifest = z.object({
+    slug: Slug,
+    registry: ComponentManifestRegistry,
+    docs: z
+        .object({
+            name: z.string().min(1),
+            description: z.string().min(1),
+            icon: z.string().min(1),
+        })
+        .passthrough(),
+    tags: Tags,
+    peerDependencies: z.array(NpmDep),
+    compatibility: CompatibilityMeta,
+    accessibility: AccessibilityMeta,
+    motion: MotionMeta.optional(),
+});
 
 export const RegistryEntry = z.object({
     name: Slug,
@@ -341,6 +374,8 @@ export type AccessibilityMapT = z.infer<typeof AccessibilityMap>;
 export type PeerDependenciesMapT = z.infer<typeof PeerDependenciesMap>;
 export type CssVariableT = z.infer<typeof CssVariable>;
 export type CssVariablesMapT = z.infer<typeof CssVariablesMap>;
+export type ComponentManifestRegistryT = z.infer<typeof ComponentManifestRegistry>;
+export type ComponentManifestT = z.infer<typeof ComponentManifest>;
 export type IntegrityHashT = z.infer<typeof IntegrityHash>;
 export type RegistryAssetT = z.infer<typeof RegistryAsset>;
 export type RelatedSlugsMapT = z.infer<typeof RelatedSlugsMap>;

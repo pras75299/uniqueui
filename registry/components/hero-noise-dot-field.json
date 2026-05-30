@@ -42,5 +42,29 @@
       "overview": "Canvas-rendered dot-field hero. Background is a separate export and can be reused under any composition.",
       "scenarios": []
     }
+  },
+  "tags": [
+    "hero",
+    "block",
+    "noise",
+    "dot",
+    "field"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }

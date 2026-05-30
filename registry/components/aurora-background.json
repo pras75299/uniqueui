@@ -95,5 +95,25 @@
       ]
     },
     "usageCode": "\"use client\";\nimport { AuroraBackground } from \"@/components/ui/aurora-background\";\n\nexport default function Example() {\n  return (\n    <AuroraBackground theme=\"dark\" className=\"h-[400px] rounded-xl\">\n      <div className=\"text-center space-y-3 px-4\">\n        <h1 className=\"text-4xl font-bold text-white\">Aurora Background</h1>\n        <p className=\"text-neutral-300\">A beautiful, customisable aurora effect behind any content.</p>\n      </div>\n    </AuroraBackground>\n  );\n}"
+  },
+  "tags": [
+    "background",
+    "aurora",
+    "gradient"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Purely decorative background; should be wrapped in an element with aria-hidden if it sits behind content."
   }
 }

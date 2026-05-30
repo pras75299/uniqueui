@@ -3,17 +3,12 @@ import { createHash } from "crypto";
 import fs from "fs-extra";
 import path from "path";
 import type { Registry, RegistryComponent, RegistryChangelogEntry } from "../registry/types";
-import { resolvePathUnderDir } from "@uniqueui/registry-schema";
+import { resolvePathUnderDir, validate, ComponentManifest as ComponentManifestSchema, type ComponentManifestT } from "@uniqueui/registry-schema";
 
 const REGISTRY_DIR = path.join(__dirname, "../registry");
 const REGISTRY_MANIFEST_FILE = path.join(REGISTRY_DIR, "manifest.json");
 const REGISTRY_COMPONENTS_DIR = path.join(REGISTRY_DIR, "components");
 const REGISTRY_CHANGELOGS_FILE = path.join(REGISTRY_DIR, "changelogs.json");
-const REGISTRY_MOTION_FILE = path.join(REGISTRY_DIR, "motion.json");
-const REGISTRY_TAGS_FILE = path.join(REGISTRY_DIR, "tags.json");
-const REGISTRY_PEER_DEPS_FILE = path.join(REGISTRY_DIR, "peer-dependencies.json");
-const REGISTRY_COMPATIBILITY_FILE = path.join(REGISTRY_DIR, "compatibility.json");
-const REGISTRY_ACCESSIBILITY_FILE = path.join(REGISTRY_DIR, "accessibility.json");
 const REGISTRY_RELATED_SLUGS_FILE = path.join(REGISTRY_DIR, "related-slugs.json");
 const REGISTRY_USED_BY_BLOCKS_FILE = path.join(REGISTRY_DIR, "used-by-blocks.json");
 const OUTPUT_FILE = path.join(__dirname, "../registry.json");
@@ -65,11 +60,6 @@ type RegistryEntry = RegistryComponent & {
 };
 
 type Changelogs = Record<string, RegistryChangelogEntry[]>;
-type MotionMap = Record<string, MotionMetaEntry>;
-type TagsMap = Record<string, string[]>;
-type PeerDependenciesMap = Record<string, string[]>;
-type CompatibilityMap = Record<string, CompatibilityMetaEntry>;
-type AccessibilityMap = Record<string, AccessibilityMetaEntry>;
 type RelatedSlugsMap = Record<string, string[]>;
 type UsedByBlocksMap = Record<string, string[]>;
 
@@ -352,198 +342,6 @@ async function loadChangelogs(slugs: string[]): Promise<Changelogs> {
   return out;
 }
 
-// `loadMotionMap` mirrors the shape-level rules of the `MotionMap` zod
-// schema in `@uniqueui/registry-schema`. Same contract as `loadChangelogs`:
-// the build script is the fast-feedback path, the zod validator is the
-// post-build CI gate. Cross-checks live in `scripts/check-reduced-motion.mjs`
-// so a missing/stray motion entry surfaces before the build runs.
-async function loadMotionMap(slugs: string[]): Promise<MotionMap> {
-  if (!(await fs.pathExists(REGISTRY_MOTION_FILE))) {
-    throw new Error(`Missing motion metadata at ${REGISTRY_MOTION_FILE}`);
-  }
-  const raw = (await fs.readJson(REGISTRY_MOTION_FILE)) as unknown;
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
-    throw new Error("registry/motion.json must be an object keyed by slug");
-  }
-  const map = raw as Record<string, unknown>;
-
-  const errors: string[] = [];
-  const out: MotionMap = {};
-  const slugSet = new Set(slugs);
-
-  for (const [slug, value] of Object.entries(map)) {
-    const where = `motion.json: "${slug}"`;
-    if (!slugSet.has(slug)) {
-      errors.push(`${where}: stray entry — no matching registry component`);
-      continue;
-    }
-    if (!value || typeof value !== "object" || Array.isArray(value)) {
-      errors.push(`${where}: must be an object`);
-      continue;
-    }
-    const v = value as Record<string, unknown>;
-    if (v.reducedMotion !== "full" && v.reducedMotion !== "partial" && v.reducedMotion !== "none") {
-      errors.push(`${where}.reducedMotion must be 'full' | 'partial' | 'none' (got ${JSON.stringify(v.reducedMotion)})`);
-      continue;
-    }
-    const entry: MotionMetaEntry = { reducedMotion: v.reducedMotion };
-    if (v.performanceNotes !== undefined) {
-      if (typeof v.performanceNotes !== "string" || v.performanceNotes.length === 0) {
-        errors.push(`${where}.performanceNotes must be a non-empty string when set`);
-        continue;
-      }
-      entry.performanceNotes = v.performanceNotes;
-    }
-    out[slug] = entry;
-  }
-
-  if (errors.length > 0) {
-    throw new Error(`Motion metadata validation failed:\n  - ${errors.join("\n  - ")}`);
-  }
-
-  return out;
-}
-
-// Shared loader for the per-component metadata maps (tags,
-// peer-dependencies, compatibility, accessibility). These differ from
-// motion.json in that EVERY registry slug must have an entry — the
-// metadata is global, not opt-in. A missing slug is a contributor mistake
-// the build should catch before publish.
-// NOTE: T must never be `string`. The discriminator below uses
-// `typeof parsed === "string"` to distinguish error messages from valid
-// values. If T were string, every valid return value would be treated as
-// an error. All current callers use T = string[] or an object type.
-async function loadFullCoverageMap<T>(
-  file: string,
-  slugs: string[],
-  parseEntry: (value: unknown, where: string) => T | string,
-): Promise<Record<string, T>> {
-  if (!(await fs.pathExists(file))) {
-    throw new Error(`Missing metadata file at ${file}`);
-  }
-  const raw = (await fs.readJson(file)) as unknown;
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
-    throw new Error(`${path.basename(file)} must be an object keyed by slug`);
-  }
-  const map = raw as Record<string, unknown>;
-  const errors: string[] = [];
-  const out: Record<string, T> = {};
-  const slugSet = new Set(slugs);
-
-  for (const [slug, value] of Object.entries(map)) {
-    if (!slugSet.has(slug)) {
-      errors.push(`${path.basename(file)}: stray entry "${slug}" — no matching registry component`);
-      continue;
-    }
-    const parsed = parseEntry(value, `${path.basename(file)}: "${slug}"`);
-    if (typeof parsed === "string") {
-      errors.push(parsed);
-      continue;
-    }
-    out[slug] = parsed;
-  }
-
-  for (const slug of slugs) {
-    if (!(slug in out)) {
-      errors.push(`${path.basename(file)}: missing entry for "${slug}"`);
-    }
-  }
-
-  if (errors.length > 0) {
-    throw new Error(`${path.basename(file)} validation failed:\n  - ${errors.join("\n  - ")}`);
-  }
-  return out;
-}
-
-const TAG_RE = /^[a-z0-9][a-z0-9-]*$/;
-async function loadTagsMap(slugs: string[]): Promise<TagsMap> {
-  return loadFullCoverageMap<string[]>(REGISTRY_TAGS_FILE, slugs, (value, where) => {
-    if (!Array.isArray(value) || value.length === 0) {
-      return `${where} must be a non-empty array of tag strings`;
-    }
-    for (const t of value) {
-      if (typeof t !== "string" || !TAG_RE.test(t)) {
-        return `${where} contains invalid tag ${JSON.stringify(t)} (must be lowercase kebab-case)`;
-      }
-    }
-    return value as string[];
-  });
-}
-
-const NPM_DEP_RE = /^(?:@[a-z0-9-][a-z0-9._~-]*\/)?[a-z0-9][a-z0-9._~-]*$/;
-async function loadPeerDependenciesMap(slugs: string[]): Promise<PeerDependenciesMap> {
-  return loadFullCoverageMap<string[]>(REGISTRY_PEER_DEPS_FILE, slugs, (value, where) => {
-    if (!Array.isArray(value)) {
-      return `${where} must be an array of npm package names (use [] for no peer dependencies)`;
-    }
-    for (const d of value) {
-      if (typeof d !== "string" || !NPM_DEP_RE.test(d)) {
-        return `${where} contains invalid npm dependency ${JSON.stringify(d)}`;
-      }
-    }
-    return value as string[];
-  });
-}
-
-const COMPAT_ALLOWED_KEYS = new Set(["react", "next", "tailwind", "rsc", "ssr"]);
-async function loadCompatibilityMap(slugs: string[]): Promise<CompatibilityMap> {
-  return loadFullCoverageMap<CompatibilityMetaEntry>(REGISTRY_COMPATIBILITY_FILE, slugs, (value, where) => {
-    if (!value || typeof value !== "object" || Array.isArray(value)) {
-      return `${where} must be an object`;
-    }
-    const v = value as Record<string, unknown>;
-    for (const k of Object.keys(v)) {
-      if (!COMPAT_ALLOWED_KEYS.has(k)) {
-        return `${where} has unknown compatibility key "${k}" (allowed: ${[...COMPAT_ALLOWED_KEYS].join(", ")})`;
-      }
-    }
-    const out: CompatibilityMetaEntry = {};
-    for (const key of ["react", "next", "tailwind"] as const) {
-      if (v[key] !== undefined) {
-        if (typeof v[key] !== "string" || (v[key] as string).length === 0) {
-          return `${where}.${key} must be a non-empty string`;
-        }
-        out[key] = v[key] as string;
-      }
-    }
-    for (const key of ["rsc", "ssr"] as const) {
-      if (v[key] !== undefined) {
-        if (typeof v[key] !== "boolean") {
-          return `${where}.${key} must be a boolean`;
-        }
-        out[key] = v[key] as boolean;
-      }
-    }
-    return out;
-  });
-}
-
-async function loadAccessibilityMap(slugs: string[]): Promise<AccessibilityMap> {
-  return loadFullCoverageMap<AccessibilityMetaEntry>(REGISTRY_ACCESSIBILITY_FILE, slugs, (value, where) => {
-    if (!value || typeof value !== "object" || Array.isArray(value)) {
-      return `${where} must be an object`;
-    }
-    const v = value as Record<string, unknown>;
-    if (v.status !== "audited" && v.status !== "unaudited" && v.status !== "n/a") {
-      return `${where}.status must be 'audited' | 'unaudited' | 'n/a' (got ${JSON.stringify(v.status)})`;
-    }
-    const out: AccessibilityMetaEntry = { status: v.status };
-    if (v.keyboard !== undefined) {
-      if (typeof v.keyboard !== "boolean") {
-        return `${where}.keyboard must be a boolean when set`;
-      }
-      out.keyboard = v.keyboard;
-    }
-    if (v.screenReaderNotes !== undefined) {
-      if (typeof v.screenReaderNotes !== "string" || v.screenReaderNotes.length === 0) {
-        return `${where}.screenReaderNotes must be a non-empty string when set`;
-      }
-      out.screenReaderNotes = v.screenReaderNotes;
-    }
-    return out;
-  });
-}
-
 function computeIntegrity(content: string): string {
   const hash = createHash("sha384").update(content, "utf8").digest("base64");
   return `sha384-${hash}`;
@@ -657,27 +455,13 @@ const cnUtilFile = {
     "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
 };
 
-type ComponentManifest = {
-  slug: string;
-  registry: {
-    dependencies: string[];
-    files: Array<{ path: string; type: string }>;
-    tailwindConfig?: Record<string, any>;
-    tailwindCss?: string;
-  };
-  docs: Omit<RegistryDocsComponent, "slug">;
-};
+type ComponentManifest = ComponentManifestT;
 
-// Aggregates the registry source of truth from the per-slug manifests under
-// `registry/components/<slug>.json`. `registry/manifest.json` holds the demos
-// sourceFile and the explicit display order; the per-slug files hold each
-// component's build config (deps, files, tailwind) and docs metadata.
-//
-// The reconstructed `registry` entries deliberately match the legacy
-// `registry/config.ts` key order (name, dependencies, files, tailwindConfig,
-// tailwindCss) and append the shared `cnUtilFile` so the emitted artifacts
-// stay byte-identical to the pre-split output.
-async function loadManifests(): Promise<{ registry: Registry; docsManifest: RegistryDocsManifest }> {
+async function loadManifests(): Promise<{
+  registry: Registry;
+  docsManifest: RegistryDocsManifest;
+  manifests: Map<string, ComponentManifest>;
+}> {
   if (!(await fs.pathExists(REGISTRY_MANIFEST_FILE))) {
     throw new Error(`Missing registry manifest at ${REGISTRY_MANIFEST_FILE}`);
   }
@@ -722,7 +506,14 @@ async function loadManifests(): Promise<{ registry: Registry; docsManifest: Regi
   const manifestBySlug = new Map<string, ComponentManifest>();
   for (const slug of manifest.order) {
     const file = path.join(REGISTRY_COMPONENTS_DIR, `${slug}.json`);
-    const entry = (await fs.readJson(file)) as ComponentManifest;
+    const raw = await fs.readJson(file);
+    const parsed = validate(ComponentManifestSchema, raw);
+    if (!parsed.ok) {
+      throw new Error(
+        `${slug}.json: manifest validation failed:\n  - ${parsed.errors.join("\n  - ")}`,
+      );
+    }
+    const entry = parsed.data;
     if (entry.slug !== slug) {
       throw new Error(`${slug}.json: slug field "${entry.slug}" does not match filename`);
     }
@@ -752,12 +543,13 @@ async function loadManifests(): Promise<{ registry: Registry; docsManifest: Regi
   // Docs-site display order (independent from install order).
   const docsComponents: RegistryDocsComponent[] = manifest.docsOrder.map((slug) => ({
     slug,
-    ...manifestBySlug.get(slug)!.docs,
+    ...(manifestBySlug.get(slug)!.docs as Omit<RegistryDocsComponent, "slug">),
   }));
 
   return {
     registry,
     docsManifest: { demos: { sourceFile: manifest.demos.sourceFile }, components: docsComponents },
+    manifests: manifestBySlug,
   };
 }
 
@@ -892,14 +684,9 @@ async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDo
 async function buildRegistry() {
   console.log("Building registry...");
 
-  const { registry, docsManifest } = await loadManifests();
+  const { registry, docsManifest, manifests } = await loadManifests();
   const slugs = registry.map((entry) => entry.name);
   const changelogs = await loadChangelogs(slugs);
-  const motionMap = await loadMotionMap(slugs);
-  const tagsMap = await loadTagsMap(slugs);
-  const peerDepsMap = await loadPeerDependenciesMap(slugs);
-  const compatibilityMap = await loadCompatibilityMap(slugs);
-  const accessibilityMap = await loadAccessibilityMap(slugs);
   const relatedSlugsMap = await loadRelatedSlugsMap(slugs);
   const usedByBlocksMap = await loadUsedByBlocksMap(slugs);
 
@@ -937,7 +724,7 @@ async function buildRegistry() {
     const entryChangelog = changelogs[component.name];
     // Latest entry is first in changelog (newest at top, like a release-notes file).
     const latest = entryChangelog[0];
-    const motion = motionMap[component.name];
+    const manifest = manifests.get(component.name)!;
     const cssVariables = extractCssVariables(component.tailwindCss);
     result.push({
       ...component,
@@ -946,13 +733,15 @@ async function buildRegistry() {
       changelog: entryChangelog,
       // Emit peerDependencies only when non-empty; RegistryEntry schema
       // uses .min(1).optional(), which rejects [] but accepts undefined.
-      ...(peerDepsMap[component.name].length ? { peerDependencies: peerDepsMap[component.name] } : {}),
-      tags: tagsMap[component.name],
-      compatibility: compatibilityMap[component.name],
-      accessibility: accessibilityMap[component.name],
+      ...(manifest.peerDependencies.length
+        ? { peerDependencies: manifest.peerDependencies }
+        : {}),
+      tags: manifest.tags,
+      compatibility: manifest.compatibility,
+      accessibility: manifest.accessibility,
       ...(relatedSlugsMap[component.name] ? { relatedSlugs: relatedSlugsMap[component.name] } : {}),
       ...(usedByBlocksMap[component.name] ? { usedByBlocks: usedByBlocksMap[component.name] } : {}),
-      ...(motion ? { motion } : {}),
+      ...(manifest.motion ? { motion: manifest.motion } : {}),
       ...(cssVariables ? { cssVariables } : {}),
     });
   }

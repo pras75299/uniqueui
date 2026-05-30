@@ -81,5 +81,28 @@
         }
       ]
     }
+  },
+  "tags": [
+    "cursor",
+    "interactive",
+    "effect"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
+  },
+  "motion": {
+    "reducedMotion": "none"
   }
 }

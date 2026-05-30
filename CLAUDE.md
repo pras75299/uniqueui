@@ -176,14 +176,15 @@ Three config files drive the entire docs site:
 
 ### Adding a New Component
 
-1. Create `registry/{component-name}/component.tsx`
-2. Create `registry/components/{slug}.json` (see ADR 0002 for the shape): a `registry` block (`dependencies`, `files`, optional `tailwindConfig`/`tailwindCss` — do **not** list the shared `cn` util; the build script appends it) and a `docs` block (name, description, icon, props, optional `docs.overview`/`docs.scenarios`).
-3. Add the slug to both `order` and `docsOrder` in `registry/manifest.json`.
-4. Add demo to `apps/www/config/demos.tsx` (`componentDemos`) — via the `registry/demos.tsx` source.
-5. Add an entry to `registry/changelogs.json` under the new slug — at minimum `[{ "version": "1.0.0", "date": "YYYY-MM-DD", "changes": ["Initial release."] }]`. The build script reads `entries[0]` as the component's `meta.version`; entries must be newest-first (descending semver).
-6. Run `pnpm build:registry` from root to regenerate `registry.json`, refresh `apps/www/public/registry/*` and **`apps/www/public/r/*`**, sync `apps/www/components/ui/{component-name}.tsx`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
+Prefer **`pnpm new:component <slug>`** (see `.claude/skills/add-component/SKILL.md`) for mechanical scaffolding, then implement judgment parts manually:
 
-When editing an existing component, update `registry/{component}/component.tsx` and — if the change is user-visible — prepend a new entry to that slug's array in `registry/changelogs.json` with a bumped semver. Then run `pnpm build:registry` to refresh the generated docs copies and registry artifacts.
+1. Run `pnpm new:component <slug> [--hero] [--tags a,b]` — creates `registry/{slug}/component.tsx` (or `registry/blocks/hero/...` for hero blocks), `registry/components/{slug}.json`, order entries in `registry/manifest.json`, and a `registry/changelogs.json` stub.
+2. Implement `component.tsx` and fill the manifest: `registry` block (deps, files, optional tailwind) + `docs` block (name, description, icon, props, optional `docs.overview`/`docs.scenarios`).
+3. Set per-slug metadata on the **same manifest** (ADR 0003 — not global sidecars): `tags`, `peerDependencies`, `compatibility`, `accessibility`, and optional `motion` when the component animates.
+4. Add demo to `registry/demos.tsx` (source for `apps/www/config/demos.tsx`).
+5. Run `pnpm build:registry` to regenerate `registry.json`, `apps/www/public/registry/*`, `apps/www/public/r/*`, and synced docs UI copies.
+
+When editing an existing component, update `registry/{component}/component.tsx` and — if the change is user-visible — prepend a new entry to that slug's array in `registry/changelogs.json` with a bumped semver. Update manifest metadata fields on `registry/components/{slug}.json` when tags, motion, or accessibility change. Then run `pnpm build:registry`.
 
 ## Component Design Rules
 

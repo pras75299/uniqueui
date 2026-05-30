@@ -77,5 +77,27 @@
         }
       ]
     }
+  },
+  "tags": [
+    "tabs",
+    "navigation",
+    "overlay"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "none"
   }
 }

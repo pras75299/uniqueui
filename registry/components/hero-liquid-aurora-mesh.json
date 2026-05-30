@@ -42,5 +42,29 @@
       "overview": "A displacement-warped aurora mesh hero. The background is a separate export, so it can layer behind any section.",
       "scenarios": []
     }
+  },
+  "tags": [
+    "hero",
+    "block",
+    "aurora",
+    "mesh",
+    "liquid"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }
