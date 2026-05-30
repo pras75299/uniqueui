@@ -38,6 +38,7 @@ import {
   LucideUserCircle2,
   LucideWand2,
   LucideWaves,
+  Terminal,
 } from "lucide-react";
 
 export type ComponentVariant = {
@@ -108,6 +109,7 @@ const iconMap = {
   LucideUserCircle2,
   LucideWand2,
   LucideWaves,
+  Terminal,
 } satisfies Record<string, ElementType>;
 
 const componentDefinitions = [
@@ -3309,6 +3311,81 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { MagneticLettersHero } from \"@/components/ui/hero-magnetic-letters\";\n\nexport default function Hero() {\n  return <MagneticLettersHero headline=\"Motion, where it matters.\" />;\n}"
+  },
+  {
+    "slug": "hero-terminal",
+    "name": "Terminal Hero",
+    "description": "A 'code-builds-the-page' hero: a headline above a macOS-style terminal that types your install commands and prints their output. Ships the reusable Terminal window too, with reduced-motion, in-view triggering, replay, copy, and keystroke sound.",
+    "icon": "Terminal",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-05-28",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content above the terminal (headline / subhead / CTAs). When omitted, a default composition renders."
+      },
+      {
+        "name": "commands",
+        "type": "string[]",
+        "description": "Commands typed out sequentially in the terminal. Defaults to a shadcn init/install sequence."
+      },
+      {
+        "name": "outputs",
+        "type": "Record<number, string[]>",
+        "default": "{}",
+        "description": "Output lines printed after a command finishes typing, keyed by the command's index."
+      },
+      {
+        "name": "username",
+        "type": "string",
+        "default": "\"you\"",
+        "description": "Name shown highlighted in the shell prompt (renders as `username:~$`)."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "default": "\"zsh — your-project\"",
+        "description": "Text shown centered in the window title bar."
+      },
+      {
+        "name": "typingSpeed",
+        "type": "number",
+        "default": "50",
+        "description": "Typing speed in milliseconds per character."
+      },
+      {
+        "name": "delayBetweenCommands",
+        "type": "number",
+        "default": "800",
+        "description": "Pause in milliseconds after a command's output before the next command starts."
+      },
+      {
+        "name": "initialDelay",
+        "type": "number",
+        "default": "500",
+        "description": "Delay in milliseconds before the first command begins typing."
+      },
+      {
+        "name": "enableSound",
+        "type": "boolean",
+        "default": "false",
+        "description": "Play a subtle keystroke click on each character via the Web Audio API. Defaults off in the hero to avoid autoplay audio."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "default": "false",
+        "description": "Restart the typing sequence from the top once it finishes."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra classes on the outer `<section>`."
+      }
+    ],
+    "usageCode": "import { TerminalHero } from \"@/components/ui/hero-terminal\";\n\nexport default function Hero() {\n  return (\n    <TerminalHero\n      username=\"you\"\n      title=\"zsh — your-project\"\n      commands={[\n        \"npx shadcn@latest init\",\n        \"npm install motion\",\n        \"npx shadcn@latest add button card\",\n      ]}\n      outputs={{\n        0: [\n          \"✔ Preflight checks passed.\",\n          \"✔ Created components.json\",\n          \"✔ Initialized project.\",\n        ],\n        1: [\"added 1 package in 2s\"],\n        2: [\"✔ Done. Installed button, card.\"],\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        One command to ship\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Watch your stack build itself.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        Copy-paste components, zero config — production-ready before the cursor\n        stops blinking.\n      </p>\n    </TerminalHero>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 

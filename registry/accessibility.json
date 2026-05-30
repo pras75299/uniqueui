@@ -59,6 +59,7 @@
   "shooting-stars-grid": { "status": "n/a", "screenReaderNotes": "Decorative background." },
   "skeleton-shimmer": { "status": "unaudited" },
   "spotlight-card": { "status": "unaudited" },
+  "hero-terminal": { "status": "unaudited", "keyboard": true, "screenReaderNotes": "The animated transcript is aria-hidden; a screen-reader-only copy of the full command list and output is exposed instead. Copy and replay controls are real buttons with aria-labels." },
   "typewriter-text": { "status": "unaudited" },
   "word-rotate": { "status": "unaudited" }
 }

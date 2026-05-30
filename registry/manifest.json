@@ -64,6 +64,7 @@
     "hero-noise-dot-field",
     "hero-logo-marquee",
     "hero-magnetic-letters",
+    "hero-terminal",
     "magnetic-text"
   ],
   "docsOrder": [
@@ -128,6 +129,7 @@
     "hero-liquid-aurora-mesh",
     "hero-noise-dot-field",
     "hero-logo-marquee",
-    "hero-magnetic-letters"
+    "hero-magnetic-letters",
+    "hero-terminal"
   ]
 }

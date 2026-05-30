@@ -1116,5 +1116,10 @@ export const docsScenarios: Record<string, ComponentDocs> = {
     "slug": "hero-magnetic-letters",
     "overview": "Per-glyph cursor-tracking hero. The headline reads as a normal h1 to screen readers (aria-label on the wrapper, aria-hidden on each animated span), so accessibility is preserved despite the per-letter wrapping.",
     "scenarios": []
+  },
+  "hero-terminal": {
+    "slug": "hero-terminal",
+    "overview": "TerminalHero pairs a headline with a live terminal that types your getting-started commands and prints their output — a high-conversion 'see it work' pattern for landing pages. The standalone `Terminal` window is exported from the same file for reuse elsewhere. The animation starts when the hero scrolls into view, respects `prefers-reduced-motion` (rendering the finished transcript instantly), and exposes copy + replay controls. The animated transcript is `aria-hidden` while a screen-reader-only copy carries the real content.",
+    "scenarios": []
   }
 };
