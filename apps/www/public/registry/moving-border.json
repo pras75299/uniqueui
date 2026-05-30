@@ -69,7 +69,8 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
-    "border-beam"
+    "border-beam",
+    "meteors-card"
   ],
   "cssVariables": [
     {

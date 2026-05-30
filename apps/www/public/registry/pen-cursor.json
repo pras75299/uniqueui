@@ -49,5 +49,10 @@
   "accessibility": {
     "status": "n/a",
     "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
-  }
+  },
+  "relatedSlugs": [
+    "cursor-trail",
+    "interactive-cursor",
+    "refractive-cursor-lens"
+  ]
 }

@@ -51,9 +51,12 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
+    "spotlight-card",
     "3d-tilt-card",
     "ambient-glow-card",
-    "spotlight-card"
+    "blur-reveal",
+    "chromatic-aberration-reveal",
+    "gradient-text-reveal"
   ],
   "motion": {
     "reducedMotion": "none"

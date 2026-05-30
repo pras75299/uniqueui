@@ -52,6 +52,8 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
+    "hero-logo-marquee",
+    "animated-timeline",
     "horizontal-scroll-gallery",
     "scroll-reveal"
   ],

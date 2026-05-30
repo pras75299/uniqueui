@@ -65,6 +65,9 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "iridescent-foil-button"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

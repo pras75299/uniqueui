@@ -52,6 +52,10 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "morphing-modal",
+    "notification-stack"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

@@ -58,6 +58,9 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "infinite-marquee"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

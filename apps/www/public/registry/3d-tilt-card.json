@@ -52,9 +52,10 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
-    "ambient-glow-card",
     "flip-card",
+    "ambient-glow-card",
     "hover-reveal-card",
+    "magnetic-button",
     "spotlight-card"
   ],
   "motion": {

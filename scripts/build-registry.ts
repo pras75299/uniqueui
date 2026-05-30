@@ -4,13 +4,12 @@ import fs from "fs-extra";
 import path from "path";
 import type { Registry, RegistryComponent, RegistryChangelogEntry } from "../registry/types";
 import { resolvePathUnderDir, validate, ComponentManifest as ComponentManifestSchema, type ComponentManifestT } from "@uniqueui/registry-schema";
+import { crossLinksFromManifests } from "./compute-cross-links";
 
 const REGISTRY_DIR = path.join(__dirname, "../registry");
 const REGISTRY_MANIFEST_FILE = path.join(REGISTRY_DIR, "manifest.json");
 const REGISTRY_COMPONENTS_DIR = path.join(REGISTRY_DIR, "components");
 const REGISTRY_CHANGELOGS_FILE = path.join(REGISTRY_DIR, "changelogs.json");
-const REGISTRY_RELATED_SLUGS_FILE = path.join(REGISTRY_DIR, "related-slugs.json");
-const REGISTRY_USED_BY_BLOCKS_FILE = path.join(REGISTRY_DIR, "used-by-blocks.json");
 const OUTPUT_FILE = path.join(__dirname, "../registry.json");
 const APP_PUBLIC_DIR = path.join(__dirname, "../apps/www/public");
 const APP_PUBLIC_OUTPUT_FILE = path.join(APP_PUBLIC_DIR, "registry.json");
@@ -60,8 +59,6 @@ type RegistryEntry = RegistryComponent & {
 };
 
 type Changelogs = Record<string, RegistryChangelogEntry[]>;
-type RelatedSlugsMap = Record<string, string[]>;
-type UsedByBlocksMap = Record<string, string[]>;
 
 type RegistryDocsVariant = {
   id: string;
@@ -345,47 +342,6 @@ async function loadChangelogs(slugs: string[]): Promise<Changelogs> {
 function computeIntegrity(content: string): string {
   const hash = createHash("sha384").update(content, "utf8").digest("base64");
   return `sha384-${hash}`;
-}
-
-async function loadRelatedSlugsMap(slugs: string[]): Promise<RelatedSlugsMap> {
-  if (!(await fs.pathExists(REGISTRY_RELATED_SLUGS_FILE))) return {};
-  const raw = (await fs.readJson(REGISTRY_RELATED_SLUGS_FILE)) as unknown;
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
-    throw new Error("registry/related-slugs.json must be an object keyed by slug");
-  }
-  const map = raw as Record<string, unknown>;
-  const errors: string[] = [];
-  const out: RelatedSlugsMap = {};
-  const slugSet = new Set(slugs);
-  for (const [slug, value] of Object.entries(map)) {
-    if (!slugSet.has(slug)) { errors.push(`related-slugs.json: stray "${slug}"`); continue; }
-    if (!Array.isArray(value) || value.length === 0) { errors.push(`related-slugs.json: "${slug}" must be non-empty array`); continue; }
-    for (const s of value) {
-      if (typeof s !== "string" || !slugSet.has(s)) { errors.push(`related-slugs.json: "${slug}" contains unknown slug "${s}"`); break; }
-    }
-    out[slug] = value as string[];
-  }
-  if (errors.length > 0) throw new Error(`related-slugs.json validation failed:\n  - ${errors.join("\n  - ")}`);
-  return out;
-}
-
-async function loadUsedByBlocksMap(slugs: string[]): Promise<UsedByBlocksMap> {
-  if (!(await fs.pathExists(REGISTRY_USED_BY_BLOCKS_FILE))) return {};
-  const raw = (await fs.readJson(REGISTRY_USED_BY_BLOCKS_FILE)) as unknown;
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
-    throw new Error("registry/used-by-blocks.json must be an object keyed by slug");
-  }
-  const map = raw as Record<string, unknown>;
-  const errors: string[] = [];
-  const out: UsedByBlocksMap = {};
-  const slugSet = new Set(slugs);
-  for (const [slug, value] of Object.entries(map)) {
-    if (!slugSet.has(slug)) { errors.push(`used-by-blocks.json: stray "${slug}"`); continue; }
-    if (!Array.isArray(value) || value.length === 0) { errors.push(`used-by-blocks.json: "${slug}" must be non-empty array`); continue; }
-    out[slug] = value as string[];
-  }
-  if (errors.length > 0) throw new Error(`used-by-blocks.json validation failed:\n  - ${errors.join("\n  - ")}`);
-  return out;
 }
 
 // Extract CSS custom properties declared in a component's `tailwindCss`
@@ -687,8 +643,7 @@ async function buildRegistry() {
   const { registry, docsManifest, manifests } = await loadManifests();
   const slugs = registry.map((entry) => entry.name);
   const changelogs = await loadChangelogs(slugs);
-  const relatedSlugsMap = await loadRelatedSlugsMap(slugs);
-  const usedByBlocksMap = await loadUsedByBlocksMap(slugs);
+  const { relatedSlugsMap, usedByBlocksMap } = crossLinksFromManifests(manifests, slugs);
 
   const result: RegistryEntry[] = [];
 

@@ -51,6 +51,17 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "hero-iridescent-sweep",
+    "magnetic-button",
+    "caustic-light-card",
+    "chromatic-aberration-reveal",
+    "refractive-cursor-lens",
+    "shader-mesh-gradient"
+  ],
+  "usedByBlocks": [
+    "hero-iridescent-sweep"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

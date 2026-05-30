@@ -50,6 +50,11 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "animated-tabs",
+    "limelight-nav",
+    "radial-menu"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

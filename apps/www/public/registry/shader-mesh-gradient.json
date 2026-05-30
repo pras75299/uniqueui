@@ -53,7 +53,15 @@
     "screenReaderNotes": "Decorative gradient background."
   },
   "relatedSlugs": [
-    "aurora-background"
+    "iridescent-foil-button",
+    "aurora-background",
+    "hero-liquid-aurora-mesh",
+    "gradient-text-reveal",
+    "shiny-text",
+    "caustic-light-card"
+  ],
+  "usedByBlocks": [
+    "hero-liquid-aurora-mesh"
   ],
   "motion": {
     "reducedMotion": "full"

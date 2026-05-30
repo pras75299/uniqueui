@@ -50,6 +50,11 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "horizontal-scroll-gallery",
+    "infinite-marquee",
+    "scroll-reveal"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

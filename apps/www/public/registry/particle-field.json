@@ -51,6 +51,17 @@
     "status": "n/a",
     "screenReaderNotes": "Decorative background; should be aria-hidden."
   },
+  "relatedSlugs": [
+    "shooting-stars-grid",
+    "hero-noise-dot-field",
+    "aurora-background",
+    "dot-grid-background",
+    "glow-hero-section",
+    "meteors-card"
+  ],
+  "usedByBlocks": [
+    "hero-noise-dot-field"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

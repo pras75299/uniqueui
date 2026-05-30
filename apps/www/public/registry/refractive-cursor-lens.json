@@ -52,6 +52,14 @@
     "status": "n/a",
     "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
   },
+  "relatedSlugs": [
+    "cursor-trail",
+    "interactive-cursor",
+    "pen-cursor",
+    "caustic-light-card",
+    "chromatic-aberration-reveal",
+    "iridescent-foil-button"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

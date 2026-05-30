@@ -52,8 +52,11 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
+    "animated-glowing-text-outline",
+    "glow-hero-section",
     "3d-tilt-card",
     "hover-reveal-card",
+    "magnetic-button",
     "spotlight-card"
   ],
   "motion": {

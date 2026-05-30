@@ -51,7 +51,10 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
-    "gradient-text-reveal"
+    "chromatic-aberration-reveal",
+    "gradient-text-reveal",
+    "hover-reveal-card",
+    "scroll-reveal"
   ],
   "motion": {
     "reducedMotion": "none"

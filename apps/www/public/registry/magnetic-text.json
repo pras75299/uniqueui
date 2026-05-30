@@ -50,6 +50,10 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "hero-magnetic-letters",
+    "magnetic-button"
+  ],
   "usedByBlocks": [
     "hero-magnetic-letters"
   ],

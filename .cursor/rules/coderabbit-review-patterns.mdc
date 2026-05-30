@@ -1,0 +1,45 @@
+---
+description: Recurring CodeRabbit-style review patterns for UniqueUI — apply before finishing registry/build/validation changes
+alwaysApply: true
+---
+
+# CodeRabbit review patterns (UniqueUI)
+
+Apply this checklist when writing or reviewing code. These patterns recur in PR reviews.
+
+## Registry schema & build
+
+- **Manifest ↔ entry parity:** `ComponentManifest` fields that emit into `RegistryEntry` must match optionality and `.min(1)` rules (e.g. `peerDependencies` — omit empty arrays, never `[]`).
+- **Delete stale sidecar references:** When removing JSON sidecars, update comments in `packages/registry-schema`, `validate-registry.mjs`, ADRs, and docs — not just the loader.
+- **Computed build fields need regression tests:** Replacing hand-maintained maps (e.g. `relatedSlugs`, `usedByBlocks`) requires tests that the computed output **covers** the previous baseline (`crossLinksCoverBaseline` pattern in `scripts/compute-cross-links.test.ts`).
+- **Algorithm caps drop valid links:** Tag-overlap with a hard cap can omit editorially correct neighbors; use IDF tie-breaking, symmetric closure (if A→B then ensure B→A), and baseline tests before accepting sparse output.
+
+## Validation & scripts
+
+- **Stray-key checks must read the full source set:** Building a map only from `registry.json` slugs cannot detect stray keys in on-disk manifests — enumerate `registry/components/*.json` (or equivalent) instead.
+- **Validate before write:** Scaffold/CLI scripts must check collisions (`manifest.json` order, existing paths) **before** creating files — never write then throw.
+- **Comment accuracy:** Reference actual file extensions/paths (`compute-cross-links.ts`, not `.mjs`) after renames.
+
+## Motion & accessibility metadata
+
+- **Motion gate is source-driven:** `check-reduced-motion.mjs` only detects `motion/react` APIs. Do not add manifest `motion` for CSS-only or rAF-only animation unless the detector is extended — otherwise CI fails as a stray entry.
+- **`reducedMotion: "none"` needs `performanceNotes`:** Document why OS preference is not honored (schema contract + CodeRabbit).
+- **a11y notes must not hide content:** Never advise `aria-hidden` on wrappers that contain readable `children`; restrict to decorative layers only.
+
+## React / registry components
+
+- **`className` via `cn`:** Merge with `cn(...)` on every registry component; do not overwrite caller classes.
+- **`"use client"`** on interactive/animated components.
+- **Cleanup:** Cancel rAF / `useAnimationFrame` / subscriptions on unmount.
+
+## Pre-PR verification (registry changes)
+
+1. `pnpm test:repo`
+2. `pnpm build:registry`
+3. `pnpm registry:validate`
+4. `pnpm check:reduced-motion`
+5. Diff generated artifacts — expect changes only for intentional slug/output updates
+
+## Review workflow
+
+Prefer `detect_changes_tool` / `get_review_context_tool` (code-review-graph MCP) against `main` before manual file scans.

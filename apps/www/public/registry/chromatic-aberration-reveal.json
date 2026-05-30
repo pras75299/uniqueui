@@ -52,7 +52,12 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
-    "scroll-reveal"
+    "refractive-cursor-lens",
+    "blur-reveal",
+    "caustic-light-card",
+    "gradient-text-reveal",
+    "hover-reveal-card",
+    "iridescent-foil-button"
   ],
   "motion": {
     "reducedMotion": "full"

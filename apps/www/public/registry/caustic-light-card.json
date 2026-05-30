@@ -51,6 +51,12 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "chromatic-aberration-reveal",
+    "iridescent-foil-button",
+    "refractive-cursor-lens",
+    "shader-mesh-gradient"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

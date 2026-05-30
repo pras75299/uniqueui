@@ -50,6 +50,17 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "spotlight-card",
+    "iridescent-foil-button",
+    "hero-magnetic-letters",
+    "magnetic-text",
+    "3d-tilt-card",
+    "ambient-glow-card"
+  ],
+  "usedByBlocks": [
+    "hero-magnetic-letters"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

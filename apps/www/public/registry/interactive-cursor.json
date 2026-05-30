@@ -52,7 +52,9 @@
     "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
   },
   "relatedSlugs": [
-    "cursor-trail"
+    "cursor-trail",
+    "pen-cursor",
+    "refractive-cursor-lens"
   ],
   "motion": {
     "reducedMotion": "none"
