@@ -112,5 +112,29 @@
         }
       ]
     }
+  },
+  "tags": [
+    "text",
+    "outline",
+    "display",
+    "headline"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Decorative display mark; provide visually-hidden text when used as a logo or heading."
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }

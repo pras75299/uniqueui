@@ -70,5 +70,29 @@
         }
       ]
     }
+  },
+  "tags": [
+    "background",
+    "ripple",
+    "effect"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Decorative ripple effect."
+  },
+  "motion": {
+    "reducedMotion": "none",
+    "performanceNotes": "Continuous drift animation is the component's visual identity; a static fallback would eliminate its purpose as an ambient hero background."
   }
 }

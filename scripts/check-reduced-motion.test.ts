@@ -1,7 +1,9 @@
-// Tests guard the *intent* of the reduced-motion gate: motion metadata in
-// `registry/motion.json` must stay in lockstep with what component sources
-// actually do, and a `"full"` stance must be backed by a real guard.
+// Tests guard the *intent* of the reduced-motion gate: manifest `motion` fields
+// must stay in lockstep with what component sources actually do, and a `"full"`
+// stance must be backed by a real guard.
 
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -10,6 +12,7 @@ import {
     checkMotionConsistency,
     detectMotionUsage,
     detectReducedMotionGuard,
+    readMotionMapFromManifests,
     runCheck,
     slugFromComponentPath,
 } from "./check-reduced-motion.mjs";
@@ -126,6 +129,24 @@ describe("checkMotionConsistency", () => {
             components: [{ slug: "a", usesMotion: false, hasGuard: false }],
         });
         expect(result.strayUnknown).toEqual(["ghost"]);
+    });
+});
+
+describe("readMotionMapFromManifests", () => {
+    it("builds a slug map from manifest motion fields", () => {
+        const dir = path.join(REGISTRY_DIR, "components");
+        const map = readMotionMapFromManifests(dir);
+        expect(map["hero-terminal"]?.reducedMotion).toBe("full");
+    });
+
+    it("throws when manifest slug does not match filename", () => {
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "motion-manifest-"));
+        fs.writeFileSync(
+            path.join(tmp, "demo-card.json"),
+            JSON.stringify({ slug: "wrong-slug", motion: { reducedMotion: "none" } }),
+        );
+        expect(() => readMotionMapFromManifests(tmp)).toThrow(/does not match filename/);
+        fs.rmSync(tmp, { recursive: true, force: true });
     });
 });
 

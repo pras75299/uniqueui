@@ -55,5 +55,28 @@
       "overview": "Per-glyph cursor-tracking hero. The headline reads as a normal h1 to screen readers (aria-label on the wrapper, aria-hidden on each animated span), so accessibility is preserved despite the per-letter wrapping.",
       "scenarios": []
     }
+  },
+  "tags": [
+    "hero",
+    "block",
+    "text",
+    "magnetic"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }

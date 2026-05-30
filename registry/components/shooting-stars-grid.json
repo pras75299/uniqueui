@@ -96,5 +96,29 @@
       ]
     },
     "usageCode": "\"use client\";\nimport { ShootingStarsGrid } from \"@/components/ui/shooting-stars-grid\";\n\nexport default function Example() {\n  return (\n    <div className=\"h-[400px] w-full rounded-xl overflow-hidden\">\n      {/* Default: multi-hue palette (white, mint, cyan, amber, pink, violet) */}\n      <ShootingStarsGrid\n        starCount={18}\n        speed={2.5}\n        gridSize={80}\n      />\n\n      {/* Monochrome — every streak picks up the same hue */}\n      {/* <ShootingStarsGrid starCount={18} color=\"#7fe7ff\" /> */}\n\n      {/* Custom palette — streaks sampled from this set */}\n      {/* <ShootingStarsGrid\n        starCount={20}\n        color={[\"#ff9ecf\", \"#c89bff\", \"#ffffff\"]}\n      /> */}\n    </div>\n  );\n}"
+  },
+  "tags": [
+    "background",
+    "stars",
+    "shooting",
+    "grid"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Decorative background."
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }

@@ -65,5 +65,25 @@
         }
       ]
     }
+  },
+  "tags": [
+    "effect",
+    "confetti",
+    "celebration"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Visual-only celebration effect; should be paired with text feedback for assistive tech."
   }
 }

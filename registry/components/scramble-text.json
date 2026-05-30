@@ -76,5 +76,28 @@
         }
       ]
     }
+  },
+  "tags": [
+    "text",
+    "scramble",
+    "effect"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "none",
+    "performanceNotes": "Text scramble effect is the component's only feature; offering a static fallback would eliminate its purpose."
   }
 }

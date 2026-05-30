@@ -76,5 +76,29 @@
         }
       ]
     }
+  },
+  "tags": [
+    "background",
+    "shader",
+    "mesh",
+    "gradient"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "n/a",
+    "screenReaderNotes": "Decorative gradient background."
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }

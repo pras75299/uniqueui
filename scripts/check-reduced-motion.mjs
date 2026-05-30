@@ -1,23 +1,8 @@
 #!/usr/bin/env node
 // Reduced-motion enforcement gate.
 //
-// Cross-checks `registry/motion.json` against actual component source so the
-// metadata cannot silently drift from the code. Three invariants:
-//
-//   1. Every component file that uses motion APIs MUST have an entry in
-//      `registry/motion.json`. (Else: undeclared animation; the docs and
-//      CLI can't warn users with `prefers-reduced-motion: reduce`.)
-//   2. Every entry in `registry/motion.json` MUST correspond to a component
-//      that actually uses motion APIs. (Else: stale metadata, possibly left
-//      over from a rewrite that removed the animation.)
-//   3. If an entry's `reducedMotion` is `"full"`, the source MUST contain
-//      `useReducedMotion` or a `prefers-reduced-motion` CSS query. (Else:
-//      the claim is unverifiable; downgrade to `"partial"` or `"none"` and
-//      document why in `performanceNotes`.)
-//
-// "partial" and "none" are explicit opt-outs and trigger no source check —
-// they exist so a component can ship without a guard and still satisfy the
-// merge gate, in exchange for surfacing the tech debt in the registry.
+// Cross-checks each component manifest's optional `motion` field against
+// actual component source so the metadata cannot silently drift from the code.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -27,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const REPO_ROOT = path.resolve(__dirname, "..");
 const REGISTRY_DIR = path.join(REPO_ROOT, "registry");
-const MOTION_FILE = path.join(REGISTRY_DIR, "motion.json");
+const COMPONENTS_DIR = path.join(REGISTRY_DIR, "components");
 
 // Motion-API detection. Intentionally broad: catches the `motion.div` /
 // `<motion.span>` pattern, the `motion/react` import line itself, the
@@ -104,9 +89,9 @@ export function detectReducedMotionGuard(source) {
  * list of `components` ({ slug, usesMotion, hasGuard }), return three
  * disjoint problem sets:
  *
- *   - `missing`:        component uses motion APIs but no motion.json entry.
- *   - `stray`:          motion.json entry but component doesn't use motion.
- *   - `unguardedFull`:  motion.json says "full" but source lacks a guard.
+ *   - `missing`:        component uses motion APIs but no manifest `motion` field.
+ *   - `stray`:          manifest `motion` entry but component doesn't use motion.
+ *   - `unguardedFull`:  manifest claims `"full"` but source lacks a guard.
  *
  * Stray slugs that aren't even in the component list (e.g. typo) come back
  * as `strayUnknown`.
@@ -140,19 +125,31 @@ export function checkMotionConsistency({ motionMap, components }) {
     return { missing, stray, unguardedFull, strayUnknown };
 }
 
-function readMotionMap(file) {
-    if (!fs.existsSync(file)) {
-        throw new Error(`registry/motion.json not found at ${file}`);
+export function readMotionMapFromManifests(componentsDir) {
+    if (!fs.existsSync(componentsDir)) {
+        throw new Error(`registry/components not found at ${componentsDir}`);
     }
-    const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-        throw new Error("registry/motion.json must be an object keyed by slug");
+    const map = {};
+    for (const file of fs.readdirSync(componentsDir)) {
+        if (!file.endsWith(".json")) continue;
+        const slugFromFile = file.replace(/\.json$/, "");
+        const manifest = JSON.parse(
+            fs.readFileSync(path.join(componentsDir, file), "utf8"),
+        );
+        if (manifest.slug !== slugFromFile) {
+            throw new Error(
+                `registry/components/${file}: slug "${manifest.slug}" does not match filename`,
+            );
+        }
+        if (manifest.motion) {
+            map[manifest.slug] = manifest.motion;
+        }
     }
-    return parsed;
+    return map;
 }
 
-export function runCheck({ registryDir = REGISTRY_DIR, motionFile = MOTION_FILE } = {}) {
-    const motionMap = readMotionMap(motionFile);
+export function runCheck({ registryDir = REGISTRY_DIR, componentsDir = COMPONENTS_DIR } = {}) {
+    const motionMap = readMotionMapFromManifests(componentsDir);
     const componentFiles = listComponentFiles(registryDir);
     const components = componentFiles.map((file) => {
         const source = fs.readFileSync(file, "utf8");
@@ -171,32 +168,32 @@ function main() {
     const total = missing.length + stray.length + unguardedFull.length + strayUnknown.length;
 
     if (total === 0) {
-        const covered = Object.keys(JSON.parse(fs.readFileSync(MOTION_FILE, "utf8"))).length;
+        const covered = Object.keys(readMotionMapFromManifests(COMPONENTS_DIR)).length;
         console.log(`Reduced-motion check OK — ${covered} motion-using component(s) covered.`);
         return;
     }
 
     console.error("Reduced-motion gate failed:\n");
     if (missing.length > 0) {
-        console.error(`  Components use motion APIs but have no registry/motion.json entry (${missing.length}):`);
+        console.error(`  Components use motion APIs but have no manifest motion field (${missing.length}):`);
         for (const s of missing) console.error(`    ✗ ${s}`);
-        console.error(`    → Add \`"${missing[0]}": { "reducedMotion": "full" | "partial" | "none" }\` to registry/motion.json.`);
+        console.error(`    → Add \`"motion": { "reducedMotion": "full" | "partial" | "none" }\` to registry/components/${missing[0]}.json.`);
         console.error("");
     }
     if (stray.length > 0) {
-        console.error(`  motion.json entries for components with NO motion APIs (${stray.length}):`);
+        console.error(`  Manifest motion entries for components with NO motion APIs (${stray.length}):`);
         for (const s of stray) console.error(`    ✗ ${s}`);
         console.error("    → Remove the entry; the component doesn't animate.");
         console.error("");
     }
     if (unguardedFull.length > 0) {
-        console.error(`  motion.json claims \`reducedMotion: "full"\` but the source has no guard (${unguardedFull.length}):`);
+        console.error(`  Manifest claims \`reducedMotion: "full"\` but the source has no guard (${unguardedFull.length}):`);
         for (const s of unguardedFull) console.error(`    ✗ ${s}`);
         console.error('    → Add `useReducedMotion` (from "motion/react") or a `prefers-reduced-motion` CSS query, OR downgrade the metadata to "partial" / "none" with `performanceNotes`.');
         console.error("");
     }
     if (strayUnknown.length > 0) {
-        console.error(`  motion.json slugs with no corresponding component file (${strayUnknown.length}):`);
+        console.error(`  Manifest motion slugs with no corresponding component file (${strayUnknown.length}):`);
         for (const s of strayUnknown) console.error(`    ✗ ${s}`);
         console.error("    → Typo or stale rename. Remove the entry.");
         console.error("");

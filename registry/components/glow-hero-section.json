@@ -121,5 +121,28 @@
       ]
     },
     "usageCode": "import GlowHeroSection from \"@/components/ui/glow-hero-section\";\n\nexport default function Example() {\n  return (\n    <GlowHeroSection\n      heading=\"Build the Future\"\n      description=\"A decentralised toolkit for ambitious teams moving fast.\"\n      badge=\"Open Source · MIT License\"\n      className=\"rounded-2xl\"\n    />\n  );\n}"
+  },
+  "tags": [
+    "background",
+    "hero",
+    "glow",
+    "section"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "none"
   }
 }

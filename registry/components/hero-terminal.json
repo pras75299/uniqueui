@@ -90,5 +90,31 @@
       "overview": "TerminalHero pairs a headline with a live terminal that types your getting-started commands and prints their output — a high-conversion 'see it work' pattern for landing pages. The standalone `Terminal` window is exported from the same file for reuse elsewhere. The animation starts when the hero scrolls into view, respects `prefers-reduced-motion` (rendering the finished transcript instantly), and exposes copy + replay controls. The animated transcript is `aria-hidden` while a screen-reader-only copy carries the real content.",
       "scenarios": []
     }
+  },
+  "tags": [
+    "terminal",
+    "cli",
+    "typing",
+    "code",
+    "hero"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited",
+    "keyboard": true,
+    "screenReaderNotes": "The animated transcript is aria-hidden; a screen-reader-only copy of the full command list and output is exposed instead. Copy and replay controls are real buttons with aria-labels."
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }

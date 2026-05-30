@@ -310,7 +310,7 @@
     },
     "accessibility": {
       "status": "n/a",
-      "screenReaderNotes": "Purely decorative background; should be wrapped in an element with aria-hidden if it sits behind content."
+      "screenReaderNotes": "Decorative visual layer only should be aria-hidden; do not apply aria-hidden to wrappers containing readable children."
     },
     "relatedSlugs": [
       "shader-mesh-gradient"
@@ -839,7 +839,8 @@
       "status": "unaudited"
     },
     "motion": {
-      "reducedMotion": "none"
+      "reducedMotion": "none",
+      "performanceNotes": "Text scramble effect is the component's only feature; offering a static fallback would eliminate its purpose."
     }
   },
   {
@@ -1796,7 +1797,8 @@
       "status": "unaudited"
     },
     "motion": {
-      "reducedMotion": "none"
+      "reducedMotion": "none",
+      "performanceNotes": "Radial burst animation is core to the component's UX contract; static fallback would reduce it to a plain button."
     }
   },
   {
@@ -2543,7 +2545,8 @@
       "screenReaderNotes": "Decorative ripple effect."
     },
     "motion": {
-      "reducedMotion": "none"
+      "reducedMotion": "none",
+      "performanceNotes": "Continuous drift animation is the component's visual identity; a static fallback would eliminate its purpose as an ambient hero background."
     }
   },
   {

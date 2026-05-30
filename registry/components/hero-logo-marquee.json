@@ -53,5 +53,28 @@
       "overview": "Headline + dual-row logo ticker. Drop-in for SaaS landing pages where social proof sits beside the value proposition.",
       "scenarios": []
     }
+  },
+  "tags": [
+    "hero",
+    "block",
+    "logo",
+    "marquee"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }

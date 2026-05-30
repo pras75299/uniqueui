@@ -10,6 +10,7 @@ import { describe, expect, it } from "vitest";
 import {
     ChangelogEntry,
     Changelogs,
+    ComponentManifest,
     RegistryArray,
     RegistryEntry,
     ShadcnItem,
@@ -61,6 +62,40 @@ const goodShadcnManifest = {
     homepage: "https://uniqueui-platform.vercel.app",
     items: [goodShadcnItem],
 };
+
+describe("ComponentManifest", () => {
+    const goodManifest = {
+        slug: "spotlight-card",
+        registry: {
+            dependencies: ["motion", "clsx", "tailwind-merge"],
+            files: [{ path: "spotlight-card/component.tsx", type: "registry:ui" }],
+        },
+        docs: {
+            name: "Spotlight Card",
+            description: "Card with spotlight.",
+            icon: "LucideMousePointer",
+            props: [],
+        },
+        tags: ["card", "hover"],
+        peerDependencies: ["react", "react-dom"],
+        compatibility: { react: "18+", next: "14+", tailwind: "3+|4+", rsc: false, ssr: true },
+        accessibility: { status: "unaudited" },
+    };
+
+    it("accepts ADR 0003 metadata on the per-slug manifest", () => {
+        expect(validate(ComponentManifest, goodManifest).ok).toBe(true);
+    });
+
+    it("accepts optional motion metadata", () => {
+        const ok = { ...goodManifest, motion: { reducedMotion: "full" } };
+        expect(validate(ComponentManifest, ok).ok).toBe(true);
+    });
+
+    it("rejects manifests missing required tags", () => {
+        const { tags: _tags, ...bad } = goodManifest;
+        expect(validate(ComponentManifest, bad).ok).toBe(false);
+    });
+});
 
 describe("RegistryEntry", () => {
     it("accepts a well-formed entry", () => {

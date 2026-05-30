@@ -42,5 +42,28 @@
       "overview": "A minimal hero block that proves the slotted composition pattern. Background lives on its own; the hero accepts children for full content override.",
       "scenarios": []
     }
+  },
+  "tags": [
+    "hero",
+    "block",
+    "pulse",
+    "reference"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "motion": {
+    "reducedMotion": "full"
   }
 }

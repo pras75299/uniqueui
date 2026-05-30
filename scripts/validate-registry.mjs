@@ -15,18 +15,15 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
-  AccessibilityMap,
   Changelogs,
-  CompatibilityMap,
+  ComponentManifest,
   MotionMap,
-  PeerDependenciesMap,
   RegistryArray,
   RegistryEntry,
   RelatedSlugsMap,
   ShadcnItem,
   ShadcnManifest,
   SplitIndex,
-  TagsMap,
   UsedByBlocksMap,
   crossCheckChangelogs,
   crossCheckSlugs,
@@ -130,21 +127,30 @@ for (const [label, changelogs] of [
   for (const m of mismatches) failures.push(`cross-check (${label}): ${m}`);
 }
 
-// Motion metadata is sparse (only components that import motion APIs).
-// Schema-validate the source file and cross-check it against the registry
-// slug set: stray slugs are caught here, missing coverage is caught by
-// `scripts/check-reduced-motion.mjs` (which also enforces source/metadata
-// consistency).
+// Per-slug source manifests (ADR 0003): metadata lives on each manifest.
+const componentsDir = path.join(ROOT, "registry", "components");
+const motionFromManifests = {};
+if (fs.existsSync(componentsDir)) {
+  for (const file of fs.readdirSync(componentsDir)) {
+    if (!file.endsWith(".json")) continue;
+    const rel = `registry/components/${file}`;
+    const raw = readJson(rel);
+    const parsed = check(rel, ComponentManifest, raw);
+    if (parsed?.motion) {
+      motionFromManifests[parsed.slug] = parsed.motion;
+    }
+  }
+}
 const sourceMotion = check(
-  "registry/motion.json",
+  "registry/components (motion fields)",
   MotionMap,
-  readJson("registry/motion.json"),
+  Object.keys(motionFromManifests).length > 0 ? motionFromManifests : null,
 );
 if (sourceMotion && rootRegistry) {
   const rootSlugs = new Set(rootRegistry.map((e) => e.name));
   for (const slug of Object.keys(sourceMotion)) {
     if (!rootSlugs.has(slug)) {
-      failures.push(`cross-check: motion.json has stray "${slug}" (not in registry)`);
+      failures.push(`cross-check: manifest motion field has stray "${slug}" (not in registry)`);
     }
   }
 }
@@ -166,33 +172,8 @@ for (const { file, schema } of [
   }
 }
 
-// Full-coverage metadata maps: every registry slug must have an entry,
-// and the file must have no stray slugs. The build script already enforces
-// this on the source files, but validating again here closes the gap if
-// someone hand-edits a generated artifact or skips the build.
-const FULL_COVERAGE_MAPS = [
-  { file: "registry/tags.json", schema: TagsMap },
-  { file: "registry/peer-dependencies.json", schema: PeerDependenciesMap },
-  { file: "registry/compatibility.json", schema: CompatibilityMap },
-  { file: "registry/accessibility.json", schema: AccessibilityMap },
-];
-for (const { file, schema } of FULL_COVERAGE_MAPS) {
-  const parsed = check(file, schema, readJson(file));
-  if (parsed && rootRegistry) {
-    const rootSlugs = new Set(rootRegistry.map((e) => e.name));
-    const fileSlugs = new Set(Object.keys(parsed));
-    for (const slug of rootSlugs) {
-      if (!fileSlugs.has(slug)) {
-        failures.push(`cross-check: ${file} missing entry for "${slug}"`);
-      }
-    }
-    for (const slug of fileSlugs) {
-      if (!rootSlugs.has(slug)) {
-        failures.push(`cross-check: ${file} has stray "${slug}" (not in registry)`);
-      }
-    }
-  }
-}
+// related-slugs.json and used-by-blocks.json remain sparse hand-maintained
+// maps until ADR follow-up computes them in the build script.
 
 // Direct parity: source is the authored truth, public is the published copy.
 // Drift between them means the build script didn't run or the public file
