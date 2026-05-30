@@ -40,7 +40,7 @@ pnpm dev                   # Docs site at localhost:3000
 1. Create `registry/<component-name>/component.tsx` with the component source
 2. Create `registry/components/<slug>.json` — a `registry` block (`dependencies`, `files`, optional `tailwindConfig`/`tailwindCss`; the shared `cn` util is appended automatically, so don't list it) and a `docs` block (name, description, icon, props, optional `docs.overview`/`docs.scenarios`). See [ADR 0002](docs/adr/0002-per-slug-registry-manifests.md)
 3. Add the slug to both `order` and `docsOrder` in `registry/manifest.json`
-4. Add the live demo mapping to `registry/demos.tsx`
+4. Add the live demo to `registry/{slug}/demo.tsx` and append the key to `registry/demos/demo-key-order.json`
 5. Run `pnpm build:registry` from the root — this regenerates `registry.json`, refreshes `apps/www/public/registry/*` and **`apps/www/public/r/*`** (shadcn registry URLs), syncs `apps/www/components/ui/*`, and generates `apps/www/config/components.ts`, `apps/www/config/docs-scenarios.ts`, and `apps/www/config/demos.tsx`
 6. Test in the docs site: `cd apps/www && pnpm dev`
 
@@ -49,11 +49,11 @@ pnpm dev                   # Docs site at localhost:3000
 | Source (edit these) | Generated (do not edit by hand) |
 |---------------------|----------------------------------|
 | `registry/components/<slug>.json` | `apps/www/config/components.ts`, `apps/www/config/docs-scenarios.ts` |
-| `registry/demos.tsx` | `apps/www/config/demos.tsx` |
+| `registry/**/demo.tsx` + `registry/demos/shared.tsx` | `apps/www/config/demos.tsx` |
 
 - **Model:** Registry metadata is authored as one manifest per component under `registry/components/<slug>.json`, aggregated by `scripts/build-registry.ts`. This supersedes the centralized `registry/docs.json` model — see [ADR 0002](docs/adr/0002-per-slug-registry-manifests.md) (which supersedes [ADR 0001](docs/adr/0001-registry-docs-metadata-storage.md)).
 - **When the model changes:** If a future ADR supersedes 0002, update this section, `BUILD.md`, and any `scripts/build-registry.ts` / CI drift checks in the same change series so contributors have a single coherent story.
-- After any edit under `registry/components/`, `registry/manifest.json`, or `registry/demos.tsx`, run `pnpm build:registry` and commit generated files under `apps/www/config/`, `apps/www/components/ui/`, `apps/www/public/registry/`, **`apps/www/public/r/`**, and root `registry.json` as required by CI.
+- After any edit under `registry/components/`, `registry/manifest.json`, or `registry/**/demo.tsx`, run `pnpm build:registry` and commit generated files under `apps/www/config/`, `apps/www/components/ui/`, `apps/www/public/registry/`, **`apps/www/public/r/`**, and root `registry.json` as required by CI.
 
 ## Component Design Rules
 

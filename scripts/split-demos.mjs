@@ -2,6 +2,7 @@
 /**
  * One-time codemod: split registry/demos.tsx into registry/demos/shared.tsx
  * and per-slug registry/{slug}/demo.tsx fragments.
+ * Parser rules must stay in sync with scripts/demo-entries-parser.ts.
  *
  * Run: node scripts/split-demos.mjs
  * Then: pnpm build:registry (assembler merges fragments into apps/www/config/demos.tsx)
@@ -175,7 +176,7 @@ function splitTopLevelEntries(objectBody) {
 }
 
 function stripLeadingComments(chunk) {
-  return chunk.replace(/^(?:\s*\/\/[^\n]*\n)+/, "").trim();
+  return chunk.replace(/^(?:\s*\/\/[^\n]*\n)+/, "").trimStart();
 }
 
 function entryKey(entry) {

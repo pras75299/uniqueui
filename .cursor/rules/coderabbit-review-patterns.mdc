@@ -38,6 +38,8 @@ Apply this checklist when writing or reviewing code. These patterns recur in PR 
 - **Preserve exact whitespace:** Never `.trim()` demo entry chunks when splitting or assembling — byte-identical output to the legacy monolith is the regression gate (`assemble-demos.test.ts`).
 - **Comment-prefixed entries:** Section comments before a key (`// ─── …`) belong on the same chunk; filter keys with `stripLeadingComments`, do not drop the comment from stored text.
 - **Bare object keys:** Some demos use unquoted keys (e.g. `ripple:`) — key parsers must accept both `"slug":` and `slug:` forms.
+- **Shared parser module:** Comma/depth rules live in `scripts/demo-entries-parser.ts`; `split-demos.mjs` must stay in sync. Add regression tests when changing split logic.
+- **Validate key order:** Reject duplicate or non-string keys in `demo-key-order.json` at assemble time; test fragment keys stay in sync with the order file.
 - **New demo workflow:** Add entries to `registry/{slug}/demo.tsx`, append key to `registry/demos/demo-key-order.json`, run `pnpm build:registry` — do not edit `apps/www/config/demos.tsx` by hand.
 
 ## Pre-PR verification (registry changes)

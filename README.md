@@ -571,7 +571,7 @@ node --version  # must be v18 or higher
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/my-component`)
 3. Add your component to `registry/` and create `registry/components/<slug>.json` (build config + docs metadata), then add the slug to `order` and `docsOrder` in `registry/manifest.json`
-4. Add the live demo mapping in `registry/demos.tsx`
+4. Add the live demo to `registry/{slug}/demo.tsx` and append the key to `registry/demos/demo-key-order.json`
 5. Run `pnpm build:registry` to regenerate `registry.json`, refresh `apps/www/public/registry/*` and **`apps/www/public/r/*`**, sync `apps/www/components/ui/*`, and generate `apps/www/config/components.ts` plus `apps/www/config/docs-scenarios.ts`
 6. Run `pnpm build` to ensure everything compiles
 7. Submit a pull request

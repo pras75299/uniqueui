@@ -49,7 +49,7 @@ per-component:
 
 ```jsonc
 {
-  "demos": { "sourceFile": "registry/demos.tsx" },
+  "demos": { "sourceFile": "registry/demos/shared.tsx + registry/**/demo.tsx" },
   "order": [ /* install / registry.json order — was registry/config.ts order */ ],
   "docsOrder": [ /* docs-site display order — was registry/docs.json order */ ]
 }

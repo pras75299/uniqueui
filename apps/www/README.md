@@ -86,6 +86,6 @@ If you are adding or changing a component, start in the repo root:
 
 - component source: `registry/<slug>/component.tsx`
 - build config + docs metadata: `registry/components/<slug>.json` (ordered by `registry/manifest.json`)
-- demo mappings: `registry/demos.tsx`
+- demo mappings: `registry/**/demo.tsx` + `registry/demos/shared.tsx` (assembled into `apps/www/config/demos.tsx`)
 
 Contributor workflow details live in the root [`CONTRIBUTING.md`](../../CONTRIBUTING.md) and [`BUILD.md`](../../BUILD.md).
