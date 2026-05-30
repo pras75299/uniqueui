@@ -51,6 +51,14 @@
     "status": "n/a",
     "screenReaderNotes": "Decorative ripple effect."
   },
+  "relatedSlugs": [
+    "aurora-background",
+    "dot-grid-background",
+    "glow-hero-section",
+    "meteors-card",
+    "particle-field",
+    "shader-mesh-gradient"
+  ],
   "motion": {
     "reducedMotion": "none",
     "performanceNotes": "Continuous drift animation is the component's visual identity; a static fallback would eliminate its purpose as an ambient hero background."

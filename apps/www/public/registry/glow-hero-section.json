@@ -51,6 +51,14 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "shooting-stars-grid",
+    "ambient-glow-card",
+    "animated-glowing-text-outline",
+    "aurora-background",
+    "dot-grid-background",
+    "meteors-card"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

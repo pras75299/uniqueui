@@ -53,6 +53,12 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "animated-tabs",
+    "drawer-slide",
+    "morphing-modal",
+    "notification-stack"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

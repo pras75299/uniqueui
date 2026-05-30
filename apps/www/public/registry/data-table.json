@@ -50,5 +50,9 @@
   },
   "accessibility": {
     "status": "unaudited"
-  }
+  },
+  "relatedSlugs": [
+    "bento-grid",
+    "dynamic-info"
+  ]
 }

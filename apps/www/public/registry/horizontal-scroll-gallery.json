@@ -52,6 +52,7 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
+    "animated-timeline",
     "infinite-marquee",
     "scroll-reveal"
   ],

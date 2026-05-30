@@ -51,8 +51,12 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
+    "hover-reveal-card",
+    "aurora-background",
+    "shader-mesh-gradient",
+    "shiny-text",
     "blur-reveal",
-    "shiny-text"
+    "chromatic-aberration-reveal"
   ],
   "motion": {
     "reducedMotion": "none"

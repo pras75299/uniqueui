@@ -52,6 +52,11 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "animated-tabs",
+    "floating-dock",
+    "radial-menu"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

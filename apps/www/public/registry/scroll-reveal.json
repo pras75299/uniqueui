@@ -51,9 +51,12 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
-    "chromatic-aberration-reveal",
+    "animated-timeline",
     "horizontal-scroll-gallery",
-    "infinite-marquee"
+    "infinite-marquee",
+    "blur-reveal",
+    "chromatic-aberration-reveal",
+    "gradient-text-reveal"
   ],
   "motion": {
     "reducedMotion": "none"

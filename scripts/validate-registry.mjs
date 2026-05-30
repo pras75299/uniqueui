@@ -20,11 +20,9 @@ import {
   MotionMap,
   RegistryArray,
   RegistryEntry,
-  RelatedSlugsMap,
   ShadcnItem,
   ShadcnManifest,
   SplitIndex,
-  UsedByBlocksMap,
   crossCheckChangelogs,
   crossCheckSlugs,
   validate,
@@ -155,25 +153,8 @@ if (sourceMotion && rootRegistry) {
   }
 }
 
-// Sparse maps: optional files that need no full coverage, just valid slugs.
-for (const { file, schema } of [
-  { file: "registry/related-slugs.json", schema: RelatedSlugsMap },
-  { file: "registry/used-by-blocks.json", schema: UsedByBlocksMap },
-]) {
-  if (!fs.existsSync(path.join(ROOT, file))) continue; // sparse — optional
-  const parsed = check(file, schema, readJson(file));
-  if (parsed && rootRegistry) {
-    const rootSlugs = new Set(rootRegistry.map((e) => e.name));
-    for (const slug of Object.keys(parsed)) {
-      if (!rootSlugs.has(slug)) {
-        failures.push(`cross-check: ${file} has stray "${slug}" (not in registry)`);
-      }
-    }
-  }
-}
-
-// related-slugs.json and used-by-blocks.json remain sparse hand-maintained
-// maps until ADR follow-up computes them in the build script.
+// relatedSlugs and usedByBlocks are computed at build time from manifest tags
+// (scripts/compute-cross-links.ts) — no hand-maintained sidecars.
 
 // Direct parity: source is the authored truth, public is the published copy.
 // Drift between them means the build script didn't run or the public file

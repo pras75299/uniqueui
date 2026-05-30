@@ -52,7 +52,12 @@
     "screenReaderNotes": "Decorative visual layer only should be aria-hidden; do not apply aria-hidden to wrappers containing readable children."
   },
   "relatedSlugs": [
-    "shader-mesh-gradient"
+    "shooting-stars-grid",
+    "shader-mesh-gradient",
+    "hero-liquid-aurora-mesh",
+    "gradient-text-reveal",
+    "shiny-text",
+    "dot-grid-background"
   ],
   "usedByBlocks": [
     "hero-liquid-aurora-mesh"

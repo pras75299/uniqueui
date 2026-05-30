@@ -53,7 +53,8 @@
   "relatedSlugs": [
     "3d-tilt-card",
     "ambient-glow-card",
-    "hover-reveal-card"
+    "hover-reveal-card",
+    "magnetic-button"
   ],
   "motion": {
     "reducedMotion": "none"

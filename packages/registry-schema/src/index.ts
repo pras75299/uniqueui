@@ -72,12 +72,12 @@ export const RegistryAsset = z.object({
 }).strict();
 
 // Cross-links between components that share concepts or are commonly used together.
-// Sparse — not every component needs related slugs. Populated in registry/related-slugs.json
-// and derived automatically by the build script from shared tag overlap.
+// Sparse — not every component needs related slugs. Computed at build time from
+// shared tag overlap (see scripts/compute-cross-links.ts).
 export const RelatedSlugsMap = z.record(Slug, z.array(Slug).min(1));
 
 // Inverse relationship: which hero-block slugs visually incorporate or were
-// inspired by a given component. Populated in registry/used-by-blocks.json.
+// inspired by a given component. Computed at build time from manifest tag overlap.
 export const UsedByBlocksMap = z.record(Slug, z.array(Slug).min(1));
 
 export const RegistryFile = z.object({

@@ -59,6 +59,11 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "aurora-background",
+    "liquid-glass-panel",
+    "shader-mesh-gradient"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

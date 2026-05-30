@@ -52,6 +52,10 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "dot-grid-background",
+    "particle-field"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

@@ -53,7 +53,12 @@
     "screenReaderNotes": "Decorative background."
   },
   "relatedSlugs": [
-    "dot-grid-background"
+    "dot-grid-background",
+    "bento-grid",
+    "aurora-background",
+    "glow-hero-section",
+    "meteors-card",
+    "particle-field"
   ],
   "motion": {
     "reducedMotion": "full"

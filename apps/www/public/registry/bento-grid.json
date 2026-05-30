@@ -50,6 +50,11 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "data-table",
+    "dot-grid-background",
+    "shooting-stars-grid"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

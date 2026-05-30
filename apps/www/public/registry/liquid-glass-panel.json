@@ -51,6 +51,12 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "hero-liquid-aurora-mesh"
+  ],
+  "usedByBlocks": [
+    "hero-liquid-aurora-mesh"
+  ],
   "motion": {
     "reducedMotion": "full"
   }

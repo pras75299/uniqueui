@@ -50,6 +50,13 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "morphing-card-stack",
+    "animated-tabs",
+    "drawer-slide",
+    "multi-step-auth-card",
+    "notification-stack"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

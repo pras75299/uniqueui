@@ -51,6 +51,10 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "ambient-glow-card",
+    "glow-hero-section"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

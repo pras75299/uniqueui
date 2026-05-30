@@ -70,7 +70,8 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
-      "border-beam"
+      "border-beam",
+      "meteors-card"
     ],
     "cssVariables": [
       {
@@ -189,9 +190,10 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
-      "ambient-glow-card",
       "flip-card",
+      "ambient-glow-card",
       "hover-reveal-card",
+      "magnetic-button",
       "spotlight-card"
     ],
     "motion": {
@@ -253,7 +255,8 @@
     "relatedSlugs": [
       "3d-tilt-card",
       "ambient-glow-card",
-      "hover-reveal-card"
+      "hover-reveal-card",
+      "magnetic-button"
     ],
     "motion": {
       "reducedMotion": "none"
@@ -313,7 +316,12 @@
       "screenReaderNotes": "Decorative visual layer only should be aria-hidden; do not apply aria-hidden to wrappers containing readable children."
     },
     "relatedSlugs": [
-      "shader-mesh-gradient"
+      "shooting-stars-grid",
+      "shader-mesh-gradient",
+      "hero-liquid-aurora-mesh",
+      "gradient-text-reveal",
+      "shiny-text",
+      "dot-grid-background"
     ],
     "usedByBlocks": [
       "hero-liquid-aurora-mesh"
@@ -371,6 +379,14 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "multi-step-auth-card",
+      "floating-dock",
+      "limelight-nav",
+      "radial-menu",
+      "drawer-slide",
+      "morphing-modal"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -427,6 +443,17 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "spotlight-card",
+      "iridescent-foil-button",
+      "hero-magnetic-letters",
+      "magnetic-text",
+      "3d-tilt-card",
+      "ambient-glow-card"
+    ],
+    "usedByBlocks": [
+      "hero-magnetic-letters"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -485,6 +512,8 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
+      "hero-logo-marquee",
+      "animated-timeline",
       "horizontal-scroll-gallery",
       "scroll-reveal"
     ],
@@ -548,9 +577,12 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
-      "chromatic-aberration-reveal",
+      "animated-timeline",
       "horizontal-scroll-gallery",
-      "infinite-marquee"
+      "infinite-marquee",
+      "blur-reveal",
+      "chromatic-aberration-reveal",
+      "gradient-text-reveal"
     ],
     "motion": {
       "reducedMotion": "none"
@@ -665,6 +697,13 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "morphing-card-stack",
+      "animated-tabs",
+      "drawer-slide",
+      "multi-step-auth-card",
+      "notification-stack"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -722,6 +761,10 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "ambient-glow-card",
+      "glow-hero-section"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -779,8 +822,12 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
+      "hover-reveal-card",
+      "aurora-background",
+      "shader-mesh-gradient",
+      "shiny-text",
       "blur-reveal",
-      "shiny-text"
+      "chromatic-aberration-reveal"
     ],
     "motion": {
       "reducedMotion": "none"
@@ -927,6 +974,14 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "shooting-stars-grid",
+      "border-beam",
+      "moving-border",
+      "aurora-background",
+      "dot-grid-background",
+      "glow-hero-section"
+    ],
     "cssVariables": [
       {
         "name": "--animate-meteor",
@@ -1107,7 +1162,12 @@
       "screenReaderNotes": "Decorative background; should be aria-hidden."
     },
     "relatedSlugs": [
-      "shooting-stars-grid"
+      "ripple",
+      "shooting-stars-grid",
+      "hero-noise-dot-field",
+      "bento-grid",
+      "aurora-background",
+      "glow-hero-section"
     ],
     "usedByBlocks": [
       "hero-noise-dot-field"
@@ -1165,6 +1225,11 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "animated-tabs",
+      "limelight-nav",
+      "radial-menu"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -1274,6 +1339,12 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "animated-tabs",
+      "morphing-modal",
+      "multi-step-auth-card",
+      "notification-stack"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -1331,6 +1402,13 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "morphing-card-stack",
+      "animated-tabs",
+      "drawer-slide",
+      "morphing-modal",
+      "multi-step-auth-card"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -1387,6 +1465,11 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "horizontal-scroll-gallery",
+      "infinite-marquee",
+      "scroll-reveal"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -1500,9 +1583,12 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
+      "spotlight-card",
       "3d-tilt-card",
       "ambient-glow-card",
-      "spotlight-card"
+      "blur-reveal",
+      "chromatic-aberration-reveal",
+      "gradient-text-reveal"
     ],
     "motion": {
       "reducedMotion": "none"
@@ -1560,6 +1646,11 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "data-table",
+      "dot-grid-background",
+      "shooting-stars-grid"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -1618,6 +1709,7 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
+      "animated-timeline",
       "infinite-marquee",
       "scroll-reveal"
     ],
@@ -1678,6 +1770,17 @@
       "status": "n/a",
       "screenReaderNotes": "Decorative background; should be aria-hidden."
     },
+    "relatedSlugs": [
+      "shooting-stars-grid",
+      "hero-noise-dot-field",
+      "aurora-background",
+      "dot-grid-background",
+      "glow-hero-section",
+      "meteors-card"
+    ],
+    "usedByBlocks": [
+      "hero-noise-dot-field"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -1736,7 +1839,9 @@
       "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
     },
     "relatedSlugs": [
-      "cursor-trail"
+      "cursor-trail",
+      "pen-cursor",
+      "refractive-cursor-lens"
     ],
     "motion": {
       "reducedMotion": "none"
@@ -1796,6 +1901,11 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "animated-tabs",
+      "floating-dock",
+      "limelight-nav"
+    ],
     "motion": {
       "reducedMotion": "none",
       "performanceNotes": "Radial burst animation is core to the component's UX contract; static fallback would reduce it to a plain button."
@@ -1855,7 +1965,9 @@
       "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
     },
     "relatedSlugs": [
-      "interactive-cursor"
+      "interactive-cursor",
+      "pen-cursor",
+      "refractive-cursor-lens"
     ],
     "motion": {
       "reducedMotion": "none"
@@ -1912,7 +2024,12 @@
     "accessibility": {
       "status": "n/a",
       "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
-    }
+    },
+    "relatedSlugs": [
+      "cursor-trail",
+      "interactive-cursor",
+      "refractive-cursor-lens"
+    ]
   },
   {
     "name": "glow-hero-section",
@@ -1967,6 +2084,14 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "shooting-stars-grid",
+      "ambient-glow-card",
+      "animated-glowing-text-outline",
+      "aurora-background",
+      "dot-grid-background",
+      "meteors-card"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -2025,6 +2150,10 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "morphing-modal",
+      "notification-stack"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -2083,6 +2212,11 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "animated-tabs",
+      "floating-dock",
+      "radial-menu"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -2139,7 +2273,11 @@
     },
     "accessibility": {
       "status": "unaudited"
-    }
+    },
+    "relatedSlugs": [
+      "bento-grid",
+      "dynamic-info"
+    ]
   },
   {
     "name": "multi-step-auth-card",
@@ -2196,6 +2334,12 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "animated-tabs",
+      "drawer-slide",
+      "morphing-modal",
+      "notification-stack"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -2253,7 +2397,9 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
-      "gradient-text-reveal"
+      "aurora-background",
+      "gradient-text-reveal",
+      "shader-mesh-gradient"
     ],
     "motion": {
       "reducedMotion": "none"
@@ -2372,7 +2518,10 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
-      "gradient-text-reveal"
+      "chromatic-aberration-reveal",
+      "gradient-text-reveal",
+      "hover-reveal-card",
+      "scroll-reveal"
     ],
     "motion": {
       "reducedMotion": "none"
@@ -2488,7 +2637,8 @@
       "screenReaderNotes": "Decorative border layer; no interactive surface."
     },
     "relatedSlugs": [
-      "moving-border"
+      "moving-border",
+      "meteors-card"
     ]
   },
   {
@@ -2544,6 +2694,14 @@
       "status": "n/a",
       "screenReaderNotes": "Decorative ripple effect."
     },
+    "relatedSlugs": [
+      "aurora-background",
+      "dot-grid-background",
+      "glow-hero-section",
+      "meteors-card",
+      "particle-field",
+      "shader-mesh-gradient"
+    ],
     "motion": {
       "reducedMotion": "none",
       "performanceNotes": "Continuous drift animation is the component's visual identity; a static fallback would eliminate its purpose as an ambient hero background."
@@ -2660,7 +2818,12 @@
       "screenReaderNotes": "Decorative background."
     },
     "relatedSlugs": [
-      "dot-grid-background"
+      "dot-grid-background",
+      "bento-grid",
+      "aurora-background",
+      "glow-hero-section",
+      "meteors-card",
+      "particle-field"
     ],
     "motion": {
       "reducedMotion": "full"
@@ -2718,6 +2881,9 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "data-table"
+    ],
     "motion": {
       "reducedMotion": "none"
     }
@@ -2835,6 +3001,12 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "hero-liquid-aurora-mesh"
+    ],
+    "usedByBlocks": [
+      "hero-liquid-aurora-mesh"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -2894,7 +3066,15 @@
       "screenReaderNotes": "Decorative gradient background."
     },
     "relatedSlugs": [
-      "aurora-background"
+      "iridescent-foil-button",
+      "aurora-background",
+      "hero-liquid-aurora-mesh",
+      "gradient-text-reveal",
+      "shiny-text",
+      "caustic-light-card"
+    ],
+    "usedByBlocks": [
+      "hero-liquid-aurora-mesh"
     ],
     "motion": {
       "reducedMotion": "full"
@@ -2953,6 +3133,12 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "chromatic-aberration-reveal",
+      "iridescent-foil-button",
+      "refractive-cursor-lens",
+      "shader-mesh-gradient"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -3011,7 +3197,12 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
-      "scroll-reveal"
+      "refractive-cursor-lens",
+      "blur-reveal",
+      "caustic-light-card",
+      "gradient-text-reveal",
+      "hover-reveal-card",
+      "iridescent-foil-button"
     ],
     "motion": {
       "reducedMotion": "full"
@@ -3070,6 +3261,17 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "hero-iridescent-sweep",
+      "magnetic-button",
+      "caustic-light-card",
+      "chromatic-aberration-reveal",
+      "refractive-cursor-lens",
+      "shader-mesh-gradient"
+    ],
+    "usedByBlocks": [
+      "hero-iridescent-sweep"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -3188,6 +3390,14 @@
       "status": "n/a",
       "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
     },
+    "relatedSlugs": [
+      "cursor-trail",
+      "interactive-cursor",
+      "pen-cursor",
+      "caustic-light-card",
+      "chromatic-aberration-reveal",
+      "iridescent-foil-button"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -3246,8 +3456,11 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
+      "animated-glowing-text-outline",
+      "glow-hero-section",
       "3d-tilt-card",
       "hover-reveal-card",
+      "magnetic-button",
       "spotlight-card"
     ],
     "motion": {
@@ -3399,6 +3612,9 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "iridescent-foil-button"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -3464,6 +3680,11 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "aurora-background",
+      "liquid-glass-panel",
+      "shader-mesh-gradient"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -3522,6 +3743,10 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "dot-grid-background",
+      "particle-field"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -3586,6 +3811,9 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "infinite-marquee"
+    ],
     "motion": {
       "reducedMotion": "full"
     }
@@ -3665,6 +3893,7 @@
       "status": "unaudited"
     },
     "relatedSlugs": [
+      "magnetic-button",
       "magnetic-text"
     ],
     "motion": {
@@ -3791,6 +4020,10 @@
     "accessibility": {
       "status": "unaudited"
     },
+    "relatedSlugs": [
+      "hero-magnetic-letters",
+      "magnetic-button"
+    ],
     "usedByBlocks": [
       "hero-magnetic-letters"
     ],

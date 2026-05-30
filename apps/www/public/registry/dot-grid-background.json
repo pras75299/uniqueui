@@ -52,7 +52,12 @@
     "screenReaderNotes": "Decorative background; should be aria-hidden."
   },
   "relatedSlugs": [
-    "shooting-stars-grid"
+    "ripple",
+    "shooting-stars-grid",
+    "hero-noise-dot-field",
+    "bento-grid",
+    "aurora-background",
+    "glow-hero-section"
   ],
   "usedByBlocks": [
     "hero-noise-dot-field"

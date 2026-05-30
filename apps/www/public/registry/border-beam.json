@@ -52,6 +52,7 @@
     "screenReaderNotes": "Decorative border layer; no interactive surface."
   },
   "relatedSlugs": [
-    "moving-border"
+    "moving-border",
+    "meteors-card"
   ]
 }

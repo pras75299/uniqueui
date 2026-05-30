@@ -50,6 +50,14 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "multi-step-auth-card",
+    "floating-dock",
+    "limelight-nav",
+    "radial-menu",
+    "drawer-slide",
+    "morphing-modal"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

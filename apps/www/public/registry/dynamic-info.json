@@ -50,6 +50,9 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "data-table"
+  ],
   "motion": {
     "reducedMotion": "none"
   }

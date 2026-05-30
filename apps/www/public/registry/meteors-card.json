@@ -82,6 +82,14 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "relatedSlugs": [
+    "shooting-stars-grid",
+    "border-beam",
+    "moving-border",
+    "aurora-background",
+    "dot-grid-background",
+    "glow-hero-section"
+  ],
   "cssVariables": [
     {
       "name": "--animate-meteor",

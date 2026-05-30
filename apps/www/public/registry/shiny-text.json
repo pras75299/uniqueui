@@ -51,7 +51,9 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
-    "gradient-text-reveal"
+    "aurora-background",
+    "gradient-text-reveal",
+    "shader-mesh-gradient"
   ],
   "motion": {
     "reducedMotion": "none"
