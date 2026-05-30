@@ -184,7 +184,7 @@ function main() {
         console.log("");
         console.log("Next (judgment — use add-component skill):");
         console.log("  1. Implement component.tsx + motion/a11y");
-        console.log("  2. Add demo to registry/demos.tsx");
+        console.log("  2. Add demo to registry/{slug}/demo.tsx and append key to registry/demos/demo-key-order.json");
         console.log("  3. Fill docs overview/scenarios in the manifest");
         console.log("  4. Set motion/accessibility/tags on the manifest");
         console.log("  5. pnpm build:registry");

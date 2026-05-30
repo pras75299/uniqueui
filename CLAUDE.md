@@ -181,7 +181,7 @@ Prefer **`pnpm new:component <slug>`** (see `.claude/skills/add-component/SKILL.
 1. Run `pnpm new:component <slug> [--hero] [--tags a,b]` — creates `registry/{slug}/component.tsx` (or `registry/blocks/hero/...` for hero blocks), `registry/components/{slug}.json`, order entries in `registry/manifest.json`, and a `registry/changelogs.json` stub.
 2. Implement `component.tsx` and fill the manifest: `registry` block (deps, files, optional tailwind) + `docs` block (name, description, icon, props, optional `docs.overview`/`docs.scenarios`).
 3. Set per-slug metadata on the **same manifest** (ADR 0003 — not global sidecars): `tags`, `peerDependencies`, `compatibility`, `accessibility`, and optional `motion` when the component animates.
-4. Add demo to `registry/demos.tsx` (source for `apps/www/config/demos.tsx`).
+4. Add demo to `registry/{slug}/demo.tsx` (shared helpers in `registry/demos/shared.tsx`; assembled into `apps/www/config/demos.tsx` by `pnpm build:registry`).
 5. Run `pnpm build:registry` to regenerate `registry.json`, `apps/www/public/registry/*`, `apps/www/public/r/*`, and synced docs UI copies.
 
 When editing an existing component, update `registry/{component}/component.tsx` and — if the change is user-visible — prepend a new entry to that slug's array in `registry/changelogs.json` with a bumped semver. Update manifest metadata fields on `registry/components/{slug}.json` when tags, motion, or accessibility change. Then run `pnpm build:registry`.

@@ -34,7 +34,7 @@ Read `CLAUDE.md` for architecture rules. **Never** edit generated files under `a
    - `motion` (only if the component animates): `{ "reducedMotion": "full"|"partial"|"none", "performanceNotes"?: "..." }`
      - Add `performanceNotes` when using `"partial"` or `"none"` to document why the OS preference isn't fully honored.
    - `compatibility` / `peerDependencies` if non-default
-4. **Demo** — add entry to `registry/demos.tsx` (until ADR 0005 per-slug demos land).
+4. **Demo** — add entry to `registry/{slug}/demo.tsx` and append the demo key to `registry/demos/demo-key-order.json` (shared helpers live in `registry/demos/shared.tsx`; `pnpm build:registry` assembles `apps/www/config/demos.tsx`).
 5. **Changelog** — bump semver in `registry/changelogs.json` when shipping user-visible changes.
 
 ## Merge gate checklist

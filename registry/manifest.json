@@ -1,6 +1,6 @@
 {
   "demos": {
-    "sourceFile": "registry/demos.tsx"
+    "sourceFile": "registry/demos/shared.tsx + registry/**/demo.tsx"
   },
   "order": [
     "moving-border",
