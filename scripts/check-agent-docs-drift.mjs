@@ -47,7 +47,16 @@ export const STALE_POINTER_PATTERNS = [
         label: "code-review-graph MCP blurb",
         pattern: /## MCP Tools: code-review-graph/,
     },
+    {
+        label: "monolithic registry/demos.tsx workflow",
+        pattern: /registry\/demos\.tsx/,
+    },
 ];
+
+/** Normalize pointer file text for byte-identity checks (ignore CRLF vs LF). */
+export function normalizePointerContent(content) {
+    return content.replace(/\r\n/g, "\n");
+}
 
 /**
  * @param {string} content
@@ -100,9 +109,11 @@ export function checkAgentDocsDrift(repoRoot = REPO_ROOT) {
         const content = fs.readFileSync(absPath, "utf8");
         errors.push(...validatePointerFile(content, relPath));
 
+        const normalized = normalizePointerContent(content);
+
         if (referenceContent === null) {
-            referenceContent = content;
-        } else if (content !== referenceContent) {
+            referenceContent = normalized;
+        } else if (normalized !== referenceContent) {
             errors.push(
                 `${relPath}: content differs from ${POINTER_FILES[0]} (pointer files must stay identical)`,
             );

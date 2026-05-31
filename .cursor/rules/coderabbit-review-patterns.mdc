@@ -40,6 +40,12 @@ Apply this checklist when writing or reviewing code. These patterns recur in PR 
 - **Bare object keys:** Some demos use unquoted keys (e.g. `ripple:`) — key parsers must accept both `"slug":` and `slug:` forms.
 - **New demo workflow:** Add entries to `registry/{slug}/demo.tsx`, append key to `registry/demos/demo-key-order.json`, run `pnpm build:registry` — do not edit `apps/www/config/demos.tsx` by hand.
 
+## Agent instruction docs (A1/A2)
+
+- **Single source of truth:** Full agent rules live in `CLAUDE.md` only. `.cursorrules`, `.windsurfrules`, `AGENTS.md`, and `GEMINI.md` are thin pointers (≤10 non-empty lines) and must stay **byte-identical** to each other (CRLF normalized).
+- **Stale copies in pointers:** Never re-paste workflows, MCP blurbs, or `registry/config.ts` / monolithic `registry/demos.tsx` guidance into pointer files — `pnpm check:agent-docs` fails on those patterns.
+- **Doc workflow parity:** When demo or manifest workflows change (e.g. ADR 0005 split demos), update `CLAUDE.md` and extend `STALE_POINTER_PATTERNS` in `scripts/check-agent-docs-drift.mjs` so drift guard catches resurrected old paths.
+
 ## Pre-PR verification (registry changes)
 
 1. `pnpm test:repo`
