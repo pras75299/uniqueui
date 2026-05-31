@@ -64,6 +64,22 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-05-20",
+      "changes": [
+        "Anchored the aurora ribbons' start frames so motion v12's `repeat: Infinity` loop runs after hydration (previously froze in production where SSR baked in the target keyframes)."
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
   "motion": {
     "reducedMotion": "full"
   }

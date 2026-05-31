@@ -44,7 +44,8 @@ Apply this checklist when writing or reviewing code. These patterns recur in PR 
 
 - **Single source of truth:** Full agent rules live in `CLAUDE.md` only. `.cursorrules`, `.windsurfrules`, `AGENTS.md`, and `GEMINI.md` are thin pointers (≤10 non-empty lines) and must stay **byte-identical** to each other (CRLF normalized).
 - **Stale copies in pointers:** Never re-paste workflows, MCP blurbs, or `registry/config.ts` / monolithic `registry/demos.tsx` guidance into pointer files — `pnpm check:agent-docs` fails on those patterns.
-- **Doc workflow parity:** When demo or manifest workflows change (e.g. ADR 0005 split demos), update `CLAUDE.md` and extend `STALE_POINTER_PATTERNS` in `scripts/check-agent-docs-drift.mjs` so drift guard catches resurrected old paths.
+- **Doc workflow parity:** When demo or manifest workflows change (e.g. ADR 0005 split demos, ADR 0006 changelog on manifests), update `CLAUDE.md` and extend `STALE_POINTER_PATTERNS` in `scripts/check-agent-docs-drift.mjs` so drift guard catches resurrected old paths.
+- **Changelog on manifest:** Never reintroduce `registry/changelogs.json`; prepend semver entries to `changelog[]` on `registry/components/{slug}.json` (newest-first — `entries[0]` drives `meta.version`). Aggregate via `scripts/changelogs-from-manifests.ts` in `manifest.order` sequence; regression test in `changelogs-from-manifests.test.ts` must match `apps/www/public/registry/changelogs.json`.
 
 ## Pre-PR verification (registry changes)
 

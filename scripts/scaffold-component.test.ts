@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
     buildManifest,
+    initialChangelog,
     parseArgs,
     resolveComponentPaths,
     titleFromSlug,
@@ -57,6 +58,18 @@ describe("buildManifest", () => {
         expect(manifest.accessibility).toEqual({ status: "unaudited" });
         expect(manifest.compatibility.react).toBe("18+");
         expect(manifest.peerDependencies).toContain("react");
+    });
+
+    it("includes a newest-first changelog stub on the manifest", () => {
+        const manifest = buildManifest({
+            slug: "demo-card",
+            hero: false,
+            tags: ["card"],
+            registryFilePath: "demo-card/component.tsx",
+        });
+        expect(manifest.changelog).toEqual(initialChangelog("demo-card"));
+        expect(manifest.changelog[0].version).toBe("1.0.0");
+        expect(manifest.changelog[0].changes).toEqual(["Initial release."]);
     });
 });
 

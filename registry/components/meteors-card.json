@@ -97,5 +97,21 @@
   },
   "accessibility": {
     "status": "unaudited"
-  }
+  },
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-05-23",
+      "changes": [
+        "Fix SSR hydration mismatch by starting with no meteors and generating randomised positions after mount."
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ]
 }

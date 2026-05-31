@@ -14,7 +14,7 @@
     "test:e2e:shadcn": "npx ts-node scripts/test-shadcn-all-components.ts",
     "test": "turbo run test",
     "test:ci": "pnpm --filter @uniqueui/registry-schema test && pnpm --filter @uniqueui/cli-core test && pnpm --dir packages/cli test && pnpm --dir apps/www test && pnpm test:repo",
-    "test:repo": "pnpm exec vitest run scripts/check-cli-readme-drift.test.ts scripts/check-agent-docs-drift.test.ts scripts/check-reduced-motion.test.ts scripts/compute-cross-links.test.ts scripts/scaffold-component.test.ts scripts/assemble-demos.test.ts",
+    "test:repo": "pnpm exec vitest run scripts/check-cli-readme-drift.test.ts scripts/check-agent-docs-drift.test.ts scripts/check-reduced-motion.test.ts scripts/compute-cross-links.test.ts scripts/changelogs-from-manifests.test.ts scripts/scaffold-component.test.ts scripts/assemble-demos.test.ts",
     "new:component": "node scripts/scaffold-component.mjs",
     "check:cli-readme": "node scripts/check-cli-readme-drift.mjs",
     "check:agent-docs": "node scripts/check-agent-docs-drift.mjs",

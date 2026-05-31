@@ -85,5 +85,14 @@
   "accessibility": {
     "status": "n/a",
     "screenReaderNotes": "Visual-only celebration effect; should be paired with text feedback for assistive tech."
-  }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ]
 }

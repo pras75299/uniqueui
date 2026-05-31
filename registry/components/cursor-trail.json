@@ -77,6 +77,15 @@
     "status": "n/a",
     "screenReaderNotes": "Cursor-only visual; no keyboard or screen-reader surface."
   },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
   "motion": {
     "reducedMotion": "none"
   }

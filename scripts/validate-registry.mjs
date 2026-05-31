@@ -103,11 +103,20 @@ const mismatches = crossCheckSlugs({
 });
 for (const m of mismatches) failures.push(`cross-check: ${m}`);
 
-const sourceChangelogs = check(
-  "registry/changelogs.json",
-  Changelogs,
-  readJson("registry/changelogs.json"),
-);
+const sourceChangelogs = (() => {
+  const componentsDir = path.join(ROOT, "registry", "components");
+  const manifest = readJson("registry/manifest.json");
+  if (!fs.existsSync(componentsDir) || !manifest?.order) return null;
+  const map = {};
+  for (const slug of manifest.order) {
+    const rel = `registry/components/${slug}.json`;
+    const raw = readJson(rel);
+    if (!raw) continue;
+    const parsed = check(rel, ComponentManifest, raw);
+    if (parsed) map[parsed.slug] = parsed.changelog;
+  }
+  return check("registry/components (changelog fields)", Changelogs, map);
+})();
 const publicChangelogs = check(
   "apps/www/public/registry/changelogs.json",
   Changelogs,
@@ -125,10 +134,26 @@ for (const [label, changelogs] of [
   for (const m of mismatches) failures.push(`cross-check (${label}): ${m}`);
 }
 
-// Per-slug source manifests (ADR 0003): metadata lives on each manifest.
+// Per-slug source manifests (ADR 0003 + ADR 0006): metadata and changelog on each manifest.
 const componentsDir = path.join(ROOT, "registry", "components");
+const registryManifest = readJson("registry/manifest.json");
 const motionFromManifests = {};
 if (fs.existsSync(componentsDir)) {
+  const onDiskSlugs = fs
+    .readdirSync(componentsDir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => f.replace(/\.json$/, ""))
+    .sort();
+  if (registryManifest?.order) {
+    const orderSet = new Set(registryManifest.order);
+    for (const slug of onDiskSlugs) {
+      if (!orderSet.has(slug)) {
+        failures.push(
+          `cross-check: registry/components/${slug}.json exists but slug is missing from registry/manifest.json order`,
+        );
+      }
+    }
+  }
   for (const file of fs.readdirSync(componentsDir)) {
     if (!file.endsWith(".json")) continue;
     const rel = `registry/components/${file}`;
@@ -164,7 +189,7 @@ if (sourceChangelogs && publicChangelogs) {
   const b = JSON.stringify(publicChangelogs);
   if (a !== b) {
     failures.push(
-      "cross-check: registry/changelogs.json and apps/www/public/registry/changelogs.json diverge — run `pnpm build:registry`",
+      "cross-check: manifest changelog aggregate and apps/www/public/registry/changelogs.json diverge — run `pnpm build:registry`",
     );
   }
 }
