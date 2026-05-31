@@ -63,6 +63,36 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "changelog": [
+    {
+      "version": "1.2.1",
+      "date": "2026-05-20",
+      "changes": [
+        "Anchored the rotating halo's start frame so motion v12's `repeat: Infinity` loop runs after hydration (previously froze in production where SSR baked in the target rotation)."
+      ]
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Added `backgroundProps.conicPalette` and `backgroundProps.pulseColor` for explicit rotating halo colors."
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Added `backgroundProps.baseColor` for the vignette / section base tint."
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
   "motion": {
     "reducedMotion": "full"
   }

@@ -18,9 +18,8 @@ pnpm new:component <slug> [--hero] [--tags tag1,tag2]
 This creates:
 
 - `registry/{slug}/component.tsx` or `registry/blocks/hero/{short}/component.tsx`
-- `registry/components/{slug}.json` with ADR 0003 metadata defaults
+- `registry/components/{slug}.json` with ADR 0003 metadata defaults and `changelog` stub at `1.0.0`
 - One-line inserts in `registry/manifest.json` (`order` + `docsOrder`)
-- `registry/changelogs.json` stub at `1.0.0`
 
 Read `CLAUDE.md` for architecture rules. **Never** edit generated files under `apps/www/components/ui` or `apps/www/config/components.ts` by hand.
 
@@ -35,7 +34,7 @@ Read `CLAUDE.md` for architecture rules. **Never** edit generated files under `a
      - Add `performanceNotes` when using `"partial"` or `"none"` to document why the OS preference isn't fully honored.
    - `compatibility` / `peerDependencies` if non-default
 4. **Demo** — add entry to `registry/{slug}/demo.tsx` and append the demo key to `registry/demos/demo-key-order.json` (shared helpers live in `registry/demos/shared.tsx`; `pnpm build:registry` assembles `apps/www/config/demos.tsx`).
-5. **Changelog** — bump semver in `registry/changelogs.json` when shipping user-visible changes.
+5. **Changelog** — prepend a semver entry to the `changelog` array on `registry/components/{slug}.json` when shipping user-visible changes.
 
 ## Merge gate checklist
 

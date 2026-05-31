@@ -72,7 +72,17 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
   "motion": {
-    "reducedMotion": "none"
+    "reducedMotion": "none",
+    "performanceNotes": "Scroll-driven horizontal pinning is the gallery's core layout; disabling it would collapse the component into a static grid."
   }
 }

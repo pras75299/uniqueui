@@ -59,6 +59,7 @@
     "chromatic-aberration-reveal"
   ],
   "motion": {
-    "reducedMotion": "none"
+    "reducedMotion": "none",
+    "performanceNotes": "Gradient mask reveal is the component's sole visual; a static fallback would remove the effect entirely."
   }
 }

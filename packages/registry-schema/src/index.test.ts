@@ -80,6 +80,7 @@ describe("ComponentManifest", () => {
         peerDependencies: ["react", "react-dom"],
         compatibility: { react: "18+", next: "14+", tailwind: "3+|4+", rsc: false, ssr: true },
         accessibility: { status: "unaudited" },
+        changelog: goodChangelog,
     };
 
     it("accepts ADR 0003 metadata on the per-slug manifest", () => {
@@ -93,6 +94,22 @@ describe("ComponentManifest", () => {
 
     it("rejects manifests missing required tags", () => {
         const { tags: _tags, ...bad } = goodManifest;
+        expect(validate(ComponentManifest, bad).ok).toBe(false);
+    });
+
+    it("rejects manifests missing required changelog", () => {
+        const { changelog: _changelog, ...bad } = goodManifest;
+        expect(validate(ComponentManifest, bad).ok).toBe(false);
+    });
+
+    it("rejects out-of-order changelog entries on the manifest", () => {
+        const bad = {
+            ...goodManifest,
+            changelog: [
+                { version: "1.0.0", date: "2026-05-20", changes: ["Initial release."] },
+                { version: "1.1.0", date: "2026-05-21", changes: ["Update."] },
+            ],
+        };
         expect(validate(ComponentManifest, bad).ok).toBe(false);
     });
 });

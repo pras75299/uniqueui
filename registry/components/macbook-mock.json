@@ -117,6 +117,15 @@
     "status": "n/a",
     "screenReaderNotes": "Decorative device mockup; wrap with aria-hidden when used for illustration only."
   },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
   "motion": {
     "reducedMotion": "full"
   }

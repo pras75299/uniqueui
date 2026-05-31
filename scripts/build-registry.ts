@@ -5,12 +5,12 @@ import path from "path";
 import type { Registry, RegistryComponent, RegistryChangelogEntry } from "../registry/types";
 import { resolvePathUnderDir, validate, ComponentManifest as ComponentManifestSchema, type ComponentManifestT } from "@uniqueui/registry-schema";
 import { crossLinksFromManifests } from "./compute-cross-links";
+import { changelogsFromManifests } from "./changelogs-from-manifests";
 import { assembleDemosSource } from "./assemble-demos";
 
 const REGISTRY_DIR = path.join(__dirname, "../registry");
 const REGISTRY_MANIFEST_FILE = path.join(REGISTRY_DIR, "manifest.json");
 const REGISTRY_COMPONENTS_DIR = path.join(REGISTRY_DIR, "components");
-const REGISTRY_CHANGELOGS_FILE = path.join(REGISTRY_DIR, "changelogs.json");
 const OUTPUT_FILE = path.join(__dirname, "../registry.json");
 const APP_PUBLIC_DIR = path.join(__dirname, "../apps/www/public");
 const APP_PUBLIC_OUTPUT_FILE = path.join(APP_PUBLIC_DIR, "registry.json");
@@ -21,10 +21,6 @@ const APP_CONFIG_DIR = path.join(__dirname, "../apps/www/config");
 const APP_COMPONENTS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "components.ts");
 const APP_DOCS_SCENARIOS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "docs-scenarios.ts");
 const APP_DEMOS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "demos.tsx");
-
-// Loose semver — full prerelease/build syntax not required for component versions.
-const SEMVER_RE = /^\d+\.\d+\.\d+$/;
-const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 type MotionStance = "full" | "partial" | "none";
 type MotionMetaEntry = { reducedMotion: MotionStance; performanceNotes?: string };
@@ -232,97 +228,6 @@ async function renderDemosConfig(manifest: RegistryDocsManifest) {
   ).trimEnd();
 
   return `${generatedBanner}\n\n${demosSource}`;
-}
-
-function compareSemver(a: string, b: string): number {
-  const [aMaj, aMin, aPat] = a.split(".").map(Number);
-  const [bMaj, bMin, bPat] = b.split(".").map(Number);
-  if (aMaj !== bMaj) return aMaj - bMaj;
-  if (aMin !== bMin) return aMin - bMin;
-  return aPat - bPat;
-}
-
-// `loadChangelogs` mirrors the shape-level rules of the `Changelogs` zod
-// schema in `@uniqueui/registry-schema`. Both must stay in sync:
-// the build script is the fast-feedback path for contributors, the zod
-// validator is the post-build CI gate. If you add a rule here, mirror it
-// in the zod schema (and vice versa).
-async function loadChangelogs(slugs: string[]): Promise<Changelogs> {
-  if (!(await fs.pathExists(REGISTRY_CHANGELOGS_FILE))) {
-    throw new Error(`Missing changelog source at ${REGISTRY_CHANGELOGS_FILE}`);
-  }
-  const raw = (await fs.readJson(REGISTRY_CHANGELOGS_FILE)) as unknown;
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
-    throw new Error("registry/changelogs.json must be an object keyed by slug");
-  }
-  const changelogs = raw as Record<string, unknown>;
-
-  const errors: string[] = [];
-  const out: Changelogs = {};
-
-  for (const slug of slugs) {
-    const entries = changelogs[slug];
-    if (!Array.isArray(entries) || entries.length === 0) {
-      errors.push(`changelogs.json: missing or empty entry for "${slug}"`);
-      continue;
-    }
-    const normalized: RegistryChangelogEntry[] = [];
-    for (const [i, entry] of entries.entries()) {
-      const where = `${slug}[${i}]`;
-      if (!entry || typeof entry !== "object") {
-        errors.push(`changelogs.json: ${where} must be an object`);
-        continue;
-      }
-      const e = entry as Record<string, unknown>;
-      if (typeof e.version !== "string" || !SEMVER_RE.test(e.version)) {
-        errors.push(`changelogs.json: ${where}.version must match \\d+.\\d+.\\d+ (got ${JSON.stringify(e.version)})`);
-        continue;
-      }
-      if (typeof e.date !== "string" || !ISO_DATE_RE.test(e.date)) {
-        errors.push(`changelogs.json: ${where}.date must be YYYY-MM-DD (got ${JSON.stringify(e.date)})`);
-        continue;
-      }
-      if (
-        !Array.isArray(e.changes) ||
-        e.changes.length === 0 ||
-        !e.changes.every((c) => typeof c === "string" && c.trim().length > 0)
-      ) {
-        errors.push(`changelogs.json: ${where}.changes must be a non-empty array of non-empty strings`);
-        continue;
-      }
-      normalized.push({
-        version: e.version,
-        date: e.date,
-        changes: e.changes as string[],
-      });
-    }
-    // Enforce newest-first ordering: build script reads entries[0] as the
-    // current meta.version, so an out-of-order array would silently demote.
-    for (let i = 1; i < normalized.length; i++) {
-      if (compareSemver(normalized[i - 1].version, normalized[i].version) <= 0) {
-        errors.push(
-          `changelogs.json: "${slug}" entries must be newest-first (descending semver); ` +
-            `index ${i - 1} (${normalized[i - 1].version}) is not greater than index ${i} (${normalized[i].version})`,
-        );
-        break;
-      }
-    }
-    out[slug] = normalized;
-  }
-
-  // Catch stray slugs in changelogs.json that don't exist in the registry.
-  const slugSet = new Set(slugs);
-  for (const key of Object.keys(changelogs)) {
-    if (!slugSet.has(key)) {
-      errors.push(`changelogs.json: stray entry "${key}" has no matching registry component`);
-    }
-  }
-
-  if (errors.length > 0) {
-    throw new Error(`Changelog validation failed:\n  - ${errors.join("\n  - ")}`);
-  }
-
-  return out;
 }
 
 function computeIntegrity(content: string): string {
@@ -628,7 +533,7 @@ async function buildRegistry() {
 
   const { registry, docsManifest, manifests } = await loadManifests();
   const slugs = registry.map((entry) => entry.name);
-  const changelogs = await loadChangelogs(slugs);
+  const changelogs = changelogsFromManifests(manifests, slugs);
   const { relatedSlugsMap, usedByBlocksMap } = crossLinksFromManifests(manifests, slugs);
 
   const result: RegistryEntry[] = [];

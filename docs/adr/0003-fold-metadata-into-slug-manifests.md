@@ -39,11 +39,10 @@ Judgment-bearing steps live in `.claude/skills/add-component/SKILL.md`.
   `registry/manifest.json` and a changelog entry).
 - **Stronger validation** — metadata is validated by `ComponentManifest` at build time.
 - **Reduced-motion gate** reads `motion` from manifests, not `motion.json`.
-- **Still global:** `registry/changelogs.json`, `registry/demos.tsx`,
-  `related-slugs.json`, `used-by-blocks.json` (A4/A5 backlog).
+- **Still global (at ADR 0003 time):** demos monolith and cross-link sidecars — resolved by ADR 0005 and ADR 0004. Changelog folded by **ADR 0006**.
 
 ## Not in scope (follow-up ADRs / backlog)
 
-- A4: compute `relatedSlugs` / `usedByBlocks` in `build-registry.ts`
-- A5: split `registry/demos.tsx` into per-slug `demo.tsx` files
-- Fold `changelog` into the manifest (optional future shrink)
+- A4: compute `relatedSlugs` / `usedByBlocks` in `build-registry.ts` — **done (ADR 0004)**
+- A5: split `registry/demos.tsx` into per-slug `demo.tsx` files — **done (ADR 0005)**
+- Fold `changelog` into the manifest — **done (ADR 0006)**

@@ -114,6 +114,23 @@
     "keyboard": true,
     "screenReaderNotes": "The animated transcript is aria-hidden; a screen-reader-only copy of the full command list and output is exposed instead. Copy and replay controls are real buttons with aria-labels."
   },
+  "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-05-29",
+      "changes": [
+        "Stop the prompt cursor from blinking under prefers-reduced-motion to honor the full reduced-motion claim.",
+        "Add a focus-visible ring to the copy and replay controls for keyboard users."
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-05-28",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
   "motion": {
     "reducedMotion": "full"
   }

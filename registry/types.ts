@@ -17,9 +17,9 @@ export type RegistryComponent = {
 export type Registry = RegistryComponent[];
 
 // Shape of a single changelog entry as emitted into built artifacts.
-// Source of truth lives in `registry/changelogs.json`; the build script
-// injects `meta.version` and `changelog` onto every entry from there so
-// component versions can be bumped without touching the manifests.
+// Source of truth lives on each `registry/components/{slug}.json` manifest
+// (`changelog` array); the build script injects `meta.version` and
+// `changelog` onto every registry entry and aggregates public/changelogs.json.
 export type RegistryChangelogEntry = {
     version: string;
     date: string;

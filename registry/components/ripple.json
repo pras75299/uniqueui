@@ -91,6 +91,15 @@
     "status": "n/a",
     "screenReaderNotes": "Decorative ripple effect."
   },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
   "motion": {
     "reducedMotion": "none",
     "performanceNotes": "Continuous drift animation is the component's visual identity; a static fallback would eliminate its purpose as an ambient hero background."

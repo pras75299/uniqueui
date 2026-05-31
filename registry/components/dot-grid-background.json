@@ -96,5 +96,14 @@
   "accessibility": {
     "status": "n/a",
     "screenReaderNotes": "Decorative background; should be aria-hidden."
-  }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ]
 }

@@ -111,7 +111,17 @@
   "accessibility": {
     "status": "unaudited"
   },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
   "motion": {
-    "reducedMotion": "none"
+    "reducedMotion": "none",
+    "performanceNotes": "Hover-driven image reveal is the card's primary interaction; a static fallback would remove the intended affordance."
   }
 }

@@ -830,7 +830,8 @@
       "chromatic-aberration-reveal"
     ],
     "motion": {
-      "reducedMotion": "none"
+      "reducedMotion": "none",
+      "performanceNotes": "Gradient mask reveal is the component's sole visual; a static fallback would remove the effect entirely."
     }
   },
   {
@@ -1591,7 +1592,8 @@
       "gradient-text-reveal"
     ],
     "motion": {
-      "reducedMotion": "none"
+      "reducedMotion": "none",
+      "performanceNotes": "Hover-driven image reveal is the card's primary interaction; a static fallback would remove the intended affordance."
     }
   },
   {
@@ -1714,7 +1716,8 @@
       "scroll-reveal"
     ],
     "motion": {
-      "reducedMotion": "none"
+      "reducedMotion": "none",
+      "performanceNotes": "Scroll-driven horizontal pinning is the gallery's core layout; disabling it would collapse the component into a static grid."
     }
   },
   {

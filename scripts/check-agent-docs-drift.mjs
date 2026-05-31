@@ -51,6 +51,10 @@ export const STALE_POINTER_PATTERNS = [
         label: "monolithic registry/demos.tsx workflow",
         pattern: /registry\/demos\.tsx/,
     },
+    {
+        label: "global registry/changelogs.json workflow",
+        pattern: /registry\/changelogs\.json/,
+    },
 ];
 
 /** Normalize pointer file text for byte-identity checks (ignore CRLF vs LF). */

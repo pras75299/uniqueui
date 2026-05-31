@@ -115,5 +115,14 @@
   "accessibility": {
     "status": "n/a",
     "screenReaderNotes": "Decorative visual layer only should be aria-hidden; do not apply aria-hidden to wrappers containing readable children."
-  }
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-20",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ]
 }

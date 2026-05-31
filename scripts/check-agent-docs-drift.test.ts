@@ -74,6 +74,12 @@ describe("validatePointerFile", () => {
         const errors = validatePointerFile(stale, "AGENTS.md");
         expect(errors.some((e) => e.includes("registry/demos.tsx"))).toBe(true);
     });
+
+    it("rejects global registry/changelogs.json workflow copies", () => {
+        const stale = `${VALID_POINTER}\nUpdate registry/changelogs.json when shipping.`;
+        const errors = validatePointerFile(stale, "GEMINI.md");
+        expect(errors.some((e) => e.includes("registry/changelogs.json"))).toBe(true);
+    });
 });
 
 describe("normalizePointerContent", () => {

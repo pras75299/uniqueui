@@ -59,6 +59,7 @@
     "gradient-text-reveal"
   ],
   "motion": {
-    "reducedMotion": "none"
+    "reducedMotion": "none",
+    "performanceNotes": "Hover-driven image reveal is the card's primary interaction; a static fallback would remove the intended affordance."
   }
 }

@@ -21,9 +21,8 @@ type Changelogs = Record<string, ChangelogEntry[]>;
 type FlatEntry = ChangelogEntry & { slug: string; name: string; kind: "block" | "component" };
 
 async function loadChangelogs(): Promise<Changelogs> {
-  // Built artifact: scripts/build-registry.ts aggregates registry/changelogs.json
-  // into apps/www/public/registry/changelogs.json. The page reads the aggregate
-  // so SSR doesn't need the registry source tree at runtime.
+  // Built artifact: scripts/build-registry.ts aggregates per-slug manifest
+  // `changelog` fields into apps/www/public/registry/changelogs.json.
   //
   // If the build step was skipped or the file is corrupt, render an empty
   // changelog rather than crashing the route — the page still loads and the
@@ -108,14 +107,13 @@ export default async function ChangelogPage() {
         </h1>
         <p className="mt-4 max-w-prose text-pretty text-neutral-600 dark:text-neutral-400">
           Versioned changes for every UniqueUI component, newest first. Each
-          entry corresponds to a semver bump in <code className="rounded bg-neutral-100 px-1.5 py-0.5 font-mono text-[0.85em] dark:bg-neutral-900">registry/changelogs.json</code>.
+          entry corresponds to a semver bump on the component manifest (<code className="rounded bg-neutral-100 px-1.5 py-0.5 font-mono text-[0.85em] dark:bg-neutral-900">registry/components/&lt;slug&gt;.json</code> → <code className="rounded bg-neutral-100 px-1.5 py-0.5 font-mono text-[0.85em] dark:bg-neutral-900">changelog</code>).
         </p>
       </header>
 
       {dates.length === 0 ? (
         <p className="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-8 text-center text-sm text-neutral-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-400">
-          No releases yet. Run <code className="font-mono text-[0.85em]">pnpm build:registry</code> to publish the changelog from{" "}
-          <code className="font-mono text-[0.85em]">registry/changelogs.json</code>.
+          No releases yet. Run <code className="font-mono text-[0.85em]">pnpm build:registry</code> to publish the changelog aggregate from per-slug manifests.
         </p>
       ) : null}
 

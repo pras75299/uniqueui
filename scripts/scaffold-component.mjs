@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Scaffold a new registry component: directory, manifest (with ADR 0003 metadata),
-// manifest.json order entries, and changelogs.json stub.
+// Scaffold a new registry component: directory, manifest (with ADR 0003 metadata
+// + changelog), and manifest.json order entries.
 //
 // Usage:
 //   node scripts/scaffold-component.mjs <slug> [--hero] [--tags tag1,tag2]
@@ -97,6 +97,12 @@ export function ${exportName}({ className }: { className?: string }) {
 ${hero ? `\nexport default ${exportName};\n` : ""}`;
 }
 
+/** @param {string} _slug Reserved for future per-slug messaging; kept for call-site clarity. */
+export function initialChangelog(_slug) {
+    const today = new Date().toISOString().slice(0, 10);
+    return [{ version: "1.0.0", date: today, changes: ["Initial release."] }];
+}
+
 /** @param {{ slug: string; hero: boolean; tags: string[]; registryFilePath: string }} opts */
 export function buildManifest({ slug, hero, tags, registryFilePath }) {
     const title = titleFromSlug(slug);
@@ -125,6 +131,7 @@ export function buildManifest({ slug, hero, tags, registryFilePath }) {
         peerDependencies: DEFAULT_PEER_DEPS,
         compatibility: DEFAULT_COMPATIBILITY,
         accessibility: { status: "unaudited" },
+        changelog: initialChangelog(slug),
     };
 }
 
@@ -160,11 +167,6 @@ export function scaffoldComponent(slug, hero, tags, repoRoot = REPO_ROOT) {
     manifest.docsOrder.push(slug);
     writeJson(manifestJsonPath, manifest);
 
-    const changelogs = JSON.parse(fs.readFileSync(path.join(repoRoot, "registry", "changelogs.json"), "utf8"));
-    const today = new Date().toISOString().slice(0, 10);
-    changelogs[slug] = [{ version: "1.0.0", date: today, changes: ["Initial release."] }];
-    writeJson(path.join(repoRoot, "registry", "changelogs.json"), changelogs);
-
     return {
         slug,
         componentFile: path.relative(repoRoot, componentFile),
@@ -180,14 +182,14 @@ function main() {
         console.log(`  - ${result.componentFile}`);
         console.log(`  - ${result.manifestPath}`);
         console.log(`  - registry/manifest.json (order + docsOrder)`);
-        console.log(`  - registry/changelogs.json`);
         console.log("");
         console.log("Next (judgment — use add-component skill):");
         console.log("  1. Implement component.tsx + motion/a11y");
         console.log("  2. Add demo to registry/{slug}/demo.tsx and append key to registry/demos/demo-key-order.json");
         console.log("  3. Fill docs overview/scenarios in the manifest");
         console.log("  4. Set motion/accessibility/tags on the manifest");
-        console.log("  5. pnpm build:registry");
+        console.log("  5. Prepend changelog entries on the manifest when shipping user-visible changes");
+        console.log("  6. pnpm build:registry");
     } catch (err) {
         console.error(err instanceof Error ? err.message : err);
         process.exit(1);

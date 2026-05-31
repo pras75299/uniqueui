@@ -181,6 +181,8 @@ const changelogArray = z
         },
     );
 
+export const ManifestChangelog = changelogArray;
+
 export const Changelogs = z.record(Slug, changelogArray);
 
 export const RegistryMeta = z.object({
@@ -294,6 +296,7 @@ export const ComponentManifest = z.object({
     peerDependencies: z.array(NpmDep).min(1),
     compatibility: CompatibilityMeta,
     accessibility: AccessibilityMeta,
+    changelog: ManifestChangelog,
     motion: MotionMeta.optional(),
 });
 
