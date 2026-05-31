@@ -181,7 +181,7 @@ Prefer **`pnpm new:component <slug>`** (see `.claude/skills/add-component/SKILL.
 1. Run `pnpm new:component <slug> [--hero] [--tags a,b]` — creates `registry/{slug}/component.tsx` (or `registry/blocks/hero/...` for hero blocks), `registry/components/{slug}.json`, order entries in `registry/manifest.json`, and a `registry/changelogs.json` stub.
 2. Implement `component.tsx` and fill the manifest: `registry` block (deps, files, optional tailwind) + `docs` block (name, description, icon, props, optional `docs.overview`/`docs.scenarios`).
 3. Set per-slug metadata on the **same manifest** (ADR 0003 — not global sidecars): `tags`, `peerDependencies`, `compatibility`, `accessibility`, and optional `motion` when the component animates.
-4. Add demo to `registry/{slug}/demo.tsx` (shared helpers in `registry/demos/shared.tsx`; assembled into `apps/www/config/demos.tsx` by `pnpm build:registry`).
+4. Add demo to `registry/{slug}/demo.tsx`, append the slug to `registry/demos/demo-key-order.json` (shared helpers in `registry/demos/shared.tsx`; assembled into `apps/www/config/demos.tsx` by `pnpm build:registry`).
 5. Run `pnpm build:registry` to regenerate `registry.json`, `apps/www/public/registry/*`, `apps/www/public/r/*`, and synced docs UI copies.
 
 When editing an existing component, update `registry/{component}/component.tsx` and — if the change is user-visible — prepend a new entry to that slug's array in `registry/changelogs.json` with a bumped semver. Update manifest metadata fields on `registry/components/{slug}.json` when tags, motion, or accessibility change. Then run `pnpm build:registry`.
@@ -206,38 +206,39 @@ Follow Conventional Commits: `feat(scope): message`, `fix(scope): message`, `cho
 
 ## MCP Tools: code-review-graph
 
-**IMPORTANT: This project has a knowledge graph. ALWAYS use the
-code-review-graph MCP tools BEFORE using Grep/Glob/Read to explore
-the codebase.** The graph is faster, cheaper (fewer tokens), and gives
-you structural context (callers, dependents, test coverage) that file
-scanning cannot.
+This project has a knowledge graph MCP server. Use it when you need **structural**
+context (callers, blast radius, test coverage). Use Grep/Glob/Read for **text**
+search and file discovery.
 
-### When to use graph tools FIRST
+### When to use graph tools
 
-- **Exploring code**: `semantic_search_nodes` or `query_graph` instead of Grep
-- **Understanding impact**: `get_impact_radius` instead of manually tracing imports
-- **Code review**: `detect_changes` + `get_review_context` instead of reading entire files
-- **Finding relationships**: `query_graph` with callers_of/callees_of/imports_of/tests_for
-- **Architecture questions**: `get_architecture_overview` + `list_communities`
+- **Impact / blast radius**: `get_impact_radius`, `get_affected_flows`
+- **Callers, callees, imports, tests**: `query_graph` with
+  `callers_of` / `callees_of` / `imports_of` / `tests_for`
+- **Code review**: `detect_changes` + `get_review_context`
+- **Refactors**: `refactor_tool` for renames or dead-code planning
 
-Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
+### Tools with limited data today
+
+`semantic_search_nodes` and `get_architecture_overview` / `list_communities`
+require embeddings and community detection that are not yet populated. Prefer
+Grep/Glob/Read for discovery until those are wired up.
 
 ### Key Tools
 
-| Tool                        | Use when                                               |
-| --------------------------- | ------------------------------------------------------ |
-| `detect_changes`            | Reviewing code changes — gives risk-scored analysis    |
-| `get_review_context`        | Need source snippets for review — token-efficient      |
-| `get_impact_radius`         | Understanding blast radius of a change                 |
-| `get_affected_flows`        | Finding which execution paths are impacted             |
-| `query_graph`               | Tracing callers, callees, imports, tests, dependencies |
-| `semantic_search_nodes`     | Finding functions/classes by name or keyword           |
-| `get_architecture_overview` | Understanding high-level codebase structure            |
-| `refactor_tool`             | Planning renames, finding dead code                    |
+| Tool                 | Use when                                               |
+| -------------------- | ------------------------------------------------------ |
+| `detect_changes`     | Reviewing code changes — gives risk-scored analysis    |
+| `get_review_context` | Need source snippets for review — token-efficient      |
+| `get_impact_radius`  | Understanding blast radius of a change                 |
+| `get_affected_flows` | Finding which execution paths are impacted             |
+| `query_graph`        | Tracing callers, callees, imports, tests, dependencies |
+| `refactor_tool`      | Planning renames, finding dead code                    |
 
 ### Workflow
 
-1. The graph auto-updates on file changes (via hooks).
+1. Graph nodes and edges update on file changes (via hooks); embeddings and
+   communities are not yet computed.
 2. Use `detect_changes` for code review.
 3. Use `get_affected_flows` to understand impact.
 4. Use `query_graph` pattern="tests_for" to check coverage.

@@ -43,6 +43,9 @@ jobs:
       - name: Check CLI ↔ README command drift
         run: pnpm check:cli-readme
 
+      - name: Check agent instruction pointer drift
+        run: pnpm check:agent-docs
+
       - name: Run workspace tests
         run: pnpm test
 
