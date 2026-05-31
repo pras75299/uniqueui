@@ -82,6 +82,7 @@
     }
   ],
   "motion": {
-    "reducedMotion": "none"
+    "reducedMotion": "none",
+    "performanceNotes": "Scroll-driven horizontal pinning is the gallery's core layout; disabling it would collapse the component into a static grid."
   }
 }
