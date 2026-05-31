@@ -32,6 +32,14 @@ Apply this checklist when writing or reviewing code. These patterns recur in PR 
 - **`"use client"`** on interactive/animated components.
 - **Cleanup:** Cancel rAF / `useAnimationFrame` / subscriptions on unmount.
 
+## Demos split (ADR 0005)
+
+- **Comma-split parsers must track `()`, `{}`, `[]` depth:** Splitting `componentDemos` on `,` at brace-depth 0 only breaks inside JSX text (e.g. `Any gradient, any speed.`). Track paren and bracket depth, not just braces.
+- **Preserve exact whitespace:** Never `.trim()` demo entry chunks when splitting or assembling — byte-identical output to the legacy monolith is the regression gate (`assemble-demos.test.ts`).
+- **Comment-prefixed entries:** Section comments before a key (`// ─── …`) belong on the same chunk; filter keys with `stripLeadingComments`, do not drop the comment from stored text.
+- **Bare object keys:** Some demos use unquoted keys (e.g. `ripple:`) — key parsers must accept both `"slug":` and `slug:` forms.
+- **New demo workflow:** Add entries to `registry/{slug}/demo.tsx`, append key to `registry/demos/demo-key-order.json`, run `pnpm build:registry` — do not edit `apps/www/config/demos.tsx` by hand.
+
 ## Pre-PR verification (registry changes)
 
 1. `pnpm test:repo`

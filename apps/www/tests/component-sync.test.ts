@@ -88,11 +88,9 @@ describe("Component metadata sync", () => {
     }
   });
 
-  it("keeps generated demos config aligned with registry demos source", () => {
-    const registryDemosPath = path.resolve(process.cwd(), "../../registry/demos.tsx");
+  it("keeps generated demos config aligned with registry demos source", async () => {
     const generatedDemosPath = path.resolve(process.cwd(), "config/demos.tsx");
 
-    expect(fs.existsSync(registryDemosPath), "missing registry demos source").toBe(true);
     expect(fs.existsSync(generatedDemosPath), "missing generated demos config").toBe(true);
 
     const normalizeGeneratedContent = (content: string) => {
@@ -107,8 +105,13 @@ describe("Component metadata sync", () => {
       return (hasGeneratedBanner ? lines.slice(4).join("\n") : content).trimEnd();
     };
 
+    const { assembleDemosSource } = await import(
+      "../../../scripts/assemble-demos"
+    );
+    const assembledSource = await assembleDemosSource();
+
     expect(normalizeGeneratedContent(fs.readFileSync(generatedDemosPath, "utf-8"))).toBe(
-      normalizeGeneratedContent(fs.readFileSync(registryDemosPath, "utf-8")),
+      normalizeGeneratedContent(assembledSource),
     );
   });
 
@@ -248,7 +251,7 @@ describe("Block thumbnail slug parity", () => {
     }
     expect(
       missing,
-      `Unresolved block thumbnail slug(s) — add matching entries to registry/demos.tsx:\n${missing.join("\n")}`,
+      `Unresolved block thumbnail slug(s) — add matching entries to registry/**/demo.tsx:\n${missing.join("\n")}`,
     ).toEqual([]);
   });
 });
@@ -266,7 +269,7 @@ describe("Scenario demoKey parity", () => {
     }
     expect(
       missing,
-      `Unresolved demoKey(s) — add a matching entry to registry/demos.tsx:\n${missing.join("\n")}`,
+      `Unresolved demoKey(s) — add a matching entry to registry/{slug}/demo.tsx:\n${missing.join("\n")}`,
     ).toEqual([]);
   });
 });
