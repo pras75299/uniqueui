@@ -50,4 +50,8 @@ backlogs.md
 !.claude/skills/review-changes.md
 !.claude/skills/add-component/
 !.claude/skills/add-component/*
+!.claude/skills/component-merge-review/
+!.claude/skills/component-merge-review/*
+!.claude/skills/registry-rebuild-verify/
+!.claude/skills/registry-rebuild-verify/*
 skills-lock.json
