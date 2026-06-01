@@ -38,6 +38,7 @@ import {
   LucideUserCircle2,
   LucideWand2,
   LucideWaves,
+  LucideWind,
   Terminal,
 } from "lucide-react";
 
@@ -109,6 +110,7 @@ const iconMap = {
   LucideUserCircle2,
   LucideWand2,
   LucideWaves,
+  LucideWind,
   Terminal,
 } satisfies Record<string, ElementType>;
 
@@ -3386,6 +3388,33 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { TerminalHero } from \"@/components/ui/hero-terminal\";\n\nexport default function Hero() {\n  return (\n    <TerminalHero\n      username=\"you\"\n      title=\"zsh — your-project\"\n      commands={[\n        \"npx shadcn@latest init\",\n        \"npm install motion\",\n        \"npx shadcn@latest add button card\",\n      ]}\n      outputs={{\n        0: [\n          \"✔ Preflight checks passed.\",\n          \"✔ Created components.json\",\n          \"✔ Initialized project.\",\n        ],\n        1: [\"added 1 package in 2s\"],\n        2: [\"✔ Done. Installed button, card.\"],\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/70 backdrop-blur\">\n        One command to ship\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Watch your stack build itself.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        Copy-paste components, zero config — production-ready before the cursor\n        stops blinking.\n      </p>\n    </TerminalHero>\n  );\n}"
+  },
+  {
+    "slug": "hero-flow-field",
+    "name": "Flow Field Hero",
+    "description": "A canvas-rendered hero block. A grid of streamlines traces a summed-sine flow field and bends as you scroll — the field's phase is driven by `window.scrollY`, with a glowing particle at each streamline head. Scroll-driven (not cursor-driven), devicePixelRatio-aware, honors `prefers-reduced-motion` with a static frame, and ships with zero external animation deps beyond `motion`.",
+    "icon": "LucideWind",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-06-01",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": "Slotted hero content. Omit for the default headline + CTAs."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      },
+      {
+        "name": "backgroundProps",
+        "type": "{ spacing?: number; color?: string; headColor?: string; lineWidth?: number; scrollStrength?: number; speed?: number; className?: string }",
+        "description": "Forwarded to the canvas background layer (`FlowFieldBackground`)."
+      }
+    ],
+    "usageCode": "import { FlowFieldHero } from \"@/components/ui/hero-flow-field\";\n\nexport default function Hero() {\n  return (\n    <FlowFieldHero\n      backgroundProps={{\n        spacing: 56,\n        color: \"rgba(125,211,252,0.45)\",\n        scrollStrength: 1,\n      }}\n    >\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full bg-sky-300/90 shadow-[0_0_10px_2px] shadow-sky-300/40\"\n        />\n        Field · scroll to flow\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Momentum you can see.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A canvas flow field of streamlines that bend and wave with the page\n        scroll position. Scroll-driven, not cursor-driven — no external deps.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Get started</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 font-mono text-xs uppercase tracking-[0.18em] text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          View source\n        </button>\n      </div>\n    </FlowFieldHero>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 

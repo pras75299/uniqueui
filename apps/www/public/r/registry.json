@@ -1179,6 +1179,24 @@
           "target": "components/ui/magnetic-text.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-flow-field",
+      "type": "registry:ui",
+      "title": "Flow Field Hero",
+      "description": "A canvas-rendered hero block. A grid of streamlines traces a summed-sine flow field and bends as you scroll — the field's phase is driven by `window.scrollY`, with a glowing particle at each streamline head. Scroll-driven (not cursor-driven), devicePixelRatio-aware, honors `prefers-reduced-motion` with a static frame, and ships with zero external animation deps beyond `motion`.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-flow-field.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-flow-field.tsx"
+        }
+      ]
     }
   ]
 }

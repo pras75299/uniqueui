@@ -74,6 +74,7 @@ import { NoiseDotFieldHero } from "@/components/ui/hero-noise-dot-field";
 import { LogoMarqueeHero } from "@/components/ui/hero-logo-marquee";
 import { MagneticLettersHero } from "@/components/ui/hero-magnetic-letters";
 import { TerminalHero } from "@/components/ui/hero-terminal";
+import { FlowFieldHero } from "@/components/ui/hero-flow-field";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
