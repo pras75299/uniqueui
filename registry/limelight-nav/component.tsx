@@ -96,7 +96,7 @@ export const LimelightNav = ({
       {items.map(({ id, icon, label, ariaLabel, onClick }, index) => {
         const isActive = safeActiveIndex === index;
 
-        if (process.env.NODE_ENV !== "production" && !label && !ariaLabel) {
+        if (process.env.NODE_ENV === "development" && !label && !ariaLabel) {
           console.warn(
             `LimelightNav: Item with id "${id}" is missing both 'label' and 'ariaLabel'. An accessible name is required for screen readers.`
           );
