@@ -28,9 +28,12 @@ git diff --name-only origin/main...HEAD
 Focus on `.tsx` under `registry/` and `apps/www`, and the manifests under
 `registry/components/`. For each, walk Steps 2–3.
 
-## Step 2 — Section-G quality checklist (per CLAUDE.md / backlogs.md)
+## Step 2 — Component quality checklist (per `.github/pull_request_template.md`)
 
-For every new/changed component:
+This list mirrors the **"Component quality gate"** section of
+`.github/pull_request_template.md` (the template labels it "Section I from
+`backlogs.md`"; the backlog/CLAUDE.md call the same list "Section G" — same content,
+the template is authoritative). For every new/changed component:
 
 - [ ] `"use client"` present where any hook, browser API, or Motion interactivity is used.
 - [ ] Accepts `className?: string` and merges via `cn(...)` on the root element (see Step 3 #1).
@@ -101,8 +104,33 @@ pnpm typecheck
 pnpm lint
 ```
 
+## Step 6 — Write the PR from the template
+
+Only after Steps 1–5 pass. The PR body **must** follow
+`.github/pull_request_template.md` — fill every section, don't paste a freeform summary:
+
+- **Title** — Conventional Commits: `<type>(<scope>): <subject>`. Types: `feat | fix |
+  docs | chore | refactor | test | style | perf | ci | build`. Scopes: `registry | cli |
+  www | docs | <component-slug>`. (Matches the repo's commit rules in CLAUDE.md.)
+- **Type** — check exactly the boxes that apply (`New component / block`, `CLI change`,
+  `Docs site`, `Build / scripts / CI`, `Bug fix`, `Refactor / chore`).
+- **Summary** — one or two sentences on *why*; the "what" is in the diff.
+- **Screenshots / video** — required for UI changes; skip for CLI/docs-only.
+- **Test plan** — check only the boxes for commands you actually ran, and list them.
+  `pnpm test`; `pnpm build:registry` if you touched `registry/` or
+  `scripts/build-registry.ts`; `pnpm --filter uniqueui-cli build` if you touched
+  `packages/cli/`; manual `apps/www` verification for UI changes. "I tested it" is not
+  enough — name what ran.
+- **New component checklist** — if the PR adds a component/block, complete *both*
+  sub-sections (Registry sources + Component quality gate). The quality-gate boxes are
+  the same items you verified in Step 2. Skip this whole section otherwise.
+- **Related issues** — `Closes #123` / `Refs #45` when applicable.
+
+Tick a checkbox only when the underlying step is genuinely done; an unchecked box is
+honest, a falsely-ticked one is not (CLAUDE.md Rule 12).
+
 ## Output
 
 Report a checklist pass/fail summary. For each failure: the file, the rule it violates,
-and the minimal fix. Do not claim the gate passed if any command above was skipped or
-errored (CLAUDE.md Rule 12 — fail loud).
+and the minimal fix. Then produce the filled PR body per Step 6. Do not claim the gate
+passed if any command above was skipped or errored (CLAUDE.md Rule 12 — fail loud).

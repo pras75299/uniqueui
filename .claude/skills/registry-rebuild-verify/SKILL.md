@@ -75,6 +75,19 @@ git status --short               # MUST be empty
 
 A non-empty status here means a generated file drifted from source on `main` — report it.
 
+## Reporting in the PR (`.github/pull_request_template.md`)
+
+This skill's result feeds two parts of the PR template — fill them honestly:
+
+- **Test plan** → tick `pnpm build:registry` **only** if you ran it here and the diff was
+  empty-or-expected. List the actual outcome ("no-op" / "diff limited to `<slug>`").
+- **New component checklist → Registry sources** (component PRs only) → the box
+  *"`pnpm build:registry` run — no `git diff` in `apps/www/public/registry/`,
+  `apps/www/public/r/`, or `apps/www/components/ui/`"* maps directly to Step 4's
+  classification. Tick it only when the diff is empty or limited to your new slug's files.
+
+A box stays unchecked if the step wasn't run — don't pre-tick template items.
+
 ## Output
 
 State the result explicitly:
