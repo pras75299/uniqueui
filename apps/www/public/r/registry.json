@@ -1163,24 +1163,6 @@
       ]
     },
     {
-      "name": "magnetic-text",
-      "type": "registry:ui",
-      "title": "Magnetic Text",
-      "description": "Per-letter cursor-tracking text effect. Every glyph leans toward the pointer under its own spring; linear falloff inside the configured radius, capped at the configured strength. Soft white glow fades in near the cursor. Wrapper carries an aria-label; per-glyph spans are aria-hidden so screen readers never spell the word out.",
-      "dependencies": [
-        "motion",
-        "clsx",
-        "tailwind-merge"
-      ],
-      "files": [
-        {
-          "path": "components/ui/magnetic-text.tsx",
-          "type": "registry:component",
-          "target": "components/ui/magnetic-text.tsx"
-        }
-      ]
-    },
-    {
       "name": "hero-flow-field",
       "type": "registry:ui",
       "title": "Flow Field Hero",
@@ -1195,6 +1177,24 @@
           "path": "components/ui/hero-flow-field.tsx",
           "type": "registry:component",
           "target": "components/ui/hero-flow-field.tsx"
+        }
+      ]
+    },
+    {
+      "name": "magnetic-text",
+      "type": "registry:ui",
+      "title": "Magnetic Text",
+      "description": "Per-letter cursor-tracking text effect. Every glyph leans toward the pointer under its own spring; linear falloff inside the configured radius, capped at the configured strength. Soft white glow fades in near the cursor. Wrapper carries an aria-label; per-glyph spans are aria-hidden so screen readers never spell the word out.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/magnetic-text.tsx",
+          "type": "registry:component",
+          "target": "components/ui/magnetic-text.tsx"
         }
       ]
     }

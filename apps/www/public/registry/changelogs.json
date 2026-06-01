@@ -642,21 +642,21 @@
       ]
     }
   ],
-  "magnetic-text": [
-    {
-      "version": "1.0.0",
-      "date": "2026-05-22",
-      "changes": [
-        "Initial release: standalone per-letter cursor-tracking text component. Wraps any string with springs that lean toward the pointer; falloff is linear inside `radius`, zero outside; capped at `strength`. Optional `animateEntry` staggers letters in on mount. `as` prop lets it render as h1/h2/p/span. aria-label on the wrapper + aria-hidden on every glyph keep screen readers from spelling out the word."
-      ]
-    }
-  ],
   "hero-flow-field": [
     {
       "version": "1.0.0",
       "date": "2026-06-01",
       "changes": [
         "Initial release."
+      ]
+    }
+  ],
+  "magnetic-text": [
+    {
+      "version": "1.0.0",
+      "date": "2026-05-22",
+      "changes": [
+        "Initial release: standalone per-letter cursor-tracking text component. Wraps any string with springs that lean toward the pointer; falloff is linear inside `radius`, zero outside; capped at `strength`. Optional `animateEntry` staggers letters in on mount. `as` prop lets it render as h1/h2/p/span. aria-label on the wrapper + aria-hidden on every glyph keep screen readers from spelling out the word."
       ]
     }
   ]

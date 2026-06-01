@@ -65,8 +65,8 @@
     "hero-logo-marquee",
     "hero-magnetic-letters",
     "hero-terminal",
-    "magnetic-text",
-    "hero-flow-field"
+    "hero-flow-field",
+    "magnetic-text"
   ],
   "docsOrder": [
     "animated-glowing-text-outline",

@@ -4,7 +4,7 @@ import { useEffect, useRef, type ComponentProps, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
-type FlowFieldBackgroundProps = {
+export type FlowFieldBackgroundProps = {
   className?: string;
   /** Seed-grid spacing in pixels (lower = more streamlines, denser field). */
   spacing?: number;
@@ -39,6 +39,9 @@ export function FlowFieldBackground({
 }: FlowFieldBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = useReducedMotion();
+  // Guard against spacing <= 0 / non-finite, which would blow up cols/rows and
+  // lock the render loop on the main thread.
+  const safeSpacing = Number.isFinite(spacing) && spacing > 0 ? spacing : 56;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -80,7 +83,7 @@ export function FlowFieldBackground({
       const h = canvas.clientHeight;
       ctx.clearRect(0, 0, w, h);
 
-      const step = spacing;
+      const step = safeSpacing;
       const stepLen = step * 0.55;
       const cols = Math.ceil(w / step) + 1;
       const rows = Math.ceil(h / step) + 1;
@@ -148,7 +151,7 @@ export function FlowFieldBackground({
       ro.disconnect();
       window.removeEventListener("scroll", onScroll);
     };
-  }, [spacing, color, headColor, lineWidth, scrollStrength, speed, reduced]);
+  }, [safeSpacing, color, headColor, lineWidth, scrollStrength, speed, reduced]);
 
   return (
     <div aria-hidden className={cn("absolute inset-0 overflow-hidden bg-[#06070a]", className)}>
@@ -158,7 +161,7 @@ export function FlowFieldBackground({
   );
 }
 
-type FlowFieldHeroProps = Omit<ComponentProps<"section">, "children"> & {
+export type FlowFieldHeroProps = Omit<ComponentProps<"section">, "children"> & {
   children?: ReactNode;
   backgroundProps?: FlowFieldBackgroundProps;
 };
