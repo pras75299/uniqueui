@@ -65,6 +65,7 @@
     "hero-logo-marquee",
     "hero-magnetic-letters",
     "hero-terminal",
+    "hero-flow-field",
     "magnetic-text"
   ],
   "docsOrder": [
@@ -130,6 +131,7 @@
     "hero-noise-dot-field",
     "hero-logo-marquee",
     "hero-magnetic-letters",
-    "hero-terminal"
+    "hero-terminal",
+    "hero-flow-field"
   ]
 }

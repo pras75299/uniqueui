@@ -1,0 +1,61 @@
+{
+  "name": "hero-flow-field",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "blocks/hero/flow-field/component.tsx",
+      "content": "\"use client\";\n\nimport { useEffect, useRef, type ComponentProps, type ReactNode } from \"react\";\nimport { motion, useReducedMotion } from \"motion/react\";\nimport { cn } from \"@/lib/utils\";\n\nexport type FlowFieldBackgroundProps = {\n  className?: string;\n  /** Seed-grid spacing in pixels (lower = more streamlines, denser field). */\n  spacing?: number;\n  /** Stroke color for the streamlines (any CSS color). */\n  color?: string;\n  /** Color of the glowing particle at each streamline head. Defaults to `color`. */\n  headColor?: string;\n  /** Stroke width of each streamline in pixels. */\n  lineWidth?: number;\n  /**\n   * How strongly the page scroll position bends the flow field. The waving\n   * motion is driven by `window.scrollY`; raise to make scrolling reshape the\n   * field faster, lower for a calmer response.\n   */\n  scrollStrength?: number;\n  /** Idle drift speed so the field stays alive when the page isn't scrolling. */\n  speed?: number;\n};\n\n// Number of segments traced per streamline. Kept low so a full redraw stays\n// cheap (seeds × STEPS line segments per frame).\nconst STEPS = 16;\n\nexport function FlowFieldBackground({\n  className,\n  spacing = 56,\n  color = \"rgba(125,211,252,0.45)\",\n  headColor,\n  lineWidth = 1.1,\n  scrollStrength = 1,\n  speed = 0.05,\n}: FlowFieldBackgroundProps) {\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const reduced = useReducedMotion();\n  // Guard against spacing <= 0 / non-finite, which would blow up cols/rows and\n  // lock the render loop on the main thread.\n  const safeSpacing = Number.isFinite(spacing) && spacing > 0 ? spacing : 56;\n\n  useEffect(() => {\n    const canvas = canvasRef.current;\n    if (!canvas) return;\n    const ctx = canvas.getContext(\"2d\");\n    if (!ctx) return;\n\n    let raf = 0;\n    let dpr = Math.min(window.devicePixelRatio || 1, 2);\n    // Smoothed scroll value so abrupt jumps ease into the field.\n    let scroll = window.scrollY;\n    let scrollTarget = scroll;\n\n    const resize = () => {\n      const { clientWidth, clientHeight } = canvas;\n      dpr = Math.min(window.devicePixelRatio || 1, 2);\n      canvas.width = Math.round(clientWidth * dpr);\n      canvas.height = Math.round(clientHeight * dpr);\n      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);\n    };\n\n    const onScroll = () => {\n      scrollTarget = window.scrollY;\n    };\n\n    // Flow direction at a point. Summed sines give an organic field with zero\n    // external noise deps. `phase` is the only animated input — advanced by\n    // scroll (primary) plus a slow idle drift.\n    const angleAt = (x: number, y: number, phase: number) => {\n      const a = Math.sin(x * 0.0022 + phase) + Math.cos(y * 0.0026 - phase * 0.8);\n      const b = Math.sin((x + y) * 0.0015 + phase * 0.6);\n      return (a + b) * Math.PI;\n    };\n\n    const head = headColor ?? color;\n\n    const render = (phase: number) => {\n      const w = canvas.clientWidth;\n      const h = canvas.clientHeight;\n      ctx.clearRect(0, 0, w, h);\n\n      const step = safeSpacing;\n      const stepLen = step * 0.55;\n      const cols = Math.ceil(w / step) + 1;\n      const rows = Math.ceil(h / step) + 1;\n\n      ctx.lineWidth = lineWidth;\n      ctx.lineCap = \"round\";\n\n      for (let r = 0; r < rows; r++) {\n        for (let c = 0; c < cols; c++) {\n          // Stagger the seed phase per cell so neighbouring streamlines aren't\n          // perfectly parallel — reads as a turbulent field, not a comb.\n          const seedPhase = phase + (r * 0.6 + c * 0.4);\n          let x = c * step;\n          let y = r * step;\n\n          ctx.strokeStyle = color;\n          ctx.globalAlpha = 0.7;\n          ctx.beginPath();\n          ctx.moveTo(x, y);\n          for (let s = 0; s < STEPS; s++) {\n            const ang = angleAt(x, y, seedPhase);\n            x += Math.cos(ang) * stepLen;\n            y += Math.sin(ang) * stepLen;\n            ctx.lineTo(x, y);\n          }\n          ctx.stroke();\n\n          // Particle at the streamline head — the \"particle field\" half of the\n          // effect. Brighter than the trail so the flow direction reads clearly.\n          ctx.globalAlpha = 0.9;\n          ctx.fillStyle = head;\n          ctx.beginPath();\n          ctx.arc(x, y, lineWidth * 1.4, 0, Math.PI * 2);\n          ctx.fill();\n        }\n      }\n      ctx.globalAlpha = 1;\n    };\n\n    resize();\n    const ro = new ResizeObserver(resize);\n    ro.observe(canvas);\n\n    if (reduced) {\n      // Static field, anchored to the current scroll position. No rAF, no\n      // scroll-driven motion — honors prefers-reduced-motion.\n      render(scroll * 0.0015 * scrollStrength);\n      return () => ro.disconnect();\n    }\n\n    window.addEventListener(\"scroll\", onScroll, { passive: true });\n    const start = performance.now();\n    const draw = (now: number) => {\n      // Ease smoothed scroll toward the latest value.\n      scroll += (scrollTarget - scroll) * 0.08;\n      const drift = ((now - start) / 1000) * speed;\n      const phase = scroll * 0.0015 * scrollStrength + drift;\n      render(phase);\n      raf = requestAnimationFrame(draw);\n    };\n    raf = requestAnimationFrame(draw);\n\n    return () => {\n      cancelAnimationFrame(raf);\n      ro.disconnect();\n      window.removeEventListener(\"scroll\", onScroll);\n    };\n  }, [safeSpacing, color, headColor, lineWidth, scrollStrength, speed, reduced]);\n\n  return (\n    <div aria-hidden className={cn(\"absolute inset-0 overflow-hidden bg-[#06070a]\", className)}>\n      <canvas ref={canvasRef} className=\"absolute inset-0 h-full w-full\" />\n      <div className=\"pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_40%,_#06070a_92%)]\" />\n    </div>\n  );\n}\n\nexport type FlowFieldHeroProps = Omit<ComponentProps<\"section\">, \"children\"> & {\n  children?: ReactNode;\n  backgroundProps?: FlowFieldBackgroundProps;\n};\n\nexport function FlowFieldHero({\n  children,\n  className,\n  backgroundProps,\n  ...rest\n}: FlowFieldHeroProps) {\n  return (\n    <section\n      {...rest}\n      className={cn(\n        \"relative isolate flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#06070a] text-white\",\n        className,\n      )}\n    >\n      <FlowFieldBackground {...backgroundProps} />\n      <div className=\"relative z-10 mx-auto flex max-w-3xl flex-col items-center px-6 text-center\">\n        {children ?? <DefaultFlowFieldContent />}\n      </div>\n    </section>\n  );\n}\n\nfunction DefaultFlowFieldContent() {\n  return (\n    <>\n      <motion.span\n        initial={{ opacity: 0, y: 8 }}\n        animate={{ opacity: 1, y: 0 }}\n        transition={{ delay: 0.05, type: \"spring\", stiffness: 140, damping: 20 }}\n        className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 backdrop-blur\"\n      >\n        <span className=\"h-1.5 w-1.5 rounded-full bg-sky-300/90 shadow-[0_0_10px_2px] shadow-sky-300/40\" aria-hidden />\n        Field · scroll to flow\n      </motion.span>\n      <motion.h1\n        initial={{ opacity: 0, y: 18 }}\n        animate={{ opacity: 1, y: 0 }}\n        transition={{ delay: 0.12, type: \"spring\", stiffness: 120, damping: 18 }}\n        className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\"\n      >\n        Momentum you can see.\n      </motion.h1>\n      <motion.p\n        initial={{ opacity: 0, y: 14 }}\n        animate={{ opacity: 1, y: 0 }}\n        transition={{ delay: 0.24, type: \"spring\", stiffness: 120, damping: 18 }}\n        className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\"\n      >\n        A canvas flow field of streamlines that bend and wave with the page\n        scroll position. Scroll-driven, not cursor-driven — no external deps.\n      </motion.p>\n      <motion.div\n        initial={{ opacity: 0, y: 12 }}\n        animate={{ opacity: 1, y: 0 }}\n        transition={{ delay: 0.36, type: \"spring\", stiffness: 120, damping: 18 }}\n        className=\"mt-9 flex flex-wrap items-center justify-center gap-3\"\n      >\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Get started</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-6 font-mono text-xs uppercase tracking-[0.18em] text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          View source\n        </button>\n      </motion.div>\n    </>\n  );\n}\n\nexport default FlowFieldHero;\n",
+      "type": "registry:ui",
+      "integrity": "sha384-jnBsNoyzaD5+TGq4CC9dPuHrHqU0LRSmjbY8txZqpRRxWo7SaQ6AZSU15rdS8Z3a"
+    },
+    {
+      "path": "utils/cn.ts",
+      "content": "import { type ClassValue, clsx } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n    return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:util",
+      "integrity": "sha384-PFsmUDxsGyTpithwRHqXHK4J46ePXMjvbm5/78jCSJEH1Dsygh4anV8Y/45UrHos"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0"
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-06-01",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "tags": [
+    "hero",
+    "block",
+    "canvas",
+    "streamlines",
+    "field"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "relatedSlugs": [
+    "particle-field"
+  ],
+  "motion": {
+    "reducedMotion": "full"
+  }
+}

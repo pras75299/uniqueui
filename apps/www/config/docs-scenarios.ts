@@ -1121,5 +1121,10 @@ export const docsScenarios: Record<string, ComponentDocs> = {
     "slug": "hero-terminal",
     "overview": "TerminalHero pairs a headline with a live terminal that types your getting-started commands and prints their output — a high-conversion 'see it work' pattern for landing pages. The standalone `Terminal` window is exported from the same file for reuse elsewhere. The animation starts when the hero scrolls into view, respects `prefers-reduced-motion` (rendering the finished transcript instantly), and exposes copy + replay controls. The animated transcript is `aria-hidden` while a screen-reader-only copy carries the real content.",
     "scenarios": []
+  },
+  "hero-flow-field": {
+    "slug": "hero-flow-field",
+    "overview": "Scroll-driven canvas flow field. The streamline field's phase tracks `window.scrollY`, so the lines bend and wave as the page scrolls; a slow idle drift keeps it alive at rest. `FlowFieldBackground` is a separate export and can be reused under any composition.",
+    "scenarios": []
   }
 };

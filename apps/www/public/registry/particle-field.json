@@ -53,14 +53,11 @@
   },
   "relatedSlugs": [
     "shooting-stars-grid",
+    "hero-flow-field",
     "hero-noise-dot-field",
     "aurora-background",
     "dot-grid-background",
-    "glow-hero-section",
-    "meteors-card"
-  ],
-  "usedByBlocks": [
-    "hero-noise-dot-field"
+    "glow-hero-section"
   ],
   "motion": {
     "reducedMotion": "none"
