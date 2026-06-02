@@ -1126,5 +1126,10 @@ export const docsScenarios: Record<string, ComponentDocs> = {
     "slug": "hero-flow-field",
     "overview": "Scroll-driven canvas flow field. Particles flow along a summed-sine vector field and leave fading comet trails; the field's phase tracks `window.scrollY`, so the streamlines bend and wave as the page scrolls, with a slow idle drift keeping it alive at rest. A centered radial scrim lifts text contrast over the field, and the `theme` prop switches the whole palette (field, scrim, text, CTAs) between light and dark. `FlowFieldBackground` is a separate export and can be reused under any composition.",
     "scenarios": []
+  },
+  "hero-radial-burst": {
+    "slug": "hero-radial-burst",
+    "overview": "A canvas radial burst rises from a bright bottom-center core: ~200 fine rays fan across the upper semicircle (longest near vertical, forming a dome), each a base-bright→tip-faint gradient with dots drifting outward. Above it sit a headline and a count-up stat row. Six time-of-day themes — Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night — are selectable from an in-block dropdown; switching crossfades the background gradient and eases the burst colors between palettes. `RadialBurst` is exported separately for reuse under your own layout.",
+    "scenarios": []
   }
 };

@@ -1197,6 +1197,25 @@
           "target": "components/ui/magnetic-text.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-radial-burst",
+      "type": "registry:ui",
+      "title": "Radial Burst Hero",
+      "description": "A Stripe-style hero block: a canvas radial burst of fine rays — each fading from a bright bottom-center core to faint tips, with dots drifting outward along them — beneath a headline and a count-up stat row. Ships with six time-of-day themes (Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night) and an in-block switcher; the background crossfades and the burst colors lerp between themes. devicePixelRatio-aware, keyboard-accessible switcher, honors `prefers-reduced-motion`, and uses `motion` for the reveal, theme blend, count-ups, and dropdown.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-radial-burst.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-radial-burst.tsx"
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,91 @@
+{
+  "slug": "hero-radial-burst",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "lucide-react",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "blocks/hero/radial-burst/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Radial Burst Hero",
+    "description": "A Stripe-style hero block: a canvas radial burst of fine rays — each fading from a bright bottom-center core to faint tips, with dots drifting outward along them — beneath a headline and a count-up stat row. Ships with six time-of-day themes (Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night) and an in-block switcher; the background crossfades and the burst colors lerp between themes. devicePixelRatio-aware, keyboard-accessible switcher, honors `prefers-reduced-motion`, and uses `motion` for the reveal, theme blend, count-ups, and dropdown.",
+    "icon": "LucideSparkle",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-06-02",
+    "props": [
+      {
+        "name": "defaultTheme",
+        "type": "\"pre-dawn\" | \"sunrise\" | \"daytime\" | \"dusk\" | \"sunset\" | \"night\"",
+        "default": "\"night\"",
+        "description": "Initial time-of-day theme. Re-synced if it changes (e.g. from a site theme toggle); the in-block switcher overrides until then."
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "description": "Headline content. Defaults to \"The backbone of global commerce\"."
+      },
+      {
+        "name": "stats",
+        "type": "{ prefix?: string; value: number; decimals?: number; suffix?: string; label: string }[]",
+        "description": "Stat row. Each value counts up on mount; `label` supports newlines. Defaults to the four Stripe-style stats."
+      },
+      {
+        "name": "burstProps",
+        "type": "{ className?: string; density?: number }",
+        "description": "Forwarded to the canvas burst layer (`RadialBurst`). `density` scales ray count (0.4–2)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      }
+    ],
+    "usageCode": "import { RadialBurstHero } from \"@/components/ui/hero-radial-burst\";\n\nexport default function Hero() {\n  return <RadialBurstHero defaultTheme=\"night\" />;\n}\n\n// Or drive the time-of-day theme + content yourself:\n// <RadialBurstHero\n//   defaultTheme=\"sunset\"\n//   title={<>Built for\\n        global scale</>}\n//   stats={[\n//     { value: 135, suffix: \"+\", label: \"currencies supported\" },\n//     { prefix: \"US$\", value: 1.9, decimals: 1, suffix: \"tn\", label: \"processed in 2025\" },\n//     { value: 99.999, decimals: 3, suffix: \"%\", label: \"historical uptime\" },\n//     { value: 200, suffix: \"M+\", label: \"active subscriptions\" },\n//   ]}\n// />",
+    "docs": {
+      "overview": "A canvas radial burst rises from a bright bottom-center core: ~200 fine rays fan across the upper semicircle (longest near vertical, forming a dome), each a base-bright→tip-faint gradient with dots drifting outward. Above it sit a headline and a count-up stat row. Six time-of-day themes — Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night — are selectable from an in-block dropdown; switching crossfades the background gradient and eases the burst colors between palettes. `RadialBurst` is exported separately for reuse under your own layout.",
+      "scenarios": []
+    }
+  },
+  "tags": [
+    "hero",
+    "block",
+    "canvas",
+    "starburst",
+    "stats"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "unaudited"
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-06-02",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ],
+  "motion": {
+    "reducedMotion": "full"
+  }
+}
