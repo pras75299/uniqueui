@@ -3420,7 +3420,7 @@ const componentDefinitions = [
         "description": "Forwarded to the canvas background layer (`FlowFieldBackground`). `density` scales particle count (0.2–3); `trail` sets comet-tail length (0.8–0.98); `scrollStrength` controls how hard scroll bends the field."
       }
     ],
-    "usageCode": "import { FlowFieldHero } from \"@/components/ui/hero-flow-field\";\n\nexport default function Hero() {\n  return <FlowFieldHero theme=\"dark\" />;\n}\n\n// Reuse just the background under your own content:\n// import { FlowFieldBackground } from \"@/components/ui/hero-flow-field\";\n// <section className=\"relative isolate min-h-[100svh]\">\n//   <FlowFieldBackground theme=\"light\" density={1.2} trail={0.94} />\n//   <div className=\"relative z-10\">{/* your content */}</div>\n// </section>"
+    "usageCode": "import { FlowFieldHero } from \"@/components/ui/hero-flow-field\";\n\nexport default function Hero() {\n  return <FlowFieldHero theme=\"dark\" />;\n}"
   }
 ] satisfies ComponentDefinition[];
 
