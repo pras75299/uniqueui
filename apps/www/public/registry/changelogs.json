@@ -644,6 +644,16 @@
   ],
   "hero-flow-field": [
     {
+      "version": "1.1.0",
+      "date": "2026-06-02",
+      "changes": [
+        "Reworked the background to a flow-field particle-trail renderer (comet trails) for a smoother, more organic look.",
+        "Added `theme` (light/dark) support across the field, scrim, text, and CTAs.",
+        "Added a centered radial scrim so headline text stays legible over the field.",
+        "Replaced `spacing`/`color`/`headColor` background props with `density`, `colors`, and `trail`."
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-06-01",
       "changes": [

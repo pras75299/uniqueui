@@ -1166,7 +1166,7 @@
       "name": "hero-flow-field",
       "type": "registry:ui",
       "title": "Flow Field Hero",
-      "description": "A canvas-rendered hero block. A grid of streamlines traces a summed-sine flow field and bends as you scroll — the field's phase is driven by `window.scrollY`, with a glowing particle at each streamline head. Scroll-driven (not cursor-driven), devicePixelRatio-aware, honors `prefers-reduced-motion` with a static frame, and ships with zero external animation deps beyond `motion`.",
+      "description": "A canvas-rendered hero block. Particles advect along a summed-sine flow field, leaving comet trails that bend and wave as you scroll — the field's phase is driven by `window.scrollY`. Scroll-driven (not cursor-driven), with light/dark `theme` support, a centered scrim that keeps headline text legible over the field, devicePixelRatio-aware rendering, a static `prefers-reduced-motion` fallback, and zero external animation deps beyond `motion`.",
       "dependencies": [
         "motion",
         "clsx",

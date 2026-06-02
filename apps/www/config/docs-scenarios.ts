@@ -1124,7 +1124,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   },
   "hero-flow-field": {
     "slug": "hero-flow-field",
-    "overview": "Scroll-driven canvas flow field. The streamline field's phase tracks `window.scrollY`, so the lines bend and wave as the page scrolls; a slow idle drift keeps it alive at rest. `FlowFieldBackground` is a separate export and can be reused under any composition.",
+    "overview": "Scroll-driven canvas flow field. Particles flow along a summed-sine vector field and leave fading comet trails; the field's phase tracks `window.scrollY`, so the streamlines bend and wave as the page scrolls, with a slow idle drift keeping it alive at rest. A centered radial scrim lifts text contrast over the field, and the `theme` prop switches the whole palette (field, scrim, text, CTAs) between light and dark. `FlowFieldBackground` is a separate export and can be reused under any composition.",
     "scenarios": []
   }
 };
