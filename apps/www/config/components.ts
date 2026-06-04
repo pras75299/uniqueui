@@ -3427,7 +3427,7 @@ const componentDefinitions = [
   {
     "slug": "hero-radial-burst",
     "name": "Radial Burst Hero",
-    "description": "A Stripe-style hero block: a canvas radial burst of fine rays — each fading from a bright bottom-center core to faint tips, with dots drifting outward along them — beneath a headline and a count-up stat row. Ships with six time-of-day themes (Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night) and an in-block switcher; the background crossfades and the burst colors lerp between themes. devicePixelRatio-aware, keyboard-accessible switcher, honors `prefers-reduced-motion`, and uses `motion` for the reveal, theme blend, count-ups, and dropdown.",
+    "description": "A Stripe-style hero block: an interactive fiber-optic radial burst on canvas. Fine glowing rays stream out of a bottom-center origin in a wide fan, each one continuously growing, over-extending, fading, and regenerating with fresh angle/length/speed/opacity, with a single glowing dot riding each fiber's tip. Hovering the middle or tip of a fiber makes it (and its neighbours) brighten, stretch, and bend toward the cursor, then ease back to their drift; the dense zone near the origin stays calm. The burst sits in a short lower band, masked so it fades out below the headline. Ships with six time-of-day themes (Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night) and an in-block switcher; the background crossfades and the burst colors lerp between themes. devicePixelRatio-aware, keyboard-accessible switcher, honors `prefers-reduced-motion` (renders a calm static frame), and uses `motion` for the intro, theme blend, and dropdown.",
     "icon": "LucideSparkle",
     "category": "Hero",
     "kind": "block",
@@ -3445,14 +3445,9 @@ const componentDefinitions = [
         "description": "Headline content. Defaults to \"The backbone of global commerce\"."
       },
       {
-        "name": "stats",
-        "type": "{ prefix?: string; value: number; decimals?: number; suffix?: string; label: string }[]",
-        "description": "Stat row. Each value counts up on mount; `label` supports newlines. Defaults to the four Stripe-style stats."
-      },
-      {
         "name": "burstProps",
-        "type": "{ className?: string; density?: number }",
-        "description": "Forwarded to the canvas burst layer (`RadialBurst`). `density` scales ray count (0.4–2)."
+        "type": "{ className?: string; density?: number; interactive?: boolean }",
+        "description": "Forwarded to the canvas burst layer (`RadialBurst`). `density` scales ray count (0.4–2); set `interactive` to false to disable pointer reactivity."
       },
       {
         "name": "className",
@@ -3460,7 +3455,7 @@ const componentDefinitions = [
         "description": "Classes for the outer `<section>`."
       }
     ],
-    "usageCode": "import { RadialBurstHero } from \"@/components/ui/hero-radial-burst\";\n\nexport default function Hero() {\n  return <RadialBurstHero defaultTheme=\"night\" />;\n}\n\n// Or drive the time-of-day theme + content yourself:\n// <RadialBurstHero\n//   defaultTheme=\"sunset\"\n//   title={<>Built for\\n        global scale</>}\n//   stats={[\n//     { value: 135, suffix: \"+\", label: \"currencies supported\" },\n//     { prefix: \"US$\", value: 1.9, decimals: 1, suffix: \"tn\", label: \"processed in 2025\" },\n//     { value: 99.999, decimals: 3, suffix: \"%\", label: \"historical uptime\" },\n//     { value: 200, suffix: \"M+\", label: \"active subscriptions\" },\n//   ]}\n// />"
+    "usageCode": "import { RadialBurstHero } from \"@/components/ui/hero-radial-burst\";\n\nexport default function Hero() {\n  return (\n    <RadialBurstHero\n      defaultTheme=\"night\"\n      title={\n        <>\n          The backbone\n          <br />\n          of global commerce\n        </>\n      }\n    />\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 

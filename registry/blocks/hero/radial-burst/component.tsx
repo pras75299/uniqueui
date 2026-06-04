@@ -13,7 +13,6 @@ import {
   animate,
   useMotionValue,
   useReducedMotion,
-  type Variants,
 } from "motion/react";
 import {
   CloudMoon,
@@ -167,18 +166,61 @@ const lerpRGB = (a: RGB, b: RGB, t: number): RGB => [
 ];
 const rgba = (c: RGB, a: number) =>
   `rgba(${c[0] | 0}, ${c[1] | 0}, ${c[2] | 0}, ${a})`;
+const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+/** Wrap an angle into (-π, π]. */
+const wrapAngle = (a: number) => {
+  let x = a;
+  while (x > Math.PI) x -= 2 * Math.PI;
+  while (x < -Math.PI) x += 2 * Math.PI;
+  return x;
+};
+/** Distance from point (px,py) to segment (ax,ay)-(bx,by). */
+const segDist = (
+  px: number,
+  py: number,
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number,
+) => {
+  const dx = bx - ax;
+  const dy = by - ay;
+  const len2 = dx * dx + dy * dy || 1;
+  const t = clamp(((px - ax) * dx + (py - ay) * dy) / len2, 0, 1);
+  const cx = ax + t * dx;
+  const cy = ay + t * dy;
+  return Math.hypot(px - cx, py - cy);
+};
 
+/** Horizontal spread multiplier — widens the fan without changing its height. */
+const SPREAD_X = 1.3;
+
+/** One fiber: a streamline that grows, holds, extends, fades, then respawns. */
 type Ray = {
-  angle: number;
-  length: number; // fraction of maxRadius
-  reveal: number; // 0..1 stagger delay
+  angle: number; // base emission angle (radians)
+  maxLen: number; // target length as a fraction of maxRadius
+  speed: number; // life units per second (→ lifetime ≈ 1/speed)
+  life: number; // < 0 staggered delay, 0..1 active
+  width: number; // core stroke width
+  bright: number; // base brightness 0..1
   phase: number; // twinkle offset
-  dots: { p: number; r: number; phase: number }[];
+  react: number; // smoothed pointer reaction 0..1
+  bend: number; // smoothed angular bend toward the pointer
+  hasDot: boolean; // whether a glowing dot rides this fiber's tip
+  dotR: number; // tip-dot radius
+  dotPhase: number; // tip-dot twinkle offset
 };
 
 /* ------------------------------------------------------------------ *
- * RadialBurst — the canvas background (reusable on its own).
+ * RadialBurst — the interactive canvas background (reusable on its own).
+ *
+ * Fibers stream out of a bottom-center origin in a wide radial fan. Each
+ * one continuously grows, slightly over-extends, fades, and regenerates
+ * with fresh angle/length/speed/opacity, while glowing dots travel along
+ * it. Rays near the pointer brighten, stretch, and bend toward it, then
+ * ease back to their drift. The burst stays in the lower band so it never
+ * reaches the headline above.
  * ------------------------------------------------------------------ */
 
 export type RadialBurstProps = {
@@ -187,18 +229,21 @@ export type RadialBurstProps = {
   theme?: RadialBurstThemeId;
   /** Ray-count multiplier (0.4–2). */
   density?: number;
+  /** Disable pointer reactivity. */
+  interactive?: boolean;
 };
 
 export function RadialBurst({
   className,
   theme = "night",
   density = 1,
+  interactive = true,
 }: RadialBurstProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = useReducedMotion();
 
-  // Reveal progress driven by Motion — read inside the canvas rAF loop.
-  const progress = useMotionValue(reduced ? 1 : 0);
+  // Global intro fade, driven by Motion — read inside the canvas rAF loop.
+  const intro = useMotionValue(reduced ? 1 : 0);
 
   // Target palette + a smoothed "displayed" palette so theme switches lerp.
   const targetRef = useRef<Palette>(THEME_BY_ID[theme].palette);
@@ -215,20 +260,20 @@ export function RadialBurst({
     dotBase: [...THEME_BY_ID[theme].palette.dotBase] as RGB,
     dotTip: [...THEME_BY_ID[theme].palette.dotTip] as RGB,
   });
-  const renderRef = useRef<() => void>(() => {});
+  const renderRef = useRef<(dt: number) => void>(() => {});
 
-  // Mount reveal animation (Motion).
+  // Mount fade-in (Motion).
   useEffect(() => {
     if (reduced) {
-      progress.set(1);
+      intro.set(1);
       return;
     }
-    const controls = animate(progress, 1, {
-      duration: 1.7,
+    const controls = animate(intro, 1, {
+      duration: 1.6,
       ease: [0.22, 1, 0.36, 1],
     });
     return () => controls.stop();
-  }, [progress, reduced]);
+  }, [intro, reduced]);
 
   // Update the target palette when the theme changes; redraw if static.
   useEffect(() => {
@@ -241,7 +286,7 @@ export function RadialBurst({
       d.rayTip = [...p.rayTip] as RGB;
       d.dotBase = [...p.dotBase] as RGB;
       d.dotTip = [...p.dotTip] as RGB;
-      renderRef.current();
+      renderRef.current(0);
     }
   }, [theme, reduced]);
 
@@ -257,38 +302,61 @@ export function RadialBurst({
     let originX = 0;
     let originY = 0;
 
+    const pointer = { x: 0, y: 0, active: false };
+
+    const respawn = (ray: Ray, initial: boolean) => {
+      const aMin = -0.06 * Math.PI;
+      const aMax = 1.06 * Math.PI;
+      const angle = lerp(aMin, aMax, Math.random()) + (Math.random() - 0.5) * 0.05;
+      // Mild bias toward vertical, but side rays stay long so the fan fills
+      // the full width along the bottom rather than tapering to a dome.
+      const vert = Math.sin(clamp(angle, 0, Math.PI));
+      ray.angle = angle;
+      ray.maxLen = Math.min(
+        1.05,
+        (0.8 + 0.2 * vert) * (0.6 + Math.random() * 0.45) +
+          (Math.random() < 0.06 ? 0.12 : 0),
+      );
+      ray.speed = 0.085 + Math.random() * 0.13; // lifetime ≈ 4.5–11.8s
+      ray.life = initial ? Math.random() : -Math.random() * 0.6;
+      ray.width = 0.55 + Math.random() * 0.5;
+      ray.bright = 0.5 + Math.random() * 0.5;
+      ray.phase = Math.random() * Math.PI * 2;
+      // A single glowing dot sits at the tip — it rides the growing tip, it
+      // does not travel along the fiber.
+      ray.hasDot = Math.random() < 0.72;
+      ray.dotR = 0.8 + Math.random() * 1;
+      ray.dotPhase = Math.random() * Math.PI * 2;
+    };
+
     const seed = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       originX = w / 2;
-      originY = h * 0.99;
-      maxRadius = h * 0.94;
+      // Origin sits on the bottom edge so the burst touches the bottom.
+      originY = h;
+      // Lower-band height — kept well below the headline, ~100px shorter.
+      maxRadius = Math.max(h * 0.4, h * 0.6 - 100);
       const count = Math.round(
-        Math.min(340, Math.max(120, w / 4.8)) *
-          Math.min(2, Math.max(0.4, density)),
+        Math.min(400, Math.max(220, w / 3.2)) * clamp(density, 0.4, 2),
       );
-      const aMin = -0.06 * Math.PI;
-      const aMax = 1.06 * Math.PI;
-      rays = Array.from({ length: count }, (_, i) => {
-        const t = count > 1 ? i / (count - 1) : 0.5;
-        const angle = lerp(aMin, aMax, t) + (Math.random() - 0.5) * 0.012;
-        // Closeness to vertical → longer rays → a dome silhouette.
-        const vert = Math.sin(Math.min(Math.PI, Math.max(0, angle)));
-        const length =
-          (0.34 + 0.66 * vert) * (0.78 + Math.random() * 0.3) +
-          (Math.random() < 0.06 ? 0.12 : 0);
-        const dotCount = 1 + Math.floor(Math.random() * 4);
-        return {
-          angle,
-          length: Math.min(1.05, length),
-          reveal: (1 - vert) * 0.42 + Math.random() * 0.12,
-          phase: Math.random() * Math.PI * 2,
-          dots: Array.from({ length: dotCount }, () => ({
-            p: 0.2 + Math.random() * 0.8,
-            r: 0.6 + Math.random() * 0.9,
-            phase: Math.random() * Math.PI * 2,
-          })),
+      rays = Array.from({ length: count }, () => {
+        const ray: Ray = {
+          angle: 0,
+          maxLen: 0,
+          speed: 0,
+          life: 0,
+          width: 1,
+          bright: 1,
+          phase: 0,
+          react: 0,
+          bend: 0,
+          hasDot: false,
+          dotR: 1,
+          dotPhase: 0,
         };
+        respawn(ray, true);
+        return ray;
       });
     };
 
@@ -299,14 +367,14 @@ export function RadialBurst({
       canvas.height = Math.round(clientHeight * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       seed();
-      if (reduced) renderRef.current();
+      if (reduced) renderRef.current(0);
     };
 
-    const render = () => {
+    const render = (dt: number) => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       const now = performance.now() / 1000;
-      const prog = progress.get();
+      const introA = intro.get();
       const disp = dispRef.current;
       const target = targetRef.current;
 
@@ -322,9 +390,11 @@ export function RadialBurst({
       const dark = target.mode === "dark";
       // Dark themes glow additively; light themes paint normally.
       ctx.globalCompositeOperation = dark ? "lighter" : "source-over";
+      ctx.lineCap = "round";
 
-      // Central bloom.
-      const bloomR = Math.min(w * 0.22, maxRadius * 0.5) * (0.6 + 0.4 * prog);
+      // Central bloom — a soft, diffuse glow rather than a hard bright disc.
+      const bloomR =
+        Math.min(w * 0.22, maxRadius * 0.6) * (0.7 + 0.3 * introA);
       const bloom = ctx.createRadialGradient(
         originX,
         originY,
@@ -333,59 +403,137 @@ export function RadialBurst({
         originY,
         bloomR,
       );
-      bloom.addColorStop(0, rgba(disp.core, dark ? 0.7 : 0.6));
-      bloom.addColorStop(0.45, rgba(disp.core, dark ? 0.22 : 0.18));
+      bloom.addColorStop(0, rgba(disp.core, (dark ? 0.5 : 0.44) * introA));
+      bloom.addColorStop(0.3, rgba(disp.core, (dark ? 0.18 : 0.15) * introA));
+      bloom.addColorStop(0.65, rgba(disp.core, (dark ? 0.06 : 0.05) * introA));
       bloom.addColorStop(1, rgba(disp.core, 0));
       ctx.fillStyle = bloom;
       ctx.beginPath();
       ctx.arc(originX, originY, bloomR, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.lineWidth = 0.7;
-      ctx.lineCap = "round";
+      const pointerOn = interactive && !reduced && pointer.active;
+      const reactR = 170; // px radius of pointer influence
+      // No reaction near the origin — only the middle/tip of fibers respond.
+      const originGuard = maxRadius * 0.22;
+      const pointerNearOrigin =
+        Math.hypot(pointer.x - originX, pointer.y - originY) < originGuard;
 
       for (let i = 0; i < rays.length; i++) {
         const ray = rays[i];
-        const lp = easeOut(
-          Math.min(1, Math.max(0, (prog - ray.reveal) / (1 - 0.54))),
-        );
-        if (lp <= 0) continue;
-        const twinkle = reduced ? 1 : 0.72 + 0.28 * Math.sin(now * 1.4 + ray.phase);
-        const dx = Math.cos(ray.angle);
-        const dy = -Math.sin(ray.angle);
-        const len = ray.length * maxRadius * lp;
-        const ex = originX + dx * len;
-        const ey = originY + dy * len;
 
+        if (!reduced) {
+          ray.life += ray.speed * dt;
+          if (ray.life >= 1) respawn(ray, false);
+        }
+        if (ray.life < 0) continue;
+
+        const life = reduced ? 0.62 : ray.life;
+        const growT = clamp(life / 0.7, 0, 1);
+        const lenFrac = easeOut(growT);
+        const extend = life > 0.7 ? (life - 0.7) / 0.3 : 0;
+        const env = reduced
+          ? 1
+          : Math.min(1, life / 0.12) *
+            (life > 0.8 ? clamp(1 - (life - 0.8) / 0.2, 0, 1) : 1);
+        if (env <= 0) continue;
+
+        const baseLen =
+          ray.maxLen * maxRadius * lenFrac * (1 + 0.06 * extend);
+
+        // Pointer reaction — engage quickly, return slowly. Hit-test only the
+        // outer 35%→tip span so the dense near-origin zone stays calm.
+        if (pointerOn && !pointerNearOrigin) {
+          const cx = Math.cos(ray.angle) * SPREAD_X;
+          const cy = -Math.sin(ray.angle);
+          const ix = originX + cx * baseLen * 0.35;
+          const iy = originY + cy * baseLen * 0.35;
+          const bx = originX + cx * baseLen;
+          const by = originY + cy * baseLen;
+          const d = segDist(pointer.x, pointer.y, ix, iy, bx, by);
+          let reactTarget = 0;
+          let bendTarget = 0;
+          if (d < reactR) {
+            reactTarget = 1 - d / reactR;
+            reactTarget *= reactTarget;
+            const pAng = Math.atan2(
+              -(pointer.y - originY),
+              (pointer.x - originX) / SPREAD_X,
+            );
+            bendTarget = clamp(wrapAngle(pAng - ray.angle), -0.4, 0.4);
+          }
+          ray.react +=
+            (reactTarget - ray.react) * (reactTarget > ray.react ? 0.14 : 0.06);
+          ray.bend += (bendTarget * ray.react - ray.bend) * 0.1;
+        } else if (ray.react !== 0 || ray.bend !== 0) {
+          ray.react += -ray.react * 0.06;
+          ray.bend += -ray.bend * 0.1;
+        }
+
+        const react = ray.react;
+        const drawAngle = ray.angle + ray.bend;
+        const dirx = Math.cos(drawAngle) * SPREAD_X;
+        const diry = -Math.sin(drawAngle);
+        const effLen = baseLen * (1 + 0.12 * react);
+        const ex = originX + dirx * effLen;
+        const ey = originY + diry * effLen;
+
+        const twinkle = reduced ? 1 : 0.82 + 0.18 * Math.sin(now * 1.3 + ray.phase);
+        const aBase = clamp(
+          env * introA * ray.bright * twinkle * (1 + 0.9 * react),
+          0,
+          1,
+        );
+
+        // Brightness builds up *along* the fiber: near-zero through the dense
+        // convergence zone at the origin (so overlapping starts don't blow out
+        // to white), peaking once the fibers have fanned apart, fading at the tip.
         const grad = ctx.createLinearGradient(originX, originY, ex, ey);
-        grad.addColorStop(0, rgba(disp.rayBase, 0.0));
-        grad.addColorStop(0.05, rgba(disp.rayBase, 0.98 * twinkle));
-        grad.addColorStop(0.4, rgba(disp.rayBase, 0.55 * twinkle));
+        grad.addColorStop(0, rgba(disp.rayBase, 0));
+        grad.addColorStop(0.16, rgba(disp.rayBase, 0.22 * aBase));
+        grad.addColorStop(0.4, rgba(disp.rayBase, 0.85 * aBase));
+        grad.addColorStop(0.75, rgba(disp.rayBase, 0.36 * aBase));
         grad.addColorStop(1, rgba(disp.rayTip, 0));
         ctx.strokeStyle = grad;
+
+        // Soft wide pass → subtle blur/glow.
+        ctx.lineWidth = ray.width * (dark ? 3.2 : 2.6);
+        ctx.globalAlpha = dark ? 0.22 : 0.18;
         ctx.beginPath();
         ctx.moveTo(originX, originY);
         ctx.lineTo(ex, ey);
         ctx.stroke();
 
-        // Dots — drift slowly outward for a living "data" feel.
-        for (let d = 0; d < ray.dots.length; d++) {
-          const dot = ray.dots[d];
-          const dp = reduced ? dot.p : (dot.p + now * 0.025) % 1;
-          if (dp > lp) continue;
-          const px = originX + dx * ray.length * maxRadius * dp;
-          const py = originY + dy * ray.length * maxRadius * dp;
-          const dtw = reduced ? 1 : 0.5 + 0.5 * Math.sin(now * 2 + dot.phase);
+        // Crisp core pass.
+        ctx.lineWidth = ray.width;
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.moveTo(originX, originY);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+
+        // A single glowing dot sits at the very tip — it rides the growing
+        // tip but never travels along the fiber.
+        if (ray.hasDot) {
+          const dtw = reduced ? 1 : 0.5 + 0.5 * Math.sin(now * 2 + ray.dotPhase);
+          // Dim dots whose tip still sits inside the convergence zone.
+          const tipFade = clamp(effLen / (maxRadius * 0.28), 0, 1);
           ctx.fillStyle = rgba(
-            lerpRGB(disp.dotBase, disp.dotTip, dp),
-            (dark ? 0.85 : 0.9) * (0.4 + 0.6 * dtw) * (1 - dp * 0.35),
+            disp.dotTip,
+            clamp(
+              env * introA * tipFade * (dark ? 0.95 : 1) * (0.45 + 0.55 * dtw) *
+                (1 + 0.6 * react),
+              0,
+              1,
+            ),
           );
           ctx.beginPath();
-          ctx.arc(px, py, dot.r, 0, Math.PI * 2);
+          ctx.arc(ex, ey, ray.dotR * (1 + 0.4 * react), 0, Math.PI * 2);
           ctx.fill();
         }
       }
 
+      ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = "source-over";
     };
     renderRef.current = render;
@@ -395,12 +543,35 @@ export function RadialBurst({
     ro.observe(canvas);
 
     if (reduced) {
-      render();
+      render(0);
       return () => ro.disconnect();
     }
 
-    const loop = () => {
-      render();
+    const onMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
+        pointer.active = false;
+        return;
+      }
+      pointer.x = x;
+      pointer.y = y;
+      pointer.active = true;
+    };
+    const onLeave = () => {
+      pointer.active = false;
+    };
+    if (interactive) {
+      window.addEventListener("pointermove", onMove, { passive: true });
+      window.addEventListener("blur", onLeave);
+    }
+
+    let last = performance.now();
+    const loop = (t: number) => {
+      const dt = Math.min(0.05, (t - last) / 1000);
+      last = t;
+      render(dt);
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -408,8 +579,12 @@ export function RadialBurst({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      if (interactive) {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("blur", onLeave);
+      }
     };
-  }, [density, progress, reduced]);
+  }, [density, intro, reduced, interactive]);
 
   return (
     <canvas
@@ -526,80 +701,8 @@ function ThemeSwitcher({
 }
 
 /* ------------------------------------------------------------------ *
- * Count-up stat (Motion-driven).
+ * RadialBurstHero — full composition: headline over the interactive burst.
  * ------------------------------------------------------------------ */
-
-type Stat = {
-  prefix?: string;
-  value: number;
-  decimals?: number;
-  suffix?: string;
-  label: string;
-};
-
-const DEFAULT_STATS: Stat[] = [
-  { value: 135, suffix: "+", label: "currencies and payment\nmethods supported" },
-  { prefix: "US$", value: 1.9, decimals: 1, suffix: "tn", label: "in payments volume\nprocessed in 2025" },
-  { value: 99.999, decimals: 3, suffix: "%", label: "historical uptime\nfor Stripe services" },
-  { value: 200, suffix: "M+", label: "active subscriptions\nmanaged on Stripe Billing" },
-];
-
-function CountUp({
-  value,
-  decimals = 0,
-  prefix = "",
-  suffix = "",
-}: Stat) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const reduced = useReducedMotion();
-  const fmt = (v: number) => {
-    const fixed = v.toFixed(decimals);
-    const [int, dec] = fixed.split(".");
-    const withSep = int.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return `${prefix}${dec !== undefined ? `${withSep}.${dec}` : withSep}${suffix}`;
-  };
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    if (reduced) {
-      node.textContent = fmt(value);
-      return;
-    }
-    const controls = animate(0, value, {
-      duration: 1.8,
-      ease: [0.22, 1, 0.36, 1],
-      onUpdate: (v) => {
-        node.textContent = fmt(v);
-      },
-    });
-    return () => controls.stop();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, decimals, reduced]);
-
-  return (
-    <span ref={ref} className="tabular-nums">
-      {fmt(value)}
-    </span>
-  );
-}
-
-/* ------------------------------------------------------------------ *
- * RadialBurstHero — full composition.
- * ------------------------------------------------------------------ */
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
-};
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { type: "spring", stiffness: 140, damping: 20 },
-  },
-};
 
 export type RadialBurstHeroProps = Omit<
   ComponentProps<"section">,
@@ -608,7 +711,6 @@ export type RadialBurstHeroProps = Omit<
   /** Initial theme; also synced if it changes (e.g. from a site toggle). */
   defaultTheme?: RadialBurstThemeId;
   title?: ReactNode;
-  stats?: Stat[];
   burstProps?: Omit<RadialBurstProps, "theme">;
 };
 
@@ -622,7 +724,6 @@ export function RadialBurstHero({
       of global commerce
     </>
   ),
-  stats = DEFAULT_STATS,
   burstProps,
   ...rest
 }: RadialBurstHeroProps) {
@@ -661,63 +762,36 @@ export function RadialBurstHero({
         />
       </AnimatePresence>
 
-      {/* Canvas burst. */}
-      <RadialBurst theme={theme} {...burstProps} />
+      {/* Interactive burst — masked so it fades out below the headline. */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, transparent 24%, #000 48%, #000 100%)",
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, transparent 24%, #000 48%, #000 100%)",
+        }}
+      >
+        <RadialBurst theme={theme} {...burstProps} />
+      </div>
 
       {/* Theme switcher. */}
       <div className="absolute right-5 top-5 z-20 sm:right-8 sm:top-8">
         <ThemeSwitcher theme={theme} onChange={setTheme} mode={palette.mode} />
       </div>
 
-      {/* Content. */}
-      <motion.div
-        variants={reduced ? undefined : containerVariants}
-        initial={reduced ? false : "hidden"}
-        animate={reduced ? undefined : "visible"}
-        className="relative z-10 mx-auto flex w-full max-w-5xl flex-col px-6 pt-[12vh]"
-      >
+      {/* Headline. */}
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col px-6 pt-[14vh]">
         <motion.h1
-          variants={reduced ? undefined : itemVariants}
+          initial={reduced ? false : { opacity: 0, y: 18 }}
+          animate={reduced ? undefined : { opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 140, damping: 20, delay: 0.1 }}
           className="text-center text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl"
         >
           {title}
         </motion.h1>
-
-        <motion.div
-          variants={reduced ? undefined : itemVariants}
-          className={cn(
-            "mt-14 grid grid-cols-2 gap-y-10 border-t pt-10 md:grid-cols-4",
-            dark ? "border-white/10" : "border-slate-900/10",
-          )}
-        >
-          {stats.map((stat, i) => (
-            <div key={i} className="px-2 text-center md:px-4">
-              <div
-                className={cn(
-                  "text-3xl font-medium tracking-tight sm:text-4xl",
-                  i === 0
-                    ? dark
-                      ? "text-white"
-                      : "text-slate-900"
-                    : dark
-                      ? "text-white/85"
-                      : "text-slate-500",
-                )}
-              >
-                <CountUp {...stat} />
-              </div>
-              <p
-                className={cn(
-                  "mx-auto mt-2 max-w-[16ch] whitespace-pre-line text-xs leading-relaxed sm:text-sm",
-                  dark ? "text-white/45" : "text-slate-500",
-                )}
-              >
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -1129,7 +1129,7 @@ export const docsScenarios: Record<string, ComponentDocs> = {
   },
   "hero-radial-burst": {
     "slug": "hero-radial-burst",
-    "overview": "A canvas radial burst rises from a bright bottom-center core: ~200 fine rays fan across the upper semicircle (longest near vertical, forming a dome), each a base-bright→tip-faint gradient with dots drifting outward. Above it sit a headline and a count-up stat row. Six time-of-day themes — Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night — are selectable from an in-block dropdown; switching crossfades the background gradient and eases the burst colors between palettes. `RadialBurst` is exported separately for reuse under your own layout.",
+    "overview": "An interactive fiber-optic burst rises from a bottom-center origin that touches the bottom edge: fine rays fan across the upper semicircle (longest near vertical, forming a soft dome), each a base-bright→tip-faint gradient drawn as a soft wide glow pass plus a crisp core, with a single glowing dot riding its tip. Every ray continuously grows, slightly over-extends, fades, and respawns with a fresh angle, length, speed, and opacity, so the loop is seamless with no global reset. Hovering the middle or tip of a fiber makes it and its neighbours brighten, stretch, and bend toward the cursor before easing back; the dense zone near the origin does not react. The burst is kept to a short lower band, masked so it never reaches the headline above. Six time-of-day themes — Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night — are selectable from an in-block dropdown; switching crossfades the background gradient and eases the burst colors between palettes. `RadialBurst` is exported separately for reuse under your own layout.",
     "scenarios": []
   }
 };

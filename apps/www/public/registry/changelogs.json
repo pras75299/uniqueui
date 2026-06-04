@@ -672,6 +672,22 @@
   ],
   "hero-radial-burst": [
     {
+      "version": "2.0.0",
+      "date": "2026-06-03",
+      "changes": [
+        "Rewrote the burst as a continuous, seamlessly looping fiber-optic engine: rays grow, over-extend, fade, and respawn with fresh angle/length/speed/opacity instead of a one-time reveal.",
+        "Added pointer reactivity — fibers near the cursor (middle→tip only) brighten, stretch, and bend toward it, then ease back; the dense zone near the origin stays calm.",
+        "Each fiber now carries a single glowing dot fixed at its tip instead of dots travelling along it.",
+        "Softened the origin: fibers fade to near-zero through the dense convergence zone and peak only after fanning apart, plus a diffuser core bloom, so the bottom-center no longer blows out to white.",
+        "Raised the fiber count for a fuller, more balanced spread.",
+        "Increased overall fiber count and shortened the burst (~100px), with the origin touching the bottom edge.",
+        "Widened the fan horizontally and lengthened the side fibers so it spreads to the full width along the bottom (height unchanged).",
+        "Constrained the burst to a masked lower band so it no longer reaches the headline.",
+        "Removed the count-up stat row; the hero now shows the headline only.",
+        "Added a `burstProps.interactive` flag to toggle pointer reactivity."
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-06-02",
       "changes": [

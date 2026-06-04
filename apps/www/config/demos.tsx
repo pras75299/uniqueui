@@ -3836,6 +3836,15 @@ export const componentDemos: Record<string, DemoComponent> = {
     <FlowFieldHero theme={theme as "light" | "dark"} />
   ),
   "hero-radial-burst": ({ theme = "dark" }) => (
-    <RadialBurstHero defaultTheme={theme === "light" ? "daytime" : "night"} />
+    <RadialBurstHero
+      defaultTheme={theme === "light" ? "daytime" : "night"}
+      title={
+        <>
+          The backbone
+          <br />
+          of global commerce
+        </>
+      }
+    />
   ),
 };
