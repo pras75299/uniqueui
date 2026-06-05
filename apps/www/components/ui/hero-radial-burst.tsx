@@ -634,7 +634,6 @@ function ThemeSwitcher({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Theme: ${THEME_BY_ID[theme].label}. Change theme`}
         className={cn(
@@ -650,7 +649,6 @@ function ThemeSwitcher({
       <AnimatePresence>
         {open && (
           <motion.ul
-            role="listbox"
             aria-label="Theme"
             initial={{ opacity: 0, y: -6, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -670,8 +668,7 @@ function ThemeSwitcher({
                 <li key={t.id}>
                   <button
                     type="button"
-                    role="option"
-                    aria-selected={active}
+                    aria-current={active}
                     onClick={() => {
                       onChange(t.id);
                       setOpen(false);

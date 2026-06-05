@@ -672,6 +672,13 @@
   ],
   "hero-radial-burst": [
     {
+      "version": "2.0.1",
+      "date": "2026-06-05",
+      "changes": [
+        "Theme switcher now uses a plain button-menu pattern (disclosure button + `aria-current` on the active theme) instead of `role=\"listbox\"`/`role=\"option\"`, which had promised listbox keyboard semantics the widget did not implement."
+      ]
+    },
+    {
       "version": "2.0.0",
       "date": "2026-06-03",
       "changes": [
