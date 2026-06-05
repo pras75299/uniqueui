@@ -1197,6 +1197,25 @@
           "target": "components/ui/magnetic-text.tsx"
         }
       ]
+    },
+    {
+      "name": "hero-radial-burst",
+      "type": "registry:ui",
+      "title": "Radial Burst Hero",
+      "description": "A Stripe-style hero block: an interactive fiber-optic radial burst on canvas. Fine glowing rays stream out of a bottom-center origin in a wide fan, each one continuously growing, over-extending, fading, and regenerating with fresh angle/length/speed/opacity, with a single glowing dot riding each fiber's tip. Hovering the middle or tip of a fiber makes it (and its neighbours) brighten, stretch, and bend toward the cursor, then ease back to their drift; the dense zone near the origin stays calm. The burst sits in a short lower band, masked so it fades out below the headline. Ships with six time-of-day themes (Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night) and an in-block switcher; the background crossfades and the burst colors lerp between themes. devicePixelRatio-aware, keyboard-accessible switcher, honors `prefers-reduced-motion` (renders a calm static frame), and uses `motion` for the intro, theme blend, and dropdown.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/hero-radial-burst.tsx",
+          "type": "registry:component",
+          "target": "components/ui/hero-radial-burst.tsx"
+        }
+      ]
     }
   ]
 }

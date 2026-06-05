@@ -1126,5 +1126,10 @@ export const docsScenarios: Record<string, ComponentDocs> = {
     "slug": "hero-flow-field",
     "overview": "Scroll-driven canvas flow field. Particles flow along a summed-sine vector field and leave fading comet trails; the field's phase tracks `window.scrollY`, so the streamlines bend and wave as the page scrolls, with a slow idle drift keeping it alive at rest. A centered radial scrim lifts text contrast over the field, and the `theme` prop switches the whole palette (field, scrim, text, CTAs) between light and dark. `FlowFieldBackground` is a separate export and can be reused under any composition.",
     "scenarios": []
+  },
+  "hero-radial-burst": {
+    "slug": "hero-radial-burst",
+    "overview": "An interactive fiber-optic burst rises from a bottom-center origin that touches the bottom edge: fine rays fan across the upper semicircle (longest near vertical, forming a soft dome), each a base-bright→tip-faint gradient drawn as a soft wide glow pass plus a crisp core, with a single glowing dot riding its tip. Every ray continuously grows, slightly over-extends, fades, and respawns with a fresh angle, length, speed, and opacity, so the loop is seamless with no global reset. Hovering the middle or tip of a fiber makes it and its neighbours brighten, stretch, and bend toward the cursor before easing back; the dense zone near the origin does not react. The burst is kept to a short lower band, masked so it never reaches the headline above. Six time-of-day themes — Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night — are selectable from an in-block dropdown; switching crossfades the background gradient and eases the burst colors between palettes. `RadialBurst` is exported separately for reuse under your own layout.",
+    "scenarios": []
   }
 };

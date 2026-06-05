@@ -29,6 +29,7 @@ import {
   LucideScanLine,
   LucideScrollText,
   LucideShield,
+  LucideSparkle,
   LucideSparkles,
   LucideSquare,
   LucideStars,
@@ -101,6 +102,7 @@ const iconMap = {
   LucideScanLine,
   LucideScrollText,
   LucideShield,
+  LucideSparkle,
   LucideSparkles,
   LucideSquare,
   LucideStars,
@@ -3421,6 +3423,39 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { FlowFieldHero } from \"@/components/ui/hero-flow-field\";\n\nexport default function Hero() {\n  return (\n    <FlowFieldHero theme=\"dark\">\n      <span className=\"mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 backdrop-blur\">\n        <span\n          aria-hidden\n          className=\"h-1.5 w-1.5 rounded-full bg-sky-400 shadow-[0_0_10px_2px] shadow-sky-400/40\"\n        />\n        Field · scroll to flow\n      </span>\n      <h1 className=\"text-balance text-4xl font-semibold tracking-tight sm:text-6xl\">\n        Momentum you can see.\n      </h1>\n      <p className=\"mt-5 max-w-xl text-pretty text-base text-white/65 sm:text-lg\">\n        A canvas flow field of streamlines that bend and wave with the page\n        scroll position. Scroll-driven, not cursor-driven — no external deps.\n      </p>\n      <div className=\"mt-9 flex flex-wrap items-center justify-center gap-3\">\n        <button\n          type=\"button\"\n          className=\"group inline-flex h-11 cursor-pointer items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-black transition-transform duration-200 hover:-translate-y-px\"\n        >\n          <span>Get started</span>\n          <span aria-hidden className=\"transition-transform duration-200 group-hover:translate-x-0.5\">\n            →\n          </span>\n        </button>\n        <button\n          type=\"button\"\n          className=\"inline-flex h-11 cursor-pointer items-center gap-2 rounded-full border border-white/15 px-6 font-mono text-xs uppercase tracking-[0.18em] text-white/85 backdrop-blur transition-colors hover:bg-white/5\"\n        >\n          View source\n        </button>\n      </div>\n    </FlowFieldHero>\n  );\n}"
+  },
+  {
+    "slug": "hero-radial-burst",
+    "name": "Radial Burst Hero",
+    "description": "A Stripe-style hero block: an interactive fiber-optic radial burst on canvas. Fine glowing rays stream out of a bottom-center origin in a wide fan, each one continuously growing, over-extending, fading, and regenerating with fresh angle/length/speed/opacity, with a single glowing dot riding each fiber's tip. Hovering the middle or tip of a fiber makes it (and its neighbours) brighten, stretch, and bend toward the cursor, then ease back to their drift; the dense zone near the origin stays calm. The burst sits in a short lower band, masked so it fades out below the headline. Ships with six time-of-day themes (Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night) and an in-block switcher; the background crossfades and the burst colors lerp between themes. devicePixelRatio-aware, keyboard-accessible switcher, honors `prefers-reduced-motion` (renders a calm static frame), and uses `motion` for the intro, theme blend, and dropdown.",
+    "icon": "LucideSparkle",
+    "category": "Hero",
+    "kind": "block",
+    "addedAt": "2026-06-02",
+    "props": [
+      {
+        "name": "defaultTheme",
+        "type": "\"pre-dawn\" | \"sunrise\" | \"daytime\" | \"dusk\" | \"sunset\" | \"night\"",
+        "default": "\"night\"",
+        "description": "Initial time-of-day theme. Re-synced if it changes (e.g. from a site theme toggle); the in-block switcher overrides until then."
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "description": "Headline content. Defaults to \"The backbone of global commerce\"."
+      },
+      {
+        "name": "burstProps",
+        "type": "{ className?: string; density?: number; interactive?: boolean }",
+        "description": "Forwarded to the canvas burst layer (`RadialBurst`). `density` scales ray count (0.4–2); set `interactive` to false to disable pointer reactivity."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Classes for the outer `<section>`."
+      }
+    ],
+    "usageCode": "import { RadialBurstHero } from \"@/components/ui/hero-radial-burst\";\n\nexport default function Hero() {\n  return (\n    <RadialBurstHero\n      defaultTheme=\"night\"\n      title={\n        <>\n          The backbone\n          <br />\n          of global commerce\n        </>\n      }\n    />\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 

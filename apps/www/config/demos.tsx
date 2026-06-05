@@ -79,6 +79,7 @@ import { LogoMarqueeHero } from "@/components/ui/hero-logo-marquee";
 import { MagneticLettersHero } from "@/components/ui/hero-magnetic-letters";
 import { TerminalHero } from "@/components/ui/hero-terminal";
 import { FlowFieldHero } from "@/components/ui/hero-flow-field";
+import { RadialBurstHero } from "@/components/ui/hero-radial-burst";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -3833,5 +3834,17 @@ export const componentDemos: Record<string, DemoComponent> = {
   "hero-terminal": () => <TerminalHero />,
   "hero-flow-field": ({ theme = "dark" }) => (
     <FlowFieldHero theme={theme as "light" | "dark"} />
+  ),
+  "hero-radial-burst": ({ theme = "dark" }) => (
+    <RadialBurstHero
+      defaultTheme={theme === "light" ? "daytime" : "night"}
+      title={
+        <>
+          The backbone
+          <br />
+          of global commerce
+        </>
+      }
+    />
   ),
 };

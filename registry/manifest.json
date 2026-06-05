@@ -66,7 +66,8 @@
     "hero-magnetic-letters",
     "hero-terminal",
     "hero-flow-field",
-    "magnetic-text"
+    "magnetic-text",
+    "hero-radial-burst"
   ],
   "docsOrder": [
     "animated-glowing-text-outline",
@@ -132,6 +133,7 @@
     "hero-logo-marquee",
     "hero-magnetic-letters",
     "hero-terminal",
-    "hero-flow-field"
+    "hero-flow-field",
+    "hero-radial-burst"
   ]
 }
