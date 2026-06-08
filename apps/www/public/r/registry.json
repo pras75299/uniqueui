@@ -1216,6 +1216,24 @@
           "target": "components/ui/hero-radial-burst.tsx"
         }
       ]
+    },
+    {
+      "name": "animated-tooltip",
+      "type": "registry:ui",
+      "title": "Animated Tooltip",
+      "description": "An accessible, spring-animated tooltip with a customizable pointing arrow. Background, text, and arrow colours are independently configurable, and it follows WAI-ARIA guidance — hover/focus triggers, role=\"tooltip\", aria-describedby, and Escape to dismiss.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/animated-tooltip.tsx",
+          "type": "registry:component",
+          "target": "components/ui/animated-tooltip.tsx"
+        }
+      ]
     }
   ]
 }

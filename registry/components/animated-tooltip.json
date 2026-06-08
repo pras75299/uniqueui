@@ -1,0 +1,162 @@
+{
+  "slug": "animated-tooltip",
+  "registry": {
+    "dependencies": [
+      "motion",
+      "clsx",
+      "tailwind-merge"
+    ],
+    "files": [
+      {
+        "path": "animated-tooltip/component.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "docs": {
+    "name": "Animated Tooltip",
+    "description": "An accessible, spring-animated tooltip with a customizable pointing arrow. Background, text, and arrow colours are independently configurable, and it follows WAI-ARIA guidance — hover/focus triggers, role=\"tooltip\", aria-describedby, and Escape to dismiss.",
+    "icon": "MessageSquare",
+    "category": "Navigation & Overlays",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactElement",
+        "description": "The trigger element. Must be a single focusable React element (e.g. a button or link)."
+      },
+      {
+        "name": "content",
+        "type": "React.ReactNode",
+        "description": "Content rendered inside the tooltip bubble."
+      },
+      {
+        "name": "side",
+        "type": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+        "default": "\"top\"",
+        "description": "Which side of the trigger the tooltip appears on."
+      },
+      {
+        "name": "align",
+        "type": "\"start\" | \"center\" | \"end\"",
+        "default": "\"center\"",
+        "description": "Alignment along the trigger's edge."
+      },
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#18181b\"",
+        "description": "Background colour of the tooltip bubble."
+      },
+      {
+        "name": "color",
+        "type": "string",
+        "default": "\"#fafafa\"",
+        "description": "Text colour inside the tooltip."
+      },
+      {
+        "name": "arrowColor",
+        "type": "string",
+        "description": "Arrow fill colour. Defaults to `background` so it always matches."
+      },
+      {
+        "name": "arrow",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to render the pointing arrow."
+      },
+      {
+        "name": "arrowSize",
+        "type": "number",
+        "default": "8",
+        "description": "Arrow edge length in px."
+      },
+      {
+        "name": "offset",
+        "type": "number",
+        "default": "8",
+        "description": "Gap between the trigger and the tooltip in px."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "default": "200",
+        "description": "Delay before the tooltip appears, in ms."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": "false",
+        "description": "Disable the tooltip entirely (the trigger still renders)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra Tailwind classes merged onto the tooltip bubble."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function Example() {\n  return (\n    <AnimatedTooltip content=\"Copy to clipboard\" side=\"top\">\n      <button className=\"rounded-md bg-neutral-800 px-4 py-2 text-sm text-white\">\n        Copy\n      </button>\n    </AnimatedTooltip>\n  );\n}",
+    "docs": {
+      "overview": "AnimatedTooltip wraps any single focusable element and shows a floating label on hover and keyboard focus. It follows the WAI-ARIA tooltip pattern: the bubble carries role=\"tooltip\", the trigger is linked via aria-describedby while open, and pressing Escape dismisses it. The bubble and its pointing arrow are styled through independent props, so you can recolour the background, the text, and the arrow separately. Enter/exit uses a spring and automatically falls back to a plain fade when the user prefers reduced motion.",
+      "scenarios": [
+        {
+          "title": "Recolour background, text, and arrow independently",
+          "description": "Set `background`, `color`, and `arrowColor` to fully theme the tooltip. The arrow defaults to the background colour but can be overridden for a contrasting tip.",
+          "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function ThemedTooltip() {\n  return (\n    <div className=\"flex items-center justify-center gap-6 p-16\">\n      <AnimatedTooltip\n        content=\"Brand-coloured tooltip\"\n        background=\"#7c3aed\"\n        color=\"#ffffff\"\n        arrowColor=\"#7c3aed\"\n      >\n        <button className=\"rounded-md bg-violet-600 px-4 py-2 text-sm text-white\">\n          Hover me\n        </button>\n      </AnimatedTooltip>\n\n      <AnimatedTooltip\n        content=\"Contrasting arrow tip\"\n        background=\"#f59e0b\"\n        color=\"#1c1917\"\n        arrowColor=\"#ef4444\"\n      >\n        <button className=\"rounded-md bg-amber-500 px-4 py-2 text-sm text-neutral-900\">\n          Mismatched arrow\n        </button>\n      </AnimatedTooltip>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Placement on any side",
+          "description": "Use `side` and `align` to position the tooltip — the arrow tracks the chosen edge and alignment automatically.",
+          "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function PlacedTooltips() {\n  const btn = \"rounded-md bg-neutral-800 px-4 py-2 text-sm text-white\";\n  return (\n    <div className=\"grid grid-cols-2 gap-6 p-16\">\n      <AnimatedTooltip content=\"Top\" side=\"top\"><button className={btn}>Top</button></AnimatedTooltip>\n      <AnimatedTooltip content=\"Right\" side=\"right\"><button className={btn}>Right</button></AnimatedTooltip>\n      <AnimatedTooltip content=\"Bottom\" side=\"bottom\"><button className={btn}>Bottom</button></AnimatedTooltip>\n      <AnimatedTooltip content=\"Left\" side=\"left\"><button className={btn}>Left</button></AnimatedTooltip>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "No arrow with a custom delay",
+          "description": "Set `arrow={false}` for a flat label and tune `delay` to control how quickly it appears.",
+          "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function MinimalTooltip() {\n  return (\n    <div className=\"flex items-center justify-center p-16\">\n      <AnimatedTooltip content=\"Instant, arrowless label\" arrow={false} delay={0} offset={6}>\n        <button className=\"rounded-md bg-neutral-800 px-4 py-2 text-sm text-white\">\n          Hover me\n        </button>\n      </AnimatedTooltip>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Rich, multi-line content",
+          "description": "`content` accepts any React node, so you can render a heading, body copy, or a keyboard shortcut. Use `className` to widen the bubble.",
+          "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function RichTooltip() {\n  return (\n    <div className=\"flex items-center justify-center p-16\">\n      <AnimatedTooltip\n        side=\"bottom\"\n        className=\"max-w-[16rem]\"\n        background=\"#0f172a\"\n        color=\"#e2e8f0\"\n        content={\n          <div className=\"space-y-1\">\n            <p className=\"font-semibold\">Keyboard shortcut</p>\n            <p className=\"text-xs text-slate-400\">\n              Press {\"\\u2318\"}K to open the command palette from anywhere.\n            </p>\n          </div>\n        }\n      >\n        <button className=\"rounded-md bg-slate-800 px-4 py-2 text-sm text-white\">\n          Command palette\n        </button>\n      </AnimatedTooltip>\n    </div>\n  );\n}"
+        },
+        {
+          "title": "Any trigger — icon buttons and links",
+          "description": "The trigger can be any single focusable element. Hover and keyboard focus both work because the tooltip listens via bubbling focus events.",
+          "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\nimport { Info } from \"lucide-react\";\n\nexport default function TriggerVariants() {\n  return (\n    <div className=\"flex items-center justify-center gap-8 p-16\">\n      <AnimatedTooltip content=\"More information\" side=\"top\">\n        <button\n          aria-label=\"More information\"\n          className=\"grid h-9 w-9 place-items-center rounded-full bg-neutral-800 text-white\"\n        >\n          <Info className=\"h-4 w-4\" />\n        </button>\n      </AnimatedTooltip>\n\n      <AnimatedTooltip content=\"Opens in a new tab\" side=\"top\">\n        <a\n          href=\"https://example.com\"\n          className=\"text-sm font-medium text-violet-500 underline underline-offset-4\"\n        >\n          Documentation\n        </a>\n      </AnimatedTooltip>\n    </div>\n  );\n}"
+        }
+      ]
+    }
+  },
+  "tags": [
+    "overlay",
+    "tooltip",
+    "accessibility"
+  ],
+  "peerDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "compatibility": {
+    "react": "18+",
+    "next": "14+",
+    "tailwind": "3+|4+",
+    "rsc": false,
+    "ssr": true
+  },
+  "accessibility": {
+    "status": "audited",
+    "screenReaderNotes": "Bubble uses role=\"tooltip\" and is linked to the trigger via aria-describedby while visible. Shows on hover and keyboard focus, dismisses on Escape and blur. The decorative arrow is aria-hidden."
+  },
+  "motion": {
+    "reducedMotion": "full",
+    "performanceNotes": "Spring scale/translate on enter/exit only; falls back to an opacity-only fade when prefers-reduced-motion is set."
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-06-08",
+      "changes": [
+        "Initial release."
+      ]
+    }
+  ]
+}

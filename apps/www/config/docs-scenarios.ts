@@ -1131,5 +1131,36 @@ export const docsScenarios: Record<string, ComponentDocs> = {
     "slug": "hero-radial-burst",
     "overview": "An interactive fiber-optic burst rises from a bottom-center origin that touches the bottom edge: fine rays fan across the upper semicircle (longest near vertical, forming a soft dome), each a base-bright→tip-faint gradient drawn as a soft wide glow pass plus a crisp core, with a single glowing dot riding its tip. Every ray continuously grows, slightly over-extends, fades, and respawns with a fresh angle, length, speed, and opacity, so the loop is seamless with no global reset. Hovering the middle or tip of a fiber makes it and its neighbours brighten, stretch, and bend toward the cursor before easing back; the dense zone near the origin does not react. The burst is kept to a short lower band, masked so it never reaches the headline above. Six time-of-day themes — Pre-dawn, Sunrise, Daytime, Dusk, Sunset, Night — are selectable from an in-block dropdown; switching crossfades the background gradient and eases the burst colors between palettes. `RadialBurst` is exported separately for reuse under your own layout.",
     "scenarios": []
+  },
+  "animated-tooltip": {
+    "slug": "animated-tooltip",
+    "overview": "AnimatedTooltip wraps any single focusable element and shows a floating label on hover and keyboard focus. It follows the WAI-ARIA tooltip pattern: the bubble carries role=\"tooltip\", the trigger is linked via aria-describedby while open, and pressing Escape dismisses it. The bubble and its pointing arrow are styled through independent props, so you can recolour the background, the text, and the arrow separately. Enter/exit uses a spring and automatically falls back to a plain fade when the user prefers reduced motion.",
+    "scenarios": [
+      {
+        "title": "Recolour background, text, and arrow independently",
+        "description": "Set `background`, `color`, and `arrowColor` to fully theme the tooltip. The arrow defaults to the background colour but can be overridden for a contrasting tip.",
+        "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function ThemedTooltip() {\n  return (\n    <div className=\"flex items-center justify-center gap-6 p-16\">\n      <AnimatedTooltip\n        content=\"Brand-coloured tooltip\"\n        background=\"#7c3aed\"\n        color=\"#ffffff\"\n        arrowColor=\"#7c3aed\"\n      >\n        <button className=\"rounded-md bg-violet-600 px-4 py-2 text-sm text-white\">\n          Hover me\n        </button>\n      </AnimatedTooltip>\n\n      <AnimatedTooltip\n        content=\"Contrasting arrow tip\"\n        background=\"#f59e0b\"\n        color=\"#1c1917\"\n        arrowColor=\"#ef4444\"\n      >\n        <button className=\"rounded-md bg-amber-500 px-4 py-2 text-sm text-neutral-900\">\n          Mismatched arrow\n        </button>\n      </AnimatedTooltip>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Placement on any side",
+        "description": "Use `side` and `align` to position the tooltip — the arrow tracks the chosen edge and alignment automatically.",
+        "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function PlacedTooltips() {\n  const btn = \"rounded-md bg-neutral-800 px-4 py-2 text-sm text-white\";\n  return (\n    <div className=\"grid grid-cols-2 gap-6 p-16\">\n      <AnimatedTooltip content=\"Top\" side=\"top\"><button className={btn}>Top</button></AnimatedTooltip>\n      <AnimatedTooltip content=\"Right\" side=\"right\"><button className={btn}>Right</button></AnimatedTooltip>\n      <AnimatedTooltip content=\"Bottom\" side=\"bottom\"><button className={btn}>Bottom</button></AnimatedTooltip>\n      <AnimatedTooltip content=\"Left\" side=\"left\"><button className={btn}>Left</button></AnimatedTooltip>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "No arrow with a custom delay",
+        "description": "Set `arrow={false}` for a flat label and tune `delay` to control how quickly it appears.",
+        "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function MinimalTooltip() {\n  return (\n    <div className=\"flex items-center justify-center p-16\">\n      <AnimatedTooltip content=\"Instant, arrowless label\" arrow={false} delay={0} offset={6}>\n        <button className=\"rounded-md bg-neutral-800 px-4 py-2 text-sm text-white\">\n          Hover me\n        </button>\n      </AnimatedTooltip>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Rich, multi-line content",
+        "description": "`content` accepts any React node, so you can render a heading, body copy, or a keyboard shortcut. Use `className` to widen the bubble.",
+        "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function RichTooltip() {\n  return (\n    <div className=\"flex items-center justify-center p-16\">\n      <AnimatedTooltip\n        side=\"bottom\"\n        className=\"max-w-[16rem]\"\n        background=\"#0f172a\"\n        color=\"#e2e8f0\"\n        content={\n          <div className=\"space-y-1\">\n            <p className=\"font-semibold\">Keyboard shortcut</p>\n            <p className=\"text-xs text-slate-400\">\n              Press {\"\\u2318\"}K to open the command palette from anywhere.\n            </p>\n          </div>\n        }\n      >\n        <button className=\"rounded-md bg-slate-800 px-4 py-2 text-sm text-white\">\n          Command palette\n        </button>\n      </AnimatedTooltip>\n    </div>\n  );\n}"
+      },
+      {
+        "title": "Any trigger — icon buttons and links",
+        "description": "The trigger can be any single focusable element. Hover and keyboard focus both work because the tooltip listens via bubbling focus events.",
+        "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\nimport { Info } from \"lucide-react\";\n\nexport default function TriggerVariants() {\n  return (\n    <div className=\"flex items-center justify-center gap-8 p-16\">\n      <AnimatedTooltip content=\"More information\" side=\"top\">\n        <button\n          aria-label=\"More information\"\n          className=\"grid h-9 w-9 place-items-center rounded-full bg-neutral-800 text-white\"\n        >\n          <Info className=\"h-4 w-4\" />\n        </button>\n      </AnimatedTooltip>\n\n      <AnimatedTooltip content=\"Opens in a new tab\" side=\"top\">\n        <a\n          href=\"https://example.com\"\n          className=\"text-sm font-medium text-violet-500 underline underline-offset-4\"\n        >\n          Documentation\n        </a>\n      </AnimatedTooltip>\n    </div>\n  );\n}"
+      }
+    ]
   }
 };

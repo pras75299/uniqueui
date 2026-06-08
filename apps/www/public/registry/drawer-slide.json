@@ -52,6 +52,7 @@
   },
   "relatedSlugs": [
     "animated-tabs",
+    "animated-tooltip",
     "morphing-modal",
     "multi-step-auth-card",
     "notification-stack"

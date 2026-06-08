@@ -40,6 +40,7 @@ import {
   LucideWand2,
   LucideWaves,
   LucideWind,
+  MessageSquare,
   Terminal,
 } from "lucide-react";
 
@@ -113,6 +114,7 @@ const iconMap = {
   LucideWand2,
   LucideWaves,
   LucideWind,
+  MessageSquare,
   Terminal,
 } satisfies Record<string, ElementType>;
 
@@ -3456,6 +3458,90 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "import { RadialBurstHero } from \"@/components/ui/hero-radial-burst\";\n\nexport default function Hero() {\n  return (\n    <RadialBurstHero\n      defaultTheme=\"night\"\n      title={\n        <>\n          The backbone\n          <br />\n          of global commerce\n        </>\n      }\n    />\n  );\n}"
+  },
+  {
+    "slug": "animated-tooltip",
+    "name": "Animated Tooltip",
+    "description": "An accessible, spring-animated tooltip with a customizable pointing arrow. Background, text, and arrow colours are independently configurable, and it follows WAI-ARIA guidance — hover/focus triggers, role=\"tooltip\", aria-describedby, and Escape to dismiss.",
+    "icon": "MessageSquare",
+    "category": "Navigation & Overlays",
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactElement",
+        "description": "The trigger element. Must be a single focusable React element (e.g. a button or link)."
+      },
+      {
+        "name": "content",
+        "type": "React.ReactNode",
+        "description": "Content rendered inside the tooltip bubble."
+      },
+      {
+        "name": "side",
+        "type": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+        "default": "\"top\"",
+        "description": "Which side of the trigger the tooltip appears on."
+      },
+      {
+        "name": "align",
+        "type": "\"start\" | \"center\" | \"end\"",
+        "default": "\"center\"",
+        "description": "Alignment along the trigger's edge."
+      },
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#18181b\"",
+        "description": "Background colour of the tooltip bubble."
+      },
+      {
+        "name": "color",
+        "type": "string",
+        "default": "\"#fafafa\"",
+        "description": "Text colour inside the tooltip."
+      },
+      {
+        "name": "arrowColor",
+        "type": "string",
+        "description": "Arrow fill colour. Defaults to `background` so it always matches."
+      },
+      {
+        "name": "arrow",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to render the pointing arrow."
+      },
+      {
+        "name": "arrowSize",
+        "type": "number",
+        "default": "8",
+        "description": "Arrow edge length in px."
+      },
+      {
+        "name": "offset",
+        "type": "number",
+        "default": "8",
+        "description": "Gap between the trigger and the tooltip in px."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "default": "200",
+        "description": "Delay before the tooltip appears, in ms."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": "false",
+        "description": "Disable the tooltip entirely (the trigger still renders)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Extra Tailwind classes merged onto the tooltip bubble."
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function Example() {\n  return (\n    <AnimatedTooltip content=\"Copy to clipboard\" side=\"top\">\n      <button className=\"rounded-md bg-neutral-800 px-4 py-2 text-sm text-white\">\n        Copy\n      </button>\n    </AnimatedTooltip>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 

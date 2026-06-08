@@ -54,6 +54,7 @@
   "relatedSlugs": [
     "morphing-card-stack",
     "animated-tabs",
+    "animated-tooltip",
     "drawer-slide",
     "morphing-modal",
     "multi-step-auth-card"

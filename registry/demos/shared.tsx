@@ -76,6 +76,7 @@ import { MagneticLettersHero } from "@/components/ui/hero-magnetic-letters";
 import { TerminalHero } from "@/components/ui/hero-terminal";
 import { FlowFieldHero } from "@/components/ui/hero-flow-field";
 import { RadialBurstHero } from "@/components/ui/hero-radial-burst";
+import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {
@@ -98,6 +99,7 @@ import {
   Clock,
   Link2,
   Share2,
+  Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

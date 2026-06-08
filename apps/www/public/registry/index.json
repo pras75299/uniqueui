@@ -64,6 +64,7 @@
     "hero-terminal",
     "hero-flow-field",
     "magnetic-text",
-    "hero-radial-burst"
+    "hero-radial-burst",
+    "animated-tooltip"
   ]
 }
