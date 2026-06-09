@@ -36,7 +36,12 @@ jobs:
       - name: Verify CHANGELOG has release entry
         run: bash scripts/verify-changelog.sh
 
+      # Publish with npm (not pnpm): npm provenance requires npm to pack from
+      # source. pnpm packs a tarball first and shells out to `npm publish
+      # <tarball> --provenance`, which npm rejects (EUSAGE). cli-core is a
+      # bundled devDependency, so no workspace: spec leaks into runtime deps.
       - name: Publish to npm
-        run: pnpm --dir packages/cli publish --access public --no-git-checks --provenance
+        working-directory: packages/cli
+        run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

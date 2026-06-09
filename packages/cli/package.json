@@ -4,7 +4,7 @@
     "description": "CLI to add beautiful animated UI components from UniqueUI to your React project",
     "main": "dist/index.js",
     "bin": {
-        "uniqueui": "./dist/index.js"
+        "uniqueui": "dist/index.js"
     },
     "files": [
         "dist",
