@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.5
+
+### Patch Changes
+
+- Ship the `animated-tooltip` component in the registry; the tooltip now preserves the trigger's existing `aria-describedby` when linking its bubble.
+
 ## 1.1.2
 
 ### Patch Changes
