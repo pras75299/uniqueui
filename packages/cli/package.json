@@ -1,6 +1,6 @@
 {
     "name": "uniqueui-cli",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "description": "CLI to add beautiful animated UI components from UniqueUI to your React project",
     "main": "dist/index.js",
     "bin": {
