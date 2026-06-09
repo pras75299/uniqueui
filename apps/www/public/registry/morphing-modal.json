@@ -53,6 +53,7 @@
   "relatedSlugs": [
     "morphing-card-stack",
     "animated-tabs",
+    "animated-tooltip",
     "drawer-slide",
     "multi-step-auth-card",
     "notification-stack"

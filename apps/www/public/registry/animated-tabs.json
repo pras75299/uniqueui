@@ -55,8 +55,8 @@
     "floating-dock",
     "limelight-nav",
     "radial-menu",
-    "drawer-slide",
-    "morphing-modal"
+    "animated-tooltip",
+    "drawer-slide"
   ],
   "motion": {
     "reducedMotion": "none"
