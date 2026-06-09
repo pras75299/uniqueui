@@ -173,8 +173,17 @@ export function AnimatedTooltip({
   // Link the trigger to the bubble for assistive tech while it is visible.
   // Event handlers live on the wrapper below — onFocus/onBlur bubble via
   // focusin/focusout, so descendant focus is captured without cloning refs in.
+  // Merge with any existing aria-describedby so other descriptions are kept.
+  const originalDescribedBy = (
+    children.props as React.HTMLAttributes<HTMLElement>
+  )["aria-describedby"];
+  const mergedDescribedBy = open
+    ? originalDescribedBy
+      ? `${originalDescribedBy} ${tooltipId}`
+      : tooltipId
+    : originalDescribedBy;
   const trigger = React.cloneElement(children, {
-    "aria-describedby": open ? tooltipId : undefined,
+    "aria-describedby": mergedDescribedBy,
   } as React.HTMLAttributes<HTMLElement>);
 
   const directional =

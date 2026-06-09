@@ -152,6 +152,13 @@
   },
   "changelog": [
     {
+      "version": "1.0.1",
+      "date": "2026-06-09",
+      "changes": [
+        "Preserve the trigger's existing aria-describedby when linking the tooltip."
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-06-08",
       "changes": [
