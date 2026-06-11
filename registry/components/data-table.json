@@ -15,86 +15,156 @@
   },
   "docs": {
     "name": "Data Table",
-    "description": "Configurable data table with optional column freeze (left/right), customizable header and body colors and backgrounds, optional borders, and optional sortable columns.",
+    "description": "Typed, zero-dependency data grid that auto-switches between a hand-rolled virtualized engine (10 to 100,000 rows) and a standard engine with row grouping and rowspan. Search, single and multi sort, multi-select, row expansion, frozen columns, column groups, pinned rows, and feature presets.",
     "icon": "LucideTable",
     "category": "Data & Layout",
     "props": [
       {
-        "name": "columns",
-        "type": "DataTableColumn[]",
-        "description": "Column definitions: key, label, and optional sortKey for sortable columns."
-      },
-      {
         "name": "data",
-        "type": "Record<string, React.ReactNode>[]",
-        "description": "Row data; each row is an object keyed by column key."
+        "type": "T[]",
+        "description": "Typed row objects; the component is generic over your row type."
       },
       {
-        "name": "freezeColumns",
-        "type": "\"none\" | \"left\" | \"right\" | \"both\"",
-        "default": "\"none\"",
-        "description": "Which columns to freeze when horizontally scrolling: none, left, right, or both sides."
+        "name": "columns",
+        "type": "DataTableColumn<T>[]",
+        "description": "Column definitions: id, header, accessor (raw value for sort/search/group), optional cell renderer, sortType, searchable, width, align, freeze, nested columns (column groups), and rowSpan."
       },
       {
-        "name": "freezeCount",
-        "type": "number",
-        "default": "1",
-        "description": "Legacy fallback count used only when freezeLeftCount or freezeRightCount are not provided."
+        "name": "getRowId",
+        "type": "(row: T) => string",
+        "description": "Required stable row id — selection, expansion, pinning, and windowing keys all hang off it."
       },
       {
-        "name": "freezeLeftCount",
-        "type": "number",
-        "default": "1",
-        "description": "How many columns to freeze on the left when freezeColumns is \"left\" or \"both\"."
+        "name": "preset",
+        "type": "\"basic\" | \"advanced\" | \"enterprise\"",
+        "description": "Feature bundle. basic: search + pagination + sort. advanced: adds multi-sort, multi-select, expansion, sticky header. enterprise: advanced minus pagination so large data auto-virtualizes. Any explicit prop overrides the preset."
       },
       {
-        "name": "freezeRightCount",
-        "type": "number",
-        "default": "1",
-        "description": "How many columns to freeze on the right when freezeColumns is \"right\" or \"both\"."
+        "name": "searchable",
+        "type": "boolean",
+        "default": "false",
+        "description": "Global debounced (150ms) case-insensitive search over searchable columns' accessor values."
       },
       {
         "name": "paginated",
         "type": "boolean",
         "default": "false",
-        "description": "Enable built-in pagination controls."
+        "description": "Client-side pagination; disables virtualization."
       },
       {
         "name": "pageSize",
         "type": "number",
-        "default": "8",
-        "description": "Number of rows per page when paginated is true."
+        "default": "10",
+        "description": "Rows per page when paginated."
       },
       {
         "name": "pageSizeOptions",
         "type": "number[]",
-        "description": "Optional list of page sizes to show in a selector."
+        "description": "Optional page-size selector values."
       },
       {
-        "name": "initialPage",
+        "name": "sortable",
+        "type": "boolean",
+        "default": "false",
+        "description": "Header click cycles asc, desc, none. Typed comparators (number/date/string) inferred from accessor values or set per column via sortType."
+      },
+      {
+        "name": "multiSort",
+        "type": "boolean",
+        "default": "false",
+        "description": "Shift-click adds secondary/tertiary sort keys with visible priority badges."
+      },
+      {
+        "name": "onSort",
+        "type": "(sort: DataTableSortRule[]) => void",
+        "description": "Called with the full ordered rule list whenever sorting changes."
+      },
+      {
+        "name": "selectable",
+        "type": "boolean",
+        "default": "false",
+        "description": "Checkbox column; the tri-state header checkbox selects all filtered rows, not just the visible page or window."
+      },
+      {
+        "name": "selectedIds",
+        "type": "string[]",
+        "description": "Controlled selection; omit for uncontrolled."
+      },
+      {
+        "name": "onSelectionChange",
+        "type": "(ids: string[]) => void",
+        "description": "Selection change callback (fires in both controlled and uncontrolled modes)."
+      },
+      {
+        "name": "expandable",
+        "type": "boolean",
+        "default": "false",
+        "description": "Chevron toggle column; requires renderExpanded."
+      },
+      {
+        "name": "renderExpanded",
+        "type": "(row: T) => React.ReactNode",
+        "description": "Expanded panel content; works in both engines (the virtualizer measures expanded height)."
+      },
+      {
+        "name": "expandedIds",
+        "type": "string[]",
+        "description": "Controlled expansion; omit for uncontrolled."
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(ids: string[]) => void",
+        "description": "Expansion change callback."
+      },
+      {
+        "name": "groupBy",
+        "type": "string",
+        "description": "Column id to group rows by — collapsible group header rows; uses the standard engine."
+      },
+      {
+        "name": "virtualized",
+        "type": "boolean",
+        "description": "Force an engine. Default is automatic: virtualized when flat data exceeds virtualizeThreshold and no groupBy/rowSpan/pagination is active."
+      },
+      {
+        "name": "virtualizeThreshold",
         "type": "number",
-        "default": "1",
-        "description": "Initial page index (1-based) when paginated is true."
+        "default": "100",
+        "description": "Row count above which flat data is windowed."
       },
       {
-        "name": "onPageChange",
-        "type": "(page: number, pageSize: number) => void",
-        "description": "Called when the current page or page size changes."
+        "name": "rowHeight",
+        "type": "number",
+        "default": "44",
+        "description": "Estimated row height in px used for windowing math."
       },
       {
-        "name": "paginationPreviousLabel",
-        "type": "React.ReactNode",
-        "description": "Previous-page control content; defaults to a left chevron icon."
+        "name": "maxHeight",
+        "type": "number | string",
+        "description": "Scroll container height; the virtualized engine falls back to 480px when omitted."
       },
       {
-        "name": "paginationNextLabel",
-        "type": "React.ReactNode",
-        "description": "Next-page control content; defaults to a right chevron icon."
+        "name": "stickyHeader",
+        "type": "boolean",
+        "default": "false",
+        "description": "Keep the header row(s) fixed while scrolling vertically."
       },
       {
-        "name": "getRowKey",
-        "type": "(row, index) => React.Key",
-        "description": "Optional stable key per row for React reconciliation (sort, pagination). Defaults to row.id / row.key when string or number, else a generated key."
+        "name": "pinnedRows",
+        "type": "string[]",
+        "description": "Row ids kept visible directly below the header."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Theme for default header/body colors when not overridden."
+      },
+      {
+        "name": "border",
+        "type": "boolean",
+        "default": "false",
+        "description": "Show table and cell borders."
       },
       {
         "name": "headerTextColor",
@@ -117,105 +187,66 @@
         "description": "Tailwind class for body background."
       },
       {
-        "name": "border",
-        "type": "boolean",
-        "default": "false",
-        "description": "Whether to show table and cell borders."
-      },
-      {
-        "name": "sortable",
-        "type": "boolean",
-        "default": "false",
-        "description": "Whether column headers with sortKey are clickable to sort."
-      },
-      {
-        "name": "onSort",
-        "type": "(key: string, direction: \"asc\" | \"desc\") => void",
-        "description": "Callback when sort changes (for controlled use)."
-      },
-      {
         "name": "className",
         "type": "string",
         "description": "Additional classes on the root wrapper."
-      },
-      {
-        "name": "theme",
-        "type": "\"light\" | \"dark\"",
-        "default": "\"dark\"",
-        "description": "Theme for default header/body colors when not overridden."
       }
     ],
     "variants": [
       {
-        "id": "default",
-        "label": "Default",
-        "demoKey": "data-table/default",
+        "id": "basic",
+        "label": "Basic preset",
+        "demoKey": "data-table/basic",
         "overflowVisible": true,
-        "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"joined\", label: \"Joined\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", email: \"alex@example.com\", department: \"Platform\", status: \"Active\", joined: \"2023-01\" },\n  { name: \"Sara Chen\", role: \"Designer\", email: \"sara@example.com\", department: \"Product\", status: \"Active\", joined: \"2023-03\" },\n  { name: \"Jordan Lee\", role: \"PM\", email: \"jordan@example.com\", department: \"Growth\", status: \"Away\", joined: \"2023-06\" },\n  { name: \"Maya Patel\", role: \"Engineer\", email: \"maya@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-01\" },\n  { name: \"Ryan Wu\", role: \"Designer\", email: \"ryan@example.com\", department: \"Product\", status: \"Away\", joined: \"2024-02\" },\n  { name: \"Priya Shah\", role: \"PM\", email: \"priya@example.com\", department: \"Growth\", status: \"Active\", joined: \"2024-04\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", email: \"sam@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-05\" },\n  { name: \"Jess Taylor\", role: \"Designer\", email: \"jess@example.com\", department: \"Product\", status: \"Active\", joined: \"2024-06\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable columns={columns} data={data} paginated pageSize={5} theme=\"dark\" />\n    </div>\n  );\n}"
+        "usageCode": "\"use client\";\nimport { DataTable, type DataTableColumn } from \"@/components/ui/data-table\";\n\ninterface Member {\n  id: string;\n  name: string;\n  role: string;\n  department: string;\n  joined: Date;\n}\n\nconst data: Member[] = [\n  { id: \"1\", name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", joined: new Date(\"2023-01-09\") },\n  { id: \"2\", name: \"Sara Chen\", role: \"Designer\", department: \"Product\", joined: new Date(\"2023-03-14\") },\n  { id: \"3\", name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", joined: new Date(\"2023-06-02\") },\n  { id: \"4\", name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", joined: new Date(\"2024-01-22\") },\n  { id: \"5\", name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", joined: new Date(\"2024-02-11\") },\n  { id: \"6\", name: \"Priya Shah\", role: \"PM\", department: \"Growth\", joined: new Date(\"2024-04-30\") },\n  { id: \"7\", name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", joined: new Date(\"2024-05-18\") },\n];\n\nconst columns: DataTableColumn<Member>[] = [\n  { id: \"name\", header: \"Name\", accessor: (row) => row.name },\n  { id: \"role\", header: \"Role\", accessor: (row) => row.role },\n  { id: \"department\", header: \"Department\", accessor: (row) => row.department },\n  { id: \"joined\", header: \"Joined\", accessor: (row) => row.joined, cell: (row) => row.joined.toISOString().slice(0, 10) },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable data={data} columns={columns} getRowId={(row) => row.id} preset=\"basic\" pageSize={5} theme=\"dark\" />\n    </div>\n  );\n}"
       },
       {
-        "id": "freeze-left",
-        "label": "Freeze left",
-        "demoKey": "data-table/freeze-left",
+        "id": "advanced",
+        "label": "Advanced preset",
+        "demoKey": "data-table/advanced",
         "overflowVisible": true,
-        "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Alex Kim\", email: \"alex@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"2\", name: \"Sara Chen\", email: \"sara@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"3\", name: \"Jordan Lee\", email: \"jordan@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"4\", name: \"Maya Patel\", email: \"maya@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"5\", name: \"Ryan Wu\", email: \"ryan@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"6\", name: \"Priya Shah\", email: \"priya@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"7\", name: \"Sam Rivera\", email: \"sam@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"8\", name: \"Jess Taylor\", email: \"jess@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", status: \"Active\", actions: \"Edit · View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"left\"\n          freezeLeftCount={2}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+        "usageCode": "\"use client\";\nimport { DataTable, type DataTableColumn } from \"@/components/ui/data-table\";\n\ninterface Order {\n  id: string;\n  order: string;\n  customer: string;\n  total: number;\n  status: string;\n}\n\nconst data: Order[] = Array.from({ length: 24 }, (_, i) => ({\n  id: `ord-${i + 1}`,\n  order: `#${String(2400 + i)}`,\n  customer: [\"Alex Kim\", \"Sara Chen\", \"Jordan Lee\", \"Maya Patel\"][i % 4],\n  total: Math.round((i * 53.7 + 24) * 100) / 100,\n  status: [\"Paid\", \"Pending\", \"Refunded\"][i % 3],\n}));\n\nconst columns: DataTableColumn<Order>[] = [\n  { id: \"order\", header: \"Order\", accessor: (row) => row.order },\n  { id: \"customer\", header: \"Customer\", accessor: (row) => row.customer },\n  { id: \"total\", header: \"Total\", accessor: (row) => row.total, cell: (row) => `$${row.total.toFixed(2)}`, align: \"right\" },\n  { id: \"status\", header: \"Status\", accessor: (row) => row.status },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable\n        data={data}\n        columns={columns}\n        getRowId={(row) => row.id}\n        preset=\"advanced\"\n        pageSize={8}\n        border\n        renderExpanded={(row) => (\n          <div className=\"text-xs opacity-80\">\n            Order {row.order} for {row.customer} — status {row.status}.\n          </div>\n        )}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
       },
       {
-        "id": "freeze-right",
-        "label": "Freeze right",
-        "demoKey": "data-table/freeze-right",
+        "id": "virtualized",
+        "label": "Virtualized 10k rows",
+        "demoKey": "data-table/virtualized",
         "overflowVisible": true,
-        "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"lastActive\", label: \"Last active\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"alex@example.com\", joined: \"2023-01\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Sara Chen\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Active\", email: \"sara@example.com\", joined: \"2023-03\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", region: \"Central\", status: \"Away\", email: \"jordan@example.com\", joined: \"2023-06\", lastActive: \"2024-02\", actions: \"Edit · View\" },\n  { name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"maya@example.com\", joined: \"2024-01\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Away\", email: \"ryan@example.com\", joined: \"2024-02\", lastActive: \"2024-01\", actions: \"Edit · View\" },\n  { name: \"Priya Shah\", role: \"PM\", department: \"Growth\", region: \"Central\", status: \"Active\", email: \"priya@example.com\", joined: \"2024-04\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", region: \"West\", status: \"Active\", email: \"sam@example.com\", joined: \"2024-05\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n  { name: \"Jess Taylor\", role: \"Designer\", department: \"Product\", region: \"East\", status: \"Active\", email: \"jess@example.com\", joined: \"2024-06\", lastActive: \"2024-03\", actions: \"Edit · View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"right\"\n          freezeRightCount={1}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+        "usageCode": "\"use client\";\nimport { useMemo } from \"react\";\nimport { DataTable, type DataTableColumn } from \"@/components/ui/data-table\";\n\ninterface EventRow {\n  id: string;\n  event: string;\n  service: string;\n  latency: number;\n  status: string;\n}\n\nconst columns: DataTableColumn<EventRow>[] = [\n  { id: \"event\", header: \"Event\", accessor: (row) => row.event },\n  { id: \"service\", header: \"Service\", accessor: (row) => row.service },\n  { id: \"latency\", header: \"Latency (ms)\", accessor: (row) => row.latency, align: \"right\" },\n  { id: \"status\", header: \"Status\", accessor: (row) => row.status },\n];\n\nexport default function Example() {\n  const data = useMemo<EventRow[]>(\n    () =>\n      Array.from({ length: 10000 }, (_, i) => ({\n        id: `evt-${i}`,\n        event: `Event ${i + 1}`,\n        service: [\"api\", \"web\", \"worker\", \"cron\"][i % 4],\n        latency: ((i * 37) % 900) + 12,\n        status: i % 13 === 0 ? \"error\" : \"ok\",\n      })),\n    []\n  );\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable\n        data={data}\n        columns={columns}\n        getRowId={(row) => row.id}\n        preset=\"enterprise\"\n        maxHeight={400}\n        rowHeight={44}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
       },
       {
-        "id": "freeze-both",
-        "label": "Freeze both",
-        "demoKey": "data-table/freeze-both",
+        "id": "grouped",
+        "label": "Grouped rows + rowspan",
+        "demoKey": "data-table/grouped",
         "overflowVisible": true,
-        "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Alex Kim\", email: \"alex@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"2\", name: \"Sara Chen\", email: \"sara@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"3\", name: \"Jordan Lee\", email: \"jordan@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"4\", name: \"Maya Patel\", email: \"maya@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"5\", name: \"Ryan Wu\", email: \"ryan@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", status: \"Away\", actions: \"Edit · View\" },\n  { id: \"6\", name: \"Priya Shah\", email: \"priya@example.com\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"7\", name: \"Sam Rivera\", email: \"sam@example.com\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", status: \"Active\", actions: \"Edit · View\" },\n  { id: \"8\", name: \"Jess Taylor\", email: \"jess@example.com\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", status: \"Active\", actions: \"Edit · View\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"both\"\n          freezeLeftCount={2}\n          freezeRightCount={1}\n        paginated\n        pageSize={5}\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+        "usageCode": "\"use client\";\nimport { DataTable, type DataTableColumn } from \"@/components/ui/data-table\";\n\ninterface Person {\n  id: string;\n  name: string;\n  team: string;\n  region: string;\n  oncall: string;\n}\n\nconst data: Person[] = [\n  { id: \"1\", name: \"Alex Kim\", team: \"Platform\", region: \"West\", oncall: \"Yes\" },\n  { id: \"2\", name: \"Maya Patel\", team: \"Platform\", region: \"West\", oncall: \"No\" },\n  { id: \"3\", name: \"Sam Rivera\", team: \"Platform\", region: \"East\", oncall: \"No\" },\n  { id: \"4\", name: \"Sara Chen\", team: \"Product\", region: \"East\", oncall: \"Yes\" },\n  { id: \"5\", name: \"Ryan Wu\", team: \"Product\", region: \"Central\", oncall: \"No\" },\n  { id: \"6\", name: \"Jordan Lee\", team: \"Growth\", region: \"Central\", oncall: \"No\" },\n];\n\nconst columns: DataTableColumn<Person>[] = [\n  { id: \"team\", header: \"Team\", accessor: (row) => row.team },\n  { id: \"name\", header: \"Name\", accessor: (row) => row.name },\n  { id: \"region\", header: \"Region\", accessor: (row) => row.region, rowSpan: true },\n  { id: \"oncall\", header: \"On call\", accessor: (row) => row.oncall },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable data={data} columns={columns} getRowId={(row) => row.id} groupBy=\"team\" border theme=\"dark\" />\n    </div>\n  );\n}"
       },
       {
-        "id": "bordered",
-        "label": "Bordered",
-        "demoKey": "data-table/bordered",
+        "id": "column-groups",
+        "label": "Column groups + freeze",
+        "demoKey": "data-table/column-groups",
         "overflowVisible": true,
-        "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"joined\", label: \"Joined\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", email: \"alex@example.com\", department: \"Platform\", status: \"Active\", joined: \"2023-01\" },\n  { name: \"Sara Chen\", role: \"Designer\", email: \"sara@example.com\", department: \"Product\", status: \"Active\", joined: \"2023-03\" },\n  { name: \"Jordan Lee\", role: \"PM\", email: \"jordan@example.com\", department: \"Growth\", status: \"Away\", joined: \"2023-06\" },\n  { name: \"Maya Patel\", role: \"Engineer\", email: \"maya@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-01\" },\n  { name: \"Ryan Wu\", role: \"Designer\", email: \"ryan@example.com\", department: \"Product\", status: \"Away\", joined: \"2024-02\" },\n  { name: \"Priya Shah\", role: \"PM\", email: \"priya@example.com\", department: \"Growth\", status: \"Active\", joined: \"2024-04\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", email: \"sam@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-05\" },\n  { name: \"Jess Taylor\", role: \"Designer\", email: \"jess@example.com\", department: \"Product\", status: \"Active\", joined: \"2024-06\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable columns={columns} data={data} border paginated pageSize={5} theme=\"dark\" />\n    </div>\n  );\n}"
-      },
-      {
-        "id": "sortable",
-        "label": "Sortable",
-        "demoKey": "data-table/sortable",
-        "overflowVisible": true,
-        "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\", sortKey: \"name\" },\n  { key: \"role\", label: \"Role\", sortKey: \"role\" },\n  { key: \"department\", label: \"Department\", sortKey: \"department\" },\n  { key: \"joined\", label: \"Joined\", sortKey: \"joined\" },\n  { key: \"status\", label: \"Status\", sortKey: \"status\" },\n];\nconst data = [\n  { name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", joined: \"2024-03\", status: \"Away\" },\n  { name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", joined: \"2024-01\", status: \"Active\" },\n  { name: \"Sara Chen\", role: \"Designer\", department: \"Product\", joined: \"2024-02\", status: \"Active\" },\n  { name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", joined: \"2023-11\", status: \"Active\" },\n  { name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", joined: \"2024-05\", status: \"Away\" },\n  { name: \"Priya Shah\", role: \"PM\", department: \"Growth\", joined: \"2023-08\", status: \"Active\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", joined: \"2024-06\", status: \"Active\" },\n  { name: \"Jess Taylor\", role: \"Designer\", department: \"Product\", joined: \"2023-09\", status: \"Active\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable columns={columns} data={data} sortable paginated pageSize={5} theme=\"dark\" />\n    </div>\n  );\n}"
-      },
-      {
-        "id": "custom-colors",
-        "label": "Custom colors",
-        "demoKey": "data-table/custom-colors",
-        "overflowVisible": true,
-        "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\" },\n  { key: \"role\", label: \"Role\" },\n  { key: \"email\", label: \"Email\" },\n  { key: \"department\", label: \"Department\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"joined\", label: \"Joined\" },\n];\nconst data = [\n  { name: \"Alex Kim\", role: \"Engineer\", email: \"alex@example.com\", department: \"Platform\", status: \"Active\", joined: \"2023-01\" },\n  { name: \"Sara Chen\", role: \"Designer\", email: \"sara@example.com\", department: \"Product\", status: \"Active\", joined: \"2023-03\" },\n  { name: \"Jordan Lee\", role: \"PM\", email: \"jordan@example.com\", department: \"Growth\", status: \"Away\", joined: \"2023-06\" },\n  { name: \"Maya Patel\", role: \"Engineer\", email: \"maya@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-01\" },\n  { name: \"Ryan Wu\", role: \"Designer\", email: \"ryan@example.com\", department: \"Product\", status: \"Away\", joined: \"2024-02\" },\n  { name: \"Priya Shah\", role: \"PM\", email: \"priya@example.com\", department: \"Growth\", status: \"Active\", joined: \"2024-04\" },\n  { name: \"Sam Rivera\", role: \"Engineer\", email: \"sam@example.com\", department: \"Platform\", status: \"Active\", joined: \"2024-05\" },\n  { name: \"Jess Taylor\", role: \"Designer\", email: \"jess@example.com\", department: \"Product\", status: \"Active\", joined: \"2024-06\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable\n        columns={columns}\n        data={data}\n        headerTextColor=\"text-purple-900\"\n        bodyTextColor=\"text-neutral-800\"\n        headerBackground=\"bg-purple-100\"\n        bodyBackground=\"bg-purple-50/50\"\n        paginated\n        pageSize={5}\n        border\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
-      },
-      {
-        "id": "full",
-        "label": "Full options",
-        "demoKey": "data-table/full",
-        "overflowVisible": true,
-        "usageCode": "import { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"id\", label: \"ID\" },\n  { key: \"name\", label: \"Name\", sortKey: \"name\" },\n  { key: \"role\", label: \"Role\", sortKey: \"role\" },\n  { key: \"department\", label: \"Dept\" },\n  { key: \"region\", label: \"Region\" },\n  { key: \"joined\", label: \"Joined\" },\n  { key: \"actions\", label: \"Actions\" },\n];\nconst data = [\n  { id: \"1\", name: \"Jordan Lee\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2023-06\", actions: \"Edit\" },\n  { id: \"2\", name: \"Alex Kim\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2023-01\", actions: \"Edit\" },\n  { id: \"3\", name: \"Sara Chen\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2023-03\", actions: \"Edit\" },\n  { id: \"4\", name: \"Maya Patel\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-01\", actions: \"Edit\" },\n  { id: \"5\", name: \"Ryan Wu\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-02\", actions: \"Edit\" },\n  { id: \"6\", name: \"Priya Shah\", role: \"PM\", department: \"Growth\", region: \"Central\", joined: \"2024-04\", actions: \"Edit\" },\n  { id: \"7\", name: \"Sam Rivera\", role: \"Engineer\", department: \"Platform\", region: \"West\", joined: \"2024-05\", actions: \"Edit\" },\n  { id: \"8\", name: \"Jess Taylor\", role: \"Designer\", department: \"Product\", region: \"East\", joined: \"2024-06\", actions: \"Edit\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n        <DataTable\n          columns={columns}\n          data={data}\n          freezeColumns=\"left\"\n          freezeLeftCount={1}\n        headerTextColor=\"text-neutral-100\"\n        bodyTextColor=\"text-neutral-300\"\n        headerBackground=\"bg-neutral-800\"\n        bodyBackground=\"bg-neutral-950\"\n        border\n        sortable\n        paginated\n        pageSize={5}\n        pageSizeOptions={[5, 10, 20]}\n        onPageChange={(page, pageSize) =>\n          console.log(\"page changed\", page, \"pageSize\", pageSize)\n        }\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+        "usageCode": "\"use client\";\nimport { DataTable, type DataTableColumn } from \"@/components/ui/data-table\";\n\ninterface ReportRow {\n  id: string;\n  name: string;\n  q1: number;\n  q2: number;\n  q3: number;\n  q4: number;\n  owner: string;\n}\n\nconst data: ReportRow[] = [\n  { id: \"1\", name: \"Alex Kim\", q1: 42, q2: 51, q3: 48, q4: 60, owner: \"Platform\" },\n  { id: \"2\", name: \"Sara Chen\", q1: 38, q2: 47, q3: 52, q4: 58, owner: \"Product\" },\n  { id: \"3\", name: \"Jordan Lee\", q1: 51, q2: 44, q3: 47, q4: 63, owner: \"Growth\" },\n];\n\nconst columns: DataTableColumn<ReportRow>[] = [\n  { id: \"name\", header: \"Name\", accessor: (row) => row.name, freeze: \"left\", width: 140 },\n  {\n    id: \"h1\",\n    header: \"H1\",\n    accessor: () => null,\n    columns: [\n      { id: \"q1\", header: \"Q1\", accessor: (row) => row.q1, align: \"right\" },\n      { id: \"q2\", header: \"Q2\", accessor: (row) => row.q2, align: \"right\" },\n    ],\n  },\n  {\n    id: \"h2\",\n    header: \"H2\",\n    accessor: () => null,\n    columns: [\n      { id: \"q3\", header: \"Q3\", accessor: (row) => row.q3, align: \"right\" },\n      { id: \"q4\", header: \"Q4\", accessor: (row) => row.q4, align: \"right\" },\n    ],\n  },\n  { id: \"owner\", header: \"Owner\", accessor: (row) => row.owner },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"w-full p-6\">\n      <DataTable data={data} columns={columns} getRowId={(row) => row.id} sortable border theme=\"dark\" />\n    </div>\n  );\n}"
       }
     ],
-    "usageCode": "\"use client\";\nimport { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\", sortKey: \"name\" },\n  { key: \"role\", label: \"Role\", sortKey: \"role\" },\n  { key: \"status\", label: \"Status\" },\n];\n\nconst data = [\n  { id: \"1\", name: \"Alice Chen\", role: \"Engineer\", status: \"Active\" },\n  { id: \"2\", name: \"Bob Martin\", role: \"Designer\", status: \"Active\" },\n  { id: \"3\", name: \"Carol White\", role: \"Product\", status: \"On leave\" },\n  { id: \"4\", name: \"Dan Brown\", role: \"Engineer\", status: \"Active\" },\n  { id: \"5\", name: \"Eve Davis\", role: \"Marketing\", status: \"Active\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-6\">\n      <DataTable columns={columns} data={data} sortable paginated pageSize={3} theme=\"dark\" />\n    </div>\n  );\n}",
+    "usageCode": "\"use client\";\nimport { DataTable, type DataTableColumn } from \"@/components/ui/data-table\";\n\ninterface Person {\n  id: string;\n  name: string;\n  role: string;\n  score: number;\n}\n\nconst data: Person[] = [\n  { id: \"1\", name: \"Alice Chen\", role: \"Engineer\", score: 92 },\n  { id: \"2\", name: \"Bob Martin\", role: \"Designer\", score: 78 },\n  { id: \"3\", name: \"Carol White\", role: \"Product\", score: 85 },\n  { id: \"4\", name: \"Dan Brown\", role: \"Engineer\", score: 88 },\n  { id: \"5\", name: \"Eve Davis\", role: \"Marketing\", score: 73 },\n];\n\nconst columns: DataTableColumn<Person>[] = [\n  { id: \"name\", header: \"Name\", accessor: (row) => row.name },\n  { id: \"role\", header: \"Role\", accessor: (row) => row.role },\n  { id: \"score\", header: \"Score\", accessor: (row) => row.score, align: \"right\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"p-6\">\n      <DataTable data={data} columns={columns} getRowId={(row) => row.id} preset=\"basic\" pageSize={3} theme=\"dark\" />\n    </div>\n  );\n}",
     "docs": {
-      "overview": "DataTable renders a fully-featured table with optional client-side sorting, pagination with configurable page sizes, and sticky column freezing on the left and/or right edges. Theming and all colour tokens are customisable.",
+      "overview": "DataTable is a typed, zero-dependency data grid built for 10 to 100,000 rows. It auto-switches between two engines: a hand-rolled virtualized engine that windows rows for large flat data, and a standard engine that supports row grouping (groupBy) and rowspan merging. Search, single and multi sort (shift-click), multi-select with a filtered-aware select-all, row expansion, frozen columns, column groups, pinned rows, and sticky headers work across engines. Presets (basic / advanced / enterprise) bundle feature defaults; any explicit prop wins.",
       "scenarios": [
         {
-          "title": "Sortable team roster",
-          "description": "Display a team list with column-level sorting so managers can quickly find members by name or role.",
-          "code": "\"use client\";\nimport { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"name\", label: \"Name\", sortKey: \"name\" },\n  { key: \"department\", label: \"Department\", sortKey: \"department\" },\n  { key: \"joined\", label: \"Joined\", sortKey: \"joined\" },\n];\n\nconst data = [\n  { id: \"1\", name: \"Alice Chen\", department: \"Engineering\", joined: \"2023-01\" },\n  { id: \"2\", name: \"Bob Martin\", department: \"Design\", joined: \"2022-08\" },\n  { id: \"3\", name: \"Carol White\", department: \"Product\", joined: \"2021-11\" },\n  { id: \"4\", name: \"Dan Brown\", department: \"Engineering\", joined: \"2024-03\" },\n];\n\nexport default function TeamRoster() {\n  return (\n    <div className=\"p-6\">\n      <DataTable columns={columns} data={data} sortable border theme=\"dark\" />\n    </div>\n  );\n}"
+          "title": "100k-row event log",
+          "description": "Render an unbounded event stream with windowed rows — only the visible slice is in the DOM, and aria-rowcount still reports the true filtered total.",
+          "code": "\"use client\";\nimport { useMemo } from \"react\";\nimport { DataTable, type DataTableColumn } from \"@/components/ui/data-table\";\n\ninterface EventRow {\n  id: string;\n  event: string;\n  service: string;\n  latency: number;\n}\n\nconst columns: DataTableColumn<EventRow>[] = [\n  { id: \"event\", header: \"Event\", accessor: (row) => row.event },\n  { id: \"service\", header: \"Service\", accessor: (row) => row.service },\n  { id: \"latency\", header: \"Latency (ms)\", accessor: (row) => row.latency, align: \"right\" },\n];\n\nexport default function EventLog() {\n  const data = useMemo<EventRow[]>(\n    () =>\n      Array.from({ length: 100000 }, (_, i) => ({\n        id: `evt-${i}`,\n        event: `Event ${i + 1}`,\n        service: [\"api\", \"web\", \"worker\"][i % 3],\n        latency: ((i * 37) % 900) + 12,\n      })),\n    []\n  );\n  return (\n    <DataTable\n      data={data}\n      columns={columns}\n      getRowId={(row) => row.id}\n      preset=\"enterprise\"\n      maxHeight={480}\n      theme=\"dark\"\n    />\n  );\n}"
         },
         {
-          "title": "Paginated transaction log",
-          "description": "Handle large datasets with pagination by using paginated, pageSize, and pageSizeOptions props.",
-          "code": "\"use client\";\nimport { DataTable } from \"@/components/ui/data-table\";\n\nconst columns = [\n  { key: \"txn\", label: \"Txn ID\" },\n  { key: \"amount\", label: \"Amount\", sortKey: \"amount\" },\n  { key: \"status\", label: \"Status\" },\n  { key: \"date\", label: \"Date\", sortKey: \"date\" },\n];\n\nconst data = Array.from({ length: 20 }, (_, i) => ({\n  id: String(i + 1),\n  txn: \"TXN-\" + String(i + 1).padStart(4, \"0\"),\n  amount: \"$\" + ((i + 1) * 47).toFixed(2),\n  status: i % 3 === 0 ? \"Pending\" : \"Completed\",\n  date: \"2026-04-\" + String((i % 28) + 1).padStart(2, \"0\"),\n}));\n\nexport default function TransactionLog() {\n  return (\n    <div className=\"p-6\">\n      <DataTable columns={columns} data={data} paginated pageSize={5} pageSizeOptions={[5, 10, 20]} sortable theme=\"dark\" />\n    </div>\n  );\n}"
+          "title": "Order management with selection and expansion",
+          "description": "Multi-select orders across pages (select-all targets every filtered row) and expand a row for details, with multi-sort via shift-click.",
+          "code": "\"use client\";\nimport { useState } from \"react\";\nimport { DataTable, type DataTableColumn } from \"@/components/ui/data-table\";\n\ninterface Order {\n  id: string;\n  order: string;\n  customer: string;\n  total: number;\n}\n\nconst data: Order[] = Array.from({ length: 40 }, (_, i) => ({\n  id: `ord-${i}`,\n  order: `#${1000 + i}`,\n  customer: [\"Alex\", \"Sara\", \"Jordan\", \"Maya\"][i % 4],\n  total: (i + 1) * 19.5,\n}));\n\nconst columns: DataTableColumn<Order>[] = [\n  { id: \"order\", header: \"Order\", accessor: (row) => row.order },\n  { id: \"customer\", header: \"Customer\", accessor: (row) => row.customer },\n  { id: \"total\", header: \"Total\", accessor: (row) => row.total, cell: (row) => `$${row.total.toFixed(2)}`, align: \"right\" },\n];\n\nexport default function Orders() {\n  const [selected, setSelected] = useState<string[]>([]);\n  return (\n    <DataTable\n      data={data}\n      columns={columns}\n      getRowId={(row) => row.id}\n      preset=\"advanced\"\n      selectedIds={selected}\n      onSelectionChange={setSelected}\n      renderExpanded={(row) => <div>Details for {row.order}</div>}\n      theme=\"dark\"\n    />\n  );\n}"
+        },
+        {
+          "title": "Quarterly report with grouped headers and a frozen name column",
+          "description": "Nested columns render a two-level header while the name column stays pinned during horizontal scroll.",
+          "code": "\"use client\";\nimport { DataTable, type DataTableColumn } from \"@/components/ui/data-table\";\n\ninterface ReportRow {\n  id: string;\n  name: string;\n  q1: number;\n  q2: number;\n  q3: number;\n  q4: number;\n}\n\nconst data: ReportRow[] = [\n  { id: \"1\", name: \"Alex Kim\", q1: 42, q2: 51, q3: 48, q4: 60 },\n  { id: \"2\", name: \"Sara Chen\", q1: 38, q2: 47, q3: 52, q4: 58 },\n];\n\nconst columns: DataTableColumn<ReportRow>[] = [\n  { id: \"name\", header: \"Name\", accessor: (row) => row.name, freeze: \"left\", width: 140 },\n  {\n    id: \"h1\",\n    header: \"H1\",\n    accessor: () => null,\n    columns: [\n      { id: \"q1\", header: \"Q1\", accessor: (row) => row.q1, align: \"right\" },\n      { id: \"q2\", header: \"Q2\", accessor: (row) => row.q2, align: \"right\" },\n    ],\n  },\n  {\n    id: \"h2\",\n    header: \"H2\",\n    accessor: () => null,\n    columns: [\n      { id: \"q3\", header: \"Q3\", accessor: (row) => row.q3, align: \"right\" },\n      { id: \"q4\", header: \"Q4\", accessor: (row) => row.q4, align: \"right\" },\n    ],\n  },\n];\n\nexport default function Report() {\n  return <DataTable data={data} columns={columns} getRowId={(row) => row.id} sortable border theme=\"dark\" />;\n}"
         }
       ]
     }
@@ -223,6 +254,8 @@
   "tags": [
     "data",
     "table",
+    "grid",
+    "virtualized",
     "layout"
   ],
   "peerDependencies": [
@@ -238,9 +271,21 @@
     "ssr": true
   },
   "accessibility": {
-    "status": "unaudited"
+    "status": "audited",
+    "screenReaderNotes": "Sortable headers expose aria-sort and are keyboard-operable buttons with arrow-key roving between them. Selected rows set aria-selected; expand toggles and group toggles set aria-expanded; checkboxes and the search input are labelled. In the virtualized engine aria-rowcount/aria-rowindex reflect the true filtered total despite windowing."
   },
   "changelog": [
+    {
+      "version": "2.0.0",
+      "date": "2026-06-11",
+      "changes": [
+        "BREAKING: columns are now typed definitions ({ id, header, accessor, cell?, ... }) and rows are your own typed objects — Record<string, ReactNode> cells and { key, label, sortKey } columns are gone.",
+        "BREAKING: getRowId is required; freezeColumns/freezeCount/freezeLeftCount/freezeRightCount are replaced by per-column freeze: \"left\" | \"right\"; initialPage/onPageChange/getRowKey/paginationPreviousLabel/paginationNextLabel were removed.",
+        "Hand-rolled row virtualization (windowing) handles up to 100,000 rows; the engine auto-switches to a standard renderer when groupBy or rowSpan is used.",
+        "New: global debounced search, typed multi-sort with shift-click, multi-select with filtered-aware select-all, row expansion, row grouping with collapsible headers, rowspan merging, column groups (multi-level headers), pinned rows, sticky header, and basic/advanced/enterprise presets.",
+        "Accessibility: aria-sort, aria-selected, aria-expanded, labelled controls, and true aria-rowcount/aria-rowindex under windowing."
+      ]
+    },
     {
       "version": "1.0.0",
       "date": "2026-05-20",
