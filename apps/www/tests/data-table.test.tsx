@@ -54,10 +54,6 @@ function bodyRowTexts(): string[] {
     .map((row) => row.textContent ?? "");
 }
 
-function firstCellTexts(): string[] {
-  return bodyRowTexts();
-}
-
 afterEach(() => {
   vi.useRealTimers();
 });
@@ -78,15 +74,15 @@ describe("DataTable v2 sorting", () => {
 
     fireEvent.click(nameButton);
     expect(nameHeader).toHaveAttribute("aria-sort", "ascending");
-    expect(firstCellTexts()[0]).toContain("Alpha");
+    expect(bodyRowTexts()[0]).toContain("Alpha");
 
     fireEvent.click(nameButton);
     expect(nameHeader).toHaveAttribute("aria-sort", "descending");
-    expect(firstCellTexts()[0]).toContain("Delta");
+    expect(bodyRowTexts()[0]).toContain("Delta");
 
     fireEvent.click(nameButton);
     expect(nameHeader).not.toHaveAttribute("aria-sort");
-    expect(firstCellTexts()[0]).toContain("Charlie");
+    expect(bodyRowTexts()[0]).toContain("Charlie");
   });
 
   it("sorts numeric columns by value, not lexicographically", () => {
@@ -100,7 +96,7 @@ describe("DataTable v2 sorting", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Score" }));
-    const rows = firstCellTexts();
+    const rows = bodyRowTexts();
     // Lexicographic order would be 100, 40, 5, 9 — numeric must be 5, 9, 40, 100.
     expect(rows[0]).toContain("Alpha");
     expect(rows[1]).toContain("Delta");
@@ -119,7 +115,7 @@ describe("DataTable v2 sorting", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Joined" }));
-    const rows = firstCellTexts();
+    const rows = bodyRowTexts();
     expect(rows[0]).toContain("Alpha"); // 2023-01-15
     expect(rows[1]).toContain("Bravo"); // 2023-09-10
     expect(rows[2]).toContain("Charlie"); // 2024-03-01
@@ -142,7 +138,7 @@ describe("DataTable v2 sorting", () => {
     fireEvent.click(screen.getByRole("button", { name: "Dept" }));
     fireEvent.click(screen.getByRole("button", { name: "Score" }), { shiftKey: true });
 
-    const rows = firstCellTexts();
+    const rows = bodyRowTexts();
     // Platform before Product; within each dept, score ascending.
     expect(rows[0]).toContain("Charlie"); // Platform 40
     expect(rows[1]).toContain("Bravo"); // Platform 100
