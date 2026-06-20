@@ -520,103 +520,6 @@ function NestedCommentsDemo({ theme = "dark" }: DemoThemeProps) {
   );
 }
 
-const DATA_TABLE_DEMO_LOCATIONS = [
-  "San Francisco",
-  "New York",
-  "Chicago",
-  "Seattle",
-  "Austin",
-  "Boston",
-  "Denver",
-  "Miami",
-];
-
-function withDemoLocation<T extends Record<string, unknown>>(
-  rows: T[],
-): (T & { location: string })[] {
-  return rows.map((row, index) => {
-    const existing = (row as { location?: unknown }).location;
-    return {
-      ...row,
-      location:
-        typeof existing === "string"
-          ? existing
-          : DATA_TABLE_DEMO_LOCATIONS[
-              index % DATA_TABLE_DEMO_LOCATIONS.length
-            ]!,
-    };
-  });
-}
-
-/** Extra wide columns for data-table freeze demos so horizontal scroll is obvious in previews. */
-const DATA_TABLE_FREEZE_EXTRA_FIELDS = [
-  {
-    project: "Orion",
-    division: "Platform core",
-    site: "SF-01",
-    timezone: "PT",
-    costCenter: "CC-4100",
-  },
-  {
-    project: "Nova",
-    division: "Product design",
-    site: "NYC-04",
-    timezone: "ET",
-    costCenter: "CC-2200",
-  },
-  {
-    project: "Atlas",
-    division: "Growth GTM",
-    site: "CHI-02",
-    timezone: "CT",
-    costCenter: "CC-1800",
-  },
-  {
-    project: "Pulse",
-    division: "Platform core",
-    site: "SEA-01",
-    timezone: "PT",
-    costCenter: "CC-4100",
-  },
-  {
-    project: "Vertex",
-    division: "Product design",
-    site: "AUS-01",
-    timezone: "CT",
-    costCenter: "CC-3300",
-  },
-  {
-    project: "Helix",
-    division: "Growth GTM",
-    site: "DEN-01",
-    timezone: "MT",
-    costCenter: "CC-5200",
-  },
-  {
-    project: "Quark",
-    division: "Platform core",
-    site: "PDX-02",
-    timezone: "PT",
-    costCenter: "CC-4100",
-  },
-  {
-    project: "Echo",
-    division: "Product design",
-    site: "BOS-03",
-    timezone: "ET",
-    costCenter: "CC-2200",
-  },
-] as const;
-
-function withDemoFreezeExtras<T extends Record<string, unknown>>(rows: T[]) {
-  return rows.map((row, index) => ({
-    ...row,
-    ...DATA_TABLE_FREEZE_EXTRA_FIELDS[
-      index % DATA_TABLE_FREEZE_EXTRA_FIELDS.length
-    ],
-  }));
-}
-
 /** Keep in sync with `docs.usageCode` in registry/components/hero-logo-marquee.json. */
 const LOGO_MARQUEE_DEMO_LOGOS = [
   "Acme",
@@ -2100,837 +2003,210 @@ export const componentDemos: Record<string, DemoComponent> = {
       <MultiStepAuthCard />
     </div>
   ),
-  "data-table/default": ({ theme = "dark" }) => {
-    const columns = [
-      { key: "name", label: "Name" },
-      { key: "role", label: "Role" },
-      { key: "email", label: "Email" },
-      { key: "department", label: "Department" },
-      { key: "location", label: "Location" },
-      { key: "status", label: "Status" },
-      { key: "joined", label: "Joined" },
+  "data-table/basic": ({ theme = "dark" }) => {
+    const rows = [
+      { id: "1", name: "Alex Kim", role: "Engineer", department: "Platform", status: "Active", joined: new Date("2023-01-09") },
+      { id: "2", name: "Sara Chen", role: "Designer", department: "Product", status: "Active", joined: new Date("2023-03-14") },
+      { id: "3", name: "Jordan Lee", role: "PM", department: "Growth", status: "Away", joined: new Date("2023-06-02") },
+      { id: "4", name: "Maya Patel", role: "Engineer", department: "Platform", status: "Active", joined: new Date("2024-01-22") },
+      { id: "5", name: "Ryan Wu", role: "Designer", department: "Product", status: "Away", joined: new Date("2024-02-11") },
+      { id: "6", name: "Priya Shah", role: "PM", department: "Growth", status: "Active", joined: new Date("2024-04-30") },
+      { id: "7", name: "Sam Rivera", role: "Engineer", department: "Platform", status: "Active", joined: new Date("2024-05-18") },
+      { id: "8", name: "Jess Taylor", role: "Designer", department: "Product", status: "Active", joined: new Date("2024-06-07") },
+      { id: "9", name: "Noah Park", role: "Engineer", department: "Growth", status: "Active", joined: new Date("2024-08-25") },
+      { id: "10", name: "Lena Voss", role: "Analyst", department: "Platform", status: "Away", joined: new Date("2024-10-13") },
+      { id: "11", name: "Omar Haddad", role: "Engineer", department: "Product", status: "Active", joined: new Date("2025-01-06") },
+      { id: "12", name: "Ivy Nguyen", role: "PM", department: "Platform", status: "Active", joined: new Date("2025-03-19") },
     ];
-    const data = [
-      {
-        name: "Alex Kim",
-        role: "Engineer",
-        email: "alex@example.com",
-        department: "Platform",
-        status: "Active",
-        joined: "2023-01",
-      },
-      {
-        name: "Sara Chen",
-        role: "Designer",
-        email: "sara@example.com",
-        department: "Product",
-        status: "Active",
-        joined: "2023-03",
-      },
-      {
-        name: "Jordan Lee",
-        role: "PM",
-        email: "jordan@example.com",
-        department: "Growth",
-        status: "Away",
-        joined: "2023-06",
-      },
-      {
-        name: "Maya Patel",
-        role: "Engineer",
-        email: "maya@example.com",
-        department: "Platform",
-        status: "Active",
-        joined: "2024-01",
-      },
-      {
-        name: "Ryan Wu",
-        role: "Designer",
-        email: "ryan@example.com",
-        department: "Product",
-        status: "Away",
-        joined: "2024-02",
-      },
-      {
-        name: "Priya Shah",
-        role: "PM",
-        email: "priya@example.com",
-        department: "Growth",
-        status: "Active",
-        joined: "2024-04",
-      },
-      {
-        name: "Sam Rivera",
-        role: "Engineer",
-        email: "sam@example.com",
-        department: "Platform",
-        status: "Active",
-        joined: "2024-05",
-      },
-      {
-        name: "Jess Taylor",
-        role: "Designer",
-        email: "jess@example.com",
-        department: "Product",
-        status: "Active",
-        joined: "2024-06",
-      },
-    ];
+    type Row = (typeof rows)[number];
     return (
       <div className="w-full p-6">
         <DataTable
-          columns={columns}
-          data={withDemoLocation(data)}
-          paginated
-          pageSize={5}
+          data={rows}
+          getRowId={(row: Row) => row.id}
+          preset="basic"
+          pageSize={6}
           theme={theme}
+          columns={[
+            { id: "name", header: "Name", accessor: (row: Row) => row.name },
+            { id: "role", header: "Role", accessor: (row: Row) => row.role },
+            { id: "department", header: "Department", accessor: (row: Row) => row.department },
+            { id: "status", header: "Status", accessor: (row: Row) => row.status },
+            {
+              id: "joined",
+              header: "Joined",
+              accessor: (row: Row) => row.joined,
+              cell: (row: Row) => row.joined.toISOString().slice(0, 10),
+            },
+          ]}
         />
       </div>
     );
   },
-  "data-table/freeze-left": ({ theme = "dark" }) => {
-    const columns = [
-      { key: "id", label: "ID" },
-      { key: "name", label: "Name" },
-      { key: "email", label: "Email" },
-      { key: "role", label: "Role" },
-      { key: "department", label: "Department" },
-      { key: "region", label: "Region" },
-      { key: "location", label: "Location" },
-      { key: "project", label: "Project" },
-      { key: "division", label: "Division" },
-      { key: "site", label: "Site" },
-      { key: "timezone", label: "TZ" },
-      { key: "costCenter", label: "Cost ctr" },
-      { key: "joined", label: "Joined" },
-      { key: "status", label: "Status" },
-      { key: "actions", label: "Actions" },
-    ];
-    const data = [
-      {
-        id: "1",
-        name: "Alex Kim",
-        email: "alex@example.com",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        joined: "2023-01",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "2",
-        name: "Sara Chen",
-        email: "sara@example.com",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        joined: "2023-03",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "3",
-        name: "Jordan Lee",
-        email: "jordan@example.com",
-        role: "PM",
-        department: "Growth",
-        region: "Central",
-        joined: "2023-06",
-        status: "Away",
-        actions: "Edit · View",
-      },
-      {
-        id: "4",
-        name: "Maya Patel",
-        email: "maya@example.com",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        joined: "2024-01",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "5",
-        name: "Ryan Wu",
-        email: "ryan@example.com",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        joined: "2024-02",
-        status: "Away",
-        actions: "Edit · View",
-      },
-      {
-        id: "6",
-        name: "Priya Shah",
-        email: "priya@example.com",
-        role: "PM",
-        department: "Growth",
-        region: "Central",
-        joined: "2024-04",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "7",
-        name: "Sam Rivera",
-        email: "sam@example.com",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        joined: "2024-05",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "8",
-        name: "Jess Taylor",
-        email: "jess@example.com",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        joined: "2024-06",
-        status: "Active",
-        actions: "Edit · View",
-      },
-    ];
+  "data-table/advanced": ({ theme = "dark" }) => {
+    const formatDate = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`;
+    const rows = Array.from({ length: 24 }, (_, i) => ({
+      id: `ord-${i + 1}`,
+      order: `#${String(2400 + i)}`,
+      customer: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel", "Ryan Wu", "Priya Shah"][i % 6],
+      total: Math.round((i * 53.7 + 24) * 100) / 100,
+      status: ["Paid", "Pending", "Refunded"][i % 3],
+      placed: new Date(2026, i % 12, (i % 27) + 1),
+    }));
+    type Row = (typeof rows)[number];
     return (
       <div className="w-full p-6">
         <DataTable
-          columns={columns}
-          data={withDemoLocation(withDemoFreezeExtras(data))}
-          freezeColumns="left"
-          freezeLeftCount={2}
-          paginated
-          pageSize={5}
+          data={rows}
+          getRowId={(row: Row) => row.id}
+          preset="advanced"
+          pageSize={8}
           theme={theme}
-        />
-      </div>
-    );
-  },
-  "data-table/freeze-right": ({ theme = "dark" }) => {
-    const columns = [
-      { key: "name", label: "Name" },
-      { key: "role", label: "Role" },
-      { key: "department", label: "Department" },
-      { key: "region", label: "Region" },
-      { key: "project", label: "Project" },
-      { key: "division", label: "Division" },
-      { key: "site", label: "Site" },
-      { key: "timezone", label: "TZ" },
-      { key: "costCenter", label: "Cost ctr" },
-      { key: "location", label: "Location" },
-      { key: "status", label: "Status" },
-      { key: "email", label: "Email" },
-      { key: "joined", label: "Joined" },
-      { key: "lastActive", label: "Last active" },
-      { key: "actions", label: "Actions" },
-    ];
-    const data = [
-      {
-        name: "Alex Kim",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        status: "Active",
-        email: "alex@example.com",
-        joined: "2023-01",
-        lastActive: "2024-03",
-        actions: "Edit · View",
-      },
-      {
-        name: "Sara Chen",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        status: "Active",
-        email: "sara@example.com",
-        joined: "2023-03",
-        lastActive: "2024-03",
-        actions: "Edit · View",
-      },
-      {
-        name: "Jordan Lee",
-        role: "PM",
-        department: "Growth",
-        region: "Central",
-        status: "Away",
-        email: "jordan@example.com",
-        joined: "2023-06",
-        lastActive: "2024-02",
-        actions: "Edit · View",
-      },
-      {
-        name: "Maya Patel",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        status: "Active",
-        email: "maya@example.com",
-        joined: "2024-01",
-        lastActive: "2024-03",
-        actions: "Edit · View",
-      },
-      {
-        name: "Ryan Wu",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        status: "Away",
-        email: "ryan@example.com",
-        joined: "2024-02",
-        lastActive: "2024-01",
-        actions: "Edit · View",
-      },
-      {
-        name: "Priya Shah",
-        role: "PM",
-        department: "Growth",
-        region: "Central",
-        status: "Active",
-        email: "priya@example.com",
-        joined: "2024-04",
-        lastActive: "2024-03",
-        actions: "Edit · View",
-      },
-      {
-        name: "Sam Rivera",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        status: "Active",
-        email: "sam@example.com",
-        joined: "2024-05",
-        lastActive: "2024-03",
-        actions: "Edit · View",
-      },
-      {
-        name: "Jess Taylor",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        status: "Active",
-        email: "jess@example.com",
-        joined: "2024-06",
-        lastActive: "2024-03",
-        actions: "Edit · View",
-      },
-    ];
-    return (
-      <div className="w-full p-6">
-        <DataTable
-          columns={columns}
-          data={withDemoLocation(withDemoFreezeExtras(data))}
-          freezeColumns="right"
-          freezeRightCount={1}
-          paginated
-          pageSize={5}
-          theme={theme}
-        />
-      </div>
-    );
-  },
-  "data-table/freeze-both": ({ theme = "dark" }) => {
-    const columns = [
-      { key: "id", label: "ID" },
-      { key: "name", label: "Name" },
-      { key: "email", label: "Email" },
-      { key: "role", label: "Role" },
-      { key: "department", label: "Department" },
-      { key: "region", label: "Region" },
-      { key: "location", label: "Location" },
-      { key: "project", label: "Project" },
-      { key: "division", label: "Division" },
-      { key: "site", label: "Site" },
-      { key: "timezone", label: "TZ" },
-      { key: "costCenter", label: "Cost ctr" },
-      { key: "joined", label: "Joined" },
-      { key: "status", label: "Status" },
-      { key: "actions", label: "Actions" },
-    ];
-    const data = [
-      {
-        id: "1",
-        name: "Alex Kim",
-        email: "alex@example.com",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        joined: "2023-01",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "2",
-        name: "Sara Chen",
-        email: "sara@example.com",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        joined: "2023-03",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "3",
-        name: "Jordan Lee",
-        email: "jordan@example.com",
-        role: "PM",
-        department: "Growth",
-        region: "Central",
-        joined: "2023-06",
-        status: "Away",
-        actions: "Edit · View",
-      },
-      {
-        id: "4",
-        name: "Maya Patel",
-        email: "maya@example.com",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        joined: "2024-01",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "5",
-        name: "Ryan Wu",
-        email: "ryan@example.com",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        joined: "2024-02",
-        status: "Away",
-        actions: "Edit · View",
-      },
-      {
-        id: "6",
-        name: "Priya Shah",
-        email: "priya@example.com",
-        role: "PM",
-        department: "Growth",
-        region: "Central",
-        joined: "2024-04",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "7",
-        name: "Sam Rivera",
-        email: "sam@example.com",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        joined: "2024-05",
-        status: "Active",
-        actions: "Edit · View",
-      },
-      {
-        id: "8",
-        name: "Jess Taylor",
-        email: "jess@example.com",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        joined: "2024-06",
-        status: "Active",
-        actions: "Edit · View",
-      },
-    ];
-    return (
-      <div className="w-full p-6">
-        <DataTable
-          columns={columns}
-          data={withDemoLocation(withDemoFreezeExtras(data))}
-          freezeColumns="both"
-          freezeLeftCount={2}
-          freezeRightCount={1}
-          paginated
-          pageSize={5}
-          theme={theme}
-        />
-      </div>
-    );
-  },
-  "data-table/bordered": ({ theme = "dark" }) => {
-    const columns = [
-      { key: "name", label: "Name" },
-      { key: "role", label: "Role" },
-      { key: "email", label: "Email" },
-      { key: "department", label: "Department" },
-      { key: "location", label: "Location" },
-      { key: "status", label: "Status" },
-      { key: "joined", label: "Joined" },
-    ];
-    const data = [
-      {
-        name: "Alex Kim",
-        role: "Engineer",
-        email: "alex@example.com",
-        department: "Platform",
-        status: "Active",
-        joined: "2023-01",
-      },
-      {
-        name: "Sara Chen",
-        role: "Designer",
-        email: "sara@example.com",
-        department: "Product",
-        status: "Active",
-        joined: "2023-03",
-      },
-      {
-        name: "Jordan Lee",
-        role: "PM",
-        email: "jordan@example.com",
-        department: "Growth",
-        status: "Away",
-        joined: "2023-06",
-      },
-      {
-        name: "Maya Patel",
-        role: "Engineer",
-        email: "maya@example.com",
-        department: "Platform",
-        status: "Active",
-        joined: "2024-01",
-      },
-      {
-        name: "Ryan Wu",
-        role: "Designer",
-        email: "ryan@example.com",
-        department: "Product",
-        status: "Away",
-        joined: "2024-02",
-      },
-      {
-        name: "Priya Shah",
-        role: "PM",
-        email: "priya@example.com",
-        department: "Growth",
-        status: "Active",
-        joined: "2024-04",
-      },
-      {
-        name: "Sam Rivera",
-        role: "Engineer",
-        email: "sam@example.com",
-        department: "Platform",
-        status: "Active",
-        joined: "2024-05",
-      },
-      {
-        name: "Jess Taylor",
-        role: "Designer",
-        email: "jess@example.com",
-        department: "Product",
-        status: "Active",
-        joined: "2024-06",
-      },
-    ];
-    return (
-      <div className="w-full p-6">
-        <DataTable
-          columns={columns}
-          data={withDemoLocation(data)}
           border
-          paginated
-          pageSize={5}
-          theme={theme}
+          renderExpanded={(row: Row) => (
+            <div className="text-xs opacity-80">
+              Order {row.order} for {row.customer} — placed{" "}
+              {row.placed.toDateString()}, status {row.status}.
+            </div>
+          )}
+          columns={[
+            { id: "order", header: "Order", accessor: (row: Row) => row.order },
+            { id: "customer", header: "Customer", accessor: (row: Row) => row.customer },
+            {
+              id: "total",
+              header: "Total",
+              accessor: (row: Row) => row.total,
+              cell: (row: Row) => `$${row.total.toFixed(2)}`,
+              align: "right",
+            },
+            { id: "status", header: "Status", accessor: (row: Row) => row.status },
+            {
+              id: "placed",
+              header: "Placed",
+              accessor: (row: Row) => row.placed,
+              cell: (row: Row) => formatDate(row.placed),
+            },
+          ]}
         />
       </div>
     );
   },
-  "data-table/sortable": ({ theme = "dark" }) => {
-    const columns = [
-      { key: "name", label: "Name", sortKey: "name" },
-      { key: "role", label: "Role", sortKey: "role" },
-      { key: "department", label: "Department", sortKey: "department" },
-      { key: "location", label: "Location", sortKey: "location" },
-      { key: "joined", label: "Joined", sortKey: "joined" },
-      { key: "status", label: "Status", sortKey: "status" },
-    ];
-    const data = [
-      {
-        name: "Jordan Lee",
-        role: "PM",
-        department: "Growth",
-        joined: "2024-03",
-        status: "Away",
-      },
-      {
-        name: "Alex Kim",
-        role: "Engineer",
-        department: "Platform",
-        joined: "2024-01",
-        status: "Active",
-      },
-      {
-        name: "Sara Chen",
-        role: "Designer",
-        department: "Product",
-        joined: "2024-02",
-        status: "Active",
-      },
-      {
-        name: "Maya Patel",
-        role: "Engineer",
-        department: "Platform",
-        joined: "2023-11",
-        status: "Active",
-      },
-      {
-        name: "Ryan Wu",
-        role: "Designer",
-        department: "Product",
-        joined: "2024-05",
-        status: "Away",
-      },
-      {
-        name: "Priya Shah",
-        role: "PM",
-        department: "Growth",
-        joined: "2023-08",
-        status: "Active",
-      },
-      {
-        name: "Sam Rivera",
-        role: "Engineer",
-        department: "Platform",
-        joined: "2024-06",
-        status: "Active",
-      },
-      {
-        name: "Jess Taylor",
-        role: "Designer",
-        department: "Product",
-        joined: "2023-09",
-        status: "Active",
-      },
-    ];
+  "data-table/virtualized": ({ theme = "dark" }) => {
+    const rows = Array.from({ length: 10000 }, (_, i) => ({
+      id: `evt-${i}`,
+      event: `Event ${i + 1}`,
+      service: ["api", "web", "worker", "cron"][i % 4],
+      latency: ((i * 37) % 900) + 12,
+      status: i % 13 === 0 ? "error" : "ok",
+    }));
+    type Row = (typeof rows)[number];
     return (
       <div className="w-full p-6">
         <DataTable
-          columns={columns}
-          data={withDemoLocation(data)}
+          data={rows}
+          getRowId={(row: Row) => row.id}
+          preset="enterprise"
+          maxHeight={400}
+          rowHeight={44}
+          theme={theme}
+          columns={[
+            { id: "event", header: "Event", accessor: (row: Row) => row.event },
+            { id: "service", header: "Service", accessor: (row: Row) => row.service },
+            {
+              id: "latency",
+              header: "Latency (ms)",
+              accessor: (row: Row) => row.latency,
+              align: "right",
+            },
+            { id: "status", header: "Status", accessor: (row: Row) => row.status },
+          ]}
+        />
+      </div>
+    );
+  },
+  "data-table/grouped": ({ theme = "dark" }) => {
+    const rows = [
+      { id: "1", name: "Alex Kim", team: "Platform", region: "West", oncall: "Yes" },
+      { id: "2", name: "Maya Patel", team: "Platform", region: "West", oncall: "No" },
+      { id: "3", name: "Sam Rivera", team: "Platform", region: "East", oncall: "No" },
+      { id: "4", name: "Sara Chen", team: "Product", region: "East", oncall: "Yes" },
+      { id: "5", name: "Ryan Wu", team: "Product", region: "Central", oncall: "No" },
+      { id: "6", name: "Jordan Lee", team: "Growth", region: "Central", oncall: "No" },
+      { id: "7", name: "Priya Shah", team: "Growth", region: "West", oncall: "Yes" },
+    ];
+    type Row = (typeof rows)[number];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          data={rows}
+          getRowId={(row: Row) => row.id}
+          groupBy="team"
+          border
+          theme={theme}
+          columns={[
+            { id: "team", header: "Team", accessor: (row: Row) => row.team },
+            { id: "name", header: "Name", accessor: (row: Row) => row.name },
+            { id: "region", header: "Region", accessor: (row: Row) => row.region, rowSpan: true },
+            { id: "oncall", header: "On call", accessor: (row: Row) => row.oncall },
+          ]}
+        />
+      </div>
+    );
+  },
+  "data-table/column-groups": ({ theme = "dark" }) => {
+    const rows = [
+      { id: "1", name: "Alex Kim", q1: 42, q2: 51, h1Target: 90, q3: 48, q4: 60, h2Target: 105, owner: "Platform" },
+      { id: "2", name: "Sara Chen", q1: 38, q2: 47, h1Target: 88, q3: 52, q4: 58, h2Target: 102, owner: "Product" },
+      { id: "3", name: "Jordan Lee", q1: 51, q2: 44, h1Target: 95, q3: 47, q4: 63, h2Target: 110, owner: "Growth" },
+      { id: "4", name: "Maya Patel", q1: 45, q2: 55, h1Target: 92, q3: 50, q4: 61, h2Target: 108, owner: "Platform" },
+    ];
+    type Row = (typeof rows)[number];
+    return (
+      <div className="w-full p-6">
+        <DataTable
+          data={rows}
+          getRowId={(row: Row) => row.id}
           sortable
-          paginated
-          pageSize={5}
-          theme={theme}
-        />
-      </div>
-    );
-  },
-  "data-table/custom-colors": ({ theme = "dark" }) => {
-    const columns = [
-      { key: "name", label: "Name" },
-      { key: "role", label: "Role" },
-      { key: "email", label: "Email" },
-      { key: "department", label: "Department" },
-      { key: "location", label: "Location" },
-      { key: "status", label: "Status" },
-      { key: "joined", label: "Joined" },
-    ];
-    const data = [
-      {
-        name: "Alex Kim",
-        role: "Engineer",
-        email: "alex@example.com",
-        department: "Platform",
-        status: "Active",
-        joined: "2023-01",
-      },
-      {
-        name: "Sara Chen",
-        role: "Designer",
-        email: "sara@example.com",
-        department: "Product",
-        status: "Active",
-        joined: "2023-03",
-      },
-      {
-        name: "Jordan Lee",
-        role: "PM",
-        email: "jordan@example.com",
-        department: "Growth",
-        status: "Away",
-        joined: "2023-06",
-      },
-      {
-        name: "Maya Patel",
-        role: "Engineer",
-        email: "maya@example.com",
-        department: "Platform",
-        status: "Active",
-        joined: "2024-01",
-      },
-      {
-        name: "Ryan Wu",
-        role: "Designer",
-        email: "ryan@example.com",
-        department: "Product",
-        status: "Away",
-        joined: "2024-02",
-      },
-      {
-        name: "Priya Shah",
-        role: "PM",
-        email: "priya@example.com",
-        department: "Growth",
-        status: "Active",
-        joined: "2024-04",
-      },
-      {
-        name: "Sam Rivera",
-        role: "Engineer",
-        email: "sam@example.com",
-        department: "Platform",
-        status: "Active",
-        joined: "2024-05",
-      },
-      {
-        name: "Jess Taylor",
-        role: "Designer",
-        email: "jess@example.com",
-        department: "Product",
-        status: "Active",
-        joined: "2024-06",
-      },
-    ];
-    return (
-      <div className="w-full p-6">
-        <DataTable
-          columns={columns}
-          data={withDemoLocation(data)}
-          headerTextColor="text-purple-900"
-          bodyTextColor="text-neutral-800"
-          headerBackground="bg-purple-100"
-          bodyBackground="bg-purple-50/50"
-          paginated
-          pageSize={5}
           border
           theme={theme}
+          columns={[
+            {
+              id: "name",
+              header: "Name",
+              accessor: (row: Row) => row.name,
+              freeze: "left",
+              width: 140,
+            },
+            {
+              id: "h1",
+              header: "H1",
+              accessor: () => null,
+              columns: [
+                { id: "q1", header: "Q1", accessor: (row: Row) => row.q1, align: "right" },
+                { id: "q2", header: "Q2", accessor: (row: Row) => row.q2, align: "right" },
+                { id: "h1Target", header: "Target", accessor: (row: Row) => row.h1Target, align: "right" },
+              ],
+            },
+            {
+              id: "h2",
+              header: "H2",
+              accessor: () => null,
+              columns: [
+                { id: "q3", header: "Q3", accessor: (row: Row) => row.q3, align: "right" },
+                { id: "q4", header: "Q4", accessor: (row: Row) => row.q4, align: "right" },
+                { id: "h2Target", header: "Target", accessor: (row: Row) => row.h2Target, align: "right" },
+              ],
+            },
+            { id: "owner", header: "Owner", accessor: (row: Row) => row.owner },
+          ]}
         />
       </div>
     );
-  },
-  "data-table/full": ({ theme = "dark" }) => {
-    const columns = [
-      { key: "id", label: "ID" },
-      { key: "name", label: "Name", sortKey: "name" },
-      { key: "role", label: "Role", sortKey: "role" },
-      { key: "department", label: "Dept" },
-      { key: "region", label: "Region" },
-      { key: "location", label: "Location" },
-      { key: "project", label: "Project" },
-      { key: "division", label: "Division" },
-      { key: "site", label: "Site" },
-      { key: "timezone", label: "TZ" },
-      { key: "costCenter", label: "Cost ctr" },
-      { key: "joined", label: "Joined" },
-      { key: "actions", label: "Actions" },
-    ];
-    const data = [
-      {
-        id: "1",
-        name: "Jordan Lee",
-        role: "PM",
-        department: "Growth",
-        region: "Central",
-        joined: "2023-06",
-        actions: "Edit",
-      },
-      {
-        id: "2",
-        name: "Alex Kim",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        joined: "2023-01",
-        actions: "Edit",
-      },
-      {
-        id: "3",
-        name: "Sara Chen",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        joined: "2023-03",
-        actions: "Edit",
-      },
-      {
-        id: "4",
-        name: "Maya Patel",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        joined: "2024-01",
-        actions: "Edit",
-      },
-      {
-        id: "5",
-        name: "Ryan Wu",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        joined: "2024-02",
-        actions: "Edit",
-      },
-      {
-        id: "6",
-        name: "Priya Shah",
-        role: "PM",
-        department: "Growth",
-        region: "Central",
-        joined: "2024-04",
-        actions: "Edit",
-      },
-      {
-        id: "7",
-        name: "Sam Rivera",
-        role: "Engineer",
-        department: "Platform",
-        region: "West",
-        joined: "2024-05",
-        actions: "Edit",
-      },
-      {
-        id: "8",
-        name: "Jess Taylor",
-        role: "Designer",
-        department: "Product",
-        region: "East",
-        joined: "2024-06",
-        actions: "Edit",
-      },
-    ];
-    return (
-      <div className="w-full p-6">
-        <DataTable
-          columns={columns}
-          data={withDemoLocation(withDemoFreezeExtras(data))}
-          freezeColumns="left"
-          freezeLeftCount={1}
-          headerTextColor="text-neutral-100"
-          bodyTextColor="text-neutral-300"
-          headerBackground="bg-neutral-800"
-          bodyBackground="bg-neutral-950"
-          border
-          sortable
-          paginated
-          pageSize={5}
-          pageSizeOptions={[5, 10, 20]}
-          onPageChange={(page, pageSize) =>
-            console.log("page changed", page, "pageSize", pageSize)
-          }
-          theme={theme}
-        />
-      </div>
-    );
-  },
+  }
+,
 
   // ─── Phase 4 — Hero & Text Effects ───────────────────────────────────────
 

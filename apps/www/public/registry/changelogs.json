@@ -323,6 +323,20 @@
   ],
   "data-table": [
     {
+      "version": "2.0.0",
+      "date": "2026-06-11",
+      "changes": [
+        "BREAKING: columns are now typed definitions ({ id, header, accessor, cell?, ... }) and rows are your own typed objects — Record<string, ReactNode> cells and { key, label, sortKey } columns are gone.",
+        "BREAKING: getRowId is required; freezeColumns/freezeCount/freezeLeftCount/freezeRightCount are replaced by per-column freeze: \"left\" | \"right\"; initialPage/onPageChange/getRowKey/paginationPreviousLabel/paginationNextLabel were removed.",
+        "Hand-rolled row virtualization (windowing) handles up to 100,000 rows; the engine auto-switches to a standard renderer when groupBy or rowSpan is used.",
+        "New: global debounced search, typed multi-sort with shift-click, multi-select with filtered-aware select-all, row expansion, row grouping with collapsible headers, rowspan merging, column groups (multi-level headers), pinned rows, sticky header, and basic/advanced/enterprise presets.",
+        "Accessibility: aria-sort, aria-selected, aria-expanded, labelled controls, and true aria-rowcount/aria-rowindex under windowing.",
+        "Accessibility: multi-sort priority is now announced to assistive tech via an sr-only label instead of being hidden.",
+        "The root element forwards arbitrary div props (id, style, role, aria-*, data-*).",
+        "Fixed virtual spacer math and select-all to stay correct when pinned rows, expansion, or active search are combined, and row spans now align with grouped render order."
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-05-20",
       "changes": [

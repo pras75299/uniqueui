@@ -55,10 +55,10 @@
   "relatedSlugs": [
     "dot-grid-background",
     "bento-grid",
+    "data-table",
     "aurora-background",
     "glow-hero-section",
-    "meteors-card",
-    "particle-field"
+    "meteors-card"
   ],
   "motion": {
     "reducedMotion": "full"

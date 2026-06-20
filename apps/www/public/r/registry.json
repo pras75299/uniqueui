@@ -681,7 +681,7 @@
       "name": "data-table",
       "type": "registry:ui",
       "title": "Data Table",
-      "description": "Configurable data table with optional column freeze (left/right), customizable header and body colors and backgrounds, optional borders, and optional sortable columns.",
+      "description": "Typed, zero-dependency data grid that auto-switches between a hand-rolled virtualized engine (10 to 100,000 rows) and a standard engine with row grouping and rowspan. Search, single and multi sort, multi-select, row expansion, frozen columns, column groups, pinned rows, and feature presets.",
       "dependencies": [
         "lucide-react",
         "clsx",

@@ -56,8 +56,8 @@
     "shooting-stars-grid",
     "hero-noise-dot-field",
     "bento-grid",
-    "aurora-background",
-    "glow-hero-section"
+    "data-table",
+    "aurora-background"
   ],
   "usedByBlocks": [
     "hero-noise-dot-field"
