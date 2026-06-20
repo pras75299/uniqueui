@@ -1222,8 +1222,13 @@ export function DataTable<T>({
 
   /* ----- body rendering ----------------------------------------------------------------------- */
   const renderBody = () => {
+    // Under virtualization pinned rows occupy the first aria-rowindex slots, so
+    // the windowed flow rows below are offset past them.
     const pinned = pinnedData.map((row, i) =>
-      renderDataRow(row, i, { pinned: true })
+      renderDataRow(row, i, {
+        pinned: true,
+        ariaRowIndex: virtual ? i + 2 : undefined,
+      })
     );
 
     if (virtual && windowSlice) {
@@ -1240,7 +1245,7 @@ export function DataTable<T>({
           )}
           {visibleRows.map((row, i) =>
             renderDataRow(row, i, {
-              ariaRowIndex: windowSlice.start + i + 2,
+              ariaRowIndex: pinnedData.length + windowSlice.start + i + 2,
             })
           )}
           {windowSlice.padBottom > 0 && (
