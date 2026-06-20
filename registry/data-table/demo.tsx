@@ -43,6 +43,10 @@ export const demoEntries = {
     );
   },
   "data-table/advanced": ({ theme = "dark" }) => {
+    const formatDate = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`;
     const rows = Array.from({ length: 24 }, (_, i) => ({
       id: `ord-${i + 1}`,
       order: `#${String(2400 + i)}`,
@@ -82,7 +86,7 @@ export const demoEntries = {
               id: "placed",
               header: "Placed",
               accessor: (row: Row) => row.placed,
-              cell: (row: Row) => row.placed.toISOString().slice(0, 10),
+              cell: (row: Row) => formatDate(row.placed),
             },
           ]}
         />

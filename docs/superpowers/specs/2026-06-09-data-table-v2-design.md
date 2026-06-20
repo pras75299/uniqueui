@@ -57,6 +57,7 @@ interface DataTableProps<T> {
   paginated?: boolean;
   pageSize?: number;
   pageSizeOptions?: number[];
+  sortable?: boolean;
   multiSort?: boolean;
   selectable?: boolean;
   selectedIds?: string[];                       // controlled selection
@@ -77,7 +78,10 @@ interface DataTableProps<T> {
   // Existing visual props carried forward:
   theme?: "light" | "dark";
   border?: boolean;
-  headerTextColor?, bodyTextColor?, headerBackground?, bodyBackground?: string;
+  headerTextColor?: string;
+  bodyTextColor?: string;
+  headerBackground?: string;
+  bodyBackground?: string;
   className?: string;
 }
 ```
@@ -108,7 +112,7 @@ interface DataTableProps<T> {
 
 ### Forcing
 - `virtualized` prop forces either engine. Forcing `virtual` while `rowSpan`/`groupBy`
-  is set logs a dev warning and ignores the unsupported feature.
+  or `paginated` is set logs a dev warning and ignores the unsupported feature.
 
 ## Feature Behaviors
 

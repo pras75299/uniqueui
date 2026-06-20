@@ -55,7 +55,8 @@ export interface DataTableColumn<T> {
   rowSpan?: boolean;
 }
 
-export interface DataTableProps<T> {
+export interface DataTableProps<T>
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
   data: T[];
   columns: DataTableColumn<T>[];
   /** Stable row id — selection, expansion, pinning, and windowing keys. */
@@ -98,7 +99,6 @@ export interface DataTableProps<T> {
   bodyTextColor?: string;
   headerBackground?: string;
   bodyBackground?: string;
-  className?: string;
 }
 
 /* ------------------------------------------------------------------ */
@@ -388,6 +388,7 @@ export function DataTable<T>({
   headerBackground,
   bodyBackground,
   className,
+  ...rootProps
 }: DataTableProps<T>) {
   /* ----- feature resolution: explicit prop > preset > base default ---- */
   const presetDefaults = preset ? PRESET_DEFAULTS[preset] : {};
@@ -518,12 +519,6 @@ export function DataTable<T>({
   );
 
   /* ----- ids, selection, expansion -------------------------------------- */
-  const rowIdIndex = useMemo(() => {
-    const map = new Map<string, number>();
-    sortedData.forEach((row, i) => map.set(getRowId(row), i));
-    return map;
-  }, [sortedData, getRowId]);
-
   const [internalSelected, setInternalSelected] = useState<Set<string>>(
     () => new Set()
   );
@@ -556,8 +551,16 @@ export function DataTable<T>({
     filteredIds.length > 0 && filteredIds.every((id) => selectedSet.has(id));
   const someFilteredSelected = filteredIds.some((id) => selectedSet.has(id));
   const toggleSelectAll = useCallback(() => {
-    updateSelection(allFilteredSelected ? new Set() : new Set(filteredIds));
-  }, [allFilteredSelected, filteredIds, updateSelection]);
+    // Merge against the current selection so ids hidden by an active search are
+    // preserved rather than dropped.
+    const next = new Set(selectedSet);
+    if (allFilteredSelected) {
+      filteredIds.forEach((id) => next.delete(id));
+    } else {
+      filteredIds.forEach((id) => next.add(id));
+    }
+    updateSelection(next);
+  }, [allFilteredSelected, filteredIds, selectedSet, updateSelection]);
 
   const [internalExpanded, setInternalExpanded] = useState<Set<string>>(
     () => new Set()
@@ -606,6 +609,13 @@ export function DataTable<T>({
         : sortedData,
     [sortedData, pinnedSet, getRowId]
   );
+  // Index map over the windowed flow (pinned rows excluded), so virtual spacer
+  // math matches the coordinate system `computeWindow` runs against.
+  const flowRowIdIndex = useMemo(() => {
+    const map = new Map<string, number>();
+    flowData.forEach((row, i) => map.set(getRowId(row), i));
+    return map;
+  }, [flowData, getRowId]);
 
   /* ----- pagination ------------------------------------------------------- */
   const normalizedPageSize = normalizePageSize(pageSize, PAGE_SIZE_FALLBACK);
@@ -689,7 +699,8 @@ export function DataTable<T>({
     let extraAbove = 0;
     let extraBelow = 0;
     for (const id of expandedSet) {
-      const index = rowIdIndex.get(id);
+      const index = flowRowIdIndex.get(id);
+      // Missing ids are pinned rows; they sit outside the virtual flow.
       if (index === undefined) continue;
       const extra = expandedHeights[id] ?? 0;
       if (index < base.start) extraAbove += extra;
@@ -708,7 +719,7 @@ export function DataTable<T>({
     flowData.length,
     expandedSet,
     expandedHeights,
-    rowIdIndex,
+    flowRowIdIndex,
   ]);
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
@@ -756,10 +767,21 @@ export function DataTable<T>({
     if (virtual || !anyRowSpan) return null;
     const plans = new Map<string, number[]>();
     for (const col of leafColumns) {
-      if (col.rowSpan) plans.set(col.id, computeRowSpans(visibleRows, col));
+      if (!col.rowSpan) continue;
+      if (groupedRows) {
+        // Spans must reset at group boundaries and align with the global
+        // grouped render order, so compute per group and concatenate.
+        const merged: number[] = [];
+        for (const group of groupedRows) {
+          merged.push(...computeRowSpans(group.rows, col));
+        }
+        plans.set(col.id, merged);
+      } else {
+        plans.set(col.id, computeRowSpans(visibleRows, col));
+      }
     }
     return plans;
-  }, [virtual, anyRowSpan, leafColumns, visibleRows]);
+  }, [virtual, anyRowSpan, leafColumns, visibleRows, groupedRows]);
 
   /* ----- frozen columns ---------------------------------------------------------- */
   const tableRef = useRef<HTMLTableElement>(null);
@@ -1169,12 +1191,20 @@ export function DataTable<T>({
                   >
                     {col.header}
                     {rule && (
-                      <span className="ml-1 inline-flex items-center" aria-hidden>
-                        {rule.direction === "asc" ? "↑" : "↓"}
+                      <span className="ml-1 inline-flex items-center">
+                        <span aria-hidden>
+                          {rule.direction === "asc" ? "↑" : "↓"}
+                        </span>
                         {sortPriority != null && (
-                          <span className="ml-0.5 text-[10px] tabular-nums opacity-70">
-                            {sortPriority}
-                          </span>
+                          <>
+                            <span
+                              className="ml-0.5 text-[10px] tabular-nums opacity-70"
+                              aria-hidden
+                            >
+                              {sortPriority}
+                            </span>
+                            <span className="sr-only">{`, sort priority ${sortPriority}`}</span>
+                          </>
                         )}
                       </span>
                     )}
@@ -1230,11 +1260,16 @@ export function DataTable<T>({
     }
 
     if (groupedRows) {
+      let groupRowOffset = 0;
       return (
         <tbody>
           {pinned}
           {groupedRows.map((group) => {
             const collapsed = collapsedGroups.has(group.key);
+            // Global index into the concatenated rowSpan plans; advances across
+            // every group (collapsed included) to stay aligned.
+            const groupStart = groupRowOffset;
+            groupRowOffset += group.rows.length;
             return (
               <React.Fragment key={group.key}>
                 <tr
@@ -1270,7 +1305,9 @@ export function DataTable<T>({
                   </td>
                 </tr>
                 {!collapsed &&
-                  group.rows.map((row, i) => renderDataRow(row, i))}
+                  group.rows.map((row, i) =>
+                    renderDataRow(row, groupStart + i)
+                  )}
               </React.Fragment>
             );
           })}
@@ -1301,6 +1338,7 @@ export function DataTable<T>({
 
   return (
     <div
+      {...rootProps}
       className={cn("w-full rounded-lg", className)}
       data-engine={virtual ? "virtual" : "standard"}
     >

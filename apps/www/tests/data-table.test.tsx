@@ -150,10 +150,23 @@ describe("DataTable v2 sorting", () => {
       { id: "score", direction: "asc" },
     ]);
 
-    const deptHeader = screen.getByRole("button", { name: "Dept" }).closest("th")!;
-    const scoreHeader = screen.getByRole("button", { name: "Score" }).closest("th")!;
+    // After multi-sort the priority is announced in the accessible name, so
+    // match on the leading column label rather than an exact name.
+    const deptHeader = screen
+      .getByRole("button", { name: /^Dept\b/ })
+      .closest("th")!;
+    const scoreHeader = screen
+      .getByRole("button", { name: /^Score\b/ })
+      .closest("th")!;
     expect(deptHeader).toHaveAttribute("aria-sort", "ascending");
     expect(scoreHeader).toHaveAttribute("aria-sort", "ascending");
+    // Priority is exposed to assistive tech for both keys.
+    expect(
+      screen.getByRole("button", { name: /Dept, sort priority 1/ })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Score, sort priority 2/ })
+    ).toBeInTheDocument();
   });
 });
 
@@ -237,6 +250,38 @@ describe("DataTable v2 selection", () => {
       expect.arrayContaining(["1", "3"])
     );
     expect(onSelectionChange.mock.lastCall?.[0]).toHaveLength(2);
+  });
+
+  it("select-all preserves selections hidden by an active search", () => {
+    vi.useFakeTimers();
+    const onSelectionChange = vi.fn();
+    render(
+      <DataTable
+        data={people}
+        columns={personColumns}
+        getRowId={(row) => row.id}
+        searchable
+        selectable
+        // "2" (Alpha, Product) is selected but will be filtered out below.
+        selectedIds={["2"]}
+        onSelectionChange={onSelectionChange}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("searchbox"), {
+      target: { value: "platform" },
+    });
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /select all/i }));
+
+    // The hidden "2" must survive alongside the newly selected platform rows.
+    expect(onSelectionChange).toHaveBeenLastCalledWith(
+      expect.arrayContaining(["1", "2", "3"])
+    );
+    expect(onSelectionChange.mock.lastCall?.[0]).toHaveLength(3);
   });
 
   it("controlled selection reflects selectedIds and reports toggles without mutating itself", () => {
@@ -377,7 +422,7 @@ describe("DataTable v2 engines", () => {
 
     const rendered = bodyRowTexts();
     expect(rendered.some((text) => text.includes("Person 100"))).toBe(true);
-    expect(rendered.some((text) => text.includes("Person 0 "))).toBe(false);
+    expect(rendered.join(" ")).not.toMatch(/\bPerson 0\b/);
   });
 
   it("uses the standard engine when groupBy is set, with collapsible group rows", () => {
