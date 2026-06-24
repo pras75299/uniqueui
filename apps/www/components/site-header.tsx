@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTheme } from "@/contexts/theme-context";
 import { SECTION_NAV } from "@/config/navigation";
+import { LIBRARY_VERSION } from "@/config/version";
 
 /** Shared across all layouts so the active pill can morph between routes when possible. */
 const SECTION_NAV_PILL_LAYOUT_ID = "site-section-nav-pill";
@@ -85,7 +86,7 @@ export function SiteHeader({ trailing, className }: SiteHeaderProps) {
             <span className="truncate">UniqueUI</span>
             {isHome ? (
               <span className={cn("shrink-0 font-mono text-[10px] font-normal tracking-normal sm:text-xs", isDark ? "text-neutral-400" : "text-neutral-500")}>
-                v1.0.0
+                v{LIBRARY_VERSION}
               </span>
             ) : null}
           </Link>
