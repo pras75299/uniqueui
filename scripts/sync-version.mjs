@@ -1,7 +1,8 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const rootDir = process.cwd();
+const rootDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const cliPackagePath = path.join(rootDir, "packages/cli/package.json");
 const versionFilePath = path.join(rootDir, "apps/www/config/version.ts");
 
