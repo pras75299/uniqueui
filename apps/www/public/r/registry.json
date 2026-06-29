@@ -1253,6 +1253,25 @@
           "target": "components/ui/autocomplete-search.tsx"
         }
       ]
+    },
+    {
+      "name": "dropdown",
+      "type": "registry:ui",
+      "title": "Dropdown",
+      "description": "Animated single and multi select dropdown with search, select all / deselect all, removable chips, per-option icons, color dots, descriptions, disabled options, grouping, and checkbox / radio / check indicators. Fully keyboard accessible.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/dropdown.tsx",
+          "type": "registry:component",
+          "target": "components/ui/dropdown.tsx"
+        }
+      ]
     }
   ]
 }

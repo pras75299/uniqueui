@@ -54,12 +54,12 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
+    "notification-stack",
     "autocomplete-search",
+    "dropdown",
     "animated-tabs",
     "animated-tooltip",
-    "drawer-slide",
-    "morphing-modal",
-    "notification-stack"
+    "drawer-slide"
   ],
   "motion": {
     "reducedMotion": "none"

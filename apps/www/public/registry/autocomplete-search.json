@@ -56,6 +56,7 @@
     "screenReaderNotes": "Follows the W3C APG editable combobox with list autocomplete: the input has role=combobox with aria-autocomplete=list, aria-expanded, aria-controls, and aria-activedescendant pointing at the highlighted option while DOM focus stays on the input. The popup is a role=listbox with role=option children setting aria-selected; grouped results use role=group with an accessible name. A polite aria-live status region announces result counts, loading, empty, and error states. ArrowUp/ArrowDown navigate (wrapping), Enter selects, Escape closes then clears; Home/End keep their native text-cursor behavior."
   },
   "relatedSlugs": [
+    "dropdown",
     "multi-step-auth-card"
   ],
   "motion": {

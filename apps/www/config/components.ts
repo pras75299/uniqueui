@@ -16,6 +16,7 @@ import {
   Loader2,
   LucideAperture,
   LucideBuilding2,
+  LucideChevronDownSquare,
   LucideFocus,
   LucideGrid3x3,
   LucideMaximize2,
@@ -91,6 +92,7 @@ const iconMap = {
   Loader2,
   LucideAperture,
   LucideBuilding2,
+  LucideChevronDownSquare,
   LucideFocus,
   LucideGrid3x3,
   LucideMaximize2,
@@ -3667,6 +3669,144 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "\"use client\";\nimport {\n  AutocompleteSearch,\n  type AutocompleteOption,\n} from \"@/components/ui/autocomplete-search\";\n\nconst frameworks: AutocompleteOption[] = [\n  { value: \"next\", label: \"Next.js\" },\n  { value: \"remix\", label: \"Remix\" },\n  { value: \"astro\", label: \"Astro\" },\n  { value: \"svelte\", label: \"SvelteKit\" },\n  { value: \"nuxt\", label: \"Nuxt\" },\n  { value: \"solid\", label: \"SolidStart\" },\n  { value: \"vite\", label: \"Vite\" },\n  { value: \"gatsby\", label: \"Gatsby\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <AutocompleteSearch\n        options={frameworks}\n        placeholder=\"Search frameworks…\"\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+  },
+  {
+    "slug": "dropdown",
+    "name": "Dropdown",
+    "description": "Animated single and multi select dropdown with search, select all / deselect all, removable chips, per-option icons, color dots, descriptions, disabled options, grouping, and checkbox / radio / check indicators. Fully keyboard accessible.",
+    "icon": "LucideChevronDownSquare",
+    "category": "Components",
+    "props": [
+      {
+        "name": "options",
+        "type": "DropdownOption[]",
+        "description": "Items: { value, label, icon?, color?, description?, group?, disabled? }. Consecutive options sharing a group render as a labelled section."
+      },
+      {
+        "name": "value",
+        "type": "string | string[]",
+        "description": "Controlled value — string[] in multiple mode, string in single mode. Omit for uncontrolled."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string | string[]",
+        "description": "Initial value when uncontrolled."
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string | string[]) => void",
+        "description": "Fires on selection change. Receives string[] when multiple, otherwise the selected string (\"\" when cleared)."
+      },
+      {
+        "name": "multiple",
+        "type": "boolean",
+        "default": "false",
+        "description": "Enable multi-select (checkbox indicators, chips/count, select all)."
+      },
+      {
+        "name": "searchable",
+        "type": "boolean",
+        "default": "false",
+        "description": "Show an in-panel search box that filters options by label."
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "default": "false",
+        "description": "Show a clear (×) button in the trigger when there is a selection."
+      },
+      {
+        "name": "showSelectAll",
+        "type": "boolean",
+        "default": "false",
+        "description": "Multiple mode: show a Select all / Deselect all row with an indeterminate state."
+      },
+      {
+        "name": "selectionIndicator",
+        "type": "\"checkbox\" | \"radio\" | \"check\" | \"none\"",
+        "description": "Per-option marker. Defaults to checkbox in multiple mode, check in single mode."
+      },
+      {
+        "name": "chips",
+        "type": "boolean",
+        "default": "false",
+        "description": "Multiple mode: render selected items as removable chips in the trigger instead of a count."
+      },
+      {
+        "name": "maxVisibleChips",
+        "type": "number",
+        "default": "3",
+        "description": "Number of chips shown before collapsing the remainder into \"+N\"."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "\"Select…\"",
+        "description": "Trigger text when nothing is selected; also the listbox accessible name."
+      },
+      {
+        "name": "searchPlaceholder",
+        "type": "string",
+        "default": "\"Search…\"",
+        "description": "Placeholder for the search input."
+      },
+      {
+        "name": "emptyMessage",
+        "type": "string",
+        "default": "\"No options found\"",
+        "description": "Shown when search yields no matches."
+      },
+      {
+        "name": "selectAllLabel",
+        "type": "string",
+        "default": "\"Select all\"",
+        "description": "Label for the select-all row (switches to \"Deselect all\" when all are selected)."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": "false",
+        "description": "Disable the whole control."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Theme for default trigger and panel colors."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional classes merged onto the root wrapper."
+      }
+    ],
+    "variants": [
+      {
+        "id": "single",
+        "label": "Single select + icons",
+        "demoKey": "dropdown/single",
+        "usageCode": "\"use client\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\nimport { Shield, Settings, User, Globe } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <Dropdown\n        theme=\"dark\"\n        placeholder=\"Select a role\"\n        clearable\n        options={[\n          { value: \"admin\", label: \"Administrator\", icon: <Shield className=\"h-4 w-4 text-purple-400\" />, description: \"Full access to everything\" },\n          { value: \"editor\", label: \"Editor\", icon: <Settings className=\"h-4 w-4 text-blue-400\" />, description: \"Can create and edit content\" },\n          { value: \"viewer\", label: \"Viewer\", icon: <User className=\"h-4 w-4 text-green-400\" />, description: \"Read-only access\" },\n          { value: \"guest\", label: \"Guest\", icon: <Globe className=\"h-4 w-4 text-neutral-400\" />, disabled: true },\n        ]}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "multi",
+        "label": "Multi-select + search",
+        "demoKey": "dropdown/multi",
+        "usageCode": "\"use client\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <Dropdown\n        theme=\"dark\"\n        multiple\n        searchable\n        clearable\n        showSelectAll\n        chips\n        defaultValue={[\"react\", \"ts\"]}\n        placeholder=\"Pick technologies\"\n        searchPlaceholder=\"Search technologies…\"\n        options={[\n          { value: \"react\", label: \"React\", color: \"#61dafb\" },\n          { value: \"vue\", label: \"Vue\", color: \"#42b883\" },\n          { value: \"svelte\", label: \"Svelte\", color: \"#ff3e00\" },\n          { value: \"angular\", label: \"Angular\", color: \"#dd0031\" },\n          { value: \"solid\", label: \"Solid\", color: \"#2c4f7c\" },\n          { value: \"ts\", label: \"TypeScript\", color: \"#3178c6\" },\n          { value: \"tailwind\", label: \"Tailwind\", color: \"#38bdf8\" },\n        ]}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "grouped",
+        "label": "Grouped + radio",
+        "demoKey": "dropdown/grouped",
+        "usageCode": "\"use client\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <Dropdown\n        theme=\"dark\"\n        selectionIndicator=\"radio\"\n        placeholder=\"Choose a plan\"\n        defaultValue=\"pro\"\n        options={[\n          { value: \"free\", label: \"Free\", description: \"$0 / month\", group: \"Personal\" },\n          { value: \"plus\", label: \"Plus\", description: \"$8 / month\", group: \"Personal\" },\n          { value: \"pro\", label: \"Pro\", description: \"$20 / month\", group: \"Teams\" },\n          { value: \"enterprise\", label: \"Enterprise\", description: \"Contact us\", group: \"Teams\" },\n        ]}\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "count",
+        "label": "Count display + clear",
+        "demoKey": "dropdown/count",
+        "usageCode": "\"use client\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <Dropdown\n        theme=\"dark\"\n        multiple\n        searchable\n        clearable\n        showSelectAll\n        defaultValue={[\"read\", \"write\"]}\n        placeholder=\"Select permissions\"\n        searchPlaceholder=\"Search permissions…\"\n        options={[\n          { value: \"read\", label: \"Read\", color: \"#22c55e\" },\n          { value: \"write\", label: \"Write\", color: \"#eab308\" },\n          { value: \"delete\", label: \"Delete\", color: \"#ef4444\" },\n          { value: \"admin\", label: \"Admin\", color: \"#a855f7\" },\n          { value: \"billing\", label: \"Billing\", color: \"#3b82f6\" },\n          { value: \"audit\", label: \"Audit log\", color: \"#06b6d4\" },\n        ]}\n      />\n    </div>\n  );\n}"
+      }
+    ],
+    "usageCode": "\"use client\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\nimport { Shield, Settings, User, Globe } from \"lucide-react\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <Dropdown\n        theme=\"dark\"\n        placeholder=\"Select a role\"\n        clearable\n        options={[\n          { value: \"admin\", label: \"Administrator\", icon: <Shield className=\"h-4 w-4 text-purple-400\" />, description: \"Full access to everything\" },\n          { value: \"editor\", label: \"Editor\", icon: <Settings className=\"h-4 w-4 text-blue-400\" />, description: \"Can create and edit content\" },\n          { value: \"viewer\", label: \"Viewer\", icon: <User className=\"h-4 w-4 text-green-400\" />, description: \"Read-only access\" },\n          { value: \"guest\", label: \"Guest\", icon: <Globe className=\"h-4 w-4 text-neutral-400\" />, disabled: true },\n        ]}\n      />\n    </div>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 

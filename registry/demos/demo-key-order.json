@@ -83,5 +83,9 @@
   "animated-tooltip",
   "autocomplete-search/basic",
   "autocomplete-search/grouped",
-  "autocomplete-search/async"
+  "autocomplete-search/async",
+  "dropdown/single",
+  "dropdown/multi",
+  "dropdown/grouped",
+  "dropdown/count"
 ]
