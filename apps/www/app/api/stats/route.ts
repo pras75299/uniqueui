@@ -5,7 +5,8 @@ const NPM_PACKAGE = "uniqueui-cli";
 const REVALIDATE = 3600; // 1 hour
 
 // Cache the rendered response on the server for an hour.
-export const revalidate = REVALIDATE;
+// Note: route segment config must be a static literal, not a reference.
+export const revalidate = 3600;
 
 async function getGitHub(): Promise<{ stars: number | null; forks: number | null }> {
   try {
