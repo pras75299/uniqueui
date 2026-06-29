@@ -1188,5 +1188,26 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "\"use client\";\nimport {\n  AutocompleteSearch,\n  type AutocompleteOption,\n} from \"@/components/ui/autocomplete-search\";\n\nasync function searchUsers(query: string): Promise<AutocompleteOption[]> {\n  const res = await fetch(`/api/users?q=${encodeURIComponent(query)}`);\n  if (!res.ok) throw new Error(\"request failed\");\n  const users = (await res.json()) as { id: string; name: string; email: string }[];\n  return users.map((u) => ({ value: u.id, label: u.name, description: u.email }));\n}\n\nexport default function UserSearch() {\n  return (\n    <AutocompleteSearch\n      onSearch={searchUsers}\n      minChars={2}\n      placeholder=\"Search users…\"\n      hintMessage=\"Type at least 2 characters\"\n      emptyMessage=\"No users match that search\"\n    />\n  );\n}"
       }
     ]
+  },
+  "dropdown": {
+    "slug": "dropdown",
+    "overview": "Dropdown is a single- and multi-select control in one component. Set `multiple` to switch modes: single shows a check (or radio) on the chosen item; multiple shows checkbox indicators, a count or removable chips in the trigger, and an optional Select all / Deselect all row with an indeterminate state. Options support leading icons or color dots, secondary descriptions, disabled entries, and grouping (consecutive options sharing `group` render under a section header). `searchable` adds an in-panel filter, `clearable` adds a reset button. It is keyboard operable (Arrow keys, Enter/Space to toggle, Home/End, Escape, Tab) with combobox + listbox/option roles, aria-multiselectable, aria-activedescendant, and aria-selected/aria-disabled. The panel animates open with a spring and chips animate in/out; everything collapses to instant under prefers-reduced-motion. Works controlled (via `value`) or uncontrolled (via `defaultValue`).",
+    "scenarios": [
+      {
+        "title": "Single select with icons and descriptions",
+        "description": "A role picker where each option carries an icon and a helper line, one entry is disabled, and the selection can be cleared.",
+        "code": "\"use client\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\nimport { Shield, Settings, User } from \"lucide-react\";\n\nexport default function RolePicker() {\n  return (\n    <Dropdown\n      placeholder=\"Select a role\"\n      clearable\n      onChange={(v) => console.log(v)}\n      options={[\n        { value: \"admin\", label: \"Administrator\", icon: <Shield className=\"h-4 w-4\" />, description: \"Full access\" },\n        { value: \"editor\", label: \"Editor\", icon: <Settings className=\"h-4 w-4\" />, description: \"Edit content\" },\n        { value: \"viewer\", label: \"Viewer\", icon: <User className=\"h-4 w-4\" />, description: \"Read only\" },\n      ]}\n    />\n  );\n}"
+      },
+      {
+        "title": "Multi-select with search, select all and chips",
+        "description": "Pick many values with a filter box, a Select all / Deselect all toggle, removable chips in the trigger, and color dots per option.",
+        "code": "\"use client\";\nimport { useState } from \"react\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\n\nexport default function TechPicker() {\n  const [value, setValue] = useState<string[]>([\"react\"]);\n  return (\n    <Dropdown\n      multiple\n      searchable\n      clearable\n      showSelectAll\n      chips\n      value={value}\n      onChange={(v) => setValue(v as string[])}\n      placeholder=\"Pick technologies\"\n      options={[\n        { value: \"react\", label: \"React\", color: \"#61dafb\" },\n        { value: \"vue\", label: \"Vue\", color: \"#42b883\" },\n        { value: \"svelte\", label: \"Svelte\", color: \"#ff3e00\" },\n        { value: \"ts\", label: \"TypeScript\", color: \"#3178c6\" },\n      ]}\n    />\n  );\n}"
+      },
+      {
+        "title": "Grouped options with radio indicators",
+        "description": "Single-choice plan selector where options are grouped into sections and marked with radio buttons.",
+        "code": "\"use client\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\n\nexport default function PlanPicker() {\n  return (\n    <Dropdown\n      selectionIndicator=\"radio\"\n      placeholder=\"Choose a plan\"\n      defaultValue=\"pro\"\n      options={[\n        { value: \"free\", label: \"Free\", description: \"$0 / month\", group: \"Personal\" },\n        { value: \"plus\", label: \"Plus\", description: \"$8 / month\", group: \"Personal\" },\n        { value: \"pro\", label: \"Pro\", description: \"$20 / month\", group: \"Teams\" },\n        { value: \"enterprise\", label: \"Enterprise\", description: \"Contact us\", group: \"Teams\" },\n      ]}\n    />\n  );\n}"
+      }
+    ]
   }
 };

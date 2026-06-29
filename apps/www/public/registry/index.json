@@ -66,6 +66,7 @@
     "magnetic-text",
     "hero-radial-burst",
     "animated-tooltip",
-    "autocomplete-search"
+    "autocomplete-search",
+    "dropdown"
   ]
 }

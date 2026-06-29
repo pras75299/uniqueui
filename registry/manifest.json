@@ -69,7 +69,8 @@
     "magnetic-text",
     "hero-radial-burst",
     "animated-tooltip",
-    "autocomplete-search"
+    "autocomplete-search",
+    "dropdown"
   ],
   "docsOrder": [
     "animated-glowing-text-outline",
@@ -138,6 +139,7 @@
     "hero-flow-field",
     "hero-radial-burst",
     "animated-tooltip",
-    "autocomplete-search"
+    "autocomplete-search",
+    "dropdown"
   ]
 }
