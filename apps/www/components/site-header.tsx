@@ -8,6 +8,7 @@ import { motion } from "motion/react";
 import { ArrowLeft, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { RepoStats } from "@/components/repo-stats";
 import { useTheme } from "@/contexts/theme-context";
 import { SECTION_NAV } from "@/config/navigation";
 import { LIBRARY_VERSION } from "@/config/version";
@@ -133,6 +134,7 @@ export function SiteHeader({ trailing, className }: SiteHeaderProps) {
         </nav>
 
         <div className="flex min-w-0 justify-self-end items-center justify-end gap-0.5 sm:gap-2">
+          <RepoStats isDark={isDark} />
           <a
             href="https://github.com/pras75299/uniqueui"
             target="_blank"
