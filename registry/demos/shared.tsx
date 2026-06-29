@@ -77,6 +77,10 @@ import { TerminalHero } from "@/components/ui/hero-terminal";
 import { FlowFieldHero } from "@/components/ui/hero-flow-field";
 import { RadialBurstHero } from "@/components/ui/hero-radial-burst";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
+import {
+  AutocompleteSearch,
+  type AutocompleteOption,
+} from "@/components/ui/autocomplete-search";
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import {

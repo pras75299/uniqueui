@@ -11,6 +11,7 @@ import { useState, useMemo } from "react";
 
 const CATEGORIES = [
   "All",
+  "Components",
   "Text",
   "Cards",
   "Effects & Animations",

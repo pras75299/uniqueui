@@ -54,6 +54,7 @@
     "status": "unaudited"
   },
   "relatedSlugs": [
+    "autocomplete-search",
     "animated-tabs",
     "animated-tooltip",
     "drawer-slide",
