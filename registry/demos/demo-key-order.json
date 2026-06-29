@@ -80,5 +80,8 @@
   "hero-terminal",
   "hero-flow-field",
   "hero-radial-burst",
-  "animated-tooltip"
+  "animated-tooltip",
+  "autocomplete-search/basic",
+  "autocomplete-search/grouped",
+  "autocomplete-search/async"
 ]

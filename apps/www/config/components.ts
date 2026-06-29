@@ -28,6 +28,7 @@ import {
   LucideRotateCw,
   LucideScanLine,
   LucideScrollText,
+  LucideSearch,
   LucideShield,
   LucideSparkle,
   LucideSparkles,
@@ -102,6 +103,7 @@ const iconMap = {
   LucideRotateCw,
   LucideScanLine,
   LucideScrollText,
+  LucideSearch,
   LucideShield,
   LucideSparkle,
   LucideSparkles,
@@ -3568,6 +3570,103 @@ const componentDefinitions = [
       }
     ],
     "usageCode": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\n\nexport default function Example() {\n  return (\n    <AnimatedTooltip content=\"Copy to clipboard\" side=\"top\">\n      <button className=\"rounded-md bg-neutral-800 px-4 py-2 text-sm text-white\">\n        Copy\n      </button>\n    </AnimatedTooltip>\n  );\n}"
+  },
+  {
+    "slug": "autocomplete-search",
+    "name": "Autocomplete Search",
+    "description": "Accessible combobox with debounced filtering, async-ready search, full keyboard navigation, grouped options, matched-text highlighting, and loading / empty / error states.",
+    "icon": "LucideSearch",
+    "category": "Components",
+    "props": [
+      {
+        "name": "options",
+        "type": "AutocompleteOption[]",
+        "description": "Static option list for synchronous local filtering. Ignored when onSearch is provided."
+      },
+      {
+        "name": "onSearch",
+        "type": "(query: string) => Promise<AutocompleteOption[]>",
+        "description": "Async resolver returning matches for a query. Enables async mode with loading/error states and a stale-response guard."
+      },
+      {
+        "name": "onSelect",
+        "type": "(option: AutocompleteOption) => void",
+        "description": "Called when an option is chosen via click or Enter."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "\"Search…\"",
+        "description": "Input placeholder; also used as the combobox/listbox accessible name."
+      },
+      {
+        "name": "debounceMs",
+        "type": "number",
+        "default": "300",
+        "description": "Delay before filtering (sync) or fetching (async) after the last keystroke."
+      },
+      {
+        "name": "minChars",
+        "type": "number",
+        "default": "0",
+        "description": "Minimum characters before a search runs. Below this, results are cleared and hintMessage (if set) shows."
+      },
+      {
+        "name": "emptyMessage",
+        "type": "string",
+        "default": "\"No results found\"",
+        "description": "Shown when a search completes with zero matches."
+      },
+      {
+        "name": "loadingMessage",
+        "type": "string",
+        "default": "\"Searching…\"",
+        "description": "Shown in async mode while onSearch is pending."
+      },
+      {
+        "name": "hintMessage",
+        "type": "string",
+        "description": "Shown when the query length is below minChars. Only rendered if provided."
+      },
+      {
+        "name": "errorMessage",
+        "type": "string",
+        "default": "\"Something went wrong. Try again.\"",
+        "description": "Shown when onSearch rejects."
+      },
+      {
+        "name": "theme",
+        "type": "\"light\" | \"dark\"",
+        "default": "\"dark\"",
+        "description": "Theme for default input and dropdown colors."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "description": "Additional classes merged onto the root wrapper."
+      }
+    ],
+    "variants": [
+      {
+        "id": "basic",
+        "label": "Static filtering",
+        "demoKey": "autocomplete-search/basic",
+        "usageCode": "\"use client\";\nimport {\n  AutocompleteSearch,\n  type AutocompleteOption,\n} from \"@/components/ui/autocomplete-search\";\n\nconst frameworks: AutocompleteOption[] = [\n  { value: \"next\", label: \"Next.js\" },\n  { value: \"remix\", label: \"Remix\" },\n  { value: \"astro\", label: \"Astro\" },\n  { value: \"svelte\", label: \"SvelteKit\" },\n  { value: \"nuxt\", label: \"Nuxt\" },\n  { value: \"solid\", label: \"SolidStart\" },\n  { value: \"vite\", label: \"Vite\" },\n  { value: \"gatsby\", label: \"Gatsby\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <AutocompleteSearch\n        options={frameworks}\n        placeholder=\"Search frameworks…\"\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "grouped",
+        "label": "Grouped options",
+        "demoKey": "autocomplete-search/grouped",
+        "usageCode": "\"use client\";\nimport {\n  AutocompleteSearch,\n  type AutocompleteOption,\n} from \"@/components/ui/autocomplete-search\";\n\nconst commands: AutocompleteOption[] = [\n  { value: \"new-file\", label: \"New File\", group: \"Actions\" },\n  { value: \"new-folder\", label: \"New Folder\", group: \"Actions\" },\n  { value: \"save-all\", label: \"Save All\", group: \"Actions\" },\n  { value: \"profile\", label: \"Profile\", group: \"Account\" },\n  { value: \"billing\", label: \"Billing\", group: \"Account\" },\n  { value: \"logout\", label: \"Log out\", group: \"Account\" },\n  { value: \"docs\", label: \"Documentation\", group: \"Help\" },\n  { value: \"shortcuts\", label: \"Keyboard Shortcuts\", group: \"Help\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <AutocompleteSearch\n        options={commands}\n        placeholder=\"Type a command…\"\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+      },
+      {
+        "id": "async",
+        "label": "Async remote search",
+        "demoKey": "autocomplete-search/async",
+        "usageCode": "\"use client\";\nimport {\n  AutocompleteSearch,\n  type AutocompleteOption,\n} from \"@/components/ui/autocomplete-search\";\n\nconst countries: AutocompleteOption[] = [\n  { value: \"us\", label: \"United States\", description: \"North America\" },\n  { value: \"ca\", label: \"Canada\", description: \"North America\" },\n  { value: \"mx\", label: \"Mexico\", description: \"North America\" },\n  { value: \"br\", label: \"Brazil\", description: \"South America\" },\n  { value: \"ar\", label: \"Argentina\", description: \"South America\" },\n  { value: \"gb\", label: \"United Kingdom\", description: \"Europe\" },\n  { value: \"de\", label: \"Germany\", description: \"Europe\" },\n  { value: \"fr\", label: \"France\", description: \"Europe\" },\n  { value: \"jp\", label: \"Japan\", description: \"Asia\" },\n  { value: \"in\", label: \"India\", description: \"Asia\" },\n  { value: \"au\", label: \"Australia\", description: \"Oceania\" },\n];\n\n// Swap this for a real fetch() to your API.\nfunction searchCountries(query: string) {\n  return new Promise<AutocompleteOption[]>((resolve) => {\n    const needle = query.toLowerCase();\n    setTimeout(() => {\n      resolve(\n        countries.filter((c) => c.label.toLowerCase().includes(needle)),\n      );\n    }, 600);\n  });\n}\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <AutocompleteSearch\n        onSearch={searchCountries}\n        minChars={1}\n        placeholder=\"Search countries…\"\n        hintMessage=\"Type to search countries\"\n        loadingMessage=\"Searching countries…\"\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
+      }
+    ],
+    "usageCode": "\"use client\";\nimport {\n  AutocompleteSearch,\n  type AutocompleteOption,\n} from \"@/components/ui/autocomplete-search\";\n\nconst frameworks: AutocompleteOption[] = [\n  { value: \"next\", label: \"Next.js\" },\n  { value: \"remix\", label: \"Remix\" },\n  { value: \"astro\", label: \"Astro\" },\n  { value: \"svelte\", label: \"SvelteKit\" },\n  { value: \"nuxt\", label: \"Nuxt\" },\n  { value: \"solid\", label: \"SolidStart\" },\n  { value: \"vite\", label: \"Vite\" },\n  { value: \"gatsby\", label: \"Gatsby\" },\n];\n\nexport default function Example() {\n  return (\n    <div className=\"flex h-[440px] w-full justify-center px-6 pt-10\">\n      <AutocompleteSearch\n        options={frameworks}\n        placeholder=\"Search frameworks…\"\n        theme=\"dark\"\n      />\n    </div>\n  );\n}"
   }
 ] satisfies ComponentDefinition[];
 

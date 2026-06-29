@@ -35,6 +35,7 @@ entities.json
 # Local design/planning docs — keep on disk, do not version
 COMPONENT_PROMPTS.md
 backlogs.md
+PREMIUM.local.md
 
 # Local-only Remotion promo workspace — do not version or publish to GitHub.
 # Excluded from pnpm-workspace.yaml as well; install deps from inside the dir.

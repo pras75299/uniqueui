@@ -65,6 +65,7 @@
     "hero-flow-field",
     "magnetic-text",
     "hero-radial-burst",
-    "animated-tooltip"
+    "animated-tooltip",
+    "autocomplete-search"
   ]
 }

@@ -1234,6 +1234,25 @@
           "target": "components/ui/animated-tooltip.tsx"
         }
       ]
+    },
+    {
+      "name": "autocomplete-search",
+      "type": "registry:ui",
+      "title": "Autocomplete Search",
+      "description": "Accessible combobox with debounced filtering, async-ready search, full keyboard navigation, grouped options, matched-text highlighting, and loading / empty / error states.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/ui/autocomplete-search.tsx",
+          "type": "registry:component",
+          "target": "components/ui/autocomplete-search.tsx"
+        }
+      ]
     }
   ]
 }

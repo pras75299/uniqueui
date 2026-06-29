@@ -1167,5 +1167,26 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "code": "\"use client\";\nimport { AnimatedTooltip } from \"@/components/ui/animated-tooltip\";\nimport { Info } from \"lucide-react\";\n\nexport default function TriggerVariants() {\n  return (\n    <div className=\"flex items-center justify-center gap-8 p-16\">\n      <AnimatedTooltip content=\"More information\" side=\"top\">\n        <button\n          aria-label=\"More information\"\n          className=\"grid h-9 w-9 place-items-center rounded-full bg-neutral-800 text-white\"\n        >\n          <Info className=\"h-4 w-4\" />\n        </button>\n      </AnimatedTooltip>\n\n      <AnimatedTooltip content=\"Opens in a new tab\" side=\"top\">\n        <a\n          href=\"https://example.com\"\n          className=\"text-sm font-medium text-violet-500 underline underline-offset-4\"\n        >\n          Documentation\n        </a>\n      </AnimatedTooltip>\n    </div>\n  );\n}"
       }
     ]
+  },
+  "autocomplete-search": {
+    "slug": "autocomplete-search",
+    "overview": "AutocompleteSearch is an accessible combobox following the W3C APG editable-combobox-with-list-autocomplete pattern. Pass a static `options` array for synchronous local filtering, or an async `onSearch` resolver for remote search — the latter debounces requests and guards against stale responses overwriting newer queries. Typing is debounced (300ms by default), the matched substring is highlighted in each result, and consecutive options sharing a `group` render as labelled sections. Keyboard support: ArrowUp/ArrowDown move the active option (wrapping), Enter selects, Escape closes then clears. It exposes combobox/listbox/option roles with aria-activedescendant and a polite live region, honors prefers-reduced-motion, and is SSR-safe.",
+    "scenarios": [
+      {
+        "title": "Filter a static list",
+        "description": "Pass an options array for instant, debounced local filtering with matched-text highlighting — no network needed.",
+        "code": "\"use client\";\nimport {\n  AutocompleteSearch,\n  type AutocompleteOption,\n} from \"@/components/ui/autocomplete-search\";\n\nconst frameworks: AutocompleteOption[] = [\n  { value: \"next\", label: \"Next.js\" },\n  { value: \"remix\", label: \"Remix\" },\n  { value: \"astro\", label: \"Astro\" },\n  { value: \"svelte\", label: \"SvelteKit\" },\n  { value: \"nuxt\", label: \"Nuxt\" },\n];\n\nexport default function FrameworkPicker() {\n  return (\n    <AutocompleteSearch\n      options={frameworks}\n      placeholder=\"Search frameworks…\"\n      onSelect={(o) => console.log(\"picked\", o.value)}\n    />\n  );\n}"
+      },
+      {
+        "title": "Grouped command menu",
+        "description": "Give options a `group` to render labelled sections (role=\"group\"); keyboard navigation flows across groups seamlessly.",
+        "code": "\"use client\";\nimport {\n  AutocompleteSearch,\n  type AutocompleteOption,\n} from \"@/components/ui/autocomplete-search\";\n\nconst commands: AutocompleteOption[] = [\n  { value: \"new-file\", label: \"New File\", group: \"Actions\" },\n  { value: \"save-all\", label: \"Save All\", group: \"Actions\" },\n  { value: \"profile\", label: \"Profile\", group: \"Account\" },\n  { value: \"logout\", label: \"Log out\", group: \"Account\" },\n  { value: \"docs\", label: \"Documentation\", group: \"Help\" },\n];\n\nexport default function CommandMenu() {\n  return (\n    <AutocompleteSearch options={commands} placeholder=\"Type a command…\" />\n  );\n}"
+      },
+      {
+        "title": "Async remote search",
+        "description": "Provide onSearch to fetch results from an API. Requests are debounced and stale responses are discarded, with built-in loading, empty, and error states. Use minChars + hintMessage to defer searching until enough is typed.",
+        "code": "\"use client\";\nimport {\n  AutocompleteSearch,\n  type AutocompleteOption,\n} from \"@/components/ui/autocomplete-search\";\n\nasync function searchUsers(query: string): Promise<AutocompleteOption[]> {\n  const res = await fetch(`/api/users?q=${encodeURIComponent(query)}`);\n  if (!res.ok) throw new Error(\"request failed\");\n  const users = (await res.json()) as { id: string; name: string; email: string }[];\n  return users.map((u) => ({ value: u.id, label: u.name, description: u.email }));\n}\n\nexport default function UserSearch() {\n  return (\n    <AutocompleteSearch\n      onSearch={searchUsers}\n      minChars={2}\n      placeholder=\"Search users…\"\n      hintMessage=\"Type at least 2 characters\"\n      emptyMessage=\"No users match that search\"\n    />\n  );\n}"
+      }
+    ]
   }
 };
