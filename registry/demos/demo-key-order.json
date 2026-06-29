@@ -86,5 +86,6 @@
   "autocomplete-search/async",
   "dropdown/single",
   "dropdown/multi",
-  "dropdown/grouped"
+  "dropdown/grouped",
+  "dropdown/count"
 ]

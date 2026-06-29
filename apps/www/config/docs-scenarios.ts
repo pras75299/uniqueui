@@ -1207,6 +1207,11 @@ export const docsScenarios: Record<string, ComponentDocs> = {
         "title": "Grouped options with radio indicators",
         "description": "Single-choice plan selector where options are grouped into sections and marked with radio buttons.",
         "code": "\"use client\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\n\nexport default function PlanPicker() {\n  return (\n    <Dropdown\n      selectionIndicator=\"radio\"\n      placeholder=\"Choose a plan\"\n      defaultValue=\"pro\"\n      options={[\n        { value: \"free\", label: \"Free\", description: \"$0 / month\", group: \"Personal\" },\n        { value: \"plus\", label: \"Plus\", description: \"$8 / month\", group: \"Personal\" },\n        { value: \"pro\", label: \"Pro\", description: \"$20 / month\", group: \"Teams\" },\n        { value: \"enterprise\", label: \"Enterprise\", description: \"Contact us\", group: \"Teams\" },\n      ]}\n    />\n  );\n}"
+      },
+      {
+        "title": "Count display, clearable, with disabled options",
+        "description": "Multi-select that shows an \"N selected\" count instead of chips, can be cleared in one click, and skips disabled options during selection and keyboard navigation. Set `disabled` on the component to lock the whole control.",
+        "code": "\"use client\";\nimport { Dropdown } from \"@/components/ui/dropdown\";\n\nexport default function PermissionPicker() {\n  return (\n    <Dropdown\n      multiple\n      searchable\n      clearable\n      showSelectAll\n      defaultValue={[\"read\"]}\n      placeholder=\"Select permissions\"\n      options={[\n        { value: \"read\", label: \"Read\", color: \"#22c55e\" },\n        { value: \"write\", label: \"Write\", color: \"#eab308\" },\n        { value: \"delete\", label: \"Delete\", color: \"#ef4444\" },\n        { value: \"admin\", label: \"Admin\", color: \"#a855f7\", disabled: true },\n      ]}\n    />\n  );\n}"
       }
     ]
   }

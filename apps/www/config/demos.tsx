@@ -3407,6 +3407,30 @@ export const componentDemos: Record<string, DemoComponent> = {
         />
       </div>
     );
+  },
+  "dropdown/count": ({ theme = "dark" }) => {
+    return (
+      <div className="flex h-[440px] w-full justify-center px-6 pt-10">
+        <Dropdown
+          theme={theme}
+          multiple
+          searchable
+          clearable
+          showSelectAll
+          defaultValue={["read", "write"]}
+          placeholder="Select permissions"
+          searchPlaceholder="Search permissions…"
+          options={[
+            { value: "read", label: "Read", color: "#22c55e" },
+            { value: "write", label: "Write", color: "#eab308" },
+            { value: "delete", label: "Delete", color: "#ef4444" },
+            { value: "admin", label: "Admin", color: "#a855f7" },
+            { value: "billing", label: "Billing", color: "#3b82f6" },
+            { value: "audit", label: "Audit log", color: "#06b6d4" },
+          ]}
+        />
+      </div>
+    );
   }
 ,
 };

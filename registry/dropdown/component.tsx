@@ -219,7 +219,7 @@ export function Dropdown({
         if (open) {
           e.preventDefault();
           setOpen(false);
-          triggerRef.current?.focus();
+          triggerRef.current?.focus({ preventScroll: true });
         }
         break;
       case "Tab":
@@ -249,7 +249,9 @@ export function Dropdown({
     );
     const firstEnabled = visible.findIndex((o) => !o.disabled);
     setActiveIndex(firstSelected >= 0 ? firstSelected : firstEnabled);
-    if (searchable) searchRef.current?.focus();
+    // preventScroll: focusing the search input must not scroll the page/panel
+    // into view, which causes a visible jump when opening.
+    if (searchable) searchRef.current?.focus({ preventScroll: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, searchable]);
 
