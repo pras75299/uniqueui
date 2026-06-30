@@ -128,17 +128,27 @@ export default tseslint.config(
 );
 `;
 
-const GLOBALS_CSS = `@import "tailwindcss";
+const GLOBALS_CSS = `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Syne:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --font-sans: "Inter", "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Fira Code", "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
+  --font-syne: "Syne", "Inter", system-ui, sans-serif;
+  --font-dm-sans: "DM Sans", "Inter", system-ui, sans-serif;
+  --font-serif: "Newsreader", "Source Serif 4", Georgia, "Times New Roman", serif;
+}
 
 @layer utilities {
   body {
     min-height: 100vh;
+    font-family: var(--font-sans);
   }
 }
 
 /* ── SaaS Landing Template shared styles ─────────────────────────────────── */
 
-.fs-syne { font-family: var(--font-sans, 'Inter', system-ui, sans-serif); }
+.fs-syne { font-family: var(--font-syne, 'Syne', 'Inter', system-ui, sans-serif); }
 
 .grad-text {
   background: linear-gradient(135deg, #67E8F9 0%, #22D3EE 50%, #818CF8 100%);
