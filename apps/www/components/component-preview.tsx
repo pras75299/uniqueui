@@ -4,6 +4,13 @@ import { forwardRef, useRef, type ForwardedRef, type RefObject } from "react";
 import { motion, useInView } from "motion/react";
 import { componentDemos } from "@/config/demos";
 import { useTheme } from "@/contexts/theme-context";
+import {
+  FULLSCREEN_FILL_CLASS,
+  FULLSCREEN_FRAME_CLASS,
+  FullscreenToggle,
+  fullscreenAlignClass,
+  useFullscreen,
+} from "@/components/fullscreen-toggle";
 import { cn } from "@/lib/utils";
 
 type ComponentPreviewProps = {
@@ -30,6 +37,11 @@ type ComponentPreviewProps = {
    * scale wrapper on `/blocks`.
    */
   lazyRoot?: RefObject<Element | null>;
+  /**
+   * Background-category components fill the whole viewport in fullscreen instead
+   * of top-aligning, so the animated backdrop covers the screen edge-to-edge.
+   */
+  isBackground?: boolean;
 };
 
 export default function ComponentPreview(props: ComponentPreviewProps) {
@@ -54,11 +66,12 @@ function LazyPreview({ lazyRoot, ...props }: ComponentPreviewProps) {
 type PreviewShellProps = ComponentPreviewProps & { shouldRender: boolean };
 
 const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function PreviewShell(
-  { slug, className, variant = "default", shouldRender },
+  { slug, className, variant = "default", shouldRender, isBackground = false },
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const { theme } = useTheme();
   const Demo = componentDemos[slug];
+  const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
 
   if (!Demo) {
     return (
@@ -92,16 +105,20 @@ const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function Prev
         isThumbnail && "rounded-none border-0",
         isDark ? "border-neutral-800 bg-neutral-950/50" : "border-neutral-200 bg-neutral-50/80",
         className,
+        // Fullscreen override wins over all of the above (incl. consumer className).
+        isFullscreen && FULLSCREEN_FRAME_CLASS,
+        isFullscreen && fullscreenAlignClass(isBackground),
       )}
       initial={false}
       animate={{
-        backgroundColor: isHeroFrame
-          ? isDark
-            ? "rgb(10,10,10)"
-            : "rgb(255,255,255)"
-          : isDark
-            ? "rgba(10,10,10,0.5)"
-            : "rgba(250,250,250,0.8)",
+        backgroundColor:
+          isHeroFrame || isFullscreen
+            ? isDark
+              ? "rgb(10,10,10)"
+              : "rgb(255,255,255)"
+            : isDark
+              ? "rgba(10,10,10,0.5)"
+              : "rgba(250,250,250,0.8)",
         borderColor: isThumbnail
           ? "transparent"
           : isDark
@@ -126,6 +143,7 @@ const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function Prev
           "relative z-10 w-full",
           isOutlinedMegaMark &&
             "flex min-h-0 flex-1 flex-col items-center justify-center",
+          isFullscreen && isBackground && FULLSCREEN_FILL_CLASS,
         )}
       >
         {shouldRender ? (
@@ -138,6 +156,15 @@ const PreviewShell = forwardRef<HTMLDivElement, PreviewShellProps>(function Prev
           />
         )}
       </div>
+
+      {/* Fullscreen toggle — hidden on the scaled `/blocks` thumbnails. */}
+      {!isThumbnail && (
+        <FullscreenToggle
+          isFullscreen={isFullscreen}
+          onToggle={toggleFullscreen}
+          isDark={isDark}
+        />
+      )}
     </motion.div>
   );
 });

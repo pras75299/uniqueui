@@ -103,6 +103,7 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
           variants={component.variants}
           highlightedCodes={highlightedCodes}
           rawCodes={rawCodes}
+          isBackground={component.category === "Backgrounds"}
         />
 
         {/* Props Reference */}
@@ -166,7 +167,10 @@ export default async function ComponentPage(props: { params: Promise<{ slug: str
       {/* Preview */}
       <section className="space-y-4">
         <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Preview</h2>
-        <ComponentPreview slug={component.slug} />
+        <ComponentPreview
+          slug={component.slug}
+          isBackground={component.category === "Backgrounds"}
+        />
       </section>
 
       {/* Usage section */}
