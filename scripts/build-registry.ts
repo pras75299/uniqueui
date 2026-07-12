@@ -7,6 +7,7 @@ import { resolvePathUnderDir, validate, ComponentManifest as ComponentManifestSc
 import { crossLinksFromManifests } from "./compute-cross-links";
 import { changelogsFromManifests } from "./changelogs-from-manifests";
 import { assembleDemosSource } from "./assemble-demos";
+import { renderLlmsIndex, renderLlmsFull, type LlmsComponent } from "./build-llms";
 
 const CLI_PACKAGE_FILE = path.join(__dirname, "../packages/cli/package.json");
 const REGISTRY_DIR = path.join(__dirname, "../registry");
@@ -23,6 +24,8 @@ const APP_COMPONENTS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "components.ts");
 const APP_DOCS_SCENARIOS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "docs-scenarios.ts");
 const APP_DEMOS_CONFIG_FILE = path.join(APP_CONFIG_DIR, "demos.tsx");
 const APP_VERSION_FILE = path.join(APP_CONFIG_DIR, "version.ts");
+const LLMS_TXT_FILE = path.join(APP_PUBLIC_DIR, "llms.txt");
+const LLMS_FULL_TXT_FILE = path.join(APP_PUBLIC_DIR, "llms-full.txt");
 
 type MotionStance = "full" | "partial" | "none";
 type MotionMetaEntry = { reducedMotion: MotionStance; performanceNotes?: string };
@@ -544,6 +547,33 @@ async function syncShadcnRegistry(entries: RegistryEntry[], manifest: RegistryDo
   );
 }
 
+async function syncLlmsArtifacts(
+  docsManifest: RegistryDocsManifest,
+  manifests: Map<string, ComponentManifest>,
+) {
+  const components: LlmsComponent[] = docsManifest.components.map((component) => {
+    const manifest = manifests.get(component.slug)!;
+    return {
+      slug: component.slug,
+      name: component.name,
+      description: component.description,
+      category: component.category,
+      kind: component.kind,
+      tags: manifest.tags,
+      ...(manifest.peerDependencies.length
+        ? { peerDependencies: manifest.peerDependencies }
+        : {}),
+      props: component.props,
+      usageCode: component.usageCode,
+      overview: component.docs?.overview,
+      scenarios: component.docs?.scenarios,
+    };
+  });
+
+  await fs.writeFile(LLMS_TXT_FILE, renderLlmsIndex(components));
+  await fs.writeFile(LLMS_FULL_TXT_FILE, renderLlmsFull(components));
+}
+
 async function buildRegistry() {
   console.log("Building registry...");
 
@@ -614,6 +644,7 @@ async function buildRegistry() {
   await syncDocsConfig(docsManifest);
   await syncVersionConstant();
   await syncShadcnRegistry(result, docsManifest);
+  await syncLlmsArtifacts(docsManifest, manifests);
   console.log(`Registry built successfully: ${OUTPUT_FILE}`);
   console.log(`Library version synced to docs config: ${APP_VERSION_FILE}`);
   console.log(`Registry synced to docs public root: ${APP_PUBLIC_OUTPUT_FILE}`);
@@ -621,6 +652,7 @@ async function buildRegistry() {
   console.log(`Registry synced to docs ui components: ${APP_COMPONENTS_UI_DIR}`);
   console.log(`Docs config generated from registry source: ${REGISTRY_COMPONENTS_DIR}`);
   console.log(`shadcn-compatible registry synced to: ${APP_PUBLIC_SHADCN_DIR}`);
+  console.log(`llms.txt artifacts synced to: ${LLMS_TXT_FILE}, ${LLMS_FULL_TXT_FILE}`);
 }
 
 buildRegistry().catch((err) => {
