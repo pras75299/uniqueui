@@ -57,10 +57,15 @@ test("multiple pinned rows remain stacked below the header", async ({ page }) =>
   await viewport.scrollIntoViewIfNeeded();
   await viewport.evaluate((el) => { el.scrollTop = 350; el.scrollLeft = 200; });
   await expect.poll(async () => {
-    const rows = await viewport.locator("[data-pinned-row]").evaluateAll((els) => els.map((el) => {
-      const box = el.getBoundingClientRect();
-      return { top: box.top, bottom: box.bottom };
-    }));
-    return Math.abs(rows[1].top - rows[0].bottom);
+    return viewport.evaluate((el) => {
+      const headerBottom = Math.max(...Array.from(el.querySelectorAll("thead th"),
+        (cell) => cell.getBoundingClientRect().bottom));
+      const rows = Array.from(el.querySelectorAll("[data-pinned-row]"),
+        (row) => row.getBoundingClientRect());
+      return Math.max(
+        Math.abs(rows[0].top - headerBottom),
+        Math.abs(rows[1].top - rows[0].bottom),
+      );
+    });
   }).toBeLessThan(2);
 });

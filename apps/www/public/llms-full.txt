@@ -4223,7 +4223,7 @@ export default function Report() {
 
 ## Morphing Card Stack (`morphing-card-stack`)
 
-An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using Framer Motion springs.
+An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using motion/react springs.
 
 - Docs: https://uniqueui-platform.vercel.app/components/morphing-card-stack
 - Install: `npx uniqueui add morphing-card-stack`

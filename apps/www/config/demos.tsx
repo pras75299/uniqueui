@@ -2234,7 +2234,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
       ]}
@@ -2265,7 +2265,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
       ]}
@@ -2296,7 +2296,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140, freeze: "left" },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
       ]}
@@ -2327,7 +2327,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130, freeze: "right" },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
       ]}
@@ -2358,7 +2358,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140, freeze: "left" },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130, freeze: "right" },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
       ]}
@@ -2389,7 +2389,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140, freeze: "left" },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130, freeze: "right" },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
       ]}
@@ -2415,7 +2415,7 @@ export const componentDemos: Record<string, DemoComponent> = {
       <DataTable data={rows} getRowId={(row: Row) => row.id}
         sortable
         stickyHeader maxHeight={320} border theme={theme}
-        columns={[ { id: "identity", header: "Identity", accessor: () => null, freeze: "left", columns: [{ id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150, freeze: "left" }, { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140, freeze: "left" }] }, { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 }, { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 }, { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` }, { id: "workflow", header: "Workflow", accessor: () => null, freeze: "right", columns: [{ id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130, freeze: "right" }, { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }] } ]}
+        columns={[ { id: "identity", header: "Identity", accessor: () => null, freeze: "left", columns: [{ id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150, freeze: "left" }, { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140, freeze: "left" }] }, { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 }, { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 }, { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` }, { id: "workflow", header: "Workflow", accessor: () => null, freeze: "right", columns: [{ id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130, freeze: "right" }, { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }] } ]}
       />
     </div>
   );
@@ -2443,7 +2443,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
       ]}
@@ -2476,7 +2476,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
       ]}
@@ -2507,7 +2507,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
       ]}
@@ -2538,7 +2538,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
       ]}
@@ -2569,7 +2569,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
       ]}
@@ -2600,7 +2600,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
       ]}
@@ -2631,7 +2631,7 @@ export const componentDemos: Record<string, DemoComponent> = {
         { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
         { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
         { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
-        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `$${row.revenue.toFixed(2)}` },
         { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
         { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
       ]}

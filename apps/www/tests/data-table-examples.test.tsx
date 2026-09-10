@@ -18,6 +18,19 @@ it.each(["basic","advanced","virtualized","grouped","column-groups","freeze-left
   expect(Demo, "The published example must have a live preview").toBeDefined();
   render(<Demo theme="dark" />);
   expect(screen.getByRole("table")).toBeInTheDocument();
+  if (id !== "empty" && screen.queryByRole("columnheader", { name: "Revenue" })) {
+    expect(screen.queryByRole("cell", { name: "$129.50" })).toBeInTheDocument();
+  }
+  if (id === "light" || id === "custom-colors") {
+    const header = screen.getByRole("columnheader", { name: "Name" });
+    const cell = screen.getAllByRole("cell", { name: "Alex Kim" })[0];
+    expect(header).toHaveClass(id === "light" ? "bg-neutral-100" : "bg-slate-900");
+    expect(cell).toHaveClass(id === "light" ? "bg-white" : "bg-slate-50");
+  }
+  if (id === "empty") {
+    expect(screen.getByRole("table").querySelectorAll("tbody tr[data-row]")).toHaveLength(0);
+    expect(screen.getByRole("columnheader", { name: "Name" })).toBeVisible();
+  }
 });
 
 it("lets customers exercise controlled selection and expansion", () => {

@@ -44,7 +44,7 @@ describe("renderLlmsIndex", () => {
 
     it("lists every component and block with an absolute docs URL", () => {
         expect(index).toContain(
-            `- [Magnetic Button](${SITE_URL}/components/magnetic-button): Button that stretches toward the cursor when nearby.`,
+            "- [Magnetic Button](https://uniqueui-platform.vercel.app/components/magnetic-button): Button that stretches toward the cursor when nearby.",
         );
         // Blocks must route under /blocks, not /components — the /components
         // URL 404s for block slugs.

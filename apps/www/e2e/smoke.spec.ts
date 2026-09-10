@@ -28,6 +28,14 @@ function trackFatalConsoleErrors(page: Page): string[] {
 }
 
 test.describe("smoke", () => {
+  test("/docs keeps the animated AI setup link available", async ({ page }) => {
+    const fatal = trackFatalConsoleErrors(page);
+    const response = await page.goto("/docs");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("link", { name: "Set up MCP" })).toHaveAttribute("href", "/docs/ai");
+    expect(fatal).toEqual([]);
+  });
+
   test("shared links use the public origin for social preview images", async ({ page }) => {
     await page.goto("/");
     for (const selector of ['meta[property="og:image"]', 'meta[name="twitter:image"]']) {

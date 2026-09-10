@@ -2169,7 +2169,7 @@ const componentDefinitions = [
   {
     "slug": "morphing-card-stack",
     "name": "Morphing Card Stack",
-    "description": "An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using Framer Motion springs.",
+    "description": "An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using motion/react springs.",
     "icon": "Layers",
     "category": "Cards",
     "props": [
