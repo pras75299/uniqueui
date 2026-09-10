@@ -2210,6 +2210,434 @@ export const componentDemos: Record<string, DemoComponent> = {
         />
       </div>
     );
+  },
+  "data-table/freeze-left": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Scroll horizontally to keep frozen columns in view.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150, freeze: "left" },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/freeze-right": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Scroll horizontally to keep frozen columns in view.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150 },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/freeze-multiple-left": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Scroll horizontally to keep frozen columns in view.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150, freeze: "left" },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140, freeze: "left" },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/freeze-multiple-right": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Scroll horizontally to keep frozen columns in view.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150 },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130, freeze: "right" },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/freeze-both": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Scroll horizontally to keep frozen columns in view.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable selectable expandable renderExpanded={(row: Row) => <div>Details for {row.name}</div>}
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150, freeze: "left" },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140, freeze: "left" },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130, freeze: "right" },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/freeze-virtualized": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 1000 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Scroll horizontally to keep frozen columns in view.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        preset="enterprise"
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150, freeze: "left" },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140, freeze: "left" },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130, freeze: "right" },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/freeze-groups": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Scroll horizontally to keep frozen columns in view.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[ { id: "identity", header: "Identity", accessor: () => null, freeze: "left", columns: [{ id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150, freeze: "left" }, { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140, freeze: "left" }] }, { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 }, { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 }, { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` }, { id: "workflow", header: "Workflow", accessor: () => null, freeze: "right", columns: [{ id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130, freeze: "right" }, { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }] } ]}
+      />
+    </div>
+  );
+  },
+  "data-table/pinned-rows": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Pinned rows + frozen columns.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable pinnedRows={["account-0", "account-1"]}
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150, freeze: "left" },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130, freeze: "right" }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/controlled": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  const [selected, setSelected] = useState<string[]>(["account-0"]);
+  const [expanded, setExpanded] = useState<string[]>(["account-0"]);
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Controlled selection + expansion.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable selectable expandable selectedIds={selected} onSelectionChange={setSelected} expandedIds={expanded} onExpandedChange={setExpanded} renderExpanded={(row: Row) => <div>Details for {row.name}</div>}
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150 },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/page-sizes": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Pagination + page sizes.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable searchable paginated pageSize={5} pageSizeOptions={[5, 10, 20]}
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150 },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/sticky-header": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Sticky header.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150 },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/light": function DataTableExample() {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Light theme + borders.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable
+        stickyHeader maxHeight={320} border theme="light"
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150 },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/custom-colors": function DataTableExample() {
+  const rows = Array.from({ length: 24 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Custom header and body colors.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable headerBackground="bg-slate-900" headerTextColor="text-white" bodyBackground="bg-slate-50" bodyTextColor="text-slate-900"
+        stickyHeader maxHeight={320} border theme="light"
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150 },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
+      ]}
+      />
+    </div>
+  );
+  },
+  "data-table/empty": function DataTableExample({ theme = "dark" }) {
+  const rows = Array.from({ length: 0 }, (_, i) => ({
+    id: `account-${i}`,
+    name: ["Alex Kim", "Sara Chen", "Jordan Lee", "Maya Patel"][i % 4],
+    team: ["Platform", "Product"][i % 2],
+    email: `member${i}@example.com`,
+    region: ["North America", "Europe", "Asia Pacific"][i % 3],
+    revenue: (i + 1) * 129.5,
+    status: i % 3 === 0 ? "Pending" : "Active",
+    actions: "Review",
+  }));
+  type Row = (typeof rows)[number];
+  return (
+    <div className="min-w-0 w-full p-6">
+      <p className="mb-3 text-sm text-neutral-500">Empty table.</p>
+      <DataTable data={rows} getRowId={(row: Row) => row.id}
+        sortable
+        stickyHeader maxHeight={320} border theme={theme}
+        columns={[
+        { id: "name", header: "Name", accessor: (row: Row) => row.name, width: 150 },
+        { id: "team", header: "Team", accessor: (row: Row) => row.team, width: 140 },
+        { id: "email", header: "Email", accessor: (row: Row) => row.email, width: 250 },
+        { id: "region", header: "Region", accessor: (row: Row) => row.region, width: 180 },
+        { id: "revenue", header: "Revenue", accessor: (row: Row) => row.revenue, width: 140, align: "right", cell: (row: Row) => `${row.revenue.toFixed(2)}` },
+        { id: "status", header: "Status", accessor: (row: Row) => row.status, width: 130 },
+        { id: "actions", header: "Actions", accessor: (row: Row) => row.actions, width: 130 }
+      ]}
+      />
+    </div>
+  );
   }
 ,
 

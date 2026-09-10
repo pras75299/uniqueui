@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/theme-context";
+import { SITE_URL } from "@/config/site";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "UniqueUI",
   description: "UniqueUI - A collection of unique and modern React components",
   openGraph: {

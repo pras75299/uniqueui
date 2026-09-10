@@ -28,6 +28,16 @@ function trackFatalConsoleErrors(page: Page): string[] {
 }
 
 test.describe("smoke", () => {
+  test("shared links use the public origin for social preview images", async ({ page }) => {
+    await page.goto("/");
+    for (const selector of ['meta[property="og:image"]', 'meta[name="twitter:image"]']) {
+      await expect(page.locator(selector)).toHaveAttribute(
+        "content",
+        "https://uniqueui-platform.vercel.app/brand/uniqueui-wordmark.png",
+      );
+    }
+  });
+
   test("/ renders the marketing headline", async ({ page }) => {
     const fatal = trackFatalConsoleErrors(page);
     const response = await page.goto("/");

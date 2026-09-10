@@ -4012,7 +4012,7 @@ DataTable is a typed, zero-dependency data grid built for 10 to 100,000 rows. It
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `data` | `T[]` | — | Typed row objects; the component is generic over your row type. |
-| `columns` | `DataTableColumn<T>[]` | — | Column definitions: id, header, accessor (raw value for sort/search/group), optional cell renderer, sortType, searchable, width, align, freeze, nested columns (column groups), and rowSpan. |
+| `columns` | `DataTableColumn<T>[]` | — | Column definitions: id, header, accessor (raw value for sort/search/group), optional cell renderer, sortType, searchable, width, align, freeze, nested columns (column groups), and rowSpan. Set freeze: "left" or "right" on any number of leaf columns, or on a group to inherit it. Width is a preferred minimum; offsets use rendered widths. Keep frozen columns at their corresponding outer edges and leave enough viewport space for both sets. |
 | `getRowId` | `(row: T) => string` | — | Required stable row id — selection, expansion, pinning, and windowing keys all hang off it. |
 | `preset` | `"basic" \| "advanced" \| "enterprise"` | — | Feature bundle. basic: search + pagination + sort. advanced: adds multi-sort, multi-select, expansion, sticky header. enterprise: advanced minus pagination so large data auto-virtualizes. Any explicit prop overrides the preset. |
 | `searchable` | `boolean` | `false` | Global debounced (150ms) case-insensitive search over searchable columns' accessor values. |

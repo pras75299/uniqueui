@@ -323,6 +323,16 @@
   ],
   "data-table": [
     {
+      "version": "2.0.1",
+      "date": "2026-09-10",
+      "changes": [
+        "Fix frozen column offsets to use rendered widths, including selection and expansion controls.",
+        "Freeze uniform column-group headers with their descendants and stack sticky header levels correctly.",
+        "Stack multiple pinned rows using their rendered heights so they remain visible without overlapping.",
+        "Add dedicated examples for left, right, multiple, and simultaneous frozen columns; virtualized freezing; pinned rows; controlled state; page sizes; themes; and empty data."
+      ]
+    },
+    {
       "version": "2.0.0",
       "date": "2026-06-11",
       "changes": [
