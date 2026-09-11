@@ -2,6 +2,7 @@ import { componentsList } from "@/config/components";
 import { codeToHtml } from "shiki";
 import { escapeHtml } from "@/lib/escape-html";
 import ClientCopyButton from "@/components/client-copy-button";
+import DocsAiCta from "@/components/docs-ai-cta";
 import Link from "next/link";
 import {
   Terminal,
@@ -289,6 +290,9 @@ export default function Hero() {
           ))}
         </div>
       </section>
+
+      {/* ── Use with AI CTA ── */}
+      <DocsAiCta />
 
       {/* ── Theming CTA ── */}
       <div className="animate-fade-in-up animate-delay-300 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">

@@ -46,6 +46,9 @@ jobs:
       - name: Check agent instruction pointer drift
         run: pnpm check:agent-docs
 
+      - name: Check README component count drift
+        run: pnpm check:readme-count
+
       - name: Run workspace tests
         run: pnpm test
 

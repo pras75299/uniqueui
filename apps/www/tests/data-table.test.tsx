@@ -2,7 +2,7 @@
 import "@testing-library/jest-dom/vitest";
 import React from "react";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   DataTable,
   computeWindow,
@@ -56,6 +56,90 @@ function bodyRowTexts(): string[] {
 
 afterEach(() => {
   vi.useRealTimers();
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
+
+beforeEach(() => {
+    vi.stubGlobal("ResizeObserver", class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    });
+});
+
+describe("frozen columns remain readable while scrolling", () => {
+  it("stacks pinned rows below the header without covering each other", () => {
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
+      width: 140, height: 52, top: 0, bottom: 52, left: 0, right: 140, x: 0, y: 0, toJSON() {},
+    });
+    render(<DataTable data={people} columns={personColumns} getRowId={(row) => row.id}
+      pinnedRows={["1", "2"]} stickyHeader />);
+    const rows = screen.getByRole("table").querySelectorAll("tbody tr[data-row]");
+    expect(rows[0]).toHaveStyle({ top: "52px" });
+    expect(rows[1]).toHaveStyle({ top: "104px" });
+  });
+  it.each([false, true])("stacks multiple columns on both edges (virtualized=%s)", (virtualized) => {
+    const columns = personColumns.map((col, i) => ({
+      ...col, width: 120 + i * 20,
+      freeze: i < 2 ? "left" as const : i > 2 ? "right" as const : undefined,
+    }));
+    render(<DataTable data={people} columns={columns} getRowId={(row) => row.id}
+      virtualized={virtualized} selectable expandable renderExpanded={(row) => row.name} />);
+    const cells = screen.getByRole("table").querySelector("tbody tr[data-row]")!.children;
+    expect(cells[0]).toHaveStyle({ left: "0px" });
+    expect(cells[1]).toHaveStyle({ left: "44px" });
+    expect(cells[2]).toHaveStyle({ left: "88px", position: "sticky" });
+    expect(cells[3]).toHaveStyle({ left: "208px" });
+    expect(cells[4]).not.toHaveStyle({ position: "sticky" });
+    expect(cells[5]).toHaveStyle({ right: "200px" });
+    expect(cells[6]).toHaveStyle({ right: "0px" });
+  });
+
+  it("uses rendered widths, including utility columns, so oversized content cannot overlap", () => {
+    let columnWidth = 180;
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      const width = this.tagName === "TH" || this.tagName === "TD"
+        ? (this.parentElement?.children[0] === this ? 60 : columnWidth) : 0;
+      return { width, height: 44, top: 0, bottom: 44, left: 0, right: width, x: 0, y: 0, toJSON() {} };
+    });
+    render(<DataTable data={people} columns={personColumns.map((col) => ({ ...col, width: 100, freeze: "left" }))}
+      getRowId={(row) => row.id} selectable />);
+    expect(screen.getByRole("columnheader", { name: "Name" })).toHaveStyle({ left: "60px" });
+    expect(screen.getByRole("columnheader", { name: "Dept" })).toHaveStyle({ left: "240px" });
+    columnWidth = 240;
+    fireEvent(window, new Event("resize"));
+    expect(screen.getByRole("columnheader", { name: "Dept" })).toHaveStyle({ left: "300px" });
+  });
+
+  it.each(["left", "right"] as const)("freezes inherited %s group headers with their children, even when empty", (freeze) => {
+    render(<DataTable data={[]} getRowId={(row: Person) => row.id} columns={[
+      { id: "identity", header: "Identity", accessor: () => null, freeze,
+        columns: personColumns.slice(0, 2).map((col) => ({ ...col, width: 140 })) },
+    ]} />);
+    expect(screen.getByRole("columnheader", { name: "Identity" })).toHaveStyle({ position: "sticky", [freeze]: "0px" });
+    expect(screen.getByRole("columnheader", { name: "Name" })).toHaveStyle({ [freeze]: freeze === "left" ? "0px" : "140px" });
+  });
+
+  it("does not freeze a group spanning different edges", () => {
+    render(<DataTable data={people} getRowId={(row) => row.id} columns={[
+      { id: "mixed", header: "Mixed", accessor: () => null, columns: [
+        { ...personColumns[0], freeze: "left" }, { ...personColumns[1], freeze: "right" },
+      ] },
+    ]} />);
+    expect(screen.getByRole("columnheader", { name: "Mixed" })).not.toHaveStyle({ position: "sticky" });
+  });
+
+  it("keeps sticky header levels separate instead of covering their parent", () => {
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
+      width: 140, height: 48, top: 0, bottom: 48, left: 0, right: 140, x: 0, y: 0, toJSON() {},
+    });
+    render(<DataTable data={people} getRowId={(row) => row.id} stickyHeader columns={[
+      { id: "identity", header: "Identity", accessor: () => null, freeze: "left", columns: personColumns.slice(0, 2) },
+    ]} />);
+    expect(screen.getByRole("columnheader", { name: "Identity" })).toHaveStyle({ top: "0px" });
+    expect(screen.getByRole("columnheader", { name: "Name" })).toHaveStyle({ top: "48px" });
+  });
 });
 
 describe("DataTable v2 sorting", () => {

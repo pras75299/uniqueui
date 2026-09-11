@@ -16,7 +16,7 @@
   },
   "docs": {
     "name": "Morphing Card Stack",
-    "description": "An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using Framer Motion springs.",
+    "description": "An interactive collection of cards that smoothly layout-morphs between Stack, Grid, and List configurations using motion/react springs.",
     "icon": "Layers",
     "category": "Cards",
     "props": [
@@ -83,6 +83,13 @@
     "status": "unaudited"
   },
   "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-09-10",
+      "changes": [
+        "Correct documentation to name the motion/react dependency used by the component."
+      ]
+    },
     {
       "version": "1.0.0",
       "date": "2026-05-20",

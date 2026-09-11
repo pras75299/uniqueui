@@ -21,9 +21,16 @@
     }
   ],
   "meta": {
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-09-10",
+      "changes": [
+        "Correct documentation to name the motion/react dependency used by the component."
+      ]
+    },
     {
       "version": "1.0.0",
       "date": "2026-05-20",

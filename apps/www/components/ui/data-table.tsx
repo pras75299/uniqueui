@@ -44,7 +44,7 @@ export interface DataTableColumn<T> {
   sortable?: boolean;
   /** Include this column's values in global search. Default true. */
   searchable?: boolean;
-  /** Fixed width in px; improves frozen-column offsets and windowing. */
+  /** Preferred minimum width in px; frozen offsets use actual rendered widths. */
   width?: number;
   align?: "left" | "center" | "right";
   /** Pin the column to an edge while horizontally scrolling. */
@@ -787,61 +787,74 @@ export function DataTable<T>({
   const tableRef = useRef<HTMLTableElement>(null);
   const theadRef = useRef<HTMLTableSectionElement>(null);
   const [measuredWidths, setMeasuredWidths] = useState<number[]>([]);
+  const [leadingWidths, setLeadingWidths] = useState<number[]>([]);
+  const [headerTops, setHeaderTops] = useState<number[]>([]);
+  const [pinnedTops, setPinnedTops] = useState<number[]>([]);
   const [headerHeight, setHeaderHeight] = useState(0);
   const anyFreeze = leafColumns.some((c) => c.freeze);
   const leadingCount = (selectableEnabled ? 1 : 0) + (expandEnabled ? 1 : 0);
   const fullColSpan = leadingCount + leafColumns.length;
 
   const measureWidths = useCallback(() => {
-    if (!anyFreeze) return;
-    const table = tableRef.current;
-    if (!table) return;
-    const firstRow = table.querySelector("tbody tr[data-row]");
-    if (!firstRow) return;
-    const cells = firstRow.querySelectorAll("td");
-    if (cells.length !== fullColSpan) return; // rowSpan merges break alignment
-    const widths: number[] = [];
-    cells.forEach((cell, i) => {
-      if (i >= leadingCount) widths.push(cell.getBoundingClientRect().width);
-    });
-    if (widths.length && widths.every((w) => Number.isFinite(w) && w > 0)) {
-      setMeasuredWidths(widths);
+    const thead = theadRef.current;
+    if (!thead) return;
+    const update = (setter: React.Dispatch<React.SetStateAction<number[]>>, values: number[]) => {
+      setter((prev) => prev.length === values.length && prev.every((v, i) => Math.abs(v - values[i]) < 0.25) ? prev : values);
+    };
+    if (anyFreeze) {
+      // Headers exist for empty data and are unaffected by body rowSpan merges.
+      const widths: number[] = [];
+      thead.querySelectorAll<HTMLElement>("[data-leaf-index]").forEach((cell) => {
+        widths[Number(cell.dataset.leafIndex)] = cell.getBoundingClientRect().width;
+      });
+      update(setMeasuredWidths, widths);
+      update(setLeadingWidths, Array.from(thead.querySelectorAll("[data-leading-column]"),
+        (cell) => cell.getBoundingClientRect().width));
     }
-  }, [anyFreeze, fullColSpan, leadingCount]);
+    let top = 0;
+    update(setHeaderTops, Array.from(thead.rows, (row) => {
+      const offset = top;
+      top += row.getBoundingClientRect().height;
+      return offset;
+    }));
+    setHeaderHeight((prev) => Math.abs(prev - top) < 0.25 ? prev : top);
+    let pinnedTop = 0;
+    update(setPinnedTops, Array.from(tableRef.current?.querySelectorAll("[data-pinned-row]") ?? [], (row) => {
+      const offset = pinnedTop;
+      pinnedTop += row.getBoundingClientRect().height;
+      return offset;
+    }));
+  }, [anyFreeze]);
 
   useLayoutEffect(() => {
     measureWidths();
-    const thead = theadRef.current;
-    if (thead && (pinnedData.length || stickyHeaderEnabled)) {
-      const h = thead.getBoundingClientRect().height;
-      if (h > 0) setHeaderHeight((prev) => (Math.abs(prev - h) > 1 ? h : prev));
-    }
-  }, [measureWidths, visibleRows, pinnedData.length, stickyHeaderEnabled]);
+  }, [measureWidths, visibleRows, columns, leadingCount, pinnedData.length, stickyHeaderEnabled]);
 
   useEffect(() => {
-    if (!anyFreeze) return;
+    if (!anyFreeze && !stickyHeaderEnabled && !pinnedData.length) return;
     const table = tableRef.current;
     if (!table) return;
     const ro = new ResizeObserver(() => measureWidths());
     ro.observe(table);
+    if (theadRef.current) ro.observe(theadRef.current);
     window.addEventListener("resize", measureWidths);
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", measureWidths);
     };
-  }, [anyFreeze, measureWidths]);
+  }, [anyFreeze, measureWidths, stickyHeaderEnabled, pinnedData.length]);
 
   const freezeOffsets = useMemo(() => {
     const widths = leafColumns.map(
       (col, i) =>
-        col.width ??
         (measuredWidths[i] && measuredWidths[i] > 0
           ? measuredWidths[i]
-          : FALLBACK_COL_WIDTH_PX)
+          : col.width ?? FALLBACK_COL_WIDTH_PX)
     );
     const left = new Map<number, number>();
     const right = new Map<number, number>();
-    let leftAcc = leadingCount * LEADING_COL_WIDTH_PX;
+    const leading = Array.from({ length: leadingCount }, (_, i) => leadingWidths[i] || LEADING_COL_WIDTH_PX);
+    let leftAcc = leading.reduce((sum, width) => sum + width, 0);
     leafColumns.forEach((col, i) => {
       if (col.freeze === "left") {
         left.set(i, leftAcc);
@@ -855,8 +868,8 @@ export function DataTable<T>({
         rightAcc += widths[i];
       }
     }
-    return { left, right, widths };
-  }, [leafColumns, measuredWidths, leadingCount]);
+    return { left, right, widths, leading };
+  }, [leafColumns, measuredWidths, leadingCount, leadingWidths]);
   const anyFreezeLeft = freezeOffsets.left.size > 0;
 
   /* ----- theming -------------------------------------------------------------------- */
@@ -919,7 +932,6 @@ export function DataTable<T>({
       const leftOffset = freezeOffsets.left.get(leafIndex);
       const rightOffset = freezeOffsets.right.get(leafIndex);
       const style: React.CSSProperties = {};
-      const width = freezeOffsets.widths[leafIndex];
       const col = leafColumns[leafIndex];
       if (col?.width) {
         style.width = col.width;
@@ -928,8 +940,6 @@ export function DataTable<T>({
       if (leftOffset === undefined && rightOffset === undefined) return style;
       style.position = "sticky";
       style.zIndex = isHeader ? 30 : 10;
-      style.width = width;
-      style.minWidth = width;
       if (leftOffset !== undefined) {
         style.left = leftOffset;
         if (leftOffset > 0) {
@@ -952,12 +962,12 @@ export function DataTable<T>({
       };
       if (anyFreezeLeft) {
         style.position = "sticky";
-        style.left = position * LEADING_COL_WIDTH_PX;
+        style.left = freezeOffsets.leading.slice(0, position).reduce((sum, width) => sum + width, 0);
         style.zIndex = isHeader ? 30 : 10;
       }
       return style;
     },
-    [anyFreezeLeft]
+    [anyFreezeLeft, freezeOffsets.leading]
   );
 
   const alignClass = (col: DataTableColumn<T>) =>
@@ -977,7 +987,7 @@ export function DataTable<T>({
     const isSelected = selectableEnabled && selectedSet.has(id);
     const isExpanded = expandEnabled && expandedSet.has(id);
     const pinnedStyle: React.CSSProperties | undefined = options.pinned
-      ? { position: "sticky", top: headerHeight, zIndex: 15 }
+      ? { position: "sticky", top: headerHeight + (pinnedTops[visibleIndex] ?? visibleIndex * rowHeight), zIndex: 15 }
       : undefined;
 
     const cells = leafColumns.map((col, leafIndex) => {
@@ -1025,6 +1035,7 @@ export function DataTable<T>({
       <React.Fragment key={id}>
         <tr
           data-row=""
+          data-pinned-row={options.pinned ? "" : undefined}
           aria-rowindex={options.ariaRowIndex}
           aria-selected={selectableEnabled ? isSelected : undefined}
           className={cn(bodyBg, border && cn("border-b", borderColor))}
@@ -1102,6 +1113,7 @@ export function DataTable<T>({
         <tr key={level} className={headerBg}>
           {level === 0 && selectableEnabled && (
             <th
+              data-leading-column=""
               scope="col"
               rowSpan={headerDepth}
               className={cn(
@@ -1111,7 +1123,7 @@ export function DataTable<T>({
                 cellBorderClass,
                 stickyHeaderClass
               )}
-              style={leadingStickyStyle(0, true)}
+              style={{ ...leadingStickyStyle(0, true), top: stickyHeaderEnabled ? 0 : undefined }}
             >
               <input
                 type="checkbox"
@@ -1130,6 +1142,7 @@ export function DataTable<T>({
           )}
           {level === 0 && expandEnabled && (
             <th
+              data-leading-column=""
               scope="col"
               rowSpan={headerDepth}
               aria-label="Row expansion"
@@ -1140,11 +1153,22 @@ export function DataTable<T>({
                 cellBorderClass,
                 stickyHeaderClass
               )}
-              style={leadingStickyStyle(selectableEnabled ? 1 : 0, true)}
+              style={{ ...leadingStickyStyle(selectableEnabled ? 1 : 0, true), top: stickyHeaderEnabled ? 0 : undefined }}
             />
           )}
           {cells.map((cell) => {
             const col = cell.column;
+            const descendants = leafColumns.slice(cell.leafIndex, cell.leafIndex + cell.colSpan);
+            const edge = descendants[0]?.freeze;
+            const frozenGroup = !cell.leaf && edge && descendants.every((child) => child.freeze === edge);
+            const style: React.CSSProperties = cell.leaf
+              ? leafStickyStyle(cell.leafIndex, true)
+              : frozenGroup
+                ? { position: "sticky", zIndex: 30, [edge]: edge === "left"
+                    ? freezeOffsets.left.get(cell.leafIndex)
+                    : freezeOffsets.right.get(cell.leafIndex + cell.colSpan - 1) }
+                : {};
+            if (stickyHeaderEnabled) style.top = headerTops[level] ?? 0;
             const canSort =
               cell.leaf && (col.sortable ?? tableSortable) && !col.columns;
             const rule = sortRules.find((r) => r.id === col.id);
@@ -1160,6 +1184,7 @@ export function DataTable<T>({
             return (
               <th
                 key={col.id}
+                data-leaf-index={cell.leaf ? cell.leafIndex : undefined}
                 scope={cell.leaf ? "col" : "colgroup"}
                 colSpan={cell.colSpan > 1 ? cell.colSpan : undefined}
                 rowSpan={cell.rowSpan > 1 ? cell.rowSpan : undefined}
@@ -1173,7 +1198,7 @@ export function DataTable<T>({
                   stickyHeaderClass,
                   alignClass(col)
                 )}
-                style={cell.leaf ? leafStickyStyle(cell.leafIndex, true) : undefined}
+                style={style}
               >
                 {canSort ? (
                   <button

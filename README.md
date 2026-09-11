@@ -36,7 +36,7 @@ UniqueUI is an open-source component library focused on **micro-interactions and
 **Key features:**
 
 - 🎯 **Copy-paste architecture** — Components live in your codebase, fully customizable
-- 🎨 **30 animated components** — From subtle to spectacular
+- 🎨 **68 animated components** — From subtle to spectacular
 - ⚡ **CLI for instant setup** — `npx uniqueui init` → `npx uniqueui add <component>` (or install via **shadcn CLI** from the published registry)
 - 🧩 **Zero lock-in** — Uses standard React, Motion, and Tailwind CSS
 - 📱 **Dark-first design** — Every component looks great out of the box
